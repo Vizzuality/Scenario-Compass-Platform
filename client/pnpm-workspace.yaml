@@ -1,0 +1,6 @@
+onlyBuiltDependencies:
+  - "@tailwindcss/oxide"
+  - sharp
+  - unrs-resolver
+
+savePrefix: ""
