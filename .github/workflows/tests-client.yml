@@ -1,0 +1,43 @@
+name: Client Tests
+
+on:
+  push:
+    paths:
+      - 'client/**'
+      - '!client/README.md'
+      - '.github/workflows/client-tests.yml'
+
+  workflow_dispatch:
+
+jobs:
+  client-integration-tests:
+    name: Client Integration Tests
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Node setup
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: 'client/.nvmrc'
+
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: 'client/package.json'
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules-
+
+      - name: Install dependencies
+        working-directory: client
+        run: pnpm install
+
+      - name: Run Client tests
+        working-directory: client
+        run: pnpm test
