@@ -1,0 +1,16 @@
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - ruff
+  - pydantic
+  - jupyter
+  - geopandas
+  - requests
+  - pyam
+  - scipy
+  - plotly
+
+  - pip:
+      - jupyterlab-code-formatter
