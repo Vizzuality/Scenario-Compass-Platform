@@ -10,12 +10,11 @@ interface CardProps {
   title: string;
   image: StaticImageData;
 }
-
 function Card({ title, image, href }: CardProps) {
   return (
     <Link
       href={href}
-      className="md:min-h- relative flex h-75 min-h-75 flex-1 flex-shrink-0 flex-col items-center justify-center overflow-hidden rounded-lg bg-white p-6 transition-all duration-300 ease-in-out hover:-translate-y-3 hover:shadow-xl md:h-65 md:min-h-65"
+      className="relative flex h-[260px] w-[302px] flex-shrink-0 flex-col items-center justify-center overflow-hidden rounded-lg bg-white p-6 transition-all duration-300 ease-in-out hover:-translate-y-3 hover:shadow-xl"
     >
       <p className="font-display relative z-10 text-center text-2xl leading-8 font-bold text-stone-800 not-italic">
         {title}
@@ -28,11 +27,7 @@ function Card({ title, image, href }: CardProps) {
 
 export function ModuleLearnByTopic() {
   return (
-    <div
-      className={
-        "container flex flex-col gap-12 px-4 pt-16 pb-20 md:gap-18 md:px-20 md:pt-28 md:pb-38"
-      }
-    >
+    <div className={"flex flex-col gap-12 px-4 pt-16 pb-20 md:gap-18 md:px-20 md:pt-28 md:pb-38"}>
       <div>
         <p className="mb-6 text-center font-sans text-base leading-6 font-normal tracking-[0.64px] text-stone-900 uppercase not-italic">
           learn by Topic
