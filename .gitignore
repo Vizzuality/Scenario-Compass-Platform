@@ -3,3 +3,4 @@
 *.pem
 science/data
 *.env
+/.idea
