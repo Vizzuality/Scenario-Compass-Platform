@@ -2,7 +2,6 @@
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
 
-
 @theme inline {
   --font-display: var(--font-oswald-sans);
   --font-sans: var(--font-source-sans);
@@ -81,7 +80,7 @@
   --sidebar-ring: oklch(0.708 0 0);
   /*custom colors*/
   --beige-light: oklch(0.9846 0.0124 75.37);
-  --beige-dark: oklch(0.9458 0.0114 71.9)
+  --beige-dark: oklch(0.9458 0.0114 71.9);
 }
 
 @layer base {
@@ -89,6 +88,6 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply font-sans antialiased text-stone-700 bg-background;
+    @apply bg-background font-sans text-stone-700 antialiased;
   }
 }
