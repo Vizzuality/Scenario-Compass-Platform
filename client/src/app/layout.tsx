@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 import type { Metadata } from "next";
 import { Oswald, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
+import { Footer } from "@/components/layout/footer";
 
 const oswaldSans = Oswald({
   variable: "--font-oswald-sans",
@@ -28,7 +29,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${oswaldSans.variable} ${sourceSans.variable}`}>{children}</body>
+      <body className={`${oswaldSans.variable} ${sourceSans.variable}`}>
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }
