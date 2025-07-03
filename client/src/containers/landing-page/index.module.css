@@ -1,0 +1,32 @@
+.shareFeedbackBackgroundContainer {
+  background-size: 100%;
+  background-position: center top 10vh;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .shareFeedbackBackgroundContainer {
+    background-size: 70%;
+    background-position: center top -25%;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .shareFeedbackBackgroundContainer {
+    background-size: 65%;
+    background-position: left 15% top -20%;
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .shareFeedbackBackgroundContainer {
+    background-size: 80%;
+    background-position: center top 20vh;
+  }
+}
+
+@media (min-width: 1400px) {
+  .shareFeedbackBackgroundContainer {
+    background-size: 70%;
+    background-position: center top 10vh;
+  }
+}
