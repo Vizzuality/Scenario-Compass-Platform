@@ -5,9 +5,7 @@ import Link from "next/link";
 export function ModuleGuidedIntro() {
   return (
     <div
-      className={
-        "bg-beige-light flex flex-col gap-10 px-4 py-16 md:flex-row md:gap-0 lg:px-20 lg:py-28"
-      }
+      className={"container flex flex-col gap-10 px-4 py-16 md:flex-row md:gap-0 lg:px-20 lg:py-28"}
     >
       <div className={"order-2 md:order-1 md:w-1/2"}>
         <p className="pb-6 font-sans text-base leading-6 font-normal text-stone-900 uppercase not-italic">
@@ -24,11 +22,11 @@ export function ModuleGuidedIntro() {
           Climate scenarios are plausible representations of the future climate of the Earth, based
           on its current observed state and different greenhouse gas emission scenarios.
         </p>
-        <div className="flex flex-col flex-wrap items-center gap-5 md:flex-row">
+        <div className="flex flex-col items-center gap-5 md:flex-row">
           <Link
             href={""}
             className={
-              "order-2 w-full rounded border-2 border-stone-900 px-8 py-4 text-center font-sans text-base leading-5 font-bold not-italic hover:bg-stone-900/10 md:order-1"
+              "order-2 w-full rounded border-2 border-stone-900 px-8 py-4 text-center font-sans text-base leading-5 font-bold not-italic hover:bg-stone-900/10 md:order-1 md:w-fit"
             }
           >
             Methodology overview
@@ -36,7 +34,7 @@ export function ModuleGuidedIntro() {
           <Link
             href={""}
             className={
-              "w-full rounded bg-stone-900 px-8 py-4 text-center font-sans text-base leading-5 font-bold text-white not-italic hover:bg-stone-700"
+              "w-full rounded bg-stone-900 px-8 py-4 text-center font-sans text-base leading-5 font-bold text-white not-italic hover:bg-stone-700 md:w-fit"
             }
           >
             Key terminology
