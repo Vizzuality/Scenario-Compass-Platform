@@ -3,32 +3,10 @@
   background-position: center top 10vh;
 }
 
-.heroBackgroundContainer {
-  background-size: 100%;
-  background-position: center top 10vh;
-}
-
-.guidedExplorationBackgroundContainer {
-  background-size: 0, 225%;
-  background-position:
-    left top,
-    right -20vh bottom -36vh;
-}
-
 @media (min-width: 768px) and (max-width: 991px) {
   .shareFeedbackBackgroundContainer {
     background-size: 70%;
     background-position: center top -25%;
-  }
-  .guidedExplorationBackgroundContainer {
-    background-size: 15%, 75%;
-    background-position:
-      left top,
-      right bottom -35vh;
-  }
-  .heroBackgroundContainer {
-    background-size: 100%;
-    background-position: center top 10vh;
   }
 }
 
@@ -37,16 +15,6 @@
     background-size: 65%;
     background-position: left 15% top -20%;
   }
-  .guidedExplorationBackgroundContainer {
-    background-size: 20%, 80%;
-    background-position:
-      left top,
-      right bottom -25vh;
-  }
-  .heroBackgroundContainer {
-    background-size: 100%;
-    background-position: center top 10vh;
-  }
 }
 
 @media (min-width: 1200px) and (max-width: 1399px) {
@@ -54,31 +22,11 @@
     background-size: 80%;
     background-position: center top 20vh;
   }
-  .guidedExplorationBackgroundContainer {
-    background-size: 15%, 75%;
-    background-position:
-      left top,
-      right bottom -30vh;
-  }
-  .heroBackgroundContainer {
-    background-size: 100%;
-    background-position: center top 10vh;
-  }
 }
 
 @media (min-width: 1400px) {
   .shareFeedbackBackgroundContainer {
     background-size: 70%;
     background-position: center top 10vh;
-  }
-  .guidedExplorationBackgroundContainer {
-    background-size: 15%, 75%;
-    background-position:
-      left top,
-      right bottom -35vh;
-  }
-  .heroBackgroundContainer {
-    background-size: 75%;
-    background-position: right 15% top 3vh;
   }
 }
