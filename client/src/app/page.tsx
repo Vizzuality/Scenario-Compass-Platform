@@ -5,11 +5,7 @@ export default function Home() {
     <div className="grid min-h-screen">
       <main className="flex flex-col">
         <div className="bg-burgundy flex flex-1 flex-col">
-          <Navbar
-          // theme="dark"
-          // sheetTheme={"burgundy"}
-          />
-          {/* intro modules goes here */}
+          <Navbar theme="dark" sheetTheme="burgundy" />
           <div className="text-center">
             <h1 className="px-4 text-2xl text-white"> Welcome to Scenario Compass Platform</h1>
           </div>

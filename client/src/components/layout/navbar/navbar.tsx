@@ -9,22 +9,19 @@ import { Sheet, SheetContent, SheetClose, SheetTrigger, SheetTitle } from "@/com
 
 interface Props {
   className?: string;
-  theme?: "default" | "burgundy" | "lilac";
+  theme: "dark" | "light";
+  sheetTheme: "burgundy" | "lilac" | "white";
 }
 
 const themeStyles = {
-  default: {
-    sheet: "bg-white text-stone-900",
-    text: "text-stone-900",
-  },
-  burgundy: {
-    sheet: "bg-burgundy text-beige-light",
-    text: "text-beige-light",
-  },
-  lilac: {
-    sheet: "bg-lilac text-stone-900",
-    text: "text-stone-900",
-  },
+  dark: "text-beige-light",
+  light: "text-stone-900",
+};
+
+const sheetThemeStyles = {
+  burgundy: "bg-burgundy text-beige-light",
+  lilac: "bg-lilac text-stone-900",
+  white: "bg-white text-stone-900",
 };
 
 const Logo = ({ className }: { className?: string }) => (
@@ -34,15 +31,16 @@ const Logo = ({ className }: { className?: string }) => (
   </Link>
 );
 
-export function Navbar({ className, theme = "default" }: Props) {
-  const styles = themeStyles[theme];
+export function Navbar({ className, theme, sheetTheme }: Props) {
+  const navStyles = themeStyles[theme];
+  const sheetStyles = sheetThemeStyles[sheetTheme];
 
   return (
     <nav className={cn("h-14 w-full bg-transparent lg:h-21", className)}>
       <div
         className={cn(
           "container mx-auto flex h-full items-center justify-between px-4 lg:px-10",
-          styles.text,
+          navStyles,
         )}
       >
         <Logo />
@@ -59,17 +57,17 @@ export function Navbar({ className, theme = "default" }: Props) {
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
-                <Menu className="" />
+                <Menu />
                 <span className="sr-only">Open Menu</span>
               </Button>
             </SheetTrigger>
             <SheetTitle>Mobile Menu Sheet</SheetTitle>
-            <SheetContent className={cn("w-full gap-6 border-none px-4 py-2", styles.sheet)}>
+            <SheetContent className={cn("w-full gap-6 border-none px-4 py-2", sheetStyles)}>
               <div className="flex items-center justify-between">
                 <Logo />
                 <SheetClose asChild>
                   <Button variant="ghost" size="icon">
-                    <X className="!h-6 !w-6" />
+                    <X />
                     <span className="sr-only">Close Menu</span>
                   </Button>
                 </SheetClose>
