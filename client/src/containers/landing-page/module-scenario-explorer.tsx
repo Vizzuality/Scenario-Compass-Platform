@@ -1,3 +1,3 @@
 export function ModuleScenarioExplorer() {
-  return <div></div>;
+  return <div className="container"></div>;
 }

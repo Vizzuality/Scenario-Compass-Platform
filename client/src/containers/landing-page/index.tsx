@@ -7,13 +7,13 @@ import { ModuleGuidedExploration } from "@/containers/landing-page/module-guided
 
 export function LandingPage() {
   return (
-    <>
+    <main className="flex w-full flex-col items-center">
       <ModuleHero />
       <ModuleGuidedIntro />
       <ModuleGuidedExploration />
       <ModuleLearnByTopic />
       <ModuleScenarioExplorer />
       <ModuleShareFeedback />
-    </>
+    </main>
   );
 }

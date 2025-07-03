@@ -10,7 +10,7 @@ export function ModuleHero() {
         "h-screen overflow-hidden px-4 py-12 md:grid md:h-fit md:grid-cols-2 md:gap-16 md:px-16 md:py-20"
       }
     >
-      <div className={"flex flex-col gap-14"}>
+      <div className={"container flex flex-col gap-14"}>
         <div className={"flex flex-col gap-6"}>
           <p
             className={
