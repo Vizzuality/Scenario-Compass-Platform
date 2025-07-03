@@ -38,12 +38,7 @@ export function Navbar({ className, theme = "default" }: Props) {
   const styles = themeStyles[theme];
 
   return (
-    <nav
-      className={cn(
-        "absolute top-0 right-0 left-0 z-50 h-14 w-full bg-transparent lg:h-21",
-        className,
-      )}
-    >
+    <nav className={cn("h-14 w-full bg-transparent lg:h-21", className)}>
       <div
         className={cn(
           "container mx-auto flex h-full items-center justify-between px-4 lg:px-10",
@@ -64,7 +59,7 @@ export function Navbar({ className, theme = "default" }: Props) {
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
-                <Menu className="!h-6 !w-6" />
+                <Menu className="" />
                 <span className="sr-only">Open Menu</span>
               </Button>
             </SheetTrigger>
