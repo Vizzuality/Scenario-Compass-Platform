@@ -15,6 +15,14 @@
     right -20vh bottom -36vh;
 }
 
+.scenarioExplorerContainer {
+  background-size: 100%, 100%;
+  background-position:
+    center top 10vh,
+    center top 10vh;
+  background-repeat: no-repeat, no-repeat;
+}
+
 @media (min-width: 768px) and (max-width: 991px) {
   .shareFeedbackBackgroundContainer {
     background-size: 70%;
@@ -29,6 +37,13 @@
   .heroBackgroundContainer {
     background-size: 100%;
     background-position: center top 10vh;
+  }
+  .scenarioExplorerContainer {
+    background-size: 100%, 100%;
+    background-position:
+      center top 10vh,
+      center top 10vh;
+    background-repeat: no-repeat, no-repeat;
   }
 }
 
@@ -47,6 +62,13 @@
     background-size: 100%;
     background-position: center top 10vh;
   }
+  .scenarioExplorerContainer {
+    background-size: 100%, 100%;
+    background-position:
+      center top 10vh,
+      center top 10vh;
+    background-repeat: no-repeat, no-repeat;
+  }
 }
 
 @media (min-width: 1200px) and (max-width: 1399px) {
@@ -64,6 +86,13 @@
     background-size: 100%;
     background-position: center top 10vh;
   }
+  .scenarioExplorerContainer {
+    background-size: 100%, 100%;
+    background-position:
+      center top 10vh,
+      center top 10vh;
+    background-repeat: no-repeat, no-repeat;
+  }
 }
 
 @media (min-width: 1400px) {
@@ -80,5 +109,12 @@
   .heroBackgroundContainer {
     background-size: 75%;
     background-position: right 15% top 3vh;
+  }
+  .scenarioExplorerContainer {
+    background-size: 40%, 70%;
+    background-position:
+      bottom 20% right 10%,
+      bottom right 60%;
+    background-repeat: no-repeat, no-repeat;
   }
 }
