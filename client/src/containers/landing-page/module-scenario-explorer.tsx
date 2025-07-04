@@ -5,6 +5,7 @@ import msebgsmall from "@/assets/images/landing-page/module-scenario-explorer/ms
 import styles from "./index.module.css";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 function Card({ title, description }: { title: string; description: string }) {
   return (
@@ -70,12 +71,11 @@ export function ModuleScenarioExplorer() {
             }}
           />
         </div>
-        <Link
-          href={""}
-          className="border-beige-light text-beige-light flex h-13 items-center justify-center gap-[10px] rounded-sm border-2 px-8 font-sans text-base leading-5 font-bold md:w-fit"
-        >
-          Scenario Explorer
-        </Link>
+        <Button asChild size="lg" variant="secondary">
+          <Link href={""} className="md:w-fit">
+            Scenario Explorer
+          </Link>
+        </Button>
       </div>
     </div>
   );
