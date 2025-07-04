@@ -2,6 +2,7 @@ import Link from "next/link";
 import shareFeedbackImg from "@/assets/images/landing-page/module-share-feedback/share-feedback-icon.png";
 import { cn } from "@/lib/utils";
 import styles from "./index.module.css";
+import { Button } from "@/components/ui/button";
 
 export function ModuleShareFeedback() {
   return (
@@ -22,12 +23,11 @@ export function ModuleShareFeedback() {
           Your feedback is invaluable to us! By sharing your thoughts and suggestions, you help us
           improve Scenario Compass. Together, we can build a platform that truly meets your needs.
         </p>
-        <Link
-          href={""}
-          className="flex h-13 items-center justify-center gap-[10px] self-stretch rounded-sm border-2 border-stone-900 px-8 font-sans text-base leading-5 font-bold md:w-fit"
-        >
-          Share feedback
-        </Link>
+        <Button variant="outline" size="lg" asChild>
+          <Link href={""} className="md:w-fit">
+            Share feedback
+          </Link>
+        </Button>
       </div>
     </div>
   );
