@@ -3,6 +3,7 @@ import heroImg from "@/assets/images/landing-page/il01.png";
 import { cn } from "@/lib/utils";
 import styles from "./index.module.css";
 import { Navbar } from "@/components/layout/navbar/navbar";
+import { Button } from "@/components/ui/button";
 
 export function ModuleHero() {
   return (
@@ -31,14 +32,11 @@ export function ModuleHero() {
                 Explore, compare, and understand pathways to a sustainable future.
               </p>
             </div>
-            <Link
-              href={""}
-              className={
-                "border-beige-light text-beige-light h-13 w-full rounded border-2 px-8 py-4 text-center font-sans text-base leading-5 font-bold not-italic md:w-fit"
-              }
-            >
-              Learn more
-            </Link>
+            <Button asChild variant="secondary" size="lg">
+              <Link href={""} className={"w-full md:w-fit"}>
+                Learn more
+              </Link>
+            </Button>
           </div>
           <div />
         </div>

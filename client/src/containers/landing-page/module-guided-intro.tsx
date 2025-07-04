@@ -1,6 +1,7 @@
 import img from "@/assets/images/landing-page/guided-intro.png";
 import Image from "next/image";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export function ModuleGuidedIntro() {
   return (
@@ -23,22 +24,16 @@ export function ModuleGuidedIntro() {
           on its current observed state and different greenhouse gas emission scenarios.
         </p>
         <div className="flex flex-col items-center gap-5 md:flex-row">
-          <Link
-            href={""}
-            className={
-              "order-2 w-full rounded border-2 border-stone-900 px-8 py-4 text-center font-sans text-base leading-5 font-bold not-italic hover:bg-stone-900/10 md:order-1 md:w-fit"
-            }
-          >
-            Methodology overview
-          </Link>
-          <Link
-            href={""}
-            className={
-              "w-full rounded bg-stone-900 px-8 py-4 text-center font-sans text-base leading-5 font-bold text-white not-italic hover:bg-stone-700 md:w-fit"
-            }
-          >
-            Key terminology
-          </Link>
+          <Button size="lg" variant="outline" asChild>
+            <Link href={""} className={"order-2 w-full md:order-1 md:w-fit"}>
+              Methodology overview
+            </Link>
+          </Button>
+          <Button size="lg" asChild>
+            <Link href={""} className={"w-full md:w-fit"}>
+              Key terminology
+            </Link>
+          </Button>
         </div>
       </div>
       <div
