@@ -21,9 +21,9 @@ export function ActiveLink({
       href={href}
       className={cn(
         "text-center font-sans text-lg leading-7 font-normal not-italic",
-        "hover:opacity-80",
-        "underline-offset-12",
-        isActive ? "underline" : "",
+        "hover:opacity-60",
+        "pb-3",
+        isActive ? "border-b-2 border-current" : "",
         className,
       )}
       {...props}
