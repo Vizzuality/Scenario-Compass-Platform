@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import type { Metadata } from "next";
 import { Oswald, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
-import { Footer } from "@/components/layout/footer";
+import { Footer } from "@/components/layout/footer/footer";
 
 const oswaldSans = Oswald({
   variable: "--font-oswald-sans",
