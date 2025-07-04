@@ -44,6 +44,8 @@
   --color-beige-light: var(--beige-light);
   --color-beige-dark: var(--beige-dark);
   --color-burgundy: var(--burgundy);
+  --color-burgundy-light: var(--burgundy-light);
+  --color-burgundy-dark: var(--burgundy-dark);
   --color-lilac: var(--lilac);
 }
 
@@ -84,6 +86,8 @@
   --beige-light: oklch(0.9846 0.0124 75.37);
   --beige-dark: oklch(0.9458 0.0114 71.9);
   --burgundy: oklch(0.3763 0.0836 5.39);
+  --burgundy-light: oklch(0.8208 0.0481 359.87);
+  --burgundy-dark: oklch(0.3287 0.0699 5.21);
   --lilac: oklch(0.8324 0.0752 288.04);
 }
 

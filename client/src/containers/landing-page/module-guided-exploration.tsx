@@ -33,9 +33,11 @@ function Card({ title, description, href }: CardProps) {
 export function ModuleGuidedExploration() {
   return (
     <div
-      className={cn("h-fit w-full bg-no-repeat", styles.guidedExplorationBackgroundContainer)}
+      className={cn(
+        "bg-lilac h-fit w-full bg-no-repeat",
+        styles.guidedExplorationBackgroundContainer,
+      )}
       style={{
-        backgroundColor: "#C5C1F7",
         backgroundImage: `url(${mge01left.src}), url(${mge02right.src})`,
       }}
     >
