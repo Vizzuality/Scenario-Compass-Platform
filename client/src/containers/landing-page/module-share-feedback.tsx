@@ -3,6 +3,7 @@ import shareFeedbackImg from "@/assets/images/landing-page/module-share-feedback
 import { cn } from "@/lib/utils";
 import styles from "./index.module.css";
 import { Button } from "@/components/ui/button";
+import { BodyText, Title2 } from "@/components/custom/typography";
 
 export function ModuleShareFeedback() {
   return (
@@ -15,16 +16,14 @@ export function ModuleShareFeedback() {
           backgroundImage: `url(${shareFeedbackImg.src})`,
         }}
       />
-      <div className={cn("order-1 w-full px-4 pt-16 md:order-2", "md:px-20 md:py-24")}>
-        <p className="font-display mb-4 text-center text-4xl leading-10 font-bold text-stone-900">
-          Help shape the future of Scenario Compass.
-        </p>
-        <p className="mb-14 font-sans text-lg leading-7 font-normal text-stone-700">
+      <div className={cn("order-1 w-full px-4 pt-16", "md:order-2 md:px-20 md:py-24")}>
+        <Title2 className="mb-4 text-center">Help shape the future of Scenario Compass.</Title2>
+        <BodyText className="mb-10 text-center">
           Your feedback is invaluable to us! By sharing your thoughts and suggestions, you help us
           improve Scenario Compass. Together, we can build a platform that truly meets your needs.
-        </p>
+        </BodyText>
         <Button variant="outline" size="lg" asChild>
-          <Link href={""} className="md:w-fit">
+          <Link href={""} className="w-full md:w-fit">
             Share feedback
           </Link>
         </Button>

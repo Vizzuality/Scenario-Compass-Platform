@@ -4,6 +4,7 @@ import lbt2 from "@/assets/images/landing-page/module-learn-by-topic/lbt2.png";
 import lbt3 from "@/assets/images/landing-page/module-learn-by-topic/lbt3.png";
 import lbt4 from "@/assets/images/landing-page/module-learn-by-topic/lbt4.png";
 import Link from "next/link";
+import { AnteTitle, BodyText, Title2 } from "@/components/custom/typography";
 
 interface CardProps {
   href: string;
@@ -33,16 +34,12 @@ export function ModuleLearnByTopic() {
         "container flex flex-col gap-12 px-4 pt-16 pb-20 md:gap-18 md:px-20 md:pt-28 md:pb-38"
       }
     >
-      <div>
-        <p className="mb-6 text-center font-sans text-base leading-6 font-normal tracking-[0.64px] text-stone-900 uppercase not-italic">
-          learn by Topic
-        </p>
-        <p className="font-display mb-4 text-center text-4xl leading-10 font-bold text-stone-900 not-italic">
-          Choose a topic, uncover the future
-        </p>
-        <p className="text-center font-sans text-lg leading-7 font-normal text-stone-800 not-italic">
+      <div className="flex flex-col">
+        <AnteTitle className="mb-6 text-center">learn by Topic</AnteTitle>
+        <Title2 className="mb-4 text-center">Choose a topic, uncover the future</Title2>
+        <BodyText className="text-center">
           Dive deep into specific themes and their associated scenarios.
-        </p>
+        </BodyText>
       </div>
       <div className="flex flex-col gap-4 md:flex-row md:gap-6">
         <Card href={""} title={"Energy"} image={lbt1} />

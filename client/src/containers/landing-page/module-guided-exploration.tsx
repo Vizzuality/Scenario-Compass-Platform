@@ -4,6 +4,7 @@ import mge01left from "@/assets/images/landing-page/module-guided-exploration/mg
 import mge02right from "@/assets/images/landing-page/module-guided-exploration/mge02right.png";
 import { cn } from "@/lib/utils";
 import styles from "./index.module.css";
+import { AnteTitle, BodyText, Title2 } from "@/components/custom/typography";
 
 interface CardProps {
   title: string;
@@ -46,17 +47,13 @@ export function ModuleGuidedExploration() {
           "flex flex-col items-center justify-center gap-12 px-4 pt-16 pb-28 md:gap-18 md:px-20 md:pt-28 md:pb-38"
         }
       >
-        <div>
-          <p className="mb-6 text-center font-sans text-base leading-6 font-normal tracking-[0.64px] text-stone-900 uppercase not-italic">
-            Guided Exploration
-          </p>
-          <p className="font-display mb-4 text-center text-4xl leading-10 font-bold text-stone-900 not-italic">
-            Explore climate futures
-          </p>
-          <p className="text-center font-sans text-lg leading-7 font-normal text-stone-800 not-italic">
+        <div className="flex flex-col">
+          <AnteTitle className="mb-6 text-center">Guided Exploration</AnteTitle>
+          <Title2 className="mb-4 text-center">Explore climate futures</Title2>
+          <BodyText className="text-center">
             Answer critical questions about the interplay between land use, climate goals, and food
-            security.{" "}
-          </p>
+            security.
+          </BodyText>
         </div>
         <div className={"flex flex-col gap-6"}>
           <Card
