@@ -6,6 +6,7 @@ import styles from "./index.module.css";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { AnteTitle, BodyText, Title2 } from "@/components/custom/typography";
 
 function Card({ title, description }: { title: string; description: string }) {
   return (
@@ -29,20 +30,20 @@ export function ModuleScenarioExplorer() {
         backgroundImage: `url(${mse01.src})`,
       }}
     >
-      <div className="container mx-auto flex flex-col items-center justify-center gap-18 py-28">
-        <div className="px-32">
-          <p className="text-beige-light mb-6 text-center font-sans text-base leading-6 font-normal tracking-[0.64px] uppercase">
+      <div className="container mx-auto flex flex-col items-center justify-center gap-12 px-4 pt-16 pb-32 md:gap-18 md:pt-28 md:pb-28">
+        <div className="flex flex-col md:px-32">
+          <AnteTitle variant="light" className="mb-6 text-center">
             Scenario Explorer
-          </p>
-          <p className="text-beige-light font-display mb-4 text-center text-5xl leading-14 font-bold">
+          </AnteTitle>
+          <Title2 variant="light" className="mb-4 text-center">
             Discover the powerful features that drive our platform
-          </p>
-          <p className="text-beige-light text-center font-sans text-lg leading-7 font-normal">
+          </Title2>
+          <BodyText variant="light" className="text-center">
             Browse and filter scenarios based on your interests.
-          </p>
+          </BodyText>
         </div>
-        <div className="grid grid-cols-2">
-          <div className="flex w-4/5 flex-col gap-8">
+        <div className="gap grid grid-rows-2 gap-12 md:grid-cols-2 md:gap-0">
+          <div className="flex w-full flex-col gap-8 md:w-4/5">
             <Card
               title={"Explore scenarios"}
               description={
@@ -72,7 +73,7 @@ export function ModuleScenarioExplorer() {
           />
         </div>
         <Button asChild size="lg" variant="secondary">
-          <Link href={""} className="md:w-fit">
+          <Link href={""} className="w-full md:w-fit">
             Scenario Explorer
           </Link>
         </Button>
