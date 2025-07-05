@@ -1,5 +1,5 @@
 import Link from "next/link";
-import heroImg from "@/assets/images/landing-page/il01.png";
+import heroImg from "@/assets/images/ilustrations/ilustration_01.png";
 import { cn } from "@/lib/utils";
 import styles from "./index.module.css";
 import { Navbar } from "@/components/layout/navbar/navbar";

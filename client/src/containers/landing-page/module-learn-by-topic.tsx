@@ -12,11 +12,34 @@ interface CardProps {
   image: StaticImageData;
 }
 
+const cardItemsArray: CardProps[] = [
+  {
+    title: "Energy",
+    image: lbt1,
+    href: "",
+  },
+  {
+    title: "Land use",
+    image: lbt2,
+    href: "",
+  },
+  {
+    title: "Water",
+    image: lbt3,
+    href: "",
+  },
+  {
+    title: "People & Economy",
+    image: lbt4,
+    href: "",
+  },
+];
+
 function Card({ title, image, href }: CardProps) {
   return (
     <Link
       href={href}
-      className="md:min-h- relative flex h-75 min-h-75 flex-1 flex-shrink-0 flex-col items-center justify-center overflow-hidden rounded-lg bg-white p-6 transition-all duration-300 ease-in-out hover:-translate-y-3 hover:shadow-xl md:h-65 md:min-h-65"
+      className="md:min-h- relative flex h-75 min-h-75 flex-1 flex-shrink-0 flex-col items-center justify-center overflow-hidden rounded-lg bg-white p-6 transition-all duration-500 ease-in-out hover:-translate-y-6 hover:shadow-xl md:h-65 md:min-h-65"
     >
       <p className="font-display relative z-10 text-center text-2xl leading-8 font-bold text-stone-800 not-italic">
         {title}
@@ -42,10 +65,9 @@ export function ModuleLearnByTopic() {
         </BodyText>
       </div>
       <div className="flex flex-col gap-4 md:flex-row md:gap-6">
-        <Card href={""} title={"Energy"} image={lbt1} />
-        <Card href={""} title={"Land use"} image={lbt2} />
-        <Card href={""} title={"Water"} image={lbt3} />
-        <Card href={""} title={"People & Economy"} image={lbt4} />
+        {cardItemsArray.map((item, index) => {
+          return <Card href={item.href} title={item.title} image={item.image} key={index} />;
+        })}
       </div>
     </div>
   );

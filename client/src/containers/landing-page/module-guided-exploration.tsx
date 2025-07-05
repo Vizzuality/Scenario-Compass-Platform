@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import mge01left from "@/assets/images/landing-page/module-guided-exploration/mge01left.png";
-import mge02right from "@/assets/images/landing-page/module-guided-exploration/mge02right.png";
+import mge01left from "@/assets/images/ilustrations/ilustration_03_cropped.png";
+import mge02right from "@/assets/images/ilustrations/ilustration_02.png";
 import { cn } from "@/lib/utils";
 import styles from "./index.module.css";
 import { AnteTitle, BodyText, Title2 } from "@/components/custom/typography";
@@ -12,12 +12,27 @@ interface CardProps {
   href: string;
 }
 
+const cardItemsArray: CardProps[] = [
+  {
+    title: "Meeting 1.5C targets and food security",
+    description:
+      "If we are to meet 1.5C warming targets whilst ensuring the population are fed, what does this mean for biodiversity?",
+    href: "#",
+  },
+  {
+    title: "Carbon removal through forest expansion",
+    description:
+      "How much carbon dioxide removal is required from forest expansion to meet a 1.5C target whilst feeding the world population?",
+    href: "#",
+  },
+];
+
 function Card({ title, description, href }: CardProps) {
   return (
     <Link
       href={href}
       className={
-        "flex items-center justify-start gap-8 rounded-lg bg-white p-6 transition-all duration-300 ease-in-out hover:translate-x-4 hover:shadow-lg md:w-[700px]"
+        "flex items-center justify-start gap-8 rounded-lg bg-white p-6 transition-all duration-400 ease-in-out hover:translate-x-8 hover:shadow-lg md:w-[700px]"
       }
     >
       <div className="flex flex-col items-start justify-center gap-2">
@@ -56,20 +71,9 @@ export function ModuleGuidedExploration() {
           </BodyText>
         </div>
         <div className={"flex flex-col gap-6"}>
-          <Card
-            title={"Meeting 1.5C targets and food security"}
-            description={
-              "If we are to meet 1.5C warming targets whilst ensuring the population are fed, what does this mean for biodiversity?"
-            }
-            href={""}
-          />
-          <Card
-            title={"Carbon removal through forest expansion"}
-            description={
-              "How much carbon dioxide removal is required from forest expansion to meet a 1.5C target whilst feeding the world population?"
-            }
-            href={""}
-          />
+          {cardItemsArray.map((item, index) => (
+            <Card key={index} title={item.title} description={item.description} href={item.href} />
+          ))}
         </div>
       </div>
     </div>

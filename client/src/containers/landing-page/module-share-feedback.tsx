@@ -1,5 +1,5 @@
 import Link from "next/link";
-import shareFeedbackImg from "@/assets/images/landing-page/module-share-feedback/share-feedback-icon.png";
+import shareFeedbackImg from "@/assets/images/ilustrations/ilustration_06.png";
 import { cn } from "@/lib/utils";
 import styles from "./index.module.css";
 import { Button } from "@/components/ui/button";
