@@ -16,10 +16,10 @@
 }
 
 .scenarioExplorerContainer {
-  background-size: 100%, 100%;
+  background-size: 40%, 70%;
   background-position:
-    center top 10vh,
-    center top 10vh;
+    bottom 20% right 10%,
+    bottom right 60%;
   background-repeat: no-repeat, no-repeat;
 }
 
@@ -39,10 +39,10 @@
     background-position: center top 10vh;
   }
   .scenarioExplorerContainer {
-    background-size: 100%, 100%;
+    background-size: 40%, 70%;
     background-position:
-      center top 10vh,
-      center top 10vh;
+      bottom 20% right 10%,
+      bottom right 60%;
     background-repeat: no-repeat, no-repeat;
   }
 }
@@ -63,10 +63,10 @@
     background-position: center top 10vh;
   }
   .scenarioExplorerContainer {
-    background-size: 100%, 100%;
+    background-size: 40%, 70%;
     background-position:
-      center top 10vh,
-      center top 10vh;
+      bottom 20% right 10%,
+      bottom right 60%;
     background-repeat: no-repeat, no-repeat;
   }
 }
@@ -87,10 +87,10 @@
     background-position: center top 10vh;
   }
   .scenarioExplorerContainer {
-    background-size: 100%, 100%;
+    background-size: 40%, 70%;
     background-position:
-      center top 10vh,
-      center top 10vh;
+      bottom 20% right 10%,
+      bottom right 60%;
     background-repeat: no-repeat, no-repeat;
   }
 }

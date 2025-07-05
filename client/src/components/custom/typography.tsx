@@ -45,6 +45,19 @@ function Title2({ children, className, variant = "dark" }: TypographyProps) {
   );
 }
 
+function Title3({ children, className, variant = "dark" }: TypographyProps) {
+  const variantClasses = {
+    dark: "text-stone-900",
+    light: "text-beige-light",
+  };
+
+  return (
+    <h3 className={cn("font-sans text-xl leading-7 font-bold", variantClasses[variant], className)}>
+      {children}
+    </h3>
+  );
+}
+
 function Subtitle({ children, className, variant = "dark" }: TypographyProps) {
   const variantClasses = {
     dark: "text-stone-900",
@@ -94,4 +107,4 @@ function BodyText({ children, className, variant = "dark" }: TypographyProps) {
   );
 }
 
-export { Title, Subtitle, AnteTitle, Title2, BodyText };
+export { Title, Subtitle, AnteTitle, Title2, BodyText, Title3 };
