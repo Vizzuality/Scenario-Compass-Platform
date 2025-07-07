@@ -1,10 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import mge01left from "@/assets/images/ilustrations/ilustration_03_cropped.png";
-import mge02right from "@/assets/images/ilustrations/ilustration_02.png";
 import { cn } from "@/lib/utils";
-import styles from "./index.module.css";
-import { AnteTitle, BodyText, Title2 } from "@/components/custom/typography";
+import { Text } from "@/components/custom/text";
 
 interface CardProps {
   title: string;
@@ -51,11 +48,18 @@ export function ModuleGuidedExploration() {
     <div
       className={cn(
         "bg-lilac h-fit w-full bg-no-repeat",
-        styles.guidedExplorationBackgroundContainer,
+        "bg-[length:0,225%]",
+        "bg-[position:left_top,right_-20vh_bottom_-36vh]",
+        "md:bg-[length:0%,175%]",
+        "md:bg-[position:left_top,right_bottom_-50vh]",
+        "lg:bg-[length:20%,80%]",
+        "lg:bg-[position:left_top,right_top_700%]",
+        "xl:bg-[length:15%,75%]",
+        "xl:bg-[position:left_top,right_top_-270%]",
+        "2xl:bg-[length:15%,75%]",
+        "2xl:bg-[position:left_top,right_top_-20%]",
+        `bg-[url("/assets/images/ilustrations/ilustration_03_cropped.webp"),url("/assets/images/ilustrations/ilustration_02.webp")]`,
       )}
-      style={{
-        backgroundImage: `url(${mge01left.src}), url(${mge02right.src})`,
-      }}
     >
       <div
         className={
@@ -63,12 +67,16 @@ export function ModuleGuidedExploration() {
         }
       >
         <div className="flex flex-col">
-          <AnteTitle className="mb-6 text-center">Guided Exploration</AnteTitle>
-          <Title2 className="mb-4 text-center">Explore climate futures</Title2>
-          <BodyText className="text-center">
+          <Text size="base" as="span" className="mb-6 text-center">
+            Guided Exploration
+          </Text>
+          <Text as="h2" size="4xl" className="mb-4 text-center">
+            Explore climate futures
+          </Text>
+          <Text as="p" size="lg" className="text-center">
             Answer critical questions about the interplay between land use, climate goals, and food
             security.
-          </BodyText>
+          </Text>
         </div>
         <div className={"flex flex-col gap-6"}>
           {cardItemsArray.map((item, index) => (

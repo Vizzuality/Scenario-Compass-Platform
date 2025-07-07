@@ -1,27 +1,32 @@
 import Link from "next/link";
-import shareFeedbackImg from "@/assets/images/ilustrations/ilustration_06.png";
 import { cn } from "@/lib/utils";
-import styles from "./index.module.css";
 import { Button } from "@/components/ui/button";
-import { BodyText, Title2 } from "@/components/custom/typography";
+import { Text } from "@/components/custom/text";
 
 export function ModuleShareFeedback() {
   return (
     <div
-      className={cn("container grid grid-rows-2 overflow-hidden md:grid-cols-2 md:grid-rows-none")}
+      className={cn("container grid grid-rows-2 overflow-hidden lg:grid-cols-2 lg:grid-rows-none")}
     >
       <div
-        className={cn(styles.shareFeedbackBackgroundContainer, "order-2 bg-no-repeat md:order-1")}
-        style={{
-          backgroundImage: `url(${shareFeedbackImg.src})`,
-        }}
+        className={cn(
+          "bg-[length:100%] bg-[position:center_top_10vh]",
+          "md:bg-[length:70%] md:bg-[position:center_top_-25%]",
+          "lg:bg-[length:65%] lg:bg-[position:center_top_30vh]",
+          "xl:bg-[length:80%] xl:bg-[position:center_top_20vh]",
+          "2xl:bg-[length:70%] 2xl:bg-[position:center_top_10vh]",
+          "order-2 bg-no-repeat lg:order-1",
+          `bg-[url("/assets/images/ilustrations/ilustration_06.webp")]`,
+        )}
       />
-      <div className={cn("order-1 w-full px-4 pt-16", "md:order-2 md:px-20 md:py-24")}>
-        <Title2 className="mb-4 text-center">Help shape the future of Scenario Compass.</Title2>
-        <BodyText className="mb-10 text-center">
+      <div className={cn("order-1 w-full px-4 pt-16", "md:px-20 md:py-24 lg:order-2")}>
+        <Text as="h2" size="4xl" className="mb-4 text-center lg:text-left">
+          Help shape the future of Scenario Compass.
+        </Text>
+        <Text as="p" size="lg" className="mb-10 text-center lg:text-left">
           Your feedback is invaluable to us! By sharing your thoughts and suggestions, you help us
           improve Scenario Compass. Together, we can build a platform that truly meets your needs.
-        </BodyText>
+        </Text>
         <Button variant="outline" size="lg" asChild>
           <Link href={""} className="w-full md:w-fit">
             Share feedback

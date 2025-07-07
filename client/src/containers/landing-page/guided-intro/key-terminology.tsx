@@ -1,12 +1,12 @@
-import msek01 from "@/assets/images/landing-page/module-guided-intro/key-terminology/msek01.png";
-import msek02 from "@/assets/images/landing-page/module-guided-intro/key-terminology/msek02.png";
-import msek03 from "@/assets/images/landing-page/module-guided-intro/key-terminology/msek03.png";
-import msek04 from "@/assets/images/landing-page/module-guided-intro/key-terminology/msek04.png";
-import msek05 from "@/assets/images/landing-page/module-guided-intro/key-terminology/msek05.png";
-import msek06 from "@/assets/images/landing-page/module-guided-intro/key-terminology/msek06.png";
+import msek01 from "../../../../public/assets/images/landing-page/module-guided-intro/key-terminology/msek01.png";
+import msek02 from "../../../../public/assets/images/landing-page/module-guided-intro/key-terminology/msek02.png";
+import msek03 from "../../../../public/assets/images/landing-page/module-guided-intro/key-terminology/msek03.png";
+import msek04 from "../../../../public/assets/images/landing-page/module-guided-intro/key-terminology/msek04.png";
+import msek05 from "../../../../public/assets/images/landing-page/module-guided-intro/key-terminology/msek05.png";
+import msek06 from "../../../../public/assets/images/landing-page/module-guided-intro/key-terminology/msek06.png";
 
 import Image, { StaticImageData } from "next/image";
-import { BodyText, Title3 } from "@/components/custom/typography";
+import { Text } from "@/components/custom/text";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
@@ -60,8 +60,12 @@ function Card({ title, description, image }: KeyTerminologyItem) {
     <div className="bg-beige-dark flex flex-col gap-16 rounded-lg p-8">
       <Image src={image} alt={title} width={117} height={78} />
       <div className="flex flex-col gap-2">
-        <Title3>{title}</Title3>
-        <BodyText>{description}</BodyText>
+        <Text as="h3" size="xl">
+          {title}
+        </Text>
+        <Text as="p" size="lg">
+          {description}
+        </Text>
       </div>
     </div>
   );
