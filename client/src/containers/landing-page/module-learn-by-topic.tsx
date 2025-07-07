@@ -1,10 +1,10 @@
 import Image, { StaticImageData } from "next/image";
-import lbt1 from "@/assets/images/landing-page/module-learn-by-topic/lbt1.png";
-import lbt2 from "@/assets/images/landing-page/module-learn-by-topic/lbt2.png";
-import lbt3 from "@/assets/images/landing-page/module-learn-by-topic/lbt3.png";
-import lbt4 from "@/assets/images/landing-page/module-learn-by-topic/lbt4.png";
+import lbt1 from "../../../public/assets/images/landing-page/module-learn-by-topic/lbt1.png";
+import lbt2 from "../../../public/assets/images/landing-page/module-learn-by-topic/lbt2.png";
+import lbt3 from "../../../public/assets/images/landing-page/module-learn-by-topic/lbt3.png";
+import lbt4 from "../../../public/assets/images/landing-page/module-learn-by-topic/lbt4.png";
 import Link from "next/link";
-import { AnteTitle, BodyText, Title2 } from "@/components/custom/typography";
+import { Text } from "@/components/custom/text";
 
 interface CardProps {
   href: string;
@@ -58,13 +58,17 @@ export function ModuleLearnByTopic() {
       }
     >
       <div className="flex flex-col">
-        <AnteTitle className="mb-6 text-center">learn by Topic</AnteTitle>
-        <Title2 className="mb-4 text-center">Choose a topic, uncover the future</Title2>
-        <BodyText className="text-center">
+        <Text as="span" size="base" className="mb-6 text-center">
+          learn by Topic
+        </Text>
+        <Text as="h2" size="4xl" className="mb-4 text-center">
+          Choose a topic, uncover the future
+        </Text>
+        <Text as="p" size="lg" className="text-center">
           Dive deep into specific themes and their associated scenarios.
-        </BodyText>
+        </Text>
       </div>
-      <div className="flex flex-col gap-4 md:flex-row md:gap-6">
+      <div className="flex flex-col gap-4 md:grid md:grid-cols-2 md:gap-4 lg:flex lg:flex-row lg:gap-6">
         {cardItemsArray.map((item, index) => {
           return <Card href={item.href} title={item.title} image={item.image} key={index} />;
         })}

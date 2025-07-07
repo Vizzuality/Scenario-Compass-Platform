@@ -1,12 +1,8 @@
 import { CircleCheckBig } from "lucide-react";
-import mse01 from "@/assets/images/ilustrations/ilustration_05_cropped.png";
-import msebgmain from "@/assets/images/landing-page/module-scenario-explorer/msebgmain.png";
-import msebgsmall from "@/assets/images/landing-page/module-scenario-explorer/msebgsmall.png";
-import styles from "./index.module.css";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { AnteTitle, BodyText, Title2, Title3 } from "@/components/custom/typography";
+import { Text } from "@/components/custom/text";
 
 function Card({ title, description }: { title: string; description: string }) {
   return (
@@ -15,7 +11,9 @@ function Card({ title, description }: { title: string; description: string }) {
         <CircleCheckBig className="h-8 w-8 text-green-400" />
       </div>
       <div className="flex flex-col">
-        <Title3 variant="light">{title}</Title3>
+        <Text as="h3" size="xl" variant="dark" className="font-bold">
+          {title}
+        </Text>
         <p className="text-burgundy-light font-sans text-lg leading-7 font-normal">{description}</p>
       </div>
     </div>
@@ -25,25 +23,41 @@ function Card({ title, description }: { title: string; description: string }) {
 export function ModuleScenarioExplorer() {
   return (
     <div
-      className="bg-burgundy w-full bg-[length:140%] bg-[position:right_30%_bottom_-4%] bg-no-repeat md:bg-[length:60%] md:bg-[position:right_bottom]"
-      style={{
-        backgroundImage: `url(${mse01.src})`,
-      }}
+      className={cn(
+        "bg-burgundy w-full bg-no-repeat",
+        `bg-[url("/assets/images/ilustrations/ilustration_05_cropped.webp")]`,
+        "bg-[length:140%]",
+        "bg-[position:right_30%_bottom_-4%]",
+        "md:bg-[length:60%]",
+        "md:bg-[position:right_bottom]",
+        "lg:bg-[length:50%]",
+        "lg:bg-[position:right_bottom]",
+        "xl:bg-[length:50%]",
+        "xl:bg-[position:right_bottom]",
+        "2xl:bg-[length:40%]",
+        "2xl:bg-[position:right_bottom]",
+      )}
     >
-      <div className="container mx-auto flex flex-col items-center justify-center gap-12 px-4 pt-16 pb-32 md:gap-18 md:px-20 md:pt-28 md:pb-28">
-        <div className="flex flex-col md:px-32">
-          <AnteTitle variant="light" className="mb-6 text-center">
+      <div
+        className={cn(
+          "container mx-auto flex flex-col items-center justify-center gap-12 px-4 py-16",
+          "lg:gap-18 lg:px-20 lg:py-28",
+          "md:gap-8 md:px-10 md:py-14",
+        )}
+      >
+        <div className="flex flex-col lg:px-32">
+          <Text as="span" size="base" variant="dark" className="mb-6 text-center">
             Scenario Explorer
-          </AnteTitle>
-          <Title2 variant="light" className="mb-4 text-center">
+          </Text>
+          <Text as="h2" size="4xl" variant="dark" className="mb-4 text-center">
             Discover the powerful features that drive our platform
-          </Title2>
-          <BodyText variant="light" className="text-center">
+          </Text>
+          <Text as="p" size="lg" variant="dark" className="text-center">
             Browse and filter scenarios based on your interests.
-          </BodyText>
+          </Text>
         </div>
-        <div className="gap grid grid-rows-2 gap-12 md:grid-cols-2 md:grid-rows-none md:gap-0">
-          <div className="flex w-full flex-col gap-8 md:w-4/5">
+        <div className="lg:grid lg:grid-cols-2 lg:grid-rows-none lg:gap-0">
+          <div className="flex w-full flex-col gap-8 lg:w-4/5">
             <Card
               title={"Explore scenarios"}
               description={
@@ -66,10 +80,21 @@ export function ModuleScenarioExplorer() {
             />
           </div>
           <div
-            className={cn("bg-beige-light rounded-xl shadow-lg", styles.scenarioExplorerContainer)}
-            style={{
-              backgroundImage: `url(${msebgsmall.src}), url(${msebgmain.src})`,
-            }}
+            className={cn(
+              "bg-beige-light mt-12 h-[calc(60vw)] rounded-xl shadow-lg md:h-[calc(50vw)] lg:mt-0 lg:h-full",
+              "bg-[length:80%]",
+              "bg-[position:bottom_right_10%]",
+              "bg-no-repeat",
+              "md:bg-[length:70%]",
+              "md:bg-[position:bottom_center]",
+              "lg:bg-[length:80%]",
+              "lg:bg-[position:center_center]",
+              "xl:bg-[length:90%]",
+              "xl:bg-[position:bottom_center]",
+              "2xl:bg-[length:80%]",
+              "2xl:bg-[position:bottom_center]",
+              `bg-[url("/assets/images/landing-page/module-scenario-explorer/mse01.png")]`,
+            )}
           />
         </div>
         <Button asChild size="lg" variant="secondary">

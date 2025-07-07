@@ -10,9 +10,9 @@ export function LandingPage() {
     <main className="flex w-full flex-col items-center">
       <ModuleHero />
       <ModuleGuidedIntro />
-      <ModuleGuidedExploration />
-      <ModuleLearnByTopic />
       <ModuleScenarioExplorer />
+      <ModuleLearnByTopic />
+      <ModuleGuidedExploration />
       <ModuleShareFeedback />
     </main>
   );
