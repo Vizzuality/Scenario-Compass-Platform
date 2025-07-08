@@ -31,6 +31,7 @@ function Card({ title, description, href }: CardProps) {
       className={
         "flex items-center justify-start gap-8 rounded-lg bg-white p-6 transition-all duration-400 ease-in-out hover:translate-x-8 hover:shadow-lg md:w-[700px]"
       }
+      aria-label={title}
     >
       <div className="flex flex-col items-start justify-center gap-2">
         <p className="font-sans text-xl leading-7 font-bold text-stone-800 not-italic">{title}</p>
@@ -58,7 +59,7 @@ export function ModuleGuidedExploration() {
         "xl:bg-[position:left_top,right_top_-270%]",
         "2xl:bg-[length:15%,75%]",
         "2xl:bg-[position:left_top,right_top_-20%]",
-        `bg-[url("/assets/images/ilustrations/ilustration_03_cropped.webp"),url("/assets/images/ilustrations/ilustration_02.webp")]`,
+        `bg-[url("/images/ilustrations/ilustration_03_cropped.webp"),url("/images/ilustrations/ilustration_02.webp")]`,
       )}
     >
       <div
