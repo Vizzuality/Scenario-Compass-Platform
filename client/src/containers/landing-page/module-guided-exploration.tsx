@@ -59,7 +59,7 @@ export function ModuleGuidedExploration() {
         "xl:bg-[position:left_top,right_top_-270%]",
         "2xl:bg-[length:15%,75%]",
         "2xl:bg-[position:left_top,right_top_-20%]",
-        `bg-[url("/images/ilustrations/ilustration_03_cropped.webp"),url("/images/ilustrations/ilustration_02.webp")]`,
+        `bg-[url("/images/illustrations/illustration_03_cropped.webp"),url("/images/illustrations/illustration_02.webp")]`,
       )}
     >
       <div

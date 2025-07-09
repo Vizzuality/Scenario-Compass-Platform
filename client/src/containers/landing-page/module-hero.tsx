@@ -17,7 +17,7 @@ export function ModuleHero() {
           "lg:bg-[length:90%] lg:bg-[position:center_top_10vh]",
           "xl:bg-[length:80%] xl:bg-[position:right_15%_bottom_160%]",
           "2xl:bg-[length:65%] 2xl:bg-[position:right_15%_bottom_100%]",
-          `bg-[url("/images/ilustrations/ilustration_01.webp")]`,
+          `bg-[url("/images/illustrations/illustration_01.webp")]`,
         )}
       >
         <div className="container pb-16 lg:grid lg:h-fit lg:grid-cols-2 lg:pb-0">

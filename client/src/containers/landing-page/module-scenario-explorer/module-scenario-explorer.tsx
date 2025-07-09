@@ -10,7 +10,7 @@ export function ModuleScenarioExplorer() {
       aria-label="Module Scenario Explorer"
       className={cn(
         "bg-burgundy w-full bg-no-repeat",
-        `bg-[url("/images/ilustrations/ilustration_05_cropped.webp")]`,
+        `bg-[url("/images/illustrations/illustration_05_cropped.webp")]`,
         "bg-[length:140%]",
         "bg-[position:right_30%_bottom_-4%]",
         "md:bg-[length:60%]",
