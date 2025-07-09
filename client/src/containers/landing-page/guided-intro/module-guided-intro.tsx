@@ -51,7 +51,7 @@ export function ModuleGuidedIntro() {
         <div
           className={cn(
             "order-1 aspect-video w-full bg-cover bg-center bg-no-repeat lg:order-2 lg:w-1/2",
-            `bg-[url("/images/landing-page/module-guided-intro/mgi01.png")]`,
+            `bg-[url("/images/landing-page/module-guided-intro/mgi01.webp")]`,
           )}
         />
       </div>
