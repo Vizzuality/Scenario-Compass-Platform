@@ -14,37 +14,37 @@ const keyTerminologyItemsArray: KeyTerminologyItem[] = [
     title: "Carbon Dioxide Removal (CDR)",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam.",
-    image: "/images/landing-page/module-guided-intro/key-terminology/msek01.png",
+    image: "/images/landing-page/module-guided-intro/key-terminology/msek01.webp",
   },
   {
     title: "Carbon Footprint",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam.",
-    image: "/images/landing-page/module-guided-intro/key-terminology/msek02.png",
+    image: "/images/landing-page/module-guided-intro/key-terminology/msek02.webp",
   },
   {
     title: "Integrated Assessment Models (IAMs)",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam.",
-    image: "/images/landing-page/module-guided-intro/key-terminology/msek03.png",
+    image: "/images/landing-page/module-guided-intro/key-terminology/msek03.webp",
   },
   {
     title: "Mitigation",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam.",
-    image: "/images/landing-page/module-guided-intro/key-terminology/msek04.png",
+    image: "/images/landing-page/module-guided-intro/key-terminology/msek04.webp",
   },
   {
     title: "Representative Concentration Pathways (RCPs)",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam.",
-    image: "/images/landing-page/module-guided-intro/key-terminology/msek05.png",
+    image: "/images/landing-page/module-guided-intro/key-terminology/msek05.webp",
   },
   {
     title: "Shared Socioeconomic Pathways (SSPs)",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam.",
-    image: "/images/landing-page/module-guided-intro/key-terminology/msek06.png",
+    image: "/images/landing-page/module-guided-intro/key-terminology/msek06.webp",
   },
 ];
 

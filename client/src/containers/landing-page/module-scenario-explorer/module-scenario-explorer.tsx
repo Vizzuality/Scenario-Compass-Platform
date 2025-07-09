@@ -46,7 +46,7 @@ export function ModuleScenarioExplorer() {
           <div
             className={cn(
               "mt-12 aspect-[14/10] w-full bg-cover bg-center bg-no-repeat lg:mt-0",
-              `bg-[url("/images/landing-page/module-scenario-explorer/mse01.png")]`,
+              `bg-[url("/images/landing-page/module-scenario-explorer/mse01.webp")]`,
             )}
           />
         </div>

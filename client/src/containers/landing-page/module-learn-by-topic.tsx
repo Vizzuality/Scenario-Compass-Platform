@@ -2,10 +2,10 @@ import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
 import { Text } from "@/components/custom/text";
 import { cn } from "@/lib/utils";
-import lbt1 from "../../../public/images/landing-page/module-learn-by-topic/lbt1.png";
-import lbt2 from "../../../public/images/landing-page/module-learn-by-topic/lbt2.png";
-import lbt3 from "../../../public/images/landing-page/module-learn-by-topic/lbt3.png";
-import lbt4 from "../../../public/images/landing-page/module-learn-by-topic/lbt4.png";
+import lbt1 from "../../../public/images/landing-page/module-learn-by-topic/lbt1.webp";
+import lbt2 from "../../../public/images/landing-page/module-learn-by-topic/lbt2.webp";
+import lbt3 from "../../../public/images/landing-page/module-learn-by-topic/lbt3.webp";
+import lbt4 from "../../../public/images/landing-page/module-learn-by-topic/lbt4.webp";
 
 interface CardProps {
   href: string;
