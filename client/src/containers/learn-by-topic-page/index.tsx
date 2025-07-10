@@ -3,10 +3,10 @@ import { ModuleCrossLinks } from "@/containers/learn-by-topic-page/module-cross-
 
 export function LearnByTopicPageContainer() {
   return (
-    <main className="flex min-h-screen w-full flex-col items-center">
+    <>
       <ModuleHero />
-      <div className="grid min-h-screen place-content-center">Placeholder</div>
+      <div className="grid min-h-screen place-content-center" />
       <ModuleCrossLinks />
-    </main>
+    </>
   );
 }

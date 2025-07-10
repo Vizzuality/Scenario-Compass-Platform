@@ -3,11 +3,11 @@ import { ModuleCrossLinks } from "@/containers/guided-exploration-page/module-cr
 
 export function GuidedExplorationPageContainer() {
   return (
-    <main className="flex min-h-screen w-full flex-col items-center">
+    <>
       <ModuleHero />
-      <div className="grid min-h-screen place-content-center">Placeholder</div>
+      <div className="grid min-h-screen place-content-center" />
       <div className="h-28 w-full bg-white" />
       <ModuleCrossLinks />
-    </main>
+    </>
   );
 }

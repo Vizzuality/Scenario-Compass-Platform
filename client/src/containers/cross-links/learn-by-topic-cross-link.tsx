@@ -2,6 +2,7 @@ import { Text } from "@/components/custom/text";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { INTERNAL_PATHS } from "@/lib/paths";
 
 export function LearnByTopicCrossLink() {
   return (
@@ -26,7 +27,10 @@ export function LearnByTopicCrossLink() {
         </Text>
       </div>
       <Button asChild size="lg" variant="default" className="w-full sm:w-fit">
-        <Link href="" className="font-sans text-base leading-5 font-bold">
+        <Link
+          href={INTERNAL_PATHS.LEARN_BY_TOPIC}
+          className="font-sans text-base leading-5 font-bold"
+        >
           Go to Learn by Topic
         </Link>
       </Button>

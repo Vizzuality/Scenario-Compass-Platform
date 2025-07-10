@@ -2,12 +2,13 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/custom/text";
-import { AnimatedCardContainer } from "@/containers/landing-page/module-scenario-explorer/animated-card-container";
+import { AnimatedCardContainer } from "@/containers/landing-page/module-scenario-dashboard/animated-card-container";
+import { INTERNAL_PATHS } from "@/lib/paths";
 
-export function ModuleScenarioExplorer() {
+export function ModuleScenarioDashboard() {
   return (
     <section
-      aria-label="Module Scenario Explorer"
+      aria-label="Module Dashboard"
       className={cn(
         "bg-burgundy w-full bg-no-repeat",
         `bg-[url("/images/illustrations/illustration_05_cropped.webp")]`,
@@ -32,7 +33,7 @@ export function ModuleScenarioExplorer() {
       >
         <div className="flex flex-col lg:px-32">
           <Text as="span" size="base" variant="dark" className="mb-6 text-center">
-            Scenario Explorer
+            Scenario Dashboard
           </Text>
           <Text as="h2" size="4xl" variant="dark" className="mb-4 text-center">
             Discover the powerful features that drive our platform
@@ -51,8 +52,11 @@ export function ModuleScenarioExplorer() {
           />
         </div>
         <Button asChild size="lg" variant="secondary">
-          <Link href={""} className="w-full font-sans text-base leading-5 font-bold md:w-fit">
-            Scenario Explorer
+          <Link
+            href={INTERNAL_PATHS.SCENARIO_DASHBOARD}
+            className="w-full font-sans text-base leading-5 font-bold md:w-fit"
+          >
+            Scenario Dashboard
           </Link>
         </Button>
       </div>

@@ -1,6 +1,6 @@
-import { mobilePaths } from "@/lib/paths";
+import { mobilePaths, EXTERNAL_LINKS } from "@/lib/paths";
 import Link from "next/link";
-import { Dot, ExternalLink, Linkedin } from "lucide-react";
+import { Dot, Linkedin } from "lucide-react";
 import { BlueskyLogoIcon } from "@/assets/icons/bluesky-logo-icon";
 
 export function Footer() {
@@ -22,12 +22,11 @@ export function Footer() {
           </div>
 
           <div className="flex flex-col items-center justify-center gap-7 pt-16 pb-12 text-center md:flex-row md:gap-14 md:pb-16">
-            {mobilePaths.map((path) => {
+            {mobilePaths.map((path, index) => {
               return (
                 <Link
-                  key={path.label}
-                  href={path.href}
-                  rel="nofollow noopener"
+                  key={index}
+                  {...path}
                   className="font-sans text-base leading-6 font-normal text-stone-700 hover:opacity-60"
                 >
                   {path.label}
@@ -35,7 +34,6 @@ export function Footer() {
               );
             })}
           </div>
-
           <div
             className={
               "flex flex-col items-center justify-between gap-6 border-t border-stone-200 py-14 md:flex-row md:gap-0 md:py-6"
@@ -48,13 +46,13 @@ export function Footer() {
               <Dot className="order-2 text-stone-500" />
               <div className="order-1 flex gap-9 md:order-3 md:gap-4">
                 <Link
-                  href={""}
+                  href=""
                   className="text-right font-sans text-sm leading-5 font-normal text-stone-500"
                 >
                   Privacy Policy
                 </Link>
                 <Link
-                  href={""}
+                  href=""
                   className="order-1 text-right font-sans text-sm leading-5 font-normal text-stone-500"
                 >
                   Cookie Policy
@@ -67,32 +65,11 @@ export function Footer() {
                 "order-1 flex flex-col items-center justify-center gap-5 md:order-2 md:flex-row"
               }
             >
-              <Link
-                href={"https://shape.apps.ece.iiasa.ac.at/explorer"}
-                aria-label="IIASA Data explorer"
-                rel="nofollow noopener"
-                target="_blank"
-                className="flex items-center justify-center gap-2 font-sans text-sm leading-5 font-normal text-stone-500"
-              >
-                IIASA Data explorer
-                <ExternalLink strokeWidth={1.5} className={"h-4 w-4 text-stone-500"} />
-              </Link>
-              <Dot className="text-stone-500" />
               <div className="flex gap-9 md:gap-5">
-                <Link
-                  href={"https://bsky.app/profile/iiasa.ac.at"}
-                  aria-label="IIASA Bluesky profile"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <Link {...EXTERNAL_LINKS.BLUESKY}>
                   <BlueskyLogoIcon />
                 </Link>
-                <Link
-                  href={"https://at.linkedin.com/company/iiasa-vienna"}
-                  aria-label="IIASA LinkedIn profile"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <Link {...EXTERNAL_LINKS.LINKEDIN}>
                   <Linkedin className={"text-stone-500"} size={20} strokeWidth={1} />
                 </Link>
               </div>
