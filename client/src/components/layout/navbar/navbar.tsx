@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 
-import { desktopPaths, mobilePaths, PATHS } from "@/lib/paths";
+import { desktopPaths, mobilePaths, INTERNAL_PATHS } from "@/lib/paths";
 import { cn } from "@/lib/utils";
 import { ActiveLink } from "@/components/layout/navbar/active-link";
 import { Button } from "@/components/ui/button";
@@ -25,7 +25,7 @@ const sheetThemeStyles = {
 };
 
 const Logo = ({ className }: { className?: string }) => (
-  <Link href={PATHS.HOME} className={className}>
+  <Link href={INTERNAL_PATHS.HOME} className={className}>
     <span className="font-display mr-2 text-xl leading-10 font-bold">SCP</span>
     <span className="font-sans text-lg font-normal">by IIASA</span>
   </Link>
@@ -46,8 +46,8 @@ export function Navbar({ className, theme, sheetTheme }: Props) {
         <Logo />
 
         <div className="hidden items-center gap-10 lg:flex">
-          {desktopPaths.map((link) => (
-            <ActiveLink key={link.href} href={link.href} className="text-lg">
+          {desktopPaths.map((link, index) => (
+            <ActiveLink key={index} {...link} className="text-lg">
               {link.label}
             </ActiveLink>
           ))}
@@ -74,9 +74,9 @@ export function Navbar({ className, theme, sheetTheme }: Props) {
               </div>
 
               <div className="flex flex-col items-start gap-4">
-                {mobilePaths.map((link) => (
-                  <SheetClose key={link.href} asChild className="py-3">
-                    <ActiveLink href={link.href}>{link.label}</ActiveLink>
+                {mobilePaths.map((link, index) => (
+                  <SheetClose key={index} asChild className="py-3">
+                    <ActiveLink {...link}>{link.label}</ActiveLink>
                   </SheetClose>
                 ))}
               </div>

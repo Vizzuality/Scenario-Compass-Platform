@@ -2,6 +2,7 @@ import { Text } from "@/components/custom/text";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { INTERNAL_PATHS } from "@/lib/paths";
 
 export function GuidedExplorationCrossLink() {
   return (
@@ -26,14 +27,12 @@ export function GuidedExplorationCrossLink() {
           security.
         </Text>
       </div>
-      <Button
-        asChild
-        size="lg"
-        variant="default"
-        className="w-full sm:w-fit"
-        aria-label="Button to open key terminology list of terms and definitions"
-      >
-        <Link href="" className="font-sans text-base leading-5 font-bold">
+      <Button asChild size="lg" variant="default" className="w-full sm:w-fit">
+        <Link
+          href={INTERNAL_PATHS.GUIDED_EXPLORATION}
+          className="font-sans text-base leading-5 font-bold"
+          aria-label="Go to Guided Exploration Page Link"
+        >
           Go to Guided Exploration
         </Link>
       </Button>

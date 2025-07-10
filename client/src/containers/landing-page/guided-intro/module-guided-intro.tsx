@@ -6,6 +6,7 @@ import { Text } from "@/components/custom/text";
 import { KeyTerminology } from "@/containers/landing-page/guided-intro/key-terminology";
 import React from "react";
 import { cn } from "@/lib/utils";
+import { INTERNAL_PATHS } from "@/lib/paths";
 
 export function ModuleGuidedIntro() {
   const [open, setOpen] = React.useState(false);
@@ -31,7 +32,7 @@ export function ModuleGuidedIntro() {
           <div className="flex flex-col items-center gap-5 md:flex-row">
             <Button size="lg" variant="outline" asChild>
               <Link
-                href={""}
+                href={INTERNAL_PATHS.METHODOLOGY}
                 className={
                   "order-2 w-full font-sans text-base leading-5 font-bold md:order-1 md:w-fit"
                 }
@@ -41,7 +42,8 @@ export function ModuleGuidedIntro() {
             </Button>
             <Button
               size="lg"
-              className={"w-full font-sans text-base leading-5 font-bold md:w-fit"}
+              className="w-full font-sans text-base leading-5 font-bold md:w-fit"
+              aria-label="Button to open key terminology modal for module guided intro"
               onClick={() => setOpen(true)}
             >
               Key terminology

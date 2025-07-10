@@ -71,10 +71,7 @@ interface Props {
 
 export function KeyTerminology({ className, onClose }: Props) {
   return (
-    <div
-      className="flex flex-col items-center gap-6"
-      aria-label="Button to open key terminology list of terms and definitions"
-    >
+    <div className="flex flex-col items-center gap-6">
       <div className={cn("flex flex-col gap-6 md:grid md:grid-cols-3 md:grid-rows-2", className)}>
         {keyTerminologyItemsArray.map((keyTerminologyItem, index) => (
           <Card
@@ -90,7 +87,7 @@ export function KeyTerminology({ className, onClose }: Props) {
         size="lg"
         variant="ghost"
         className="w-full font-sans text-base leading-5 font-bold md:w-fit"
-        aria-label="Button to open key terminology list of terms and definitions"
+        aria-label="Button to close key terminology list of terms and definitions"
       >
         Close
       </Button>

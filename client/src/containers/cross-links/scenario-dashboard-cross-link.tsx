@@ -2,8 +2,9 @@ import { Text } from "@/components/custom/text";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { INTERNAL_PATHS } from "@/lib/paths";
 
-export function ScenarioExplorerCrossLink() {
+export function ScenarioDashboardCrossLink() {
   return (
     <div
       className={cn(
@@ -19,21 +20,18 @@ export function ScenarioExplorerCrossLink() {
     >
       <div className="flex w-full flex-col gap-4 text-center">
         <Text as="h2" size="4xl" variant="dark">
-          Scenario Explorer
+          Scenario Dashboard
         </Text>
         <Text as="p" size="lg" variant="dark">
           Browse and filter scenarios based on your interests.
         </Text>
       </div>
-      <Button
-        asChild
-        size="lg"
-        variant="secondary"
-        className="w-full sm:w-fit"
-        aria-label="Button to open key terminology list of terms and definitions"
-      >
-        <Link href="" className="font-sans text-base leading-5 font-bold">
-          Go to Guided Exploration
+      <Button asChild size="lg" variant="secondary" className="w-full sm:w-fit">
+        <Link
+          href={INTERNAL_PATHS.SCENARIO_DASHBOARD}
+          className="font-sans text-base leading-5 font-bold"
+        >
+          Go to Scenario Dashboard
         </Link>
       </Button>
     </div>

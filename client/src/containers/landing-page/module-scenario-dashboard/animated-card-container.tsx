@@ -1,5 +1,5 @@
 import { StaggeredFadeIn } from "@/components/animations/staggered-fade-in";
-import { ModuleScenarioExplorerCard } from "@/containers/landing-page/module-scenario-explorer/module-scenario-explorer-card";
+import { ModuleScenarioExplorerCard } from "@/containers/landing-page/module-scenario-dashboard/module-scenario-explorer-card";
 
 const cardData = [
   {
