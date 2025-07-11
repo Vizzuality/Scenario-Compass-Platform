@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Text } from "@/components/custom/text";
+import { Heading } from "@/components/custom/heading";
 
 interface CardProps {
   title: string;
@@ -34,50 +34,47 @@ function Card({ title, description, href }: CardProps) {
       aria-label={title}
     >
       <div className="flex flex-col items-start justify-center gap-2">
-        <p className="font-sans text-xl leading-7 font-bold text-stone-800 not-italic">{title}</p>
-        <p className="font-sans text-lg leading-7 font-normal text-stone-600 not-italic">
-          {description}
-        </p>
+        <p className="text-xl leading-7 font-bold text-stone-800 not-italic">{title}</p>
+        <p className="text-lg leading-7 font-normal text-stone-600 not-italic">{description}</p>
       </div>
       <ArrowRight size={24} className="flex-shrink-0" />
     </Link>
   );
 }
 
+const backgroundStyles = [
+  "bg-[length:0,225%]",
+  "bg-[position:left_top,right_-20vh_bottom_-36vh]",
+  "md:bg-[length:0%,175%]",
+  "md:bg-[position:left_top,right_bottom_-50vh]",
+  "lg:bg-[length:20%,80%]",
+  "lg:bg-[position:left_top,right_top_700%]",
+  "xl:bg-[length:15%,75%]",
+  "xl:bg-[position:left_top,right_top_-270%]",
+  "2xl:bg-[length:15%,75%]",
+  "2xl:bg-[position:left_top,right_top_-20%]",
+  `bg-[url("/images/illustrations/illustration_03_cropped.webp"),url("/images/illustrations/illustration_02.webp")]`,
+];
+
 export function ModuleGuidedExploration() {
   return (
-    <div
-      className={cn(
-        "bg-lilac h-fit w-full bg-no-repeat",
-        "bg-[length:0,225%]",
-        "bg-[position:left_top,right_-20vh_bottom_-36vh]",
-        "md:bg-[length:0%,175%]",
-        "md:bg-[position:left_top,right_bottom_-50vh]",
-        "lg:bg-[length:20%,80%]",
-        "lg:bg-[position:left_top,right_top_700%]",
-        "xl:bg-[length:15%,75%]",
-        "xl:bg-[position:left_top,right_top_-270%]",
-        "2xl:bg-[length:15%,75%]",
-        "2xl:bg-[position:left_top,right_top_-20%]",
-        `bg-[url("/images/illustrations/illustration_03_cropped.webp"),url("/images/illustrations/illustration_02.webp")]`,
-      )}
-    >
+    <div className={cn("bg-lilac h-fit w-full bg-no-repeat", ...backgroundStyles)}>
       <div
         className={
           "flex flex-col items-center justify-center gap-12 px-4 pt-16 pb-28 md:gap-18 md:px-20 md:pt-28 md:pb-38"
         }
       >
         <div className="flex flex-col">
-          <Text size="base" as="span" className="mb-6 text-center">
+          <span className="mb-6 text-center text-base leading-6 tracking-[0.64px] uppercase">
             Guided Exploration
-          </Text>
-          <Text as="h2" size="4xl" className="mb-4 text-center">
+          </span>
+          <Heading as="h2" size="4xl" className="mb-4 text-center">
             Explore climate futures
-          </Text>
-          <Text as="p" size="lg" className="text-center">
+          </Heading>
+          <p className="text-center text-lg leading-7">
             Answer critical questions about the interplay between land use, climate goals, and food
             security.
-          </Text>
+          </p>
         </div>
         <div className={"flex flex-col gap-6"}>
           {cardItemsArray.map((item, index) => (

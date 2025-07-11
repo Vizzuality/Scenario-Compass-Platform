@@ -1,6 +1,6 @@
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
-import { Text } from "@/components/custom/text";
+import { Heading } from "@/components/custom/heading";
 import { cn } from "@/lib/utils";
 import lbt1 from "../../../public/images/landing-page/module-learn-by-topic/lbt1.webp";
 import lbt2 from "../../../public/images/landing-page/module-learn-by-topic/lbt2.webp";
@@ -70,15 +70,15 @@ export function ModuleLearnByTopic() {
       }
     >
       <div className="flex flex-col">
-        <Text as="span" size="base" className="mb-6 text-center">
+        <span className="mb-6 text-center text-base leading-6 tracking-[0.64px] uppercase">
           learn by Topic
-        </Text>
-        <Text as="h2" size="4xl" className="mb-4 text-center">
+        </span>
+        <Heading as="h2" size="4xl" className="mb-4 text-center">
           Choose a topic, uncover the future
-        </Text>
-        <Text as="p" size="lg" className="text-center">
+        </Heading>
+        <p className="text-center text-lg leading-7">
           Dive deep into specific themes and their associated scenarios.
-        </Text>
+        </p>
       </div>
       <div className="flex flex-col gap-4 md:grid md:grid-cols-2 md:gap-4 lg:flex lg:flex-row lg:gap-6">
         {cardItemsArray.map((item, index) => {

@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { Text } from "@/components/custom/text";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
@@ -53,12 +52,8 @@ function Card({ title, description, image }: KeyTerminologyItem) {
     <div className="bg-beige-dark flex flex-col gap-16 rounded-lg p-8">
       <Image src={image} alt="" width={117} height={78} aria-hidden={true} />
       <div className="flex flex-col gap-2">
-        <Text as="h3" size="xl">
-          {title}
-        </Text>
-        <Text as="p" size="lg">
-          {description}
-        </Text>
+        <p className="text-foreground text-lg leading-7 font-bold">{title}</p>
+        <p className="text-lg leading-7 text-stone-700">{description}</p>
       </div>
     </div>
   );
@@ -86,7 +81,7 @@ export function KeyTerminology({ className, onClose }: Props) {
         onClick={onClose}
         size="lg"
         variant="ghost"
-        className="w-full font-sans text-base leading-5 font-bold md:w-fit"
+        className="w-full text-base leading-5 font-bold md:w-fit"
         aria-label="Button to close key terminology list of terms and definitions"
       >
         Close

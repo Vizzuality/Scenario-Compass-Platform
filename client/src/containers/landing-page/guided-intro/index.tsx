@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Text } from "@/components/custom/text";
+import { Heading } from "@/components/custom/heading";
 import { KeyTerminology } from "@/containers/landing-page/guided-intro/key-terminology";
 import React from "react";
 import { cn } from "@/lib/utils";
@@ -18,31 +18,29 @@ export function ModuleGuidedIntro() {
       <div className="flex flex-col items-center gap-10 lg:flex-row lg:gap-10">
         <div className={"order-2 flex flex-col gap-14 lg:order-1 lg:w-1/2"}>
           <div className="flex flex-col">
-            <Text as="span" size="base" className="mb-6">
+            <span className="mb-6 text-base leading-6 tracking-[0.64px] uppercase">
               Introduction to Scenarios
-            </Text>
-            <Text as="h2" size="4xl" className="mb-4">
+            </span>
+            <Heading as="h2" size="4xl" className="mb-4">
               What a climate scenario is
-            </Text>
-            <Text as="h3" size="lg" className="w-full lg:w-4/5">
+            </Heading>
+            <h3 className="w-full text-lg leading-7 lg:w-4/5">
               Climate scenarios are plausible representations of the future climate of the Earth,
               based on its current observed state and different greenhouse gas emission scenarios.
-            </Text>
+            </h3>
           </div>
           <div className="flex flex-col items-center gap-5 md:flex-row">
             <Button size="lg" variant="outline" asChild>
               <Link
                 href={INTERNAL_PATHS.METHODOLOGY}
-                className={
-                  "order-2 w-full font-sans text-base leading-5 font-bold md:order-1 md:w-fit"
-                }
+                className={"order-2 w-full text-base leading-5 font-bold md:order-1 md:w-fit"}
               >
                 Methodology overview
               </Link>
             </Button>
             <Button
               size="lg"
-              className="w-full font-sans text-base leading-5 font-bold md:w-fit"
+              className="w-full text-base leading-5 font-bold md:w-fit"
               aria-label="Button to open key terminology modal for module guided intro"
               onClick={() => setOpen(true)}
             >
