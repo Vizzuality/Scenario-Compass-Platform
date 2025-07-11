@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Text } from "@/components/custom/text";
+import { Heading } from "@/components/custom/heading";
 import { AnimatedCardContainer } from "@/containers/landing-page/module-scenario-dashboard/animated-card-container";
 import { INTERNAL_PATHS } from "@/lib/paths";
 
@@ -32,15 +32,15 @@ export function ModuleScenarioDashboard() {
         )}
       >
         <div className="flex flex-col lg:px-32">
-          <Text as="span" size="base" variant="dark" className="mb-6 text-center">
+          <span className="text-background mb-6 text-center text-base leading-6 tracking-[0.64px] uppercase">
             Scenario Dashboard
-          </Text>
-          <Text as="h2" size="4xl" variant="dark" className="mb-4 text-center">
+          </span>
+          <Heading as="h2" size="4xl" variant="dark" className="mb-4 text-center">
             Discover the powerful features that drive our platform
-          </Text>
-          <Text as="p" size="lg" variant="dark" className="text-center">
+          </Heading>
+          <p className="text-background text-center text-lg leading-7">
             Browse and filter scenarios based on your interests.
-          </Text>
+          </p>
         </div>
         <div className="items-center lg:grid lg:grid-cols-2 lg:grid-rows-none lg:gap-0">
           <AnimatedCardContainer />
@@ -54,7 +54,7 @@ export function ModuleScenarioDashboard() {
         <Button asChild size="lg" variant="secondary">
           <Link
             href={INTERNAL_PATHS.SCENARIO_DASHBOARD}
-            className="w-full font-sans text-base leading-5 font-bold md:w-fit"
+            className="w-full text-base leading-5 font-bold md:w-fit"
           >
             Scenario Dashboard
           </Link>

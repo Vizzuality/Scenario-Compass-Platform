@@ -16,9 +16,7 @@ export function Footer() {
             >
               Scenario Compass Platform
             </p>
-            <p className={"text-center font-sans text-xl leading-6 font-normal text-stone-700"}>
-              by IIASA
-            </p>
+            <p className={"text-center text-xl leading-6 font-normal text-stone-700"}>by IIASA</p>
           </div>
 
           <div className="flex flex-col items-center justify-center gap-7 pt-16 pb-12 text-center md:flex-row md:gap-14 md:pb-16">
@@ -27,7 +25,7 @@ export function Footer() {
                 <Link
                   key={index}
                   {...path}
-                  className="font-sans text-base leading-6 font-normal text-stone-700 hover:opacity-60"
+                  className="text-base leading-6 font-normal text-stone-700 hover:opacity-60"
                 >
                   {path.label}
                 </Link>
@@ -40,20 +38,17 @@ export function Footer() {
             }
           >
             <div className="order-3 flex flex-col items-center justify-center gap-6 md:order-1 md:flex-row md:gap-4">
-              <div className="order-3 font-sans text-sm leading-5 font-normal text-stone-500 md:order-1">
+              <div className="order-3 text-sm leading-5 font-normal text-stone-500 md:order-1">
                 Copyright 2025 SCP
               </div>
               <Dot className="order-2 text-stone-500" />
               <div className="order-1 flex gap-9 md:order-3 md:gap-4">
-                <Link
-                  href=""
-                  className="text-right font-sans text-sm leading-5 font-normal text-stone-500"
-                >
+                <Link href="" className="text-right text-sm leading-5 font-normal text-stone-500">
                   Privacy Policy
                 </Link>
                 <Link
                   href=""
-                  className="order-1 text-right font-sans text-sm leading-5 font-normal text-stone-500"
+                  className="order-1 text-right text-sm leading-5 font-normal text-stone-500"
                 >
                   Cookie Policy
                 </Link>

@@ -27,7 +27,7 @@ const sheetThemeStyles = {
 const Logo = ({ className }: { className?: string }) => (
   <Link href={INTERNAL_PATHS.HOME} className={className}>
     <span className="font-display mr-2 text-xl leading-10 font-bold">SCP</span>
-    <span className="font-sans text-lg font-normal">by IIASA</span>
+    <span className="text-lg font-normal">by IIASA</span>
   </Link>
 );
 

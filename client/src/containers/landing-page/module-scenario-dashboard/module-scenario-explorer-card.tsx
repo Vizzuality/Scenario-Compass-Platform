@@ -1,5 +1,4 @@
 import { CircleCheckBig } from "lucide-react";
-import { Text } from "@/components/custom/text";
 
 export function ModuleScenarioExplorerCard({
   title,
@@ -14,10 +13,8 @@ export function ModuleScenarioExplorerCard({
         <CircleCheckBig className="h-8 w-8 text-green-400" aria-hidden={true} />
       </div>
       <div className="flex flex-col">
-        <Text as="h3" size="xl" variant="dark" className="font-bold">
-          {title}
-        </Text>
-        <p className="text-burgundy-light font-sans text-lg leading-7 font-normal">{description}</p>
+        <p className="text-background text-xl leading-7 font-bold">{title}</p>
+        <p className="text-burgundy-light text-lg leading-7">{description}</p>
       </div>
     </div>
   );

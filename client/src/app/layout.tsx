@@ -31,7 +31,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${oswaldSans.variable} ${sourceSans.variable}`}>
+      <body className={`${oswaldSans.variable} ${sourceSans.variable} font-sans`}>
         <ClientProviders>
           <>
             {children}
