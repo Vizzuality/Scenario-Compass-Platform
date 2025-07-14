@@ -10,7 +10,7 @@ const imgBackgroundStyles = [
   "md:bg-[length:120%] md:bg-[position:right_30%_top_10%]",
   "lg:bg-[length:140%] lg:bg-[position:right_30%_top_15%]",
   "xl:bg-[length:150%] xl:bg-[position:right_25%_top_15%]",
-  "2xl:bg-[length:130%] 2xl:bg-[position:right_35%_top_15%]",
+  "2xl:bg-[length:70%] 2xl:bg-[position:right_35%_top_15%]",
   `bg-[url("/images/illustrations/illustration_02.webp")]`,
 ];
 
@@ -18,7 +18,7 @@ export function GuidedExplorationCrossLink() {
   return (
     <div
       className={cn(
-        "bg-lilac flex flex-col items-center gap-8 bg-no-repeat px-12 pt-20 pb-16",
+        "bg-lilac container flex flex-col items-center gap-8 bg-no-repeat px-12 pt-20 pb-16",
         ...imgBackgroundStyles,
       )}
     >
