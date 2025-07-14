@@ -1,4 +1,9 @@
 import { ComponentProps } from "react";
+import { geographyOptions } from "@/lib/constants";
+import {
+  SCENARIO_DASHBOARD_SEARCH_PARAMS,
+  YEAR_OPTIONS,
+} from "@/containers/scenario-dashboard/utils/url-store";
 
 type LinkItem = {
   label: string;
@@ -10,6 +15,7 @@ export const INTERNAL_PATHS = {
   GUIDED_EXPLORATION: "/guided-exploration",
   LEARN_BY_TOPIC: "/learn-by-topic",
   SCENARIO_DASHBOARD: "/scenario-dashboard",
+  SCENARIO_DASHBOARD_EXPLORATION: "/scenario-dashboard/exploration",
   METHODOLOGY: "/methodology",
   CONTACT: "/contact",
 } as const;
@@ -20,6 +26,10 @@ export const EXTERNAL_PATHS = {
   IIASA_BLUESKY: "https://bsky.app/profile/iiasa.org",
   IIASA_ABOUT: "https://scenariocompass.org/",
 };
+
+export const PREDEFINED_SCENARIO_DASHBOARD_PATH =
+  INTERNAL_PATHS.SCENARIO_DASHBOARD +
+  `?${SCENARIO_DASHBOARD_SEARCH_PARAMS.START_YEAR}=${YEAR_OPTIONS[3]}&${SCENARIO_DASHBOARD_SEARCH_PARAMS.END_YEAR}=${YEAR_OPTIONS[5]}&${SCENARIO_DASHBOARD_SEARCH_PARAMS.GEOGRAPHY}=${geographyOptions[0].value}`;
 
 export const EXTERNAL_LINKS: Record<"BLUESKY" | "LINKEDIN" | "OTHER_PRODUCTS" | "ABOUT", LinkItem> =
   {
@@ -56,7 +66,7 @@ export const EXTERNAL_LINKS: Record<"BLUESKY" | "LINKEDIN" | "OTHER_PRODUCTS" | 
 export const desktopPaths: LinkItem[] = [
   { href: INTERNAL_PATHS.GUIDED_EXPLORATION, label: "Guided Exploration" },
   { href: INTERNAL_PATHS.LEARN_BY_TOPIC, label: "Learn By Topic" },
-  { href: INTERNAL_PATHS.SCENARIO_DASHBOARD, label: "Scenario Dashboard" },
+  { href: PREDEFINED_SCENARIO_DASHBOARD_PATH, label: "Scenario Dashboard" },
   { href: INTERNAL_PATHS.METHODOLOGY, label: "Methodology" },
   { ...EXTERNAL_LINKS.OTHER_PRODUCTS },
   { ...EXTERNAL_LINKS.ABOUT },

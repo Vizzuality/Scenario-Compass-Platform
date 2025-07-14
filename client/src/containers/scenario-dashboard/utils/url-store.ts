@@ -46,10 +46,10 @@ export function useScenarioDashboardUrlParams() {
 
   const validation = useMemo(() => {
     const currentData = {
-      year: filters.year ?? undefined,
-      startYear: filters.startYear ?? undefined,
-      endYear: filters.endYear ?? undefined,
-      geography: filters.geography ?? undefined,
+      year: filters.year ?? null,
+      startYear: filters.startYear ?? null,
+      endYear: filters.endYear ?? null,
+      geography: filters.geography ?? null,
     };
     const result = yearFilterSchema.safeParse(currentData);
     return {

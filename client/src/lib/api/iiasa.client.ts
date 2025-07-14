@@ -1,4 +1,11 @@
-import { IAuth, Platform, ScenarioFilter } from "@iiasa/ixmp4-ts";
+import {
+  IAuth,
+  Platform,
+  Scenario,
+  ScenarioFilter,
+  VariableFilter,
+  IamcDataFilter,
+} from "@iiasa/ixmp4-ts";
 import * as z from "zod/v4";
 
 export const IIASAConfigSchema = z.object({
@@ -75,6 +82,12 @@ export class IIASA_API_CLIENT {
     };
   }
 
+  private validatePlatform(): asserts this is this & { platform: Platform } {
+    if (!this.platform) {
+      throw new Error("Platform is not initialized.");
+    }
+  }
+
   public async setPlatform(accessToken: IAuth["accessToken"]) {
     this.platform = await Platform.create({
       name: this.appName,
@@ -121,7 +134,20 @@ export class IIASA_API_CLIENT {
     };
   }
 
-  public async getScenarios(filters?: ScenarioFilter) {
-    return this.platform?.scenarios.list(filters);
+  public async getScenarios(filters?: ScenarioFilter): Promise<Scenario[]> {
+    this.validatePlatform();
+    return this.platform.scenarios.list(filters);
+  }
+
+  // Subject to be removed in the future, as it is not used in the current implementation.
+  // For now the variables are hardcoded in the frontend but it would be better to fetch them from the API.
+  public getVariables(filters?: VariableFilter) {
+    this.validatePlatform();
+    return this.platform.iamc.variables.list(filters);
+  }
+
+  public getDataTabulatedPoints(filters?: IamcDataFilter) {
+    this.validatePlatform();
+    return this.platform.iamc.tabulate(filters);
   }
 }

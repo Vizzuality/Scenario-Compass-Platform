@@ -1,4 +1,4 @@
-import ScenarioDashboardContainer from "@/containers/scenario-dashboard-page";
+import ScenarioDashboardContainer from "@/containers/scenario-dashboard";
 
 export default function ScenarioDashboardPage() {
   return <ScenarioDashboardContainer />;
