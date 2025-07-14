@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/custom/heading";
 import { AnimatedCardContainer } from "@/containers/landing-page/module-scenario-dashboard/animated-card-container";
-import { PREDEFINED_SCENARIO_DASHBOARD_PATH } from "@/lib/paths";
+import { INTERNAL_PATHS } from "@/lib/paths";
 
 export function ModuleScenarioDashboard() {
   return (
@@ -53,7 +53,7 @@ export function ModuleScenarioDashboard() {
         </div>
         <Button asChild size="lg" variant="secondary">
           <Link
-            href={PREDEFINED_SCENARIO_DASHBOARD_PATH}
+            href={INTERNAL_PATHS.SCENARIO_DASHBOARD}
             className="w-full text-base leading-5 font-bold md:w-fit"
           >
             Scenario Dashboard
