@@ -9,7 +9,7 @@ import { cva, VariantProps } from "class-variance-authority";
 
 const selectTriggerVariants = cva(
   [
-    "border-input flex w-fit items-center justify-between gap-2.5 rounded-[4px] border bg-transparent p-4 text-sm leading-5 whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none",
+    "border-input flex w-fit items-center justify-between gap-2.5 rounded-[4px] border bg-transparent p-4 text-sm leading-5 whitespace-nowrap  outline-none",
     "disabled:cursor-not-allowed disabled:opacity-50",
     "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
     "aria-invalid:ring-destructive/20 aria-invalid:border-destructive",
@@ -22,11 +22,12 @@ const selectTriggerVariants = cva(
           "text-primary-foreground data-[placeholder]:text-primary-foreground [&_svg:not([class*='text-'])]:text-primary-foreground *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2",
         ],
         light: [
-          "data-[placeholder]:text-muted-foreground [&_svg:not([class*='text-'])]:text-muted-foreground *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2",
+          "data-[placeholder]:text-foreground [&_svg:not([class*='text-'])]:text-foreground *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 ",
+          "border-stone-300 text-foreground",
         ],
       },
       size: {
-        sm: "h-8",
+        sm: "h-8 pl-3 py-0.5 pr-2",
         default: "h-9",
         lg: "h-13",
       },

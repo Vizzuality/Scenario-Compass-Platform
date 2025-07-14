@@ -2,21 +2,23 @@
 
 import queryKeys from "@/lib/query-keys";
 import { geographyOptions } from "@/lib/constants/geography-options";
-import { VARIABLES_OPTIONS } from "@/lib/constants/variables-options";
 import { useQuery } from "@tanstack/react-query";
+import { useScenarioDashboardUrlParams } from "@/containers/scenario-dashboard/utils/url-store";
+import { extractDataPoints } from "@/components/plots/utils/utils";
 
 interface FilterParams {
   geography: string | null;
   year: string | null;
   startYear: string | null;
   endYear: string | null;
+  variable: string;
 }
 
-const getFilter = ({ geography, year, startYear, endYear }: FilterParams) => {
+const getFilter = ({ geography, year, startYear, endYear, variable }: FilterParams) => {
   const baseFilter = {
-    region: { name: geographyOptions.find((g) => g.value === geography)?.label },
+    region: { name: geographyOptions.find((g) => g.value === geography)?.lookupName },
     variable: {
-      name: VARIABLES_OPTIONS[0],
+      name: variable,
     },
   };
 
@@ -38,16 +40,24 @@ const getFilter = ({ geography, year, startYear, endYear }: FilterParams) => {
   return baseFilter;
 };
 
-export default function useFilterDataPoints({ geography, year, startYear, endYear }: FilterParams) {
-  const filter = getFilter({ geography, year, startYear, endYear });
+interface Props {
+  variable: string;
+}
+
+export default function useFilterDataPoints({ variable }: Props) {
+  const { geography, year, startYear, endYear } = useScenarioDashboardUrlParams();
+
+  const filter = getFilter({ geography, year, startYear, endYear, variable });
 
   const { data, isLoading, isError } = useQuery({
     ...queryKeys.dataPoints.tabulate(filter),
     enabled: !!geography,
   });
 
+  const dataPoints = extractDataPoints(data);
+
   return {
-    data,
+    dataPoints,
     isLoading,
     isError,
     geography,
