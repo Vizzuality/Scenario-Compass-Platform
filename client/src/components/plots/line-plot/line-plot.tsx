@@ -3,8 +3,8 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { processChartData, renderLinePlot } from "@/components/plots/line-plot/utils";
-import { DataPoint } from "@/components/plots/utils/types";
-import { getPlotDimensions } from "@/components/plots/utils/dimensions";
+import { DataPoint } from "@/components/plots/types/plots";
+import { getPlotDimensions } from "@/components/plots/utils/chart";
 
 interface Props {
   dataPoints: DataPoint[];
@@ -25,7 +25,7 @@ export const LinePlot: React.FC<Props> = ({ dataPoints }) => {
     <svg
       ref={svgRef}
       viewBox={`0 0 ${dimensions.WIDTH} ${dimensions.HEIGHT}`}
-      style={{ width: "100%" }}
+      style={{ width: "100%", height: "100%" }}
     />
   );
 };

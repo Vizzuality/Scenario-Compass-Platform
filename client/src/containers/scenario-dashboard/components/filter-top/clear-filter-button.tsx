@@ -1,8 +1,8 @@
 "use client";
 
-import { useScenarioDashboardUrlParams } from "@/containers/scenario-dashboard/utils/url-store";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useScenarioDashboardUrlParams } from "@/hooks/use-scenario-dashboard-url-params";
 
 export default function ClearFilterButton() {
   const { clearAll } = useScenarioDashboardUrlParams();
@@ -12,12 +12,11 @@ export default function ClearFilterButton() {
       variant="ghost"
       onClick={clearAll}
       className={cn(
-        "text-beige-light text-sm leading-5 font-normal text-nowrap underline underline-offset-2",
-        "hover:text-beige-light hover:bg-transparent",
+        "text-primary text-sm leading-5 font-normal text-nowrap underline underline-offset-2",
+        "hover:text-primary hover:bg-transparent",
       )}
-      aria-label="Clear all filters"
     >
-      Clear all
+      Clear all filters
     </Button>
   );
 }

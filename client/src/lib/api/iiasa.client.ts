@@ -5,6 +5,9 @@ import {
   ScenarioFilter,
   VariableFilter,
   IamcDataFilter,
+  MetaIndicatorFilter,
+  ModelFilter,
+  DataFrame,
 } from "@iiasa/ixmp4-ts";
 import * as z from "zod/v4";
 
@@ -134,16 +137,34 @@ export class IIASA_API_CLIENT {
     };
   }
 
-  public async getScenarios(filters?: ScenarioFilter): Promise<Scenario[]> {
+  public async getScenariosList(filters?: ScenarioFilter): Promise<Scenario[]> {
     this.validatePlatform();
     return this.platform.scenarios.list(filters);
   }
 
-  // Subject to be removed in the future, as it is not used in the current implementation.
-  // For now the variables are hardcoded in the frontend but it would be better to fetch them from the API.
-  public getVariables(filters?: VariableFilter) {
+  public async getScenariosTabulate(filters?: ScenarioFilter): Promise<DataFrame> {
+    this.validatePlatform();
+    return this.platform.scenarios.tabulate(filters);
+  }
+
+  public getVariablesList(filters?: VariableFilter) {
     this.validatePlatform();
     return this.platform.iamc.variables.list(filters);
+  }
+
+  public getMetaIndicators(filters?: MetaIndicatorFilter) {
+    this.validatePlatform();
+    return this.platform.meta.tabulate(filters);
+  }
+
+  public getModelsTabulate(filters?: ModelFilter) {
+    this.validatePlatform();
+    return this.platform.models.tabulate(filters);
+  }
+
+  public getModelsList(filters?: ModelFilter) {
+    this.validatePlatform();
+    return this.platform.models.list(filters);
   }
 
   public getDataTabulatedPoints(filters?: IamcDataFilter) {
