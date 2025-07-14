@@ -17,7 +17,7 @@ const cardData = [
   },
   {
     title: "Regional Insights",
-    description: "Select a region to explore it, like its energy and emissions outlook.",
+    description: "Select a region to exploration-page it, like its energy and emissions outlook.",
   },
 ];
 

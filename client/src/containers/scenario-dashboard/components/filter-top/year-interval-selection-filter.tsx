@@ -13,7 +13,7 @@ import { useState } from "react";
 import {
   useScenarioDashboardUrlParams,
   YEAR_OPTIONS,
-} from "@/containers/scenario-dashboard-page/url-store";
+} from "@/containers/scenario-dashboard/utils/url-store";
 
 type FilterType = "start" | "end";
 

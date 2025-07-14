@@ -1,7 +1,5 @@
 import { Navbar } from "@/components/layout/navbar/navbar";
-import ScenarioDashboardTopFilter from "@/containers/scenario-dashboard-page/filter-top";
 import { cn } from "@/lib/utils";
-import { Suspense } from "react";
 
 const imgBackgroundStyles = [
   "bg-[length:80%] bg-[position:right_bottom]",
@@ -13,7 +11,11 @@ const imgBackgroundStyles = [
   `bg-[url("/images/illustrations/Illustration_05_cropped_left.webp")]`,
 ];
 
-export default function ScenarioDashboardHero() {
+interface Props {
+  children: React.ReactNode;
+}
+
+export default function ScenarioDashboardHero({ children }: Props) {
   return (
     <div
       className={cn(
@@ -22,11 +24,7 @@ export default function ScenarioDashboardHero() {
       )}
     >
       <Navbar theme="dark" sheetTheme="burgundy" />
-      <div className="container mb-6 w-full">
-        <Suspense fallback={null}>
-          <ScenarioDashboardTopFilter />
-        </Suspense>
-      </div>
+      {children}
     </div>
   );
 }

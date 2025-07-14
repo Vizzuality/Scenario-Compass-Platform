@@ -15,8 +15,8 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Label } from "@/components/ui/label";
 import { geographyOptions } from "@/lib/constants";
-import { useScenarioDashboardUrlParams } from "@/containers/scenario-dashboard-page/url-store";
-import { filterGeography } from "@/containers/scenario-dashboard-page/utils";
+import { useScenarioDashboardUrlParams } from "@/containers/scenario-dashboard/utils/url-store";
+import { filterGeography } from "@/containers/scenario-dashboard/utils";
 
 export default function GeographyFilter() {
   const { geography, setGeography } = useScenarioDashboardUrlParams();

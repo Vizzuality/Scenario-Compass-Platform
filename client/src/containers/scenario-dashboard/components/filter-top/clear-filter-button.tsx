@@ -1,6 +1,6 @@
 "use client";
 
-import { useScenarioDashboardUrlParams } from "@/containers/scenario-dashboard-page/url-store";
+import { useScenarioDashboardUrlParams } from "@/containers/scenario-dashboard/utils/url-store";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
