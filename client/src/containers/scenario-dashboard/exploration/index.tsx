@@ -1,6 +1,6 @@
 import ScenarioDashboardHero from "@/containers/scenario-dashboard/components/module-hero";
 import DemoFilters from "@/containers/scenario-dashboard/components/demo-filters";
-import Playground from "@/containers/scenario-dashboard/components/playground";
+import PlotsSection from "@/containers/scenario-dashboard/components/plots-section";
 import { Suspense } from "react";
 import ScenarioDashboardTopFilter from "@/containers/scenario-dashboard/components/filter-top";
 import { Button } from "@/components/ui/button";
@@ -25,7 +25,7 @@ export default function ScenarioDashboardExploreContainer() {
       </ScenarioDashboardHero>
       <Suspense>
         <DemoFilters />
-        <Playground />
+        <PlotsSection />
       </Suspense>
     </>
   );

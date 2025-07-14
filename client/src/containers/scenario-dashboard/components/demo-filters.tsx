@@ -21,7 +21,7 @@ export default function DemoFilters() {
 
   return (
     <div className="w-full bg-white">
-      <div className="container mx-auto flex h-40 w-full gap-6 pt-6" ref={filterRef}>
+      <div className="container mx-auto flex h-fit w-full gap-6 pt-6" ref={filterRef}>
         {filterArray.map((filter, index) => (
           <div key={index} className="flex w-full flex-col gap-2">
             <div className="flex items-center gap-2">
