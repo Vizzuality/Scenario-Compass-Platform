@@ -4,7 +4,7 @@ import YearIntervalSelectionFilter from "@/containers/scenario-dashboard/compone
 import { renderWithNuqs } from "@/tests/test-utils";
 import { createUrlWithParams } from "@/tests/test-utils";
 import {
-  SCENARIO_DASHBOARD_SEARCH_PARAMS,
+  SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS,
   YEAR_OPTIONS,
 } from "@/containers/scenario-dashboard/utils/url-store";
 
@@ -204,7 +204,7 @@ describe("URL Parameter Tests", () => {
       const selectedYear = YEAR_OPTIONS[0];
       renderWithNuqs(<YearIntervalSelectionFilter />, {
         searchParams: createUrlWithParams({
-          [SCENARIO_DASHBOARD_SEARCH_PARAMS.YEAR]: selectedYear,
+          [SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS.YEAR]: selectedYear,
         }),
       });
 
@@ -217,8 +217,8 @@ describe("URL Parameter Tests", () => {
       const endYear = YEAR_OPTIONS[3];
       renderWithNuqs(<YearIntervalSelectionFilter />, {
         searchParams: createUrlWithParams({
-          [SCENARIO_DASHBOARD_SEARCH_PARAMS.START_YEAR]: startYear,
-          [SCENARIO_DASHBOARD_SEARCH_PARAMS.END_YEAR]: endYear,
+          [SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS.START_YEAR]: startYear,
+          [SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS.END_YEAR]: endYear,
         }),
       });
 
@@ -234,7 +234,7 @@ describe("URL Parameter Tests", () => {
     it("renders with only start year from URL parameter will trigger the single mode", () => {
       renderWithNuqs(<YearIntervalSelectionFilter />, {
         searchParams: createUrlWithParams({
-          [SCENARIO_DASHBOARD_SEARCH_PARAMS.START_YEAR]: YEAR_OPTIONS[0],
+          [SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS.START_YEAR]: YEAR_OPTIONS[0],
         }),
       });
 
@@ -245,9 +245,9 @@ describe("URL Parameter Tests", () => {
     it("prioritizes range parameters over single year parameter", () => {
       renderWithNuqs(<YearIntervalSelectionFilter />, {
         searchParams: createUrlWithParams({
-          [SCENARIO_DASHBOARD_SEARCH_PARAMS.YEAR]: YEAR_OPTIONS[2],
-          [SCENARIO_DASHBOARD_SEARCH_PARAMS.START_YEAR]: YEAR_OPTIONS[4],
-          [SCENARIO_DASHBOARD_SEARCH_PARAMS.END_YEAR]: YEAR_OPTIONS[5],
+          [SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS.YEAR]: YEAR_OPTIONS[2],
+          [SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS.START_YEAR]: YEAR_OPTIONS[4],
+          [SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS.END_YEAR]: YEAR_OPTIONS[5],
         }),
       });
 

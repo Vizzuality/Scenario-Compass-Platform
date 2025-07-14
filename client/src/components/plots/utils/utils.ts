@@ -1,5 +1,5 @@
 import { DataFrame } from "@iiasa/ixmp4-ts";
-import { DataPoint } from "@/components/plots/utils/types";
+import { DataPoint } from "@/components/plots/types/plots";
 
 export const extractDataPoints = (data: DataFrame | undefined): DataPoint[] | undefined => {
   if (data === undefined) {
