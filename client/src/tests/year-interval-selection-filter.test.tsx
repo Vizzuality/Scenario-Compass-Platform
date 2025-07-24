@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { screen, fireEvent, waitFor } from "@testing-library/react";
-import YearIntervalSelectionFilter from "@/containers/scenario-dashboard-page/filter-top/year-interval-selection-filter";
+import YearIntervalSelectionFilter from "@/containers/scenario-dashboard/components/filter-top/year-interval-selection-filter";
 import { renderWithNuqs } from "@/tests/test-utils";
 import { createUrlWithParams } from "@/tests/test-utils";
 import {
   SCENARIO_DASHBOARD_SEARCH_PARAMS,
   YEAR_OPTIONS,
-} from "@/containers/scenario-dashboard-page/url-store";
+} from "@/containers/scenario-dashboard/utils/url-store";
 
 class YearFilterPage {
   get checkbox() {

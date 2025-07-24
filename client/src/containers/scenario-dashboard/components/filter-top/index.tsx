@@ -1,7 +1,8 @@
-import { Button } from "@/components/ui/button";
-import YearIntervalSelectionFilter from "@/containers/scenario-dashboard-page/filter-top/year-interval-selection-filter";
-import ClearFilterButton from "@/containers/scenario-dashboard-page/filter-top/clear-filter-button";
-import GeographyFilter from "@/containers/scenario-dashboard-page/filter-top/geography-filter";
+import YearIntervalSelectionFilter from "@/containers/scenario-dashboard/components/filter-top/year-interval-selection-filter";
+import ClearFilterButton from "@/containers/scenario-dashboard/components/filter-top/clear-filter-button";
+import GeographyFilter from "@/containers/scenario-dashboard/components/filter-top/geography-filter";
+import ExploreScenariosButton from "@/containers/scenario-dashboard/components/explore-scenarios-button";
+import { INTERNAL_PATHS } from "@/lib/paths";
 
 export default function ScenarioDashboardTopFilter() {
   return (
@@ -15,9 +16,7 @@ export default function ScenarioDashboardTopFilter() {
       <div className="grid w-full grid-rows-3 items-end gap-6 lg:grid-cols-3 lg:grid-rows-none">
         <GeographyFilter />
         <YearIntervalSelectionFilter />
-        <Button size="lg" className="w-full flex-1 text-base leading-5" variant="tertiary">
-          Explore Scenarios
-        </Button>
+        <ExploreScenariosButton href={INTERNAL_PATHS.SCENARIO_DASHBOARD_EXPLORATION} />
       </div>
     </div>
   );
