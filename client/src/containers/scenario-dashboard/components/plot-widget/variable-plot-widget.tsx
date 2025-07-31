@@ -1,6 +1,5 @@
 "use client";
 
-import useFilterDataPoints from "@/hooks/use-filter-data-points";
 import { LinePlot } from "@/components/plots/line-plot/line-plot";
 import { RobustnessIcon } from "@/assets/icons/robustness-icon";
 import { ArrowRight, DownloadIcon } from "lucide-react";
@@ -12,14 +11,15 @@ import {
   ChartType,
   ChartTypeToggle,
 } from "@/containers/scenario-dashboard/components/plot-widget/chart-type-toggle";
+import { DataPoint } from "@/components/plots/types/plots";
 
 interface Props {
+  dataPoints: DataPoint[] | undefined;
   variable: string;
 }
 
-export function VariablePlotWidget({ variable }: Props) {
-  const { dataPoints } = useFilterDataPoints({ variable });
-  const [chartType, setChartType] = useState<ChartType>("line");
+export function VariablePlotWidget({ dataPoints, variable }: Props) {
+  const [chartType, setChartType] = useState<ChartType>("area");
 
   return (
     <div className="aspect-square w-full rounded-md bg-white p-4 select-none">

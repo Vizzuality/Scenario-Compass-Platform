@@ -3,8 +3,8 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { processChartData, renderLinePlot } from "@/components/plots/line-plot/utils";
-import { DataPoint } from "@/components/plots/utils/types";
-import { getPlotDimensions } from "@/components/plots/utils/dimensions";
+import { DataPoint } from "@/components/plots/types/plots";
+import { getPlotDimensions } from "@/components/plots/utils/chart";
 
 interface Props {
   dataPoints: DataPoint[];

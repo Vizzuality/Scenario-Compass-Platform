@@ -16,43 +16,36 @@ export const ChartTypeToggle: React.FC<ChartTypeToggleProps> = ({
   currentType = "line",
   onChange,
 }) => {
-  const getButtonClass = (type: ChartType) =>
-    currentType === type ? selectedClass : unselectedClass;
-
-  const handleKeyDown = (event: React.KeyboardEvent, type: ChartType) => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      onChange?.(type);
+  const handleToggle = () => {
+    const newType = currentType === "line" ? "area" : "line";
+    if (onChange) {
+      onChange(newType);
     }
   };
 
+  const getButtonClass = (type: ChartType) => {
+    return currentType === type ? selectedClass : unselectedClass;
+  };
+
   return (
-    <div className="flex" role="radiogroup" aria-label="Chart type selection">
+    <div className="flex">
       <Button
         variant="ghost"
-        role="radio"
-        aria-checked={currentType === "area"}
-        aria-label="Area chart"
-        onClick={() => onChange?.("area")}
-        onKeyDown={(e) => handleKeyDown(e, "area")}
         className={cn(
           "rounded-l-[4px] rounded-r-none border border-r-0 p-2",
           getButtonClass("area"),
         )}
+        onClick={handleToggle}
       >
         <ChartArea className="h-4 w-4" />
       </Button>
       <Button
         variant="ghost"
-        role="radio"
-        aria-checked={currentType === "line"}
-        aria-label="Line chart"
-        onClick={() => onChange?.("line")}
-        onKeyDown={(e) => handleKeyDown(e, "line")}
         className={cn(
           "rounded-l-none rounded-r-[4px] border border-l-0 p-2",
           getButtonClass("line"),
         )}
+        onClick={handleToggle}
       >
         <ChartLine className="h-4 w-4" />
       </Button>

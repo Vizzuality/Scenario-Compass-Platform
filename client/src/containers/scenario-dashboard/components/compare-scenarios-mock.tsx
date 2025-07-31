@@ -1,179 +1,133 @@
-import { Eye, Edit, Info, ChevronDown } from "lucide-react";
+"use client";
 
-interface Flag {
-  id: string;
+import { DataPoint } from "@/components/plots/types/plots";
+import { useQuery } from "@tanstack/react-query";
+import queryKeys from "@/lib/query-keys";
+import { getMetaPoints } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
+import { Button } from "@/components/ui/button";
+import { EyeIcon, Flag, HighlighterIcon, InfoIcon } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+
+interface Props {
   title: string;
-  count?: number;
-  color: "red" | "yellow" | "purple";
-  items: string[];
+  set: Set<string>;
+  icon: React.ReactElement;
 }
 
-interface ScenarioFlagsProps {
-  scenarios?: number;
-  models?: number;
-  flags?: Flag[];
-}
-
-const defaultFlags: Flag[] = [
-  {
-    id: "major",
-    title: "MAJOR FEASIBILITY CONCERN",
-    count: 2,
-    color: "red",
-    items: [
-      "Annual gross loss of primary and secondary forest area",
-      "Global Sustainable Use of Bioenergy in 2050 is higher than 300 EJ/yr",
-    ],
-  },
-  {
-    id: "intermediate",
-    title: "INTERMEDIATE FEASIBILITY CONCERN",
-    count: 16,
-    color: "yellow",
-    items: [
-      "Future near-term expansion of hydropower",
-      "Global Sustainable Use of Bioenergy in 2050 is higher than 100 EJ/yr",
-    ],
-  },
-  {
-    id: "sustainability",
-    title: "SUSTAINABILITY CONCERN",
-    count: 1,
-    color: "purple",
-    items: ["Sustainability concerns due to excessive biomass use"],
-  },
-];
-
-const FlagIcon: React.FC<{ color: "red" | "yellow" | "purple" }> = ({ color }) => {
-  const colorClasses = {
-    red: "bg-red-500",
-    yellow: "bg-yellow-500",
-    purple: "bg-purple-500",
-  };
-
+function FlagAccordionItem({ set, icon, title }: Props) {
   return (
-    <div
-      className={`h-12 w-12 rounded-full ${colorClasses[color]} flex items-center justify-center text-white`}
-    >
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
-        <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
-        <line x1="4" y1="22" x2="4" y2="15" />
-      </svg>
-    </div>
+    <AccordionItem value={title} className="mt-6 last:border-b">
+      {icon}
+      <AccordionTrigger className="items-center gap-2">
+        <div className="flex w-full justify-between gap-4">
+          <p className="whitespace-nowrap">
+            {title} ({set.size})
+          </p>
+          <div className="flex items-center gap-2">
+            <EyeIcon size={16} />
+            <HighlighterIcon size={16} />
+            <InfoIcon size={16} />
+          </div>
+        </div>
+      </AccordionTrigger>
+      <AccordionContent className="flex flex-col gap-2">
+        {Array.from(set.entries()).map((entry, index) => (
+          <div key={index}>{entry[0]}</div>
+        ))}
+      </AccordionContent>
+    </AccordionItem>
   );
-};
+}
 
-const ActionButton: React.FC<{ icon: React.ReactNode; onClick?: () => void }> = ({
-  icon,
-  onClick,
-}) => (
-  <button
-    className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200"
-    onClick={onClick}
-  >
-    {icon}
-  </button>
-);
+export default function ScenarioFlags({ dataPoints }: { dataPoints: DataPoint[] }) {
+  const { data: allScenarios } = useQuery({
+    ...queryKeys.scenarios.list({}),
+  });
+  const { data: allModels } = useQuery({
+    ...queryKeys.models.list({}),
+  });
+  const { data: allMetaIndicators } = useQuery({
+    ...queryKeys.metaIndicators.tabulate({}),
+  });
 
-export default function ScenarioFlags({
-  scenarios = 8,
-  models = 4,
-  flags = defaultFlags,
-}: ScenarioFlagsProps) {
-  const displayedFlags = flags.slice(0, 2);
+  const modelsCount = [...new Set(dataPoints.map((point) => point.model))].length;
+  const dataPointsScenarios = new Set(dataPoints.map((point) => point.scenario));
+
+  const metaPoints = getMetaPoints(allMetaIndicators);
+
+  const filteredMetaPoints = metaPoints.filter((metaPoint) =>
+    dataPointsScenarios.has(metaPoint.scenario),
+  );
+
+  const okPoints = filteredMetaPoints.filter((metaPoint) => metaPoint.value === "ok");
+  const mediumPoints = filteredMetaPoints.filter((metaPoint) => metaPoint.value === "medium");
+  const highPoints = filteredMetaPoints.filter((metaPoint) => metaPoint.value === "high");
+
+  const okScenariosCount = new Set(okPoints.map((point) => point.key));
+  const mediumScenariosCount = new Set(mediumPoints.map((point) => point.key));
+  const highScenariosCount = new Set(highPoints.map((point) => point.key));
+  const totalFlagsCount =
+    okScenariosCount.size + mediumScenariosCount.size + highScenariosCount.size;
 
   return (
-    <div className="mx-auto max-w-2xl p-6">
-      {/* Compare Button */}
-      <button className="mb-6 flex w-full items-center justify-between rounded-lg bg-gray-800 px-4 py-3 text-white hover:bg-gray-700">
-        <span className="font-medium">Compare this scenario set to</span>
+    <div className="mx-auto flex max-w-2xl flex-col">
+      <Button className="mt-8 mb-7">
+        <p>Compare this scenario set to</p>
         <span className="text-xl">+</span>
-      </button>
+      </Button>
 
-      {/* Scenario Metrics */}
-      <div className="mb-8">
-        <h2 className="mb-4 text-2xl font-bold text-gray-900">Scenario metrics</h2>
-        <div className="space-y-2">
-          <div className="flex items-center">
-            <span className="mr-3 h-2 w-2 rounded-full bg-gray-800"></span>
-            <span className="text-gray-700">Scenarios: {scenarios}</span>
-          </div>
-          <div className="flex items-center">
-            <span className="mr-3 h-2 w-2 rounded-full bg-gray-800"></span>
-            <span className="text-gray-700">Models: {models}</span>
-          </div>
-        </div>
+      <div className="mb-6">
+        <p className="mb-4 border-b pb-1.5 text-base leading-6 font-bold text-stone-800">
+          Scenario metrics
+        </p>
+        <ul className="ml-5 list-outside list-disc space-y-2">
+          <li className="text-foreground text-sm leading-5">
+            Scenarios: {dataPointsScenarios.size}/{allScenarios?.length}
+          </li>
+          <li className="text-foreground text-sm leading-5">
+            Models: {modelsCount}/{allModels?.length}
+          </li>
+        </ul>
       </div>
 
-      {/* Flags Section */}
-      <div>
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-gray-900">Flags</h2>
-          <div className="flex space-x-2">
-            <ActionButton icon={<Eye size={16} />} />
-            <ActionButton icon={<Edit size={16} />} />
-            <ActionButton icon={<Info size={16} />} />
-          </div>
-        </div>
+      <p className="border-b pb-1.5 text-base leading-6 font-bold text-stone-800">
+        Flags ({totalFlagsCount})
+      </p>
 
-        {/* Flag Items */}
-        <div className="space-y-6">
-          {displayedFlags.map((flag) => (
-            <div key={flag.id}>
-              {/* Flag Header */}
-              <div className="mb-4 flex items-start space-x-4">
-                <FlagIcon color={flag.color} />
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-bold tracking-wide text-gray-900 uppercase">
-                      {flag.title} ({flag.count})
-                    </h3>
-                    <div className="flex space-x-2">
-                      <ActionButton icon={<Eye size={16} />} />
-                      <ActionButton icon={<Edit size={16} />} />
-                      <ActionButton icon={<Info size={16} />} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Flag Items */}
-              <div className="ml-16 space-y-3">
-                {flag.items.map((item, index) => (
-                  <div key={index} className="flex items-start justify-between py-2">
-                    <p className="flex-1 pr-4 text-gray-700">{item}</p>
-                    <div className="flex flex-shrink-0 space-x-2">
-                      <ActionButton icon={<Eye size={16} />} />
-                      <ActionButton icon={<Edit size={16} />} />
-                      <ActionButton icon={<Info size={16} />} />
-                    </div>
-                  </div>
-                ))}
-              </div>
+      <Accordion type="multiple">
+        <FlagAccordionItem
+          title="Major Feasibility Concern"
+          icon={
+            <div className="w-fit rounded-full bg-red-600 p-2 text-white">
+              <Flag size={16} />
             </div>
-          ))}
-        </div>
-
-        {/* Show All Button */}
-        {flags.length > 2 && (
-          <button className="mt-6 flex items-center space-x-2 border-b border-gray-300 pb-1 text-gray-600 hover:text-gray-800">
-            <span className="font-medium">Show all</span>
-            <div className="flex h-6 w-6 items-center justify-center rounded bg-green-500">
-              <ChevronDown
-                size={14}
-                className={"rotate-180 transform text-white transition-transform"}
-              />
+          }
+          set={highScenariosCount}
+        />
+        <FlagAccordionItem
+          title="Intermediate Feasibility Concern"
+          icon={
+            <div className="text-primary w-fit rounded-full bg-yellow-400 p-2">
+              <Flag size={16} />
             </div>
-          </button>
-        )}
-      </div>
+          }
+          set={mediumScenariosCount}
+        />
+        <FlagAccordionItem
+          title="Sustainability Concern"
+          icon={
+            <div className="w-fit rounded-full bg-purple-600 p-2 text-white">
+              <Flag size={16} />
+            </div>
+          }
+          set={okScenariosCount}
+        />
+      </Accordion>
     </div>
   );
 }

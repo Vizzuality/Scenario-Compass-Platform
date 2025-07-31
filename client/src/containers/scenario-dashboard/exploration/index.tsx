@@ -1,5 +1,5 @@
 import ScenarioDashboardHero from "@/containers/scenario-dashboard/components/module-hero";
-import DemoFilters from "@/containers/scenario-dashboard/components/demo-filters";
+import MetaIndicatorsFilters from "@/containers/scenario-dashboard/components/meta-scenario-filters";
 import PlotsSection from "@/containers/scenario-dashboard/components/plots-section";
 import { Suspense } from "react";
 import ScenarioDashboardTopFilter from "@/containers/scenario-dashboard/components/filter-top";
@@ -24,7 +24,7 @@ export default function ScenarioDashboardExploreContainer() {
         </Suspense>
       </ScenarioDashboardHero>
       <Suspense>
-        <DemoFilters />
+        <MetaIndicatorsFilters />
         <PlotsSection />
       </Suspense>
     </>

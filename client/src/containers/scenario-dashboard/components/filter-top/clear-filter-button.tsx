@@ -1,8 +1,8 @@
 "use client";
 
-import { useScenarioDashboardUrlParams } from "@/containers/scenario-dashboard/utils/url-store";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useScenarioDashboardUrlParams } from "@/hooks/use-scenario-dashboard-url-params";
 
 export default function ClearFilterButton() {
   const { clearAll } = useScenarioDashboardUrlParams();

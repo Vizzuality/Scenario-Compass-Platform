@@ -81,7 +81,7 @@ describe("IIASA API Client", () => {
       },
     } as never;
 
-    const scenarios = await apiClient.getScenarios();
+    const scenarios = await apiClient.getScenariosList();
 
     expect(scenarios).toEqual(mockScenarios);
   });
