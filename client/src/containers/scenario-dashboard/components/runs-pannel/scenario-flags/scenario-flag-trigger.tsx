@@ -8,12 +8,14 @@ import { RunCategory } from "@/containers/scenario-dashboard/components/runs-pan
 export default function ScenarioFlagTrigger({
   categoryKey,
   category,
+  prefix,
 }: {
   categoryKey: CategoryKey;
   category: RunCategory;
+  prefix?: string;
 }) {
   const { handleCheckboxChange, isCategorySelected, handleHideToggle, isCategoryHidden } =
-    useScenarioFlagsSelection();
+    useScenarioFlagsSelection(prefix);
 
   return (
     <AccordionTrigger className="[&_svg]:text-foreground flex w-full items-center px-0 py-2">

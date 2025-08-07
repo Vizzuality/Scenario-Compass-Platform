@@ -11,39 +11,39 @@ import { Button } from "@/components/ui/button";
 import { TrashIcon } from "lucide-react";
 
 const tooltipInfo =
-  "Climate refers to the long-term patterns of temperature, humidity, wind, and precipitation in a given area. In this context, it is used to categorize scenarios based on their climate impact or assessment.";
+  "Land refers to the use and management of land resources in scenarios, including aspects like deforestation, urbanization, and agricultural practices. This filter allows you to categorize scenarios based on their land use impact.";
 
-const useGetClimateOptions = () => {
+const useGetLandOptions = () => {
   const { data } = useQuery({
     ...queryKeys.metaIndicators.tabulate({
       // @ts-expect-error Not sufficient ts support
-      key_like: "Climate Assessment|Category [Name]",
+      key_like: "Land Assessment|Category [Name]",
     }),
     select: (data) => getMetaPoints(data),
   });
   return [...new Set(data?.map((obj) => obj.value))].sort();
 };
 
-interface ClimateFilterRowProps {
+interface LandFilterRowProps {
   prefix?: string;
   onDelete?: () => void;
 }
 
-export const ClimateFilter = () => {
-  const uniqueValues = useGetClimateOptions();
-  const { climate, setClimate } = useScenarioDashboardUrlParams();
+export const LandFilter = () => {
+  const uniqueValues = useGetLandOptions();
+  const { land, setLand } = useScenarioDashboardUrlParams();
 
   return (
     <div className="flex w-full flex-col gap-2">
       <div className="flex items-center gap-2">
-        <Label htmlFor="climate" className="leading-6 font-bold">
-          Climate
+        <Label htmlFor="land" className="leading-6 font-bold">
+          Land
         </Label>
         <TooltipInfo info={tooltipInfo} />
       </div>
-      <Select value={climate || ""} onValueChange={setClimate}>
-        <SelectTrigger size="lg" className="w-full" id="climate" theme="light">
-          {climate || "Select option"}
+      <Select value={land || ""} onValueChange={setLand}>
+        <SelectTrigger size="lg" className="w-full" id="land" theme="light">
+          {land || "Select option"}
         </SelectTrigger>
         <SelectContent>
           {uniqueValues.map((value) => (
@@ -57,19 +57,19 @@ export const ClimateFilter = () => {
   );
 };
 
-export const ClimateFilterRow = ({ prefix, onDelete }: ClimateFilterRowProps) => {
-  const uniqueValues = useGetClimateOptions();
-  const { climate, setClimate } = useScenarioDashboardUrlParams(prefix);
+export const LandFilterRow = ({ prefix, onDelete }: LandFilterRowProps) => {
+  const uniqueValues = useGetLandOptions();
+  const { land, setLand } = useScenarioDashboardUrlParams(prefix);
 
   return (
     <div className="flex w-full justify-between gap-2">
       <div className="flex w-full gap-2">
-        <Label htmlFor="climate" className="w-20 leading-5">
-          Climate:
+        <Label htmlFor="land" className="w-20 leading-5">
+          Land:
         </Label>
-        <Select value={climate || ""} onValueChange={setClimate}>
-          <SelectTrigger size="lg" className="w-fit" id="climate" theme="light">
-            {climate || "Select option"}
+        <Select value={land || ""} onValueChange={setLand}>
+          <SelectTrigger size="lg" className="w-fit" id="land" theme="light">
+            {land || "Select option"}
           </SelectTrigger>
           <SelectContent>
             {uniqueValues.map((value) => (
