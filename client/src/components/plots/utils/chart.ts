@@ -13,9 +13,6 @@ export interface PlotDimensions {
   INNER_HEIGHT: number;
 }
 
-export const GRID_STROKE_COLOR = "#E7E5E4";
-export const GRID_TEXT_COLOR = "#78716C";
-
 export const getPlotDimensions = (
   WIDTH: number = 800,
   HEIGHT: number = 500,

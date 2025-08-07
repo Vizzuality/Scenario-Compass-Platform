@@ -38,9 +38,17 @@ export interface RunPipelineReturn {
   isError: boolean;
 }
 
-export function useNewFilterPointsPipeline(variable: VARIABLE_TYPE): RunPipelineReturn {
+interface RunPipelineParams {
+  variable: VARIABLE_TYPE;
+  prefix?: string;
+}
+
+export function useNewFilterPointsPipeline({
+  variable,
+  prefix = "",
+}: RunPipelineParams): RunPipelineReturn {
   const { year, endYear, startYear, geography, climate, energy, land } =
-    useScenarioDashboardUrlParams();
+    useScenarioDashboardUrlParams(prefix);
 
   const {
     dataPoints,

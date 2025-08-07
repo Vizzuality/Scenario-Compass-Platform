@@ -10,7 +10,7 @@ type CheckboxProps = React.ComponentProps<typeof CheckboxPrimitive.Root> & {
   theme?: "light" | "dark";
 };
 
-function Checkbox({ className, theme = "dark", ...props }: CheckboxProps) {
+function Checkbox({ className, theme = "light", ...props }: CheckboxProps) {
   const themeStyles = {
     light:
       "data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground data-[state=checked]:border-primary",
