@@ -9,12 +9,13 @@ import { useScenarioFlagsSelection } from "@/hooks/nuqs/use-scenario-flags-selec
 
 interface Props {
   runs: ExtendedRun[];
+  prefix?: string;
 }
 
-export const LinePlot: React.FC<Props> = ({ runs }) => {
+export const LinePlot: React.FC<Props> = ({ runs, prefix }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const dimensions = getPlotDimensions();
-  const { selectedFlags, hiddenFlags } = useScenarioFlagsSelection();
+  const { selectedFlags, hiddenFlags } = useScenarioFlagsSelection(prefix);
 
   useEffect(() => {
     if (!runs.length || !svgRef.current) return;

@@ -81,6 +81,7 @@ export default function YearIntervalSelectionFilter() {
         </Label>
         <div className="flex items-center gap-2">
           <Checkbox
+            theme="dark"
             id="multiple"
             checked={isMultiple}
             onCheckedChange={handleMultipleToggle}

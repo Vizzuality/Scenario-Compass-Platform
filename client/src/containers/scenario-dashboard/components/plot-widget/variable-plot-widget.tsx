@@ -11,11 +11,13 @@ import { VARIABLE_TYPE } from "@/lib/constants/variables-options";
 
 interface Props {
   variable: VARIABLE_TYPE;
+  prefix?: string;
+  initialChartType?: ChartType;
 }
 
-export function VariablePlotWidget({ variable }: Props) {
-  const [chartType, setChartType] = useState<ChartType>("area");
-  const { runs, isLoading, isError } = useNewFilterPointsPipeline(variable);
+export function VariablePlotWidget({ variable, prefix, initialChartType = "area" }: Props) {
+  const [chartType, setChartType] = useState<ChartType>(initialChartType);
+  const { runs, isLoading, isError } = useNewFilterPointsPipeline({ variable, prefix });
   const dimensions = getPlotDimensions();
 
   return (
@@ -28,7 +30,13 @@ export function VariablePlotWidget({ variable }: Props) {
           aspectRatio: dimensions.WIDTH / dimensions.HEIGHT,
         }}
       >
-        <PlotContent chartType={chartType} runs={runs} isLoading={isLoading} isError={isError} />
+        <PlotContent
+          chartType={chartType}
+          runs={runs}
+          isLoading={isLoading}
+          isError={isError}
+          prefix={prefix}
+        />
       </div>
     </div>
   );
