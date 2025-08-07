@@ -32,8 +32,8 @@ export default function AdditionalInformation({ result }: Props) {
   }
 
   return (
-    <div className="mb-6">
-      <p className="mb-4 border-b pb-1.5 text-base font-bold text-stone-800">
+    <div>
+      <p className="mb-1.5 border-b pb-1.5 text-base font-bold text-stone-800">
         Additional Information
       </p>
       <Accordion type="single" collapsible>

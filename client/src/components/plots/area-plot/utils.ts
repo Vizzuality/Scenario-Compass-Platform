@@ -1,7 +1,8 @@
 import * as d3 from "d3";
 import { AggregatedDataPoint, ProcessedAreaData } from "@/components/plots/types/plots";
-import { GRID_STROKE_COLOR, GRID_TEXT_COLOR, PlotDimensions } from "@/components/plots/utils/chart";
+import { PlotDimensions } from "@/components/plots/utils/chart";
 import { ExtendedRun, ShortDataPoint } from "@/hooks/runs/pipeline/use-runs-filtering-pipeline";
+import { GRID_STROKE_COLOR, GRID_TEXT_COLOR } from "@/components/plots/utils/constants";
 
 const aggregateDataByYear = (dataPoints: ShortDataPoint[]): AggregatedDataPoint[] => {
   const groupedByYear = d3.group(dataPoints, (d) => d.year);

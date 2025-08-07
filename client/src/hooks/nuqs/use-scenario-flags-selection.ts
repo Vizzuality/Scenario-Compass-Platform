@@ -110,61 +110,6 @@ export const useScenarioFlagsSelection = (prefix: string = "") => {
     setFlagState(categoryKey, currentState === "hidden" ? "default" : "hidden");
   };
 
-  const clearSelection = () => {
-    const newState: FlagsState = {};
-    Object.entries(flagsState).forEach(([abbrev, state]) => {
-      if (state === "hidden") {
-        newState[abbrev] = "hidden";
-      }
-    });
-    setFlagsState(newState);
-  };
-
-  const clearHidden = () => {
-    const newState: FlagsState = {};
-    Object.entries(flagsState).forEach(([abbrev, state]) => {
-      if (state === "selected") {
-        newState[abbrev] = "selected";
-      }
-    });
-    setFlagsState(newState);
-  };
-
-  const selectAll = (categoryKeys: string[]) => {
-    const newState = { ...flagsState };
-    categoryKeys.forEach((key) => {
-      const abbrev = CATEGORY_CONFIG[key as keyof typeof CATEGORY_CONFIG]?.abbrev;
-      if (abbrev) {
-        newState[abbrev] = "selected";
-      }
-    });
-    setFlagsState(newState);
-  };
-
-  const hideAll = (categoryKeys: string[]) => {
-    const newState = { ...flagsState };
-    categoryKeys.forEach((key) => {
-      const abbrev = CATEGORY_CONFIG[key as keyof typeof CATEGORY_CONFIG]?.abbrev;
-      if (abbrev) {
-        const currentState = getFlagState(key);
-        if (currentState !== "selected") {
-          newState[abbrev] = "hidden";
-        }
-      }
-    });
-    setFlagsState(newState);
-  };
-
-  const showAll = () => {
-    const newState: FlagsState = {};
-    Object.entries(flagsState).forEach(([abbrev, state]) => {
-      if (state === "selected") {
-        newState[abbrev] = "selected";
-      }
-    });
-    setFlagsState(newState);
-  };
-
   const selectedFlags = Object.entries(flagsState)
     .filter(([, state]) => state === "selected")
     .map(([abbrev]) => abbrev);
@@ -182,10 +127,5 @@ export const useScenarioFlagsSelection = (prefix: string = "") => {
     isCategoryHidden,
     toggleCategory,
     toggleHidden,
-    clearSelection,
-    clearHidden,
-    selectAll,
-    hideAll,
-    showAll,
   };
 };

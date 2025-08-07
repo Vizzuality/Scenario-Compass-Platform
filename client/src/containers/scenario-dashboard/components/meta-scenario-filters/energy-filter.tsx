@@ -14,9 +14,9 @@ import { Button } from "@/components/ui/button";
 import { Trash2Icon } from "lucide-react";
 
 const tooltipInfo =
-  "Climate refers to the long-term patterns of temperature, humidity, wind, and precipitation in a given area. In this context, it is used to categorize scenarios based on their climate impact or assessment.";
+  "Energy refers to the sources and types of energy used in scenarios, such as renewable energy, fossil fuels, or nuclear power. This filter allows you to categorize scenarios based on their energy profiles.";
 
-const useGetClimateOptions = () => {
+const useGetEnergyOptions = () => {
   const { data } = useQuery({
     ...queryKeys.metaIndicators.tabulate({
       // @ts-expect-error Not sufficient ts support
@@ -31,21 +31,21 @@ const useGetClimateOptions = () => {
   return data ?? [];
 };
 
-export const ClimateFilter = () => {
-  const uniqueValues = useGetClimateOptions();
-  const { climate, setClimate } = useScenarioDashboardUrlParams();
+export const EnergyFilter = () => {
+  const uniqueValues = useGetEnergyOptions();
+  const { energy, setEnergy } = useScenarioDashboardUrlParams();
 
   return (
-    <div className="flex w-full flex-col items-start gap-2">
+    <div className="flex w-full flex-col gap-2">
       <div className="flex items-center gap-2">
-        <Label htmlFor="climate" className="leading-6 font-bold">
-          Climate
+        <Label htmlFor="energy" className="leading-6 font-bold">
+          Energy
         </Label>
         <TooltipInfo info={tooltipInfo} />
       </div>
-      <Select value={climate || ""} onValueChange={setClimate}>
-        <SelectTrigger size="lg" className="w-full" id="climate" theme="light">
-          {climate || "Select option"}
+      <Select value={energy || ""} onValueChange={setEnergy}>
+        <SelectTrigger size="lg" className="w-full" id="energy" theme="light">
+          {energy || "Select option"}
         </SelectTrigger>
         <SelectContent>
           {uniqueValues.map((value) => (
@@ -59,19 +59,19 @@ export const ClimateFilter = () => {
   );
 };
 
-export const ClimateFilterRow = ({ prefix, onDelete }: RowFilterProps) => {
-  const uniqueValues = useGetClimateOptions();
-  const { climate, setClimate } = useScenarioDashboardUrlParams(prefix);
+export const EnergyFilterRow = ({ prefix, onDelete }: RowFilterProps) => {
+  const uniqueValues = useGetEnergyOptions();
+  const { energy, setEnergy } = useScenarioDashboardUrlParams(prefix);
 
   return (
     <div className="flex w-full items-center justify-between gap-2">
       <div className="flex w-full gap-2">
-        <Label htmlFor="climate" className="w-20 leading-5">
-          Climate:
+        <Label htmlFor="energy" className="w-20 leading-5">
+          Energy:
         </Label>
-        <Select value={climate || ""} onValueChange={setClimate}>
-          <SelectTrigger size="lg" className="w-fit" id="climate" theme="light">
-            {climate || "Select option"}
+        <Select value={energy || ""} onValueChange={setEnergy}>
+          <SelectTrigger size="lg" className="w-fit" id="energy" theme="light">
+            {energy || "Select option"}
           </SelectTrigger>
           <SelectContent>
             {uniqueValues.map((value) => (

@@ -9,12 +9,14 @@ import { cn } from "@/lib/utils";
 export default function ScenarioFlagTrigger({
   categoryKey,
   category,
+  prefix,
 }: {
   categoryKey: CategoryKey;
   category: RunCategory;
+  prefix?: string;
 }) {
   const { handleCheckboxChange, isCategorySelected, handleHideToggle, isCategoryHidden } =
-    useScenarioFlagsSelection();
+    useScenarioFlagsSelection(prefix);
 
   const isChecked = isCategorySelected(categoryKey);
   const isHidden = isCategoryHidden(categoryKey);

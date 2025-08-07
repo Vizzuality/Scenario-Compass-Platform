@@ -9,11 +9,13 @@ const PlotContent = ({
   runs,
   isLoading,
   isError,
+  prefix = "",
 }: {
   chartType: ChartType;
   runs: ExtendedRun[];
   isLoading: boolean;
   isError: boolean;
+  prefix?: string;
 }) => {
   if (isLoading) {
     return (
@@ -33,7 +35,7 @@ const PlotContent = ({
 
   return (
     <div className="absolute inset-0">
-      {chartType === "line" && <LinePlot runs={runs} />}
+      {chartType === "line" && <LinePlot runs={runs} prefix={prefix} />}
       {chartType === "area" && <AreaPlot runs={runs} />}
     </div>
   );

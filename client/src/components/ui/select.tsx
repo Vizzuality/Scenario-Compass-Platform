@@ -19,11 +19,12 @@ const selectTriggerVariants = cva(
     variants: {
       theme: {
         dark: [
-          "text-primary-foreground data-[placeholder]:text-primary-foreground [&_svg:not([class*='text-'])]:text-primary-foreground *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2",
+          "data-[placeholder]:text-primary-foreground [&_svg:not([class*='text-'])]:text-primary-foreground *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2",
+          "text-primary-foreground",
         ],
         light: [
           "data-[placeholder]:text-foreground [&_svg:not([class*='text-'])]:text-foreground *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 ",
-          "border-stone-300 text-foreground",
+          "border-stone-300 text-foreground bg-white",
         ],
       },
       size: {
