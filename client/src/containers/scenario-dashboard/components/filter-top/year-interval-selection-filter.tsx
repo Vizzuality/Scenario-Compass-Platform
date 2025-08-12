@@ -48,7 +48,7 @@ const SingleYearSelect = ({
 export default function YearIntervalSelectionFilter() {
   const { startYear, endYear, year, setStartYear, setEndYear, setYear } =
     useScenarioDashboardUrlParams();
-  const [isMultiple, setIsMultiple] = useState(!!(startYear && endYear));
+  const [isMultiple, setIsMultiple] = useState(!year);
 
   const handleMultipleToggle = (checked: boolean) => {
     setIsMultiple(checked);

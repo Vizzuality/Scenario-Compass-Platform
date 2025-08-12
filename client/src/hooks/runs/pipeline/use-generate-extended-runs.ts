@@ -3,9 +3,9 @@ import {
   ExtendedRun,
   ShortDataPoint,
   ShortMetaIndicator,
-} from "@/hooks/runs/pipeline/use-runs-filtering-pipeline";
+} from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
 import { Run } from "@iiasa/ixmp4-ts";
-import { getRunCategory } from "@/containers/scenario-dashboard/utils/utils";
+import { getRunCategory } from "@/containers/scenario-dashboard/utils/flags-utils";
 
 interface Props {
   runs: Run[];
