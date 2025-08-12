@@ -1,4 +1,4 @@
-import { RunPipelineReturn } from "@/hooks/runs/pipeline/use-runs-filtering-pipeline";
+import { RunPipelineReturn } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
 import {
   Accordion,
   AccordionContent,
@@ -6,7 +6,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useMemo } from "react";
-import { categorizeRuns } from "@/containers/scenario-dashboard/utils/utils";
+import { categorizeRuns } from "@/containers/scenario-dashboard/utils/flags-utils";
 import { AccordionItemContent } from "@/containers/scenario-dashboard/components/runs-pannel/accordion-item-content";
 import { ColoredScenarioBar } from "@/containers/scenario-dashboard/components/runs-pannel/scenario-flags/collored-scenario-bar";
 import ScenarioFlagTrigger from "@/containers/scenario-dashboard/components/runs-pannel/scenario-flags/scenario-flag-trigger";
@@ -17,7 +17,7 @@ interface Props {
   prefix?: string;
 }
 
-export default function ScenarioFlags({ result, prefix }: Props) {
+export default function MultiRunScenarioFlags({ result, prefix }: Props) {
   const categories = useMemo(() => categorizeRuns(result.runs), [result.runs]);
 
   const categoriesWithRuns = useMemo(

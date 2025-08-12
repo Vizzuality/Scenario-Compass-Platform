@@ -1,6 +1,6 @@
 import { AccordionContent } from "@/components/ui/accordion";
 import { useMemo } from "react";
-import { _getKeyCounts } from "@/containers/scenario-dashboard/utils/utils";
+import { _getKeyCounts } from "@/containers/scenario-dashboard/utils/flags-utils";
 import { RunCategory } from "@/containers/scenario-dashboard/components/runs-pannel/utils";
 
 interface AccordionItemContentProps {

@@ -12,6 +12,7 @@ import {
   Run,
 } from "@iiasa/ixmp4-ts";
 import * as z from "zod/v4";
+import { VARIABLE_TYPE } from "@/lib/constants/variables-options";
 
 export const IIASAConfigSchema = z.object({
   appName: z.string(),
@@ -174,6 +175,30 @@ export class IIASA_API_CLIENT {
     return this.platform.iamc.tabulate(filters);
   }
 
+  public getDataPointsForRun({
+    runId,
+    variable,
+    geography,
+  }: {
+    runId: number;
+    variable?: VARIABLE_TYPE;
+    geography?: string;
+  }) {
+    this.validatePlatform();
+    return this.platform?.iamc.tabulate({
+      variable: {
+        name: variable,
+      },
+      run: {
+        id: runId,
+      },
+      region: {
+        // @ts-expect-error No TS support for geography id yet
+        id: geography,
+      },
+    });
+  }
+
   public getTabulatedRuns(filters?: RunFilter) {
     this.validatePlatform();
     return this.platform.runs.tabulate(filters);
@@ -182,5 +207,12 @@ export class IIASA_API_CLIENT {
   public async getRuns(filters?: RunFilter): Promise<Run[]> {
     this.validatePlatform();
     return this.platform.runs.list(filters);
+  }
+
+  public getRunDetails(id: number) {
+    this.validatePlatform();
+    return this.platform.runs.list({
+      id,
+    });
   }
 }

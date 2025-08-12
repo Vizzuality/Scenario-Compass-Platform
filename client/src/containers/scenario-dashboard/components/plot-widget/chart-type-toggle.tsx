@@ -2,7 +2,14 @@ import { ChartArea, ChartLine } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
-export type ChartType = "line" | "area";
+export const PLOT_TYPE_OPTIONS = {
+  MULTIPLE_LINE: "multipleLine",
+  SINGLE_LINE: "singleLine",
+  AREA: "area",
+  DOTS: "dots",
+} as const;
+
+export type ChartType = (typeof PLOT_TYPE_OPTIONS)[keyof typeof PLOT_TYPE_OPTIONS];
 
 interface ChartTypeToggleProps {
   currentType?: ChartType;
@@ -13,11 +20,14 @@ const selectedClass = "bg-beige-dark text-foreground border-primary";
 const unselectedClass = "bg-transparent text-stone-500 border-stone-500";
 
 export const ChartTypeToggle: React.FC<ChartTypeToggleProps> = ({
-  currentType = "line",
+  currentType = "multipleLine",
   onChange,
 }) => {
   const handleToggle = () => {
-    const newType = currentType === "line" ? "area" : "line";
+    const newType =
+      currentType === PLOT_TYPE_OPTIONS.MULTIPLE_LINE
+        ? PLOT_TYPE_OPTIONS.AREA
+        : PLOT_TYPE_OPTIONS.MULTIPLE_LINE;
     if (onChange) {
       onChange(newType);
     }
@@ -33,7 +43,7 @@ export const ChartTypeToggle: React.FC<ChartTypeToggleProps> = ({
         variant="ghost"
         className={cn(
           "rounded-l-[4px] rounded-r-none border border-r-0 p-2",
-          getButtonClass("area"),
+          getButtonClass(PLOT_TYPE_OPTIONS.AREA),
         )}
         onClick={handleToggle}
       >
@@ -43,7 +53,7 @@ export const ChartTypeToggle: React.FC<ChartTypeToggleProps> = ({
         variant="ghost"
         className={cn(
           "rounded-l-none rounded-r-[4px] border border-l-0 p-2",
-          getButtonClass("line"),
+          getButtonClass(PLOT_TYPE_OPTIONS.MULTIPLE_LINE),
         )}
         onClick={handleToggle}
       >

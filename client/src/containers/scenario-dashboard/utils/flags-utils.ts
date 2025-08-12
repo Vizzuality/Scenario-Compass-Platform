@@ -1,4 +1,4 @@
-import { ExtendedRun, ShortMetaIndicator } from "@/hooks/runs/pipeline/use-runs-filtering-pipeline";
+import { ExtendedRun, ShortMetaIndicator } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
 import {
   CATEGORY_CONFIG,
   CATEGORY_KEYS,

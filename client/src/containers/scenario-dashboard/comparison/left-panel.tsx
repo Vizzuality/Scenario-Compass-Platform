@@ -1,9 +1,10 @@
 import { VARIABLE_TYPE } from "@/lib/constants/variables-options";
-import ScenarioFlags from "@/containers/scenario-dashboard/components/runs-pannel/scenario-flags";
-import { VariablePlotWidget } from "@/containers/scenario-dashboard/components/plot-widget/variable-plot-widget";
-import useBatchFilterRuns from "@/hooks/runs/pipeline/use-batch-filter-runs";
+import MultiRunScenarioFlags from "@/containers/scenario-dashboard/components/runs-pannel/scenario-flags/multi-run-scenario-flags";
+import useMultipleRunsBatchFilter from "@/hooks/runs/pipeline/use-multiple-runs-batch-filter";
 import { FilterArrayItem } from "@/containers/scenario-dashboard/comparison/main-plot-section";
-import { LEFT_COMPARISON_TAG } from "@/containers/scenario-dashboard/comparison/constants";
+import { LEFT_COMPARISON_TAG } from "@/containers/scenario-dashboard/comparison/utils";
+import { MultipleRunsPlotWidget } from "@/containers/scenario-dashboard/components/plot-widget/multiple-runs-plot-widget";
+import { PLOT_TYPE_OPTIONS } from "@/containers/scenario-dashboard/components/plot-widget/chart-type-toggle";
 
 interface Props {
   variables: readonly VARIABLE_TYPE[];
@@ -13,7 +14,7 @@ interface Props {
 const prefix = LEFT_COMPARISON_TAG;
 
 export default function LeftPanel({ variables, filters }: Props) {
-  const result = useBatchFilterRuns({ variables, prefix });
+  const result = useMultipleRunsBatchFilter({ variables, prefix });
 
   return (
     <div className="border-r">
@@ -28,17 +29,17 @@ export default function LeftPanel({ variables, filters }: Props) {
       </div>
 
       <div className="pt-6 pr-6">
-        <ScenarioFlags result={result} prefix={prefix} />
+        <MultiRunScenarioFlags result={result} prefix={prefix} />
       </div>
 
       <div className="flex h-fit w-full flex-col gap-4 pt-6 pr-6">
         {variables.map((variable, index) => {
           return (
-            <VariablePlotWidget
+            <MultipleRunsPlotWidget
               key={index}
               variable={variable}
               prefix={prefix}
-              initialChartType="line"
+              initialChartType={PLOT_TYPE_OPTIONS.MULTIPLE_LINE}
             />
           );
         })}

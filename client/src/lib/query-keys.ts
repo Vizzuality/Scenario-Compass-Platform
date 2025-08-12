@@ -9,6 +9,7 @@ import {
   RunFilter,
 } from "@iiasa/ixmp4-ts";
 import API from "@/lib/api";
+import { VARIABLE_TYPE } from "@/lib/constants/variables-options";
 
 export const queryKeys = createQueryKeyStore({
   scenarios: {
@@ -50,6 +51,18 @@ export const queryKeys = createQueryKeyStore({
       queryKey: [{ filters }],
       queryFn: async () => API.getDataTabulatedPoints(filters),
     }),
+    getForRun: ({
+      runId,
+      variable,
+      geography = "",
+    }: {
+      runId: number;
+      variable?: VARIABLE_TYPE;
+      geography?: string;
+    }) => ({
+      queryKey: [{ runId, variable, geography }],
+      queryFn: async () => API.getDataPointsForRun({ runId, variable, geography }),
+    }),
   },
   metaIndicators: {
     tabulate: (filters: MetaIndicatorFilter) => ({
@@ -65,6 +78,10 @@ export const queryKeys = createQueryKeyStore({
     list: (filters?: RunFilter) => ({
       queryKey: [{ filters }],
       queryFn: async () => API.getRuns(filters),
+    }),
+    details: (id: number) => ({
+      queryKey: [{ id }],
+      queryFn: async () => API.getRunDetails(id),
     }),
   },
 });

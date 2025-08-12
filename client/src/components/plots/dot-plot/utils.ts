@@ -1,0 +1,137 @@
+import {
+  DOT_HOVER_RADIUS,
+  DOT_HOVER_STROKE,
+  GREY,
+  PLOT_CONFIG,
+} from "@/components/plots/utils/constants";
+import { ExtendedRun } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
+import { PlotDimensions } from "@/components/plots/utils/dimensions";
+import * as d3 from "d3";
+import {
+  SVGSelection,
+  calculateDomain,
+  createScales,
+  createMainGroup,
+  clearSVG,
+  renderGridLines,
+  renderAxes,
+  filterVisibleRuns,
+  getRunColor,
+  formatNumber,
+} from "@/components/plots/utils";
+import { CATEGORY_CONFIG } from "@/containers/scenario-dashboard/utils/category-config";
+import { createTooltipManager } from "@/components/plots/utils/tooltip-manager";
+
+const DOT_CLASS_PREFIX = "dot-run-";
+
+interface Props {
+  svg: SVGSelection;
+  runs: ExtendedRun[];
+  dimensions: PlotDimensions;
+  selectedFlags: string[];
+  hiddenFlags: string[];
+  onRunClick?: (run: ExtendedRun) => void;
+}
+
+export const renderDotPlot = ({
+  svg,
+  runs,
+  selectedFlags,
+  dimensions,
+  hiddenFlags,
+  onRunClick,
+}: Props): void => {
+  clearSVG(svg);
+  const tooltipManager = createTooltipManager({ svg, dimensions });
+  if (!tooltipManager) return;
+  const visibleRuns = filterVisibleRuns(runs, hiddenFlags);
+  if (visibleRuns.length === 0) return;
+
+  const g = createMainGroup(svg, dimensions);
+
+  const allPoints = visibleRuns.flatMap((run) =>
+    run.points.map((point) => ({
+      ...point,
+      run,
+    })),
+  );
+
+  const hasSelection = selectedFlags.length > 0;
+  const domain = calculateDomain(allPoints);
+  const scales = createScales(domain, dimensions.INNER_WIDTH, dimensions.INNER_HEIGHT);
+
+  renderGridLines(g, scales.yScale, dimensions.INNER_WIDTH);
+  renderAxes({ g, scales, height: dimensions.INNER_HEIGHT });
+
+  const dots = g
+    .selectAll(".data-point")
+    .data(allPoints)
+    .join("circle")
+    .attr("class", (d) => `${DOT_CLASS_PREFIX}${d.run.id}`)
+    .attr("cx", (d) => scales.xScale(d.year))
+    .attr("cy", (d) => scales.yScale(d.value))
+    .attr("r", PLOT_CONFIG.SINGLE_DOT_RADIUS)
+    .attr("fill", (d) => getRunColor(d.run, selectedFlags, hasSelection))
+    .attr("fill-opacity", PLOT_CONFIG.NORMAL_OPACITY)
+    .style("cursor", "pointer");
+
+  dots
+    .on("mouseleave", function () {
+      dots
+        .transition()
+        .duration(PLOT_CONFIG.NORMAL_TRANSITION_MS)
+        .attr("fill-opacity", PLOT_CONFIG.NORMAL_OPACITY)
+        .attr("stroke", "none")
+        .attr("r", PLOT_CONFIG.SINGLE_DOT_RADIUS)
+        .attr("fill", (d) => getRunColor(d.run, selectedFlags, hasSelection));
+
+      tooltipManager.hide();
+    })
+    .on("mouseenter", function (event, hoveredRun) {
+      const hoveredDot = d3.select(this);
+      const hoverColor = CATEGORY_CONFIG[hoveredRun.run.flagCategory]?.color || GREY;
+
+      dots
+        .transition()
+        .duration(PLOT_CONFIG.FAST_TRANSITION_MS)
+        .attr("fill-opacity", PLOT_CONFIG.DIMMED_OPACITY);
+
+      hoveredDot
+        .transition()
+        .duration(PLOT_CONFIG.FAST_TRANSITION_MS)
+        .attr("fill-opacity", PLOT_CONFIG.FULL_OPACITY)
+        .attr("fill", hoverColor)
+        .attr("stroke-width", DOT_HOVER_STROKE)
+        .attr("r", DOT_HOVER_RADIUS);
+      tooltipManager.show();
+
+      const tooltipHTML = `
+        <ul class="list-disc m-0 pl-5 flex flex-col gap-1 text-black">
+            <li>
+                <strong> Year: </strong> ${hoveredRun.year}
+            </li>
+            <li>
+                <strong>Value: </strong>
+                <span >${formatNumber(hoveredRun.value)}</span>
+            </li>
+            <li>
+                <strong> Model: </strong>
+                <span>${hoveredRun.run.model.name}</span>
+            </li>
+            <li>
+                <strong> Scenario: </strong>
+                <span>${hoveredRun.run.scenario.name}</li>
+            </ul>
+      `;
+
+      const pointX = scales.xScale(hoveredRun.year);
+      const pointY = scales.yScale(hoveredRun.value);
+
+      tooltipManager.update(tooltipHTML, pointX, pointY);
+    })
+
+    .on("click", (event, d) => {
+      event.stopPropagation();
+      onRunClick?.(d.run);
+    });
+};
