@@ -1,4 +1,4 @@
-import { RunPipelineReturn } from "@/hooks/runs/pipeline/use-runs-filtering-pipeline";
+import { RunPipelineReturn } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
 import {
   Accordion,
   AccordionContent,

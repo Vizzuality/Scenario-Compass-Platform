@@ -1,43 +1,64 @@
-import { ChartType } from "@/containers/scenario-dashboard/components/plot-widget/chart-type-toggle";
 import LoadingDots from "@/components/animations/loading-dots";
-import { LinePlot } from "@/components/plots/line-plot/line-plot";
-import { AreaPlot } from "@/components/plots/area-plot/area-plot";
-import { ExtendedRun } from "@/hooks/runs/pipeline/use-runs-filtering-pipeline";
+import { MultiLinePlot } from "@/components/plots/multi-line-plot";
+import { AreaPlot } from "@/components/plots/area-plot";
+import { ExtendedRun, RunPipelineReturn } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
+import { getPlotDimensions } from "@/components/plots/utils/dimensions";
+import { ReactNode } from "react";
+import {
+  ChartType,
+  PLOT_TYPE_OPTIONS,
+} from "@/containers/scenario-dashboard/components/plot-widget/chart-type-toggle";
+import { SingleLinePlot } from "@/components/plots/single-line-plot";
+import { DotPlot } from "@/components/plots/dot-plot";
 
-const PlotContent = ({
-  chartType,
-  runs,
-  isLoading,
-  isError,
-  prefix = "",
-}: {
+interface Props {
   chartType: ChartType;
-  runs: ExtendedRun[];
-  isLoading: boolean;
-  isError: boolean;
+  data: RunPipelineReturn;
+  onRunClick?: (run: ExtendedRun) => void;
   prefix?: string;
-}) => {
-  if (isLoading) {
-    return (
-      <div className="absolute inset-0 flex items-center justify-center">
-        <LoadingDots />
-      </div>
-    );
-  }
+}
 
-  if (isError) {
-    return (
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div>Error loading data</div>
-      </div>
-    );
-  }
+const PlotContainer = ({ children }: { children: ReactNode }) => {
+  const dimensions = getPlotDimensions();
+  const aspectRatio = dimensions.WIDTH / dimensions.HEIGHT;
 
   return (
-    <div className="absolute inset-0">
-      {chartType === "line" && <LinePlot runs={runs} prefix={prefix} />}
-      {chartType === "area" && <AreaPlot runs={runs} />}
+    <div className={"relative flex w-full items-center justify-center"} style={{ aspectRatio }}>
+      {children}
     </div>
+  );
+};
+
+const PlotContent = ({ chartType, data, prefix = "", onRunClick }: Props) => {
+  if (data.isLoading) {
+    return (
+      <PlotContainer>
+        <LoadingDots />
+      </PlotContainer>
+    );
+  }
+
+  if (data.isError) {
+    return (
+      <PlotContainer>
+        <div>Error loading data</div>
+      </PlotContainer>
+    );
+  }
+
+  const plots = {
+    [PLOT_TYPE_OPTIONS.MULTIPLE_LINE]: (
+      <MultiLinePlot runs={data.runs} prefix={prefix} onRunClick={onRunClick} />
+    ),
+    [PLOT_TYPE_OPTIONS.SINGLE_LINE]: <SingleLinePlot run={data.runs[0]} />,
+    [PLOT_TYPE_OPTIONS.AREA]: <AreaPlot runs={data.runs} />,
+    [PLOT_TYPE_OPTIONS.DOTS]: <DotPlot runs={data.runs} />,
+  };
+
+  return (
+    <PlotContainer>
+      <div className="absolute inset-0">{plots[chartType]}</div>
+    </PlotContainer>
   );
 };
 

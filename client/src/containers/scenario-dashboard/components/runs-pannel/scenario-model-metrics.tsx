@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/lib/query-keys";
-import { RunPipelineReturn } from "@/hooks/runs/pipeline/use-runs-filtering-pipeline";
+import { RunPipelineReturn } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
 
 export default function ScenarioModelMetrics({ result }: { result: RunPipelineReturn }) {
   const {

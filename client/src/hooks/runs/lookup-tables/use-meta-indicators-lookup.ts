@@ -1,4 +1,4 @@
-import { ShortMetaIndicator } from "@/hooks/runs/pipeline/use-runs-filtering-pipeline";
+import { ShortMetaIndicator } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
 import { useGroupLookup } from "@/hooks/runs/lookup-tables/use-group-lookup";
 import { MetaIndicator } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
 

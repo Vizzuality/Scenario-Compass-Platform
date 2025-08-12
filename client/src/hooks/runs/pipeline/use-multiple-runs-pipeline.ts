@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
 import useTopDataPointsFilter from "@/hooks/runs/filtering/use-top-data-points-filter";
-import { DataPoint } from "@/components/plots/types/plots";
+import { DataPoint } from "@/components/plots/types";
 import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/lib/query-keys";
 import {
@@ -43,7 +43,7 @@ interface RunPipelineParams {
   prefix?: string;
 }
 
-export function useNewFilterPointsPipeline({
+export function useMultipleRunsPipeline({
   variable,
   prefix = "",
 }: RunPipelineParams): RunPipelineReturn {
