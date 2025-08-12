@@ -1,7 +1,8 @@
 import { VariablePlotWidget } from "@/containers/scenario-dashboard/components/plot-widget/variable-plot-widget";
+import { VARIABLE_TYPE } from "@/lib/constants/variables-options";
 
 interface PlotsSectionProps {
-  variables: readonly string[];
+  variables: readonly VARIABLE_TYPE[];
 }
 
 export function PlotGrid({ variables }: PlotsSectionProps) {

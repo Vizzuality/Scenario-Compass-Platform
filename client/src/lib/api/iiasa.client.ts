@@ -8,6 +8,8 @@ import {
   MetaIndicatorFilter,
   ModelFilter,
   DataFrame,
+  RunFilter,
+  Run,
 } from "@iiasa/ixmp4-ts";
 import * as z from "zod/v4";
 
@@ -170,5 +172,15 @@ export class IIASA_API_CLIENT {
   public getDataTabulatedPoints(filters?: IamcDataFilter) {
     this.validatePlatform();
     return this.platform.iamc.tabulate(filters);
+  }
+
+  public getTabulatedRuns(filters?: RunFilter) {
+    this.validatePlatform();
+    return this.platform.runs.tabulate(filters);
+  }
+
+  public async getRuns(filters?: RunFilter): Promise<Run[]> {
+    this.validatePlatform();
+    return this.platform.runs.list(filters);
   }
 }

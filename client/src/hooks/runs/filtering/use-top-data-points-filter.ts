@@ -198,13 +198,11 @@ export default function useTopDataPointsFilter({
   const { data, isLoading, isError } = useQuery({
     ...queryKeys.dataPoints.tabulate(filter),
     enabled: !!geography,
+    select: (data) => extractDataPoints(data),
   });
 
-  /** Extract and transform raw API data into DataPoint objects */
-  const dataPoints = extractDataPoints(data);
-
   return {
-    dataPoints,
+    dataPoints: data,
     isLoading,
     isError,
   };

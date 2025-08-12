@@ -1,13 +1,13 @@
 import { DataFrame } from "@iiasa/ixmp4-ts";
 
-export interface MetaPoint {
-  model: string;
-  scenario: string;
+export interface MetaIndicator {
+  modelName: string;
+  scenarioName: string;
   key: string;
   value: string;
 }
 
-type ColumnMap = MetaPoint;
+type ColumnMap = MetaIndicator;
 
 /**
  * Find column names that match the required fields
@@ -25,7 +25,7 @@ function findColumns(columns: string[]): ColumnMap | null {
     return null;
   }
 
-  return { model, scenario, key, value };
+  return { modelName: model, scenarioName: scenario, key, value };
 }
 
 /**
@@ -33,7 +33,7 @@ function findColumns(columns: string[]): ColumnMap | null {
  * @param data DataFrame containing meta information
  * @returns Array of MetaPoint objects
  */
-export function getMetaPoints(data: DataFrame | undefined): MetaPoint[] {
+export function getMetaPoints(data: DataFrame | undefined): MetaIndicator[] {
   if (!data) {
     return [];
   }
@@ -54,11 +54,11 @@ export function getMetaPoints(data: DataFrame | undefined): MetaPoint[] {
     return [];
   }
 
-  const dataPoints: MetaPoint[] = [];
+  const dataPoints: MetaIndicator[] = [];
 
   for (let i = 0; i < rows; i++) {
-    const model = data.at(i, columnMap.model);
-    const scenario = data.at(i, columnMap.scenario);
+    const model = data.at(i, columnMap.modelName);
+    const scenario = data.at(i, columnMap.scenarioName);
     const key = data.at(i, columnMap.key);
     const value = data.at(i, columnMap.value);
 
@@ -67,8 +67,8 @@ export function getMetaPoints(data: DataFrame | undefined): MetaPoint[] {
     }
 
     dataPoints.push({
-      model: String(model),
-      scenario: String(scenario),
+      modelName: String(model),
+      scenarioName: String(scenario),
       key: String(key),
       value: String(value),
     });
