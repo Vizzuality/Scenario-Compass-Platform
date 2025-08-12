@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+
 @plugin "@tailwindcss/typography";
 
 @theme inline {
@@ -43,7 +44,6 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  /* custom colors*/
   --color-beige-light: var(--beige-light);
   --color-beige-dark: var(--beige-dark);
   --color-burgundy: var(--burgundy);
@@ -51,6 +51,13 @@
   --color-burgundy-dark: var(--burgundy-dark);
   --color-lilac: var(--lilac);
   --color-red-orange: var(--red-orange);
+
+  --color-data-red: var(--data-red);
+  --color-data-brown: var(--data-brown);
+  --color-data-yellow: var(--data-yellow);
+  --color-data-pink: var(--data-pink);
+  --color-data-purple: var(--data-purple);
+  --color-data-blue: var(--data-blue);
 }
 
 :root {
@@ -89,7 +96,6 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 
-  /* custom colors  */
   --beige-light: oklch(0.9846 0.0124 75.37);
   --beige-dark: oklch(0.9458 0.0114 71.9);
   --beige: oklch(0.9699 0.0113 71.9);
@@ -98,12 +104,20 @@
   --burgundy-dark: oklch(0.3287 0.0699 5.21);
   --lilac: oklch(0.8324 0.0752 288.04);
   --red-orange: oklch(0.6727 0.1553 34.03);
+
+  --data-red: #e33021;
+  --data-brown: #9c4600;
+  --data-yellow: #edc14b;
+  --data-pink: #ec8d82;
+  --data-purple: #832da4;
+  --data-blue: #4599df;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background font-sans text-stone-700 antialiased;
   }

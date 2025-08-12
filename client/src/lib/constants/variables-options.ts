@@ -26,3 +26,9 @@ export const ENERGY_VARIABLES_OPTIONS = [
   "Primary Energy|Hydro",
   "Primary Energy|Oil",
 ] as const;
+
+export type VARIABLE_TYPE =
+  | (typeof GENERAL_VARIABLES_OPTIONS)[number]
+  | (typeof EMISSIONS_VARIABLES_OPTIONS)[number]
+  | (typeof LAND_USE_VARIABLES_OPTIONS)[number]
+  | (typeof ENERGY_VARIABLES_OPTIONS)[number];

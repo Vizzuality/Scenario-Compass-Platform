@@ -5,7 +5,7 @@ import { GENERAL_VARIABLES_OPTIONS } from "@/lib/constants/variables-options";
 import { PlotGrid } from "@/containers/scenario-dashboard/components/plots-section/plot-grid";
 import { TabItem, tabsArray } from "@/containers/scenario-dashboard/components/plots-section/utils";
 import { TabsSection } from "@/containers/scenario-dashboard/components/plots-section/tabs-section";
-import ScenarioFlags from "@/containers/scenario-dashboard/components/scenario-flags";
+import RunsPanel from "@/containers/scenario-dashboard/components/runs-pannel";
 import ClearFilterButton from "@/containers/scenario-dashboard/components/filter-top/clear-filter-button";
 
 export default function PlotsSection() {
@@ -25,7 +25,7 @@ export default function PlotsSection() {
       <TabsSection selectedTab={selectedTab} onSelectTab={setSelectedTab} />
       <div className="container mx-auto flex gap-16">
         <PlotGrid variables={currentTabVariables} />
-        <ScenarioFlags variables={currentTabVariables} />
+        <RunsPanel variables={currentTabVariables} />
       </div>
     </>
   );

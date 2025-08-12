@@ -1,99 +1,65 @@
 import * as d3 from "d3";
-import { DataPoint, ProcessedData } from "@/components/plots/utils/types";
-import { PlotDimensions } from "@/components/plots/utils/dimensions";
 import {
-  BURGUNDY,
-  BURGUNDY_LIGHT,
+  GREY,
   GRID_STROKE_COLOR,
   GRID_TEXT_COLOR,
-  LILAC,
-  LILAC_DARK,
-  LILAC_LIGHT,
+  LIGHT_GREY,
 } from "@/components/plots/utils/constants";
+import { ExtendedRun, ShortDataPoint } from "@/hooks/runs/pipeline/use-runs-filtering-pipeline";
+import { getPlotDimensions } from "@/components/plots/utils/chart";
+import {
+  CATEGORY_CONFIG,
+  getCategoryAbbrev,
+} from "@/containers/scenario-dashboard/utils/category-config";
 
-export const processChartData = (dataPoints: DataPoint[]): ProcessedData => {
-  const modelScenarioPairs = d3.group(dataPoints, (d) => `${d.model}|${d.scenario}`);
+const getRunColor = (run: ExtendedRun, selectedFlags: string[], hasSelection: boolean) => {
+  if (!run.flagCategory) {
+    return hasSelection ? LIGHT_GREY : GREY;
+  }
 
-  const xDomain = d3.extent(dataPoints, (d) => d.year) as [number, number];
-  const yDomain = d3.extent(dataPoints, (d) => d.value) as [number, number];
+  const abbrev = getCategoryAbbrev(run.flagCategory);
 
-  return {
-    dataPoints,
-    scenarios: modelScenarioPairs,
-    xDomain,
-    yDomain,
-  };
+  if (abbrev && selectedFlags.includes(abbrev)) {
+    const color = CATEGORY_CONFIG[run.flagCategory as keyof typeof CATEGORY_CONFIG]?.color;
+    return color || GREY;
+  }
+
+  return hasSelection ? LIGHT_GREY : GREY;
 };
 
-export const createValueBasedColorMapping = (scenarios: Map<string, DataPoint[]>) => {
-  const scenarioAverages = new Map<string, number>();
+const filterVisibleRuns = (runs: ExtendedRun[], hiddenFlags: string[]) => {
+  if (hiddenFlags.length === 0) return runs;
 
-  scenarios.forEach((points, scenarioKey) => {
-    const average = points.reduce((sum, point) => sum + point.value, 0) / points.length;
-    scenarioAverages.set(scenarioKey, average);
+  return runs.filter((run) => {
+    if (!run.flagCategory) return true;
+
+    const abbrev = getCategoryAbbrev(run.flagCategory);
+
+    return !abbrev || !hiddenFlags.includes(abbrev);
   });
-
-  const sortedScenarios = Array.from(scenarioAverages.entries())
-    .sort((a, b) => a[1] - b[1])
-    .map(([scenarioKey]) => scenarioKey);
-
-  const createCustomInterpolation = () => {
-    const colorStops = [
-      { position: 0.0, color: LILAC_LIGHT },
-      { position: 0.25, color: LILAC },
-      { position: 0.5, color: LILAC_DARK },
-      { position: 0.75, color: BURGUNDY_LIGHT },
-      { position: 1.0, color: BURGUNDY },
-    ];
-
-    return (t: number) => {
-      t = Math.max(0, Math.min(1, t));
-
-      let lowerStop = colorStops[0];
-      let upperStop = colorStops[colorStops.length - 1];
-
-      for (let i = 0; i < colorStops.length - 1; i++) {
-        if (t >= colorStops[i].position && t <= colorStops[i + 1].position) {
-          lowerStop = colorStops[i];
-          upperStop = colorStops[i + 1];
-          break;
-        }
-      }
-
-      const localT = (t - lowerStop.position) / (upperStop.position - lowerStop.position);
-
-      return d3.interpolateRgb(lowerStop.color, upperStop.color)(localT);
-    };
-  };
-
-  const colorMap = new Map<string, string>();
-  const customInterpolate = createCustomInterpolation();
-
-  sortedScenarios.forEach((scenarioKey, index) => {
-    const t = index / Math.max(1, sortedScenarios.length - 1);
-    const color = customInterpolate(t);
-    colorMap.set(scenarioKey, color);
-  });
-
-  return { colorMap, scenarioAverages, sortedScenarios };
 };
 
 export const renderLinePlot = (
   svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
-  scenarios: Map<string, DataPoint[]>,
-  xDomain: [number, number],
-  yDomain: [number, number],
-  dimensions: PlotDimensions,
+  runs: ExtendedRun[],
+  selectedFlags: string[] = [],
+  hiddenFlags: string[] = [],
 ) => {
   svg.selectAll("*").remove();
-  const { INNER_WIDTH, INNER_HEIGHT, MARGIN } = dimensions;
 
+  const visibleRuns = filterVisibleRuns(runs, hiddenFlags);
+
+  const { INNER_WIDTH, INNER_HEIGHT, MARGIN } = getPlotDimensions();
   const g = svg.append("g").attr("transform", `translate(${MARGIN.LEFT},${MARGIN.TOP})`);
+  const points = visibleRuns.flatMap((run) => run.points);
+
+  const hasSelection = selectedFlags.length > 0;
+
+  const xDomain = d3.extent(points, (d) => d.year) as [number, number];
+  const yDomain = d3.extent(points, (d) => d.value) as [number, number];
 
   const xScale = d3.scaleLinear().domain(xDomain).range([0, INNER_WIDTH]);
   const yScale = d3.scaleLinear().domain(yDomain).range([INNER_HEIGHT, 0]);
-
-  const { colorMap } = createValueBasedColorMapping(scenarios);
 
   g.selectAll(".grid-line")
     .data(yScale.ticks(6))
@@ -108,7 +74,7 @@ export const renderLinePlot = (
     .attr("stroke-width", 1);
 
   const line = d3
-    .line<DataPoint>()
+    .line<ShortDataPoint>()
     .x((d) => xScale(d.year))
     .y((d) => yScale(d.value));
 
@@ -131,17 +97,19 @@ export const renderLinePlot = (
     .style("fill", GRID_TEXT_COLOR)
     .text("Value");
 
-  scenarios.forEach((points, scenarioKey) => {
-    const sortedPoints = points.sort((a, b) => a.year - b.year);
-    const color = colorMap.get(scenarioKey)!;
+  visibleRuns.forEach((run, index) => {
+    if (run.points && run.points.length > 0) {
+      const sortedPoints = [...run.points].sort((a, b) => a.year - b.year);
+      const color = getRunColor(run, selectedFlags, hasSelection);
 
-    g.append("path")
-      .datum(sortedPoints)
-      .attr("class", `line-${scenarioKey.replace(/\W/g, "_")}`)
-      .attr("fill", "none")
-      .attr("stroke", color)
-      .attr("stroke-width", 2)
-      .attr("d", line)
-      .append("title");
+      g.append("path")
+        .datum(sortedPoints)
+        .attr("class", `line-run-${index}`)
+        .attr("fill", "none")
+        .attr("stroke", color)
+        .attr("stroke-width", 1.5)
+        .attr("stroke-opacity", 0.7)
+        .attr("d", line);
+    }
   });
 };

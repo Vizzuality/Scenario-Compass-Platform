@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useScenarioDashboardUrlParams } from "@/hooks/use-scenario-dashboard-url-params";
+import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
 
 export default function ClearFilterButton() {
   const { clearAll } = useScenarioDashboardUrlParams();

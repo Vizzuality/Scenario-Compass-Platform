@@ -3,9 +3,16 @@ import {
   ENERGY_VARIABLES_OPTIONS,
   GENERAL_VARIABLES_OPTIONS,
   LAND_USE_VARIABLES_OPTIONS,
+  VARIABLE_TYPE,
 } from "@/lib/constants/variables-options";
 
-export const tabsArray = [
+export type TabItem = "land use" | "energy" | "general" | "emissions/climate";
+type TabsArray = Array<{
+  name: TabItem;
+  variables: readonly VARIABLE_TYPE[];
+}>;
+
+export const tabsArray: TabsArray = [
   {
     name: "general",
     variables: GENERAL_VARIABLES_OPTIONS,
@@ -23,5 +30,3 @@ export const tabsArray = [
     variables: EMISSIONS_VARIABLES_OPTIONS,
   },
 ] as const;
-
-export type TabItem = "land use" | "energy" | "general" | "emissions/climate";

@@ -11,7 +11,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
 import { YEAR_OPTIONS } from "@/containers/scenario-dashboard/utils/url-store";
-import { useScenarioDashboardUrlParams } from "@/hooks/use-scenario-dashboard-url-params";
+import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
 
 type FilterType = "start" | "end";
 
