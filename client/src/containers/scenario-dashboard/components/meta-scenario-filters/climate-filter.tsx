@@ -5,7 +5,7 @@ import { InfoIcon } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { getMetaPoints } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
 import { DataFrame } from "@iiasa/ixmp4-ts";
-import { useScenarioDashboardUrlParams } from "@/hooks/use-scenario-dashboard-url-params";
+import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
 
 interface Props {
   data: DataFrame | undefined;
