@@ -12,6 +12,7 @@ const filterArray = ["Energy", "Land", "Advanced filters"];
 
 export default function MetaIndicatorsFilters() {
   const filterRef = useRef<HTMLDivElement | null>(null);
+
   const { data } = useQuery({
     ...queryKeys.metaIndicators.tabulate({
       // @ts-expect-error Not sufficient ts support

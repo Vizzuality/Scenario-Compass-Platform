@@ -1,23 +1,17 @@
-import { MetaPoint } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
-
 /**
  * Data point extracted from IAMC format.
  *
  * @interface DataPoint
- * @property {string} scenario - The name of the scenario.
- * @property {string} model - The name of the model.
+ * @property {string} scenarioName - The name of the scenario.
+ * @property {string} modelName - The name of the model.
  * @property {number} year - The year of the data point.
  * @property {number} value - The value of the data point.
  */
 interface DataPoint {
-  scenario: string;
-  model: string;
+  scenarioName: string;
+  modelName: string;
   year: number;
   value: number;
-}
-
-interface MetaDataPoint extends DataPoint {
-  meta?: MetaPoint[];
 }
 
 /**
@@ -68,4 +62,4 @@ interface ProcessedAreaData {
   yDomain: [number, number];
 }
 
-export type { DataPoint, MetaDataPoint, ProcessedData, ProcessedAreaData, AggregatedDataPoint };
+export type { DataPoint, ProcessedData, ProcessedAreaData, AggregatedDataPoint };

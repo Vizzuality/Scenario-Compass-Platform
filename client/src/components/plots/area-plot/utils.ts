@@ -1,8 +1,9 @@
 import * as d3 from "d3";
-import { AggregatedDataPoint, DataPoint, ProcessedAreaData } from "@/components/plots/types/plots";
+import { AggregatedDataPoint, ProcessedAreaData } from "@/components/plots/types/plots";
 import { GRID_STROKE_COLOR, GRID_TEXT_COLOR, PlotDimensions } from "@/components/plots/utils/chart";
+import { ExtendedRun, ShortDataPoint } from "@/hooks/runs/pipeline/use-runs-filtering-pipeline";
 
-const aggregateDataByYear = (dataPoints: DataPoint[]): AggregatedDataPoint[] => {
+const aggregateDataByYear = (dataPoints: ShortDataPoint[]): AggregatedDataPoint[] => {
   const groupedByYear = d3.group(dataPoints, (d) => d.year);
 
   const aggregatedData: AggregatedDataPoint[] = [];
@@ -20,7 +21,8 @@ const aggregateDataByYear = (dataPoints: DataPoint[]): AggregatedDataPoint[] => 
   return aggregatedData.sort((a, b) => a.year - b.year);
 };
 
-export const processAreaChartData = (dataPoints: DataPoint[]): ProcessedAreaData => {
+export const processAreaChartData = (runs: ExtendedRun[]): ProcessedAreaData => {
+  const dataPoints = runs.flatMap((run) => run.points);
   const aggregatedData = aggregateDataByYear(dataPoints);
 
   const xDomain = d3.extent(aggregatedData, (d) => d.year) as [number, number];
@@ -74,12 +76,12 @@ export const renderAreaPlot = (
     .y((d) => yScale(d.average))
     .curve(d3.curveMonotoneX);
 
-  g.append("path").datum(aggregatedData).attr("fill", "rgba(197, 193, 247, 0.30)").attr("d", area);
+  g.append("path").datum(aggregatedData).attr("fill", "rgba(68, 64, 60, 0.10)").attr("d", area);
 
   g.append("path")
     .datum(aggregatedData)
     .attr("fill", "none")
-    .attr("stroke", "#B3AEF5")
+    .attr("stroke", "#44403C")
     .attr("stroke-width", 1.37)
     .attr("d", line);
 

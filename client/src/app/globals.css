@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+
 @plugin "@tailwindcss/typography";
 
 @theme inline {
@@ -51,6 +52,14 @@
   --color-burgundy-dark: var(--burgundy-dark);
   --color-lilac: var(--lilac);
   --color-red-orange: var(--red-orange);
+
+  /* Vizzuality colors */
+  --color-vizz-red: var(--vizz-red);
+  --color-vizz-brown: var(--vizz-brown);
+  --color-vizz-yellow: var(--vizz-yellow);
+  --color-vizz-pink: var(--vizz-pink);
+  --color-vizz-purple: var(--vizz-purple);
+  --color-vizz-blue: var(--vizz-blue);
 }
 
 :root {
@@ -98,12 +107,21 @@
   --burgundy-dark: oklch(0.3287 0.0699 5.21);
   --lilac: oklch(0.8324 0.0752 288.04);
   --red-orange: oklch(0.6727 0.1553 34.03);
+
+  /* Vizzuality colors */
+  --vizz-red: #e33021;
+  --vizz-brown: #9c4600;
+  --vizz-yellow: #edc14b;
+  --vizz-pink: #ec8d82;
+  --vizz-purple: #832da4;
+  --vizz-blue: #4599df;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background font-sans text-stone-700 antialiased;
   }
