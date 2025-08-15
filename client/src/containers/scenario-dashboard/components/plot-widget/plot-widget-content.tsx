@@ -1,19 +1,21 @@
 import { ChartType } from "@/containers/scenario-dashboard/components/plot-widget/chart-type-toggle";
-import { MetaDataPoint } from "@/components/plots/types/plots";
 import LoadingDots from "@/components/animations/loading-dots";
 import { LinePlot } from "@/components/plots/line-plot/line-plot";
 import { AreaPlot } from "@/components/plots/area-plot/area-plot";
+import { ExtendedRun } from "@/hooks/runs/pipeline/use-runs-filtering-pipeline";
 
 const PlotContent = ({
   chartType,
-  dataPoints,
+  runs,
   isLoading,
   isError,
+  prefix = "",
 }: {
   chartType: ChartType;
-  dataPoints: MetaDataPoint[];
+  runs: ExtendedRun[];
   isLoading: boolean;
   isError: boolean;
+  prefix?: string;
 }) => {
   if (isLoading) {
     return (
@@ -33,8 +35,8 @@ const PlotContent = ({
 
   return (
     <div className="absolute inset-0">
-      {chartType === "line" && <LinePlot dataPoints={dataPoints} />}
-      {chartType === "area" && <AreaPlot dataPoints={dataPoints} />}
+      {chartType === "line" && <LinePlot runs={runs} prefix={prefix} />}
+      {chartType === "area" && <AreaPlot runs={runs} />}
     </div>
   );
 };

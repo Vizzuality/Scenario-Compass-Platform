@@ -1,7 +1,7 @@
 import { DataFrame } from "@iiasa/ixmp4-ts";
 import { DataPoint } from "@/components/plots/types/plots";
 
-export const extractDataPoints = (data: DataFrame | undefined): DataPoint[] | undefined => {
+export const extractDataPoints = (data: DataFrame | undefined): DataPoint[] | [] => {
   if (data === undefined) {
     return [];
   }
@@ -28,8 +28,8 @@ export const extractDataPoints = (data: DataFrame | undefined): DataPoint[] | un
 
     if (scenario != null && year != null && value != null) {
       dataPoints.push({
-        scenario: String(scenario),
-        model: String(model),
+        scenarioName: String(scenario),
+        modelName: String(model),
         year: Number(year),
         value: Number(value),
       });

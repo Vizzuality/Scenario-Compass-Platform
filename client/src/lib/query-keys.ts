@@ -6,6 +6,7 @@ import {
   IamcDataFilter,
   MetaIndicatorFilter,
   ModelFilter,
+  RunFilter,
 } from "@iiasa/ixmp4-ts";
 import API from "@/lib/api";
 
@@ -19,6 +20,10 @@ export const queryKeys = createQueryKeyStore({
       queryKey: [{ filters }],
       queryFn: async () => API.getScenariosTabulate(filters),
     }),
+    count: () => ({
+      queryKey: ["scenariosCount"],
+      queryFn: async () => API.platform?.scenarios.count(),
+    }),
   },
   models: {
     tabulate: (filters?: ModelFilter) => ({
@@ -28,6 +33,10 @@ export const queryKeys = createQueryKeyStore({
     list: (filters?: ModelFilter) => ({
       queryKey: [{ filters }],
       queryFn: async () => API.getModelsList(filters),
+    }),
+    count: () => ({
+      queryKey: ["modelsCount"],
+      queryFn: async () => API.platform?.models.count(),
     }),
   },
   variables: {
@@ -46,6 +55,16 @@ export const queryKeys = createQueryKeyStore({
     tabulate: (filters: MetaIndicatorFilter) => ({
       queryKey: [{ filters }],
       queryFn: async () => API.getMetaIndicators(filters),
+    }),
+  },
+  runs: {
+    tabulate: (filters?: RunFilter) => ({
+      queryKey: [{ filters }],
+      queryFn: async () => API.getTabulatedRuns(filters),
+    }),
+    list: (filters?: RunFilter) => ({
+      queryKey: [{ filters }],
+      queryFn: async () => API.getRuns(filters),
     }),
   },
 });

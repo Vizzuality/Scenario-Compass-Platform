@@ -2,19 +2,22 @@
 
 import { useState } from "react";
 import { ChartType } from "@/containers/scenario-dashboard/components/plot-widget/chart-type-toggle";
-import { useFilterPointsPipeline } from "@/hooks/use-filter-points-pipeline";
 import { getPlotDimensions } from "@/components/plots/utils/chart";
 import { VariablePlotWidgetHeader } from "@/containers/scenario-dashboard/components/plot-widget/variable-plot-widget-header";
 import { VariableSelect } from "@/containers/scenario-dashboard/components/plot-widget/variable-select";
 import PlotContent from "@/containers/scenario-dashboard/components/plot-widget/plot-widget-content";
+import { useNewFilterPointsPipeline } from "@/hooks/runs/pipeline/use-runs-filtering-pipeline";
+import { VARIABLE_TYPE } from "@/lib/constants/variables-options";
 
 interface Props {
-  variable: string;
+  variable: VARIABLE_TYPE;
+  prefix?: string;
+  initialChartType?: ChartType;
 }
 
-export function VariablePlotWidget({ variable }: Props) {
-  const [chartType, setChartType] = useState<ChartType>("area");
-  const { dataPoints, isLoading, isError } = useFilterPointsPipeline(variable);
+export function VariablePlotWidget({ variable, prefix, initialChartType = "area" }: Props) {
+  const [chartType, setChartType] = useState<ChartType>(initialChartType);
+  const { runs, isLoading, isError } = useNewFilterPointsPipeline({ variable, prefix });
   const dimensions = getPlotDimensions();
 
   return (
@@ -29,9 +32,10 @@ export function VariablePlotWidget({ variable }: Props) {
       >
         <PlotContent
           chartType={chartType}
-          dataPoints={dataPoints || []}
+          runs={runs}
           isLoading={isLoading}
           isError={isError}
+          prefix={prefix}
         />
       </div>
     </div>
