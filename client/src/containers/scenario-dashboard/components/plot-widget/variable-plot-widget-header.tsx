@@ -1,13 +1,13 @@
 import { RobustnessIcon } from "@/assets/icons/robustness-icon";
 import { DownloadIcon } from "lucide-react";
 import {
-  ChartType,
   ChartTypeToggle,
+  ChartType,
 } from "@/containers/scenario-dashboard/components/plot-widget/chart-type-toggle";
 
 interface Props {
   chartType: ChartType;
-  onChange: (chartType: ChartType) => void;
+  onChange?: (chartType: ChartType) => void;
   variable: string;
 }
 
@@ -20,7 +20,7 @@ export function VariablePlotWidgetHeader({ chartType, onChange, variable }: Prop
       </div>
       <div className="flex items-center gap-4">
         <DownloadIcon className="h-4 w-4" />
-        <ChartTypeToggle currentType={chartType} onChange={onChange} />
+        {onChange && <ChartTypeToggle currentType={chartType} onChange={onChange} />}
       </div>
     </div>
   );

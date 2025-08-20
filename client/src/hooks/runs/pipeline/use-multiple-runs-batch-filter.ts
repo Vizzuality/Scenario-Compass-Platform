@@ -1,7 +1,7 @@
 import {
   RunPipelineReturn,
   useNewFilterPointsPipeline,
-} from "@/hooks/runs/pipeline/use-runs-filtering-pipeline";
+} from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
 import { VARIABLE_TYPE } from "@/lib/constants/variables-options";
 
 interface PipelineParams {
@@ -9,7 +9,7 @@ interface PipelineParams {
   prefix?: string;
 }
 
-export default function useBatchFilterRuns({
+export default function useMultipleRunsBatchFilter({
   variables,
   prefix = "",
 }: PipelineParams): RunPipelineReturn {

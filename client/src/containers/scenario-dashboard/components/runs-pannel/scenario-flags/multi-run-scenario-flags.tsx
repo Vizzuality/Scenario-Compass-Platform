@@ -1,4 +1,4 @@
-import { RunPipelineReturn } from "@/hooks/runs/pipeline/use-runs-filtering-pipeline";
+import { RunPipelineReturn } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
 import {
   Accordion,
   AccordionContent,
@@ -17,7 +17,7 @@ interface Props {
   prefix?: string;
 }
 
-export default function ScenarioFlags({ result, prefix }: Props) {
+export default function MultiRunScenarioFlags({ result, prefix }: Props) {
   const categories = useMemo(() => categorizeRuns(result.runs), [result.runs]);
 
   const categoriesWithRuns = useMemo(

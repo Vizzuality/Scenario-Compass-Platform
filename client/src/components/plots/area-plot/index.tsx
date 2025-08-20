@@ -2,9 +2,9 @@
 
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
-import { processAreaChartData, renderAreaPlot } from "@/components/plots/area-plot/utils";
-import { getPlotDimensions } from "@/components/plots/utils/chart";
-import { ExtendedRun } from "@/hooks/runs/pipeline/use-runs-filtering-pipeline";
+import { renderAreaPlot } from "@/components/plots/area-plot/utils";
+import { ExtendedRun } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
+import { getPlotDimensions } from "@/components/plots/utils/dimensions";
 
 interface AreaChartProps {
   runs: ExtendedRun[];
@@ -16,10 +16,9 @@ export const AreaPlot: React.FC<AreaChartProps> = ({ runs }) => {
 
   useEffect(() => {
     if (!runs.length || !svgRef.current) return;
-    const { aggregatedData, xDomain, yDomain } = processAreaChartData(runs);
     const svg = d3.select(svgRef.current);
-    renderAreaPlot(svg, aggregatedData, xDomain, yDomain, dimensions);
-  }, [runs, dimensions]);
+    renderAreaPlot(svg, runs);
+  }, [runs]);
 
   return (
     <svg

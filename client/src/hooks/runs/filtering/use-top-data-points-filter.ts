@@ -3,7 +3,7 @@
 import queryKeys from "@/lib/query-keys";
 import { geographyOptions } from "@/lib/constants/geography-options";
 import { useQuery } from "@tanstack/react-query";
-import { extractDataPoints } from "@/components/plots/utils/utils";
+import { extractDataPoints } from "@/components/plots/utils";
 
 interface FilterParams {
   geography: string | null;
