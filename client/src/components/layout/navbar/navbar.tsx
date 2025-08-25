@@ -39,7 +39,7 @@ export function Navbar({ className, theme, sheetTheme }: Props) {
     <nav className={cn("h-14 w-full bg-transparent lg:h-21", className)}>
       <div
         className={cn(
-          "container mx-auto flex h-full items-center justify-between px-4 lg:px-10",
+          "container mx-auto flex h-full items-center justify-between px-4 lg:px-0",
           navStyles,
         )}
       >

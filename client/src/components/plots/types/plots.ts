@@ -15,22 +15,6 @@ interface DataPoint {
 }
 
 /**
- * Processed data for line chart.
- *
- * @interface ProcessedData
- * @property {DataPoint[]} dataPoints - Array of data points.
- * @property {Map<string, DataPoint[]>} scenarios - Map of scenarios to their data points.
- * The more readable way to store scenarios. Under the hood, d3 uses InternMap
- * @property {[number, number]} xDomain - The x-axis domain as a tuple of [min, max]. Equivalent to d3.extent return type, d3.NumberValue[]
- */
-interface ProcessedData {
-  dataPoints: DataPoint[];
-  scenarios: Map<string, DataPoint[]>;
-  xDomain: [number, number];
-  yDomain: [number, number];
-}
-
-/**
  * Aggregated data point for area chart.
  * It contains the minimum, maximum, and average values for a given year.
  * For ANNUAL data, it is the same as the original data point.
@@ -62,4 +46,4 @@ interface ProcessedAreaData {
   yDomain: [number, number];
 }
 
-export type { DataPoint, ProcessedData, ProcessedAreaData, AggregatedDataPoint };
+export type { DataPoint, ProcessedAreaData, AggregatedDataPoint };
