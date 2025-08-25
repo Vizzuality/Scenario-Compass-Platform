@@ -1,107 +1,175 @@
 import * as d3 from "d3";
-import { AggregatedDataPoint, ProcessedAreaData } from "@/components/plots/types/plots";
-import { GRID_STROKE_COLOR, GRID_TEXT_COLOR, PlotDimensions } from "@/components/plots/utils/chart";
-import { ExtendedRun, ShortDataPoint } from "@/hooks/runs/pipeline/use-runs-filtering-pipeline";
+import { AggregatedDataPoint } from "@/components/plots/types";
+import { getPlotDimensions } from "@/components/plots/utils/dimensions";
+import { ExtendedRun } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
+import {
+  AREA_BACKGROUND_COLOR,
+  DOT_HOVER_RADIUS,
+  DOT_HOVER_STROKE,
+  DOT_RADIUS,
+  DOT_STROKE_WIDTH,
+  GREY,
+  STONE,
+} from "@/components/plots/utils/constants";
+import {
+  SVGSelection,
+  PlotDomain,
+  createScales,
+  createMainGroup,
+  clearSVG,
+  renderGridLines,
+  renderAxes,
+  createInteractionOverlay,
+  findClosestDataPoint,
+  formatNumber,
+  processAreaChartData,
+} from "@/components/plots/utils";
 
-const aggregateDataByYear = (dataPoints: ShortDataPoint[]): AggregatedDataPoint[] => {
-  const groupedByYear = d3.group(dataPoints, (d) => d.year);
+export const renderAreaPlot = (svg: SVGSelection, runs: ExtendedRun[]): void => {
+  clearSVG(svg);
+  if (runs.length === 0) return;
+  const dimensions = getPlotDimensions();
+  const { aggregatedData, xDomain, yDomain } = processAreaChartData(runs);
 
-  const aggregatedData: AggregatedDataPoint[] = [];
+  const { INNER_WIDTH, INNER_HEIGHT } = dimensions;
+  const g = createMainGroup(svg, dimensions);
 
-  groupedByYear.forEach((values, year) => {
-    const valuesArray = values.map((d) => d.value);
-    aggregatedData.push({
-      year,
-      min: d3.min(valuesArray)!,
-      max: d3.max(valuesArray)!,
-      average: d3.mean(valuesArray)!,
-    });
-  });
+  const domain: PlotDomain = { xDomain, yDomain };
+  const scales = createScales(domain, INNER_WIDTH, INNER_HEIGHT);
 
-  return aggregatedData.sort((a, b) => a.year - b.year);
-};
+  renderGridLines(g, scales.yScale, INNER_WIDTH);
+  renderAxes(
+    g,
+    scales,
+    INNER_HEIGHT,
+    aggregatedData.map((d) => d.year),
+  );
 
-export const processAreaChartData = (runs: ExtendedRun[]): ProcessedAreaData => {
-  const dataPoints = runs.flatMap((run) => run.points);
-  const aggregatedData = aggregateDataByYear(dataPoints);
-
-  const xDomain = d3.extent(aggregatedData, (d) => d.year) as [number, number];
-  const yMin = d3.min(aggregatedData, (d) => d.min)!;
-  const yMax = d3.max(aggregatedData, (d) => d.max)!;
-
-  return {
-    aggregatedData,
-    xDomain,
-    yDomain: [yMin, yMax],
-  };
-};
-
-export const renderAreaPlot = (
-  svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
-  aggregatedData: AggregatedDataPoint[],
-  xDomain: [number, number],
-  yDomain: [number, number],
-  dimensions: PlotDimensions,
-) => {
-  svg.selectAll("*").remove();
-  const { INNER_WIDTH, INNER_HEIGHT, MARGIN } = dimensions;
-
-  const g = svg.append("g").attr("transform", `translate(${MARGIN.LEFT},${MARGIN.TOP})`);
-
-  const xScale = d3.scaleLinear().domain(xDomain).range([0, INNER_WIDTH]);
-  const yScale = d3.scaleLinear().domain(yDomain).range([INNER_HEIGHT, 0]);
-
-  g.selectAll(".grid-line")
-    .data(yScale.ticks(6))
-    .enter()
-    .append("line")
-    .attr("class", "grid-line")
-    .attr("x1", 0)
-    .attr("x2", INNER_WIDTH)
-    .attr("y1", yScale)
-    .attr("y2", yScale)
-    .attr("stroke", "#E7E5E4")
-    .attr("stroke-width", 1);
-
-  const area = d3
+  const areaSurface = d3
     .area<AggregatedDataPoint>()
-    .x((d) => xScale(d.year))
-    .y0((d) => yScale(d.min))
-    .y1((d) => yScale(d.max))
+    .x((d) => scales.xScale(d.year))
+    .y0((d) => scales.yScale(d.min))
+    .y1((d) => scales.yScale(d.max))
     .curve(d3.curveMonotoneX);
 
-  const line = d3
+  const averageLine = d3
     .line<AggregatedDataPoint>()
-    .x((d) => xScale(d.year))
-    .y((d) => yScale(d.average))
+    .x((d) => scales.xScale(d.year))
+    .y((d) => scales.yScale(d.average))
     .curve(d3.curveMonotoneX);
 
-  g.append("path").datum(aggregatedData).attr("fill", "rgba(68, 64, 60, 0.10)").attr("d", area);
+  g.append("path").datum(aggregatedData).attr("fill", AREA_BACKGROUND_COLOR).attr("d", areaSurface);
 
   g.append("path")
     .datum(aggregatedData)
     .attr("fill", "none")
-    .attr("stroke", "#44403C")
+    .attr("stroke", GREY)
     .attr("stroke-width", 1.37)
-    .attr("d", line);
+    .attr("d", averageLine);
 
-  const xAxis = g
-    .append("g")
-    .attr("transform", `translate(0,${INNER_HEIGHT})`)
-    .call(d3.axisBottom(xScale).tickFormat(d3.format("d")));
+  const hoverGroup = g.append("g").attr("class", "hover-group");
 
-  const yAxis = g.append("g").call(d3.axisLeft(yScale).ticks(6));
+  const horizontalHoverLine = hoverGroup
+    .append("line")
+    .attr("y1", 0)
+    .attr("y2", dimensions.INNER_HEIGHT)
+    .attr("stroke", STONE)
+    .attr("stroke-width", 1)
+    .style("opacity", 0);
 
-  xAxis.selectAll("path, line").attr("stroke", GRID_STROKE_COLOR);
-  yAxis.selectAll("path, line").attr("stroke", GRID_STROKE_COLOR);
-  yAxis.selectAll("text").style("fill", GRID_TEXT_COLOR).style("font-size", "10px");
+  const intersectionHoverPoint = hoverGroup
+    .append("circle")
+    .attr("r", DOT_RADIUS)
+    .attr("fill", GREY)
+    .attr("stroke", "white")
+    .attr("stroke-width", DOT_STROKE_WIDTH)
+    .style("opacity", 0);
 
-  g.append("text")
-    .attr("transform", "rotate(-90)")
-    .attr("y", -40)
-    .attr("x", -INNER_HEIGHT / 2)
-    .attr("text-anchor", "middle")
-    .style("font-size", "10px")
-    .style("fill", GRID_TEXT_COLOR)
-    .text("Value");
+  const pointWrappingCircle = hoverGroup
+    .append("circle")
+    .attr("r", DOT_HOVER_RADIUS)
+    .attr("fill", "none")
+    .attr("stroke", GREY)
+    .attr("stroke-width", DOT_HOVER_STROKE)
+    .attr("stroke-opacity", 0.3)
+    .style("opacity", 0);
+
+  const tooltip = hoverGroup.append("g").attr("class", "svg-tooltip").style("opacity", 0);
+
+  const tooltipRect = tooltip
+    .append("rect")
+    .attr("fill", "white")
+    .attr("stroke", "#E7E5E4")
+    .attr("stroke-width", 1)
+    .attr("rx", 4)
+    .attr("ry", 4)
+    .style("filter", "drop-shadow(0 2px 4px rgba(0,0,0,0.1))");
+
+  const tooltipText = tooltip
+    .append("text")
+    .attr("text-anchor", "start")
+    .style("font-size", "12px")
+    .style("fill", "#44403C");
+
+  const interactionOverlay = createInteractionOverlay(g, INNER_WIDTH, INNER_HEIGHT);
+
+  interactionOverlay
+    .on("mouseenter", () => {
+      horizontalHoverLine.style("opacity", 1);
+      intersectionHoverPoint.style("opacity", 1);
+      tooltip.style("opacity", 1);
+      pointWrappingCircle.style("opacity", 1);
+    })
+    .on("mouseleave", () => {
+      horizontalHoverLine.style("opacity", 0);
+      intersectionHoverPoint.style("opacity", 0);
+      tooltip.style("opacity", 0);
+      pointWrappingCircle.style("opacity", 0);
+    })
+    .on("mousemove", function (event) {
+      const [mouseX] = d3.pointer(event);
+      const nearestData = findClosestDataPoint(mouseX, scales.xScale, aggregatedData);
+
+      if (!nearestData) return;
+
+      const x = scales.xScale(nearestData.year);
+      const y = scales.yScale(nearestData.average);
+
+      horizontalHoverLine.attr("x1", x).attr("x2", x);
+      intersectionHoverPoint.attr("cx", x).attr("cy", y);
+      pointWrappingCircle.attr("cx", x).attr("cy", y);
+
+      const tooltipLines = [
+        `Year: ${nearestData.year}`,
+        `Average: ${formatNumber(nearestData.average)}`,
+        `Range: ${formatNumber(nearestData.min)} - ${formatNumber(nearestData.max)}`,
+      ];
+
+      tooltipText.selectAll("tspan").remove();
+      tooltipLines.forEach((line, i) => {
+        tooltipText
+          .append("tspan")
+          .attr("x", 8)
+          .attr("y", 16 + i * 16)
+          .text(line);
+      });
+
+      const tooltipWidth = 160;
+      const tooltipHeight = 60;
+      let tooltipX = x + 10;
+      let tooltipY = y - 30;
+
+      if (tooltipX + tooltipWidth > INNER_WIDTH) {
+        tooltipX = x - tooltipWidth - 10;
+      }
+      if (tooltipY < 0) {
+        tooltipY = y + 10;
+      }
+      if (tooltipY + tooltipHeight > INNER_HEIGHT) {
+        tooltipY = INNER_HEIGHT - tooltipHeight;
+      }
+
+      tooltip.attr("transform", `translate(${tooltipX}, ${tooltipY})`);
+      tooltipRect.attr("width", tooltipWidth).attr("height", tooltipHeight);
+    });
 };

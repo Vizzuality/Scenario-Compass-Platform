@@ -7,6 +7,11 @@ export interface MetaIndicator {
   value: string;
 }
 
+export interface RowFilterProps {
+  prefix?: string;
+  onDelete?: () => void;
+}
+
 type ColumnMap = MetaIndicator;
 
 /**

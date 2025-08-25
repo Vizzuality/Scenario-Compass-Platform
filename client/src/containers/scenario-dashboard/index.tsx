@@ -3,7 +3,7 @@ import IntroExplanations from "@/containers/scenario-dashboard/components/intro-
 import { Heading } from "@/components/custom/heading";
 import { Suspense } from "react";
 import ScenarioDashboardTopFilter from "@/containers/scenario-dashboard/components/filter-top";
-import ExploreScenariosButton from "@/containers/scenario-dashboard/components/explore-scenarios-button";
+import ExploreScenariosButton from "@/containers/scenario-dashboard/components/buttons/explore-scenarios-button";
 
 export default function ScenarioDashboardContainer() {
   return (

@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
 import useTopDataPointsFilter from "@/hooks/runs/filtering/use-top-data-points-filter";
-import { DataPoint } from "@/components/plots/types/plots";
+import { DataPoint } from "@/components/plots/types";
 import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/lib/query-keys";
 import {
@@ -38,9 +38,17 @@ export interface RunPipelineReturn {
   isError: boolean;
 }
 
-export function useNewFilterPointsPipeline(variable: VARIABLE_TYPE): RunPipelineReturn {
+interface RunPipelineParams {
+  variable: VARIABLE_TYPE;
+  prefix?: string;
+}
+
+export function useNewFilterPointsPipeline({
+  variable,
+  prefix = "",
+}: RunPipelineParams): RunPipelineReturn {
   const { year, endYear, startYear, geography, climate, energy, land } =
-    useScenarioDashboardUrlParams();
+    useScenarioDashboardUrlParams(prefix);
 
   const {
     dataPoints,

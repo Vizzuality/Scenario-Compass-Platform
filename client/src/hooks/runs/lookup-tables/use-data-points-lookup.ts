@@ -1,6 +1,6 @@
 import { useGroupLookup } from "@/hooks/runs/lookup-tables/use-group-lookup";
-import { ShortDataPoint } from "@/hooks/runs/pipeline/use-runs-filtering-pipeline";
-import { DataPoint } from "@/components/plots/types/plots";
+import { ShortDataPoint } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
+import { DataPoint } from "@/components/plots/types";
 
 export function useDataPointsLookup(
   dataPoints: DataPoint[] | undefined,

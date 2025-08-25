@@ -1,0 +1,91 @@
+"use client";
+
+import { ArrowLeft, Share2 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import queryKeys from "@/lib/query-keys";
+import { useParams, useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import GeographyYearInfo from "@/containers/scenario-dashboard/scenario-detail/geography-year-info";
+import { getMetaPoints } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
+import { ADDITIONAL_INFORMATION_META_INDICATORS } from "@/containers/scenario-dashboard/components/runs-pannel/utils";
+
+interface InfoItemProps {
+  title: string;
+  value: string;
+}
+
+const InfoItem: React.FC<InfoItemProps> = ({ title, value }) => (
+  <div className="h-fit">
+    <h3 className="mb-1 text-lg font-semibold text-gray-900">{title}</h3>
+    <p className="text-sm text-gray-600">{value}</p>
+  </div>
+);
+
+export default function ScenarioDetails() {
+  const params = useParams();
+  const runId = params.runId as unknown as number;
+  const router = useRouter();
+
+  const { data: runs = [] } = useQuery({
+    ...queryKeys.runs.details(runId),
+  });
+
+  const { data: metaData } = useQuery({
+    ...queryKeys.metaIndicators.tabulate({
+      run: {
+        id: runId,
+      },
+    }),
+    select: (data) => getMetaPoints(data),
+  });
+
+  const climateCategory = metaData?.find((item) =>
+    item.key.includes("Climate Assessment|Category [Name]"),
+  ) || { value: "Loading Category" };
+
+  const projectName = metaData?.find(
+    (item) => item.key === ADDITIONAL_INFORMATION_META_INDICATORS[0].key,
+  ) || { value: "Loading Project" };
+
+  const studyName = metaData?.find(
+    (item) => item.key === ADDITIONAL_INFORMATION_META_INDICATORS[1].key,
+  ) || { value: "Loading Study" };
+
+  const scenarioName = runs[0]?.scenario?.name || "Loading Scenario";
+  const modelName = runs[0]?.model?.name || "Loading Model";
+
+  return (
+    <div className="container mx-auto">
+      <div className="mb-8 flex items-center justify-between">
+        <Button
+          onClick={() => router.back()}
+          size="lg"
+          className="text-base leading-6 font-normal"
+          variant="ghost"
+        >
+          <ArrowLeft size={16} /> Back
+        </Button>
+      </div>
+
+      <div className="mb-12 flex w-full items-center justify-between">
+        <h1 className="text-5xl font-bold text-gray-900">
+          {scenarioName} - {modelName}
+        </h1>
+        <Share2 />
+      </div>
+
+      <div className="grid grid-cols-[1fr_3fr] gap-6">
+        <GeographyYearInfo />
+        <div className="grid h-full grid-cols-4 grid-rows-2 justify-between">
+          <InfoItem title="Climate category" value={climateCategory.value} />
+          <InfoItem title="Cumulative emissions" value="Info goes here" />
+          <InfoItem title="Peak temperature" value="Info goes here" />
+          <InfoItem title="Year of CO2/GHG net-zero" value="Info goes here" />
+          <InfoItem title="Model" value={modelName} />
+          <InfoItem title="Project" value={projectName.value} />
+          <InfoItem title="Study" value={studyName.value} />
+        </div>
+      </div>
+    </div>
+  );
+}
