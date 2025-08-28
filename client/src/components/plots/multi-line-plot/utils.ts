@@ -1,7 +1,10 @@
 import * as d3 from "d3";
 import { GREY, PLOT_CONFIG } from "@/components/plots/utils/constants";
 import { PlotDimensions } from "@/components/plots/utils/dimensions";
-import { CATEGORY_CONFIG } from "@/containers/scenario-dashboard/utils/category-config";
+import {
+  CATEGORY_CONFIG,
+  getCategoryAbbrev,
+} from "@/containers/scenario-dashboard/utils/category-config";
 import {
   SVGSelection,
   calculateDomain,
@@ -72,6 +75,14 @@ export const renderMultiLinePlot = ({
     .attr("stroke-opacity", PLOT_CONFIG.NORMAL_OPACITY)
     .style("cursor", "pointer")
     .style("pointer-events", "stroke");
+
+  lines
+    .filter((run) => {
+      const abbrev = getCategoryAbbrev(run.flagCategory);
+      if (!abbrev) return false;
+      return selectedFlags.includes(abbrev);
+    })
+    .raise();
 
   const { verticalHoverLine, intersectionPoint, pointWrappingCircle } = createHoverElements(
     g,

@@ -23,7 +23,7 @@ export default function PlotsSection() {
         </div>
       </div>
       <TabsSection selectedTab={selectedTab} onSelectTab={setSelectedTab} />
-      <div className="container mx-auto flex gap-16">
+      <div className="container mx-auto flex gap-16 pb-24">
         <PlotGrid variables={currentTabVariables} />
         <RunsPanel variables={currentTabVariables} />
       </div>

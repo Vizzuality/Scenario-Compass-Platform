@@ -7,7 +7,7 @@ export default function TooltipInfo({ info }: { info: string }) {
       <TooltipTrigger>
         <InfoIcon size={14} />
       </TooltipTrigger>
-      <TooltipContent>
+      <TooltipContent className="max-w-100">
         <p className="text-sm">{info}</p>
       </TooltipContent>
     </Tooltip>

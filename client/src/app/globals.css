@@ -113,6 +113,22 @@
   --data-blue: #4599df;
 }
 
+[data-slot="skeleton"].custom-skeleton-pulse,
+.animate-pulse {
+  animation: custom-skeleton-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite !important;
+  transform: none !important;
+}
+
+@keyframes custom-skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

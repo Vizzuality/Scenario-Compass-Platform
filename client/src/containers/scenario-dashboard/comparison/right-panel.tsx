@@ -36,11 +36,11 @@ export default function RightPanel({ variables, filters, onDelete }: Props) {
         })}
       </div>
 
-      <div className="pt-6 pl-6">
+      <div className="pt-6 pl-4">
         <MultiRunScenarioFlags result={result} prefix={prefix} />
       </div>
 
-      <div className="flex h-fit w-full flex-col gap-4 pt-6 pl-6">
+      <div className="flex h-fit w-full flex-col gap-4 pt-6 pl-4">
         {variables.map((variable, index) => {
           return (
             <MultipleRunsPlotWidget

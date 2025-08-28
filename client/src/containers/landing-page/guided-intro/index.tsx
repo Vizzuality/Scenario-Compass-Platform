@@ -33,7 +33,7 @@ export function ModuleGuidedIntro() {
             <Button size="lg" variant="outline" asChild>
               <Link
                 href={INTERNAL_PATHS.METHODOLOGY}
-                className={"order-2 w-full text-base leading-5 font-bold md:order-1 md:w-fit"}
+                className="order-2 w-full text-base leading-5 font-bold md:order-1 md:w-fit"
               >
                 Methodology overview
               </Link>

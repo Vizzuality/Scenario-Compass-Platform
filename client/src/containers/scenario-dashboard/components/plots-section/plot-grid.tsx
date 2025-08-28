@@ -12,7 +12,7 @@ export function PlotGrid({ variables }: PlotsSectionProps) {
   const chartType = year ? PLOT_TYPE_OPTIONS.DOTS : PLOT_TYPE_OPTIONS.AREA;
 
   return (
-    <div className="my-8 grid min-h-[600px] w-full grid-cols-2 grid-rows-2 gap-4">
+    <div className="my-8 grid h-fit min-h-[600px] w-full grid-cols-2 grid-rows-2 gap-4">
       {variables.map((variable, index) => {
         return (
           <MultipleRunsPlotWidget variable={variable} key={index} initialChartType={chartType} />

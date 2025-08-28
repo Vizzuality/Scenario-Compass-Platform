@@ -1,3 +1,4 @@
+import { RunPipelineReturn } from "@/hooks/runs/pipeline/types";
 import { Accordion, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useMemo } from "react";
 import { categorizeRuns } from "@/containers/scenario-dashboard/utils/flags-utils";
@@ -5,7 +6,8 @@ import { AccordionItemContent } from "@/containers/scenario-dashboard/components
 import { CategoryKey } from "@/containers/scenario-dashboard/utils/category-config";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { InfoIcon } from "lucide-react";
-import { RunPipelineReturn } from "@/hooks/runs/pipeline/types";
+import { Skeleton } from "@/components/ui/skeleton";
+import { DataFetchError } from "@/components/error-state/data-fetch-error";
 
 interface Props {
   result: RunPipelineReturn;
@@ -23,41 +25,39 @@ export default function SingleRunScenarioFlags({ result }: Props) {
     [categories],
   );
 
-  const totalCategories = Object.keys(categoriesWithRuns).length;
-
-  if (result.isError) {
+  if (result.isLoading) {
     return (
-      <div className="mb-6 w-140">
-        <p className="mb-4 border-b pb-1.5 text-base font-bold text-stone-800">
-          Error Loading Scenario Flags...
-        </p>
+      <div className="flex w-140 flex-col gap-3">
+        <p className="mb-1.5 border-b pb-1.5 text-base font-bold text-stone-800">Flags </p>
+        <div className="flex w-full flex-col gap-3">
+          <Skeleton className="h-6 w-full rounded-md" />
+          <Skeleton className="h-6 w-3/4 rounded-md" />
+        </div>
       </div>
     );
   }
 
-  if (result.isLoading) {
+  if (result.isError) {
     return (
-      <div className="mb-6 w-140">
-        <p className="mb-4 border-b pb-1.5 text-base font-bold text-stone-800">
-          Loading Scenario Flags...
-        </p>
+      <div className="flex w-140 flex-col gap-3">
+        <p className="mb-1.5 border-b pb-1.5 text-base font-bold text-stone-800">Flags </p>
+        <div className="flex flex-col gap-3">
+          <DataFetchError />
+        </div>
       </div>
     );
   }
 
   return (
     <div className="mt-8 w-140">
-      <p className="w-full border-b pb-1.5 text-base font-bold text-stone-800">
-        Flags <strong>({totalCategories})</strong>
-      </p>
+      <p className="w-full border-b pb-1.5 text-base font-bold text-stone-800">Flags</p>
       {categoriesWithRuns.map(([key, category]) => (
-        <Accordion type="multiple" key={key}>
+        <Accordion type="single" value={key} key={key}>
           <AccordionItem value={key}>
             <AccordionTrigger>
               <div className="flex w-full items-start justify-between gap-4">
                 <div className="flex w-full gap-4">
                   <p className="w-fit">{category.label}</p>
-                  <strong>({category.count})</strong>
                 </div>
                 <Tooltip>
                   <TooltipTrigger asChild>

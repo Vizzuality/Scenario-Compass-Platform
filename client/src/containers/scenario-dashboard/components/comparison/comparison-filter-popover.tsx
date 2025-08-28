@@ -69,7 +69,7 @@ export const ComparisonFilterPopover: React.FC<Props> = ({
               disabled={!tempFilters.length}
               onClick={() => onApply(tempFilters)}
               variant="outline"
-              className="w-full"
+              className="w-full text-sm"
             >
               Apply
             </Button>
