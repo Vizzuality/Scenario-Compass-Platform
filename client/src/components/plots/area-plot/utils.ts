@@ -1,7 +1,6 @@
 import * as d3 from "d3";
 import { AggregatedDataPoint } from "@/components/plots/types";
 import { PlotDimensions } from "@/components/plots/utils/dimensions";
-import { ExtendedRun } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
 import { AREA_BACKGROUND_COLOR, GREY } from "@/components/plots/utils/constants";
 import {
   SVGSelection,
@@ -18,6 +17,7 @@ import {
 } from "@/components/plots/utils";
 import { createTooltipManager } from "@/components/plots/utils/tooltip-manager";
 import { createHoverElements } from "@/components/plots/utils/create-hover-elements";
+import { ExtendedRun } from "@/hooks/runs/pipeline/types";
 
 interface Props {
   svg: SVGSelection;
@@ -30,10 +30,10 @@ export const renderAreaPlot = ({ svg, runs, dimensions }: Props): void => {
   const tooltipManager = createTooltipManager({ svg, dimensions });
   if (!tooltipManager) return;
   if (runs.length === 0) return;
-  const { aggregatedData, xDomain, yDomain } = processAreaChartData(runs);
+  const allPoints = runs.flatMap((run) => run.points);
+  const { aggregatedData, xDomain, yDomain } = processAreaChartData(allPoints);
   const { INNER_WIDTH, INNER_HEIGHT } = dimensions;
   const g = createMainGroup(svg, dimensions);
-  const allPoints = runs.flatMap((run) => run.points);
   const allYears = allPoints.map((d) => d.year);
   const uniqueYears = [...new Set(allYears)].sort((a, b) => a - b);
   const domain: PlotDomain = { xDomain, yDomain };

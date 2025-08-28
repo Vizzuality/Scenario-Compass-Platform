@@ -1,4 +1,4 @@
-import { ExtendedRun } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
+import { ExtendedRun } from "@/hooks/runs/pipeline/types";
 
 export interface RunCategory {
   label: string;

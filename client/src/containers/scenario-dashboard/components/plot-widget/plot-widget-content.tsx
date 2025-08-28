@@ -1,7 +1,6 @@
 import LoadingDots from "@/components/animations/loading-dots";
 import { MultiLinePlot } from "@/components/plots/multi-line-plot";
 import { AreaPlot } from "@/components/plots/area-plot";
-import { ExtendedRun, RunPipelineReturn } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
 import { getPlotDimensions } from "@/components/plots/utils/dimensions";
 import { ReactNode } from "react";
 import {
@@ -10,6 +9,7 @@ import {
 } from "@/containers/scenario-dashboard/components/plot-widget/chart-type-toggle";
 import { SingleLinePlot } from "@/components/plots/single-line-plot";
 import { DotPlot } from "@/components/plots/dot-plot";
+import { ExtendedRun, RunPipelineReturn } from "@/hooks/runs/pipeline/types";
 
 interface Props {
   chartType: ChartType;

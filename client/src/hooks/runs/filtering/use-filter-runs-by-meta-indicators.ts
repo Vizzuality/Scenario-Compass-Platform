@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { ExtendedRun } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
+import { ExtendedRun } from "@/hooks/runs/pipeline/types";
 
 interface Props {
   runs: ExtendedRun[];

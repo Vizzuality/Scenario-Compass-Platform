@@ -1,4 +1,3 @@
-import { RunPipelineReturn } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
 import {
   Accordion,
   AccordionContent,
@@ -10,6 +9,7 @@ import {
   ADDITIONAL_INFORMATION_META_INDICATORS,
   getAdditionalInformationMetaIndicatorCounts,
 } from "@/containers/scenario-dashboard/components/runs-pannel/utils";
+import { RunPipelineReturn } from "@/hooks/runs/pipeline/types";
 
 interface Props {
   result: RunPipelineReturn;

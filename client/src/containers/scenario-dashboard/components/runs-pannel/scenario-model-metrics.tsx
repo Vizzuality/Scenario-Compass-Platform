@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/lib/query-keys";
-import { RunPipelineReturn } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
+import { RunPipelineReturn } from "@/hooks/runs/pipeline/types";
 
 export default function ScenarioModelMetrics({ result }: { result: RunPipelineReturn }) {
   const {
@@ -21,8 +21,8 @@ export default function ScenarioModelMetrics({ result }: { result: RunPipelineRe
   const isLoadingState = result.isLoading || isLoadingScenarios || isLoadingModels;
   const isErrorState = result.isError || isErrorScenarios || isErrorModels;
 
-  const modelsCount = new Set(result.runs.map((run) => run.model.name));
-  const scenarioCount = new Set(result.runs.map((run) => run.scenario.name));
+  const modelsCount = new Set(result.runs.map((run) => run.modelName));
+  const scenarioCount = new Set(result.runs.map((run) => run.scenarioName));
 
   return (
     <div>

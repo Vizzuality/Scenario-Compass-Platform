@@ -1,4 +1,3 @@
-import { RunPipelineReturn } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
 import { Accordion, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useMemo } from "react";
 import { categorizeRuns } from "@/containers/scenario-dashboard/utils/flags-utils";
@@ -6,6 +5,7 @@ import { AccordionItemContent } from "@/containers/scenario-dashboard/components
 import { CategoryKey } from "@/containers/scenario-dashboard/utils/category-config";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { InfoIcon } from "lucide-react";
+import { RunPipelineReturn } from "@/hooks/runs/pipeline/types";
 
 interface Props {
   result: RunPipelineReturn;

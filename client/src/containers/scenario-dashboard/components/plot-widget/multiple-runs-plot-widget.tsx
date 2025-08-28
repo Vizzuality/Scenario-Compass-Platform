@@ -5,14 +5,12 @@ import {
   ChartType,
   PLOT_TYPE_OPTIONS,
 } from "@/containers/scenario-dashboard/components/plot-widget/chart-type-toggle";
-import {
-  ExtendedRun,
-  useMultipleRunsPipeline,
-} from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
+import { useMultipleRunsPipeline } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
 import { INTERNAL_PATHS } from "@/lib/paths";
 import { VARIABLE_TYPE } from "@/lib/constants/variables-options";
 import { VariableSelect } from "@/containers/scenario-dashboard/components/plot-widget/variable-select";
 import PlotContent from "@/containers/scenario-dashboard/components/plot-widget/plot-widget-content";
+import { ExtendedRun } from "@/hooks/runs/pipeline/types";
 
 interface Props {
   variable: VARIABLE_TYPE;
@@ -31,7 +29,7 @@ export function MultipleRunsPlotWidget({ variable, prefix, initialChartType = "a
   const router = useRouter();
 
   const handleRunClick = (run: ExtendedRun) => {
-    router.push(`${INTERNAL_PATHS.SCENARIO_DASHBOARD}/${run.id}`);
+    router.push(`${INTERNAL_PATHS.SCENARIO_DASHBOARD}/${run.runId}`);
   };
 
   const showChartTypeToggle = chartType !== PLOT_TYPE_OPTIONS.DOTS;

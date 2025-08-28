@@ -8,6 +8,7 @@
  * @property {number} value - The value of the data point.
  */
 interface DataPoint {
+  runId: string;
   scenarioName: string;
   modelName: string;
   year: number;

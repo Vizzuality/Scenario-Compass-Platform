@@ -1,5 +1,32 @@
 import { DataFrame } from "@iiasa/ixmp4-ts";
 import { AggregatedDataPoint, DataPoint, ProcessedAreaData } from "@/components/plots/types";
+import * as d3 from "d3";
+import {
+  FONT_SIZE,
+  GREY,
+  GRID_STROKE_COLOR,
+  GRID_TEXT_COLOR,
+  LIGHT_GREY,
+} from "@/components/plots/utils/constants";
+import { PlotDimensions } from "@/components/plots/utils/dimensions";
+import {
+  CATEGORY_CONFIG,
+  getCategoryAbbrev,
+} from "@/containers/scenario-dashboard/utils/category-config";
+import { ExtendedRun, ShortDataPoint } from "@/hooks/runs/pipeline/types";
+
+export type SVGSelection = d3.Selection<SVGSVGElement, unknown, null, undefined>;
+export type GroupSelection = d3.Selection<SVGGElement, unknown, null, undefined>;
+
+export interface PlotScales {
+  xScale: d3.ScaleLinear<number, number>;
+  yScale: d3.ScaleLinear<number, number>;
+}
+
+export interface PlotDomain {
+  xDomain: [number, number];
+  yDomain: [number, number];
+}
 
 export const extractDataPoints = (data: DataFrame | undefined): DataPoint[] | [] => {
   if (data === undefined) {
@@ -10,17 +37,19 @@ export const extractDataPoints = (data: DataFrame | undefined): DataPoint[] | []
   const [rows] = data.shape;
   const columns: string[] = data.columns;
 
+  const runIdCol = columns.find((col) => col.toLowerCase() === "run__id");
   const scenarioCol = columns.find((col) => col.toLowerCase().includes("scenario"));
   const modelCol = columns.find((col) => col.toLowerCase().includes("model"));
   const yearCol = columns.find((col) => col.toLowerCase().includes("year"));
   const valueCol = columns.find((col) => col.toLowerCase().includes("value"));
 
-  if (!scenarioCol || !yearCol || !valueCol || !modelCol) {
+  if (!scenarioCol || !yearCol || !valueCol || !modelCol || !runIdCol) {
     console.error("Missing required columns: scenario, year, value or model");
     return [];
   }
 
   for (let i = 0; i < rows; i++) {
+    const runId = data.at(i, runIdCol);
     const scenario = data.at(i, scenarioCol);
     const model = data.at(i, modelCol);
     const year = data.at(i, yearCol);
@@ -28,6 +57,7 @@ export const extractDataPoints = (data: DataFrame | undefined): DataPoint[] | []
 
     if (scenario != null && year != null && value != null) {
       dataPoints.push({
+        runId: runId,
         scenarioName: String(scenario),
         modelName: String(model),
         year: Number(year),
@@ -55,34 +85,6 @@ export const aggregateDataByYear = (dataPoints: ShortDataPoint[]): AggregatedDat
 
   return aggregatedData.sort((a, b) => a.year - b.year);
 };
-
-import * as d3 from "d3";
-import {
-  FONT_SIZE,
-  GREY,
-  GRID_STROKE_COLOR,
-  GRID_TEXT_COLOR,
-  LIGHT_GREY,
-} from "@/components/plots/utils/constants";
-import { ExtendedRun, ShortDataPoint } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
-import { PlotDimensions } from "@/components/plots/utils/dimensions";
-import {
-  CATEGORY_CONFIG,
-  getCategoryAbbrev,
-} from "@/containers/scenario-dashboard/utils/category-config";
-
-export type SVGSelection = d3.Selection<SVGSVGElement, unknown, null, undefined>;
-export type GroupSelection = d3.Selection<SVGGElement, unknown, null, undefined>;
-
-export interface PlotScales {
-  xScale: d3.ScaleLinear<number, number>;
-  yScale: d3.ScaleLinear<number, number>;
-}
-
-export interface PlotDomain {
-  xDomain: [number, number];
-  yDomain: [number, number];
-}
 
 export const clearSVG = (svg: SVGSelection): void => {
   svg.selectAll("*").remove();
@@ -219,8 +221,7 @@ export const createLineGenerator = (scales: PlotScales): d3.Line<ShortDataPoint>
     .y((d) => scales.yScale(d.value));
 };
 
-export const processAreaChartData = (runs: ExtendedRun[]): ProcessedAreaData => {
-  const dataPoints = runs.flatMap((run) => run.points);
+export const processAreaChartData = (dataPoints: ShortDataPoint[]): ProcessedAreaData => {
   const aggregatedData = aggregateDataByYear(dataPoints);
 
   const xDomain = d3.extent(aggregatedData, (d) => d.year) as [number, number];

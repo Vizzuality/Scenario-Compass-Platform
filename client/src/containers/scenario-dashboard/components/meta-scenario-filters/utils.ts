@@ -1,8 +1,7 @@
 import { DataFrame } from "@iiasa/ixmp4-ts";
 
 export interface MetaIndicator {
-  modelName: string;
-  scenarioName: string;
+  runId: string;
   key: string;
   value: string;
 }
@@ -10,27 +9,6 @@ export interface MetaIndicator {
 export interface RowFilterProps {
   prefix?: string;
   onDelete?: () => void;
-}
-
-type ColumnMap = MetaIndicator;
-
-/**
- * Find column names that match the required fields
- */
-function findColumns(columns: string[]): ColumnMap | null {
-  const findColumn = (searchTerm: string) =>
-    columns.find((col) => col.toLowerCase().includes(searchTerm.toLowerCase()));
-
-  const model = findColumn("model");
-  const scenario = findColumn("scenario");
-  const key = findColumn("key");
-  const value = findColumn("value");
-
-  if (!model || !scenario || !key || !value) {
-    return null;
-  }
-
-  return { modelName: model, scenarioName: scenario, key, value };
 }
 
 /**
@@ -50,34 +28,33 @@ export function getMetaPoints(data: DataFrame | undefined): MetaIndicator[] {
     return [];
   }
 
-  const columnMap = findColumns(columns);
-  if (!columnMap) {
+  const runIdCol = columns.find((col) => col.toLowerCase() === "run__id");
+  const keyCol = columns.find((col) => col.toLowerCase() === "key");
+  const valueCol = columns.find((col) => col.toLowerCase() === "value");
+  if (!runIdCol || !keyCol || !valueCol) {
     console.error(
-      `Missing required columns. Found: [${columns.join(", ")}]. ` +
-        `Expected columns containing: model, scenario, key, value`,
+      "Missing required columns: run__id, key or value" + "" + `Found ${columns.join(", ")}`,
     );
     return [];
   }
 
-  const dataPoints: MetaIndicator[] = [];
+  const metaIndicators: MetaIndicator[] = [];
 
   for (let i = 0; i < rows; i++) {
-    const model = data.at(i, columnMap.modelName);
-    const scenario = data.at(i, columnMap.scenarioName);
-    const key = data.at(i, columnMap.key);
-    const value = data.at(i, columnMap.value);
+    const key = data.at(i, keyCol);
+    const value = data.at(i, valueCol);
+    const runId = data.at(i, runIdCol);
 
-    if (model == null || scenario == null || key == null || value == null) {
+    if (runId == null || key == null || value == null) {
       continue;
     }
 
-    dataPoints.push({
-      modelName: String(model),
-      scenarioName: String(scenario),
+    metaIndicators.push({
+      runId: String(runId),
       key: String(key),
       value: String(value),
     });
   }
 
-  return dataPoints;
+  return metaIndicators;
 }

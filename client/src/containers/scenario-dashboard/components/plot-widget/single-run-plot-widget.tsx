@@ -12,7 +12,7 @@ interface Props {
 }
 
 export function SingleRunPlotWidget({ variable, runId }: Props) {
-  const data = useSingleRunPipeline({ runId: runId, variable });
+  const data = useSingleRunPipeline({ runId, variable });
 
   return (
     <div className="w-full rounded-md bg-white p-4 select-none">

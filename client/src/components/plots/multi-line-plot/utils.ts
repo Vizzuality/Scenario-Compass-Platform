@@ -1,6 +1,5 @@
 import * as d3 from "d3";
 import { GREY, PLOT_CONFIG } from "@/components/plots/utils/constants";
-import { ExtendedRun } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
 import { PlotDimensions } from "@/components/plots/utils/dimensions";
 import { CATEGORY_CONFIG } from "@/containers/scenario-dashboard/utils/category-config";
 import {
@@ -19,6 +18,7 @@ import {
 } from "@/components/plots/utils";
 import { createTooltipManager } from "@/components/plots/utils/tooltip-manager";
 import { createHoverElements } from "@/components/plots/utils/create-hover-elements";
+import { ExtendedRun } from "@/hooks/runs/pipeline/types";
 
 interface Props {
   svg: SVGSelection;
@@ -63,9 +63,9 @@ export const renderMultiLinePlot = ({
   const linesGroup = g.append("g").attr("class", "lines-group");
   const lines = linesGroup
     .selectAll<SVGPathElement, ExtendedRun>("path")
-    .data(visibleRuns, (d) => d.id)
+    .data(visibleRuns, (d) => d.runId)
     .join("path")
-    .attr("d", (run) => lineGenerator([...run.points].sort((a, b) => a.year - b.year)))
+    .attr("d", (run) => lineGenerator(run.points))
     .attr("fill", "none")
     .attr("stroke", (run) => getRunColor(run, selectedFlags, hasSelection))
     .attr("stroke-width", PLOT_CONFIG.NORMAL_STROKE_WIDTH)
@@ -77,6 +77,8 @@ export const renderMultiLinePlot = ({
     g,
     dimensions.INNER_HEIGHT,
   );
+
+  let rafId: number | null = null;
 
   lines
     .on("click", (event, run) => {
@@ -90,20 +92,15 @@ export const renderMultiLinePlot = ({
       tooltipManager.show();
 
       const hoveredLine = d3.select(this);
-      const highlightColor = CATEGORY_CONFIG[run.flagCategory]?.color || GREY;
+      const highlightColor =
+        CATEGORY_CONFIG[run.flagCategory as keyof typeof CATEGORY_CONFIG]?.color || GREY;
 
       intersectionPoint.attr("fill", highlightColor);
       pointWrappingCircle.attr("stroke", highlightColor);
 
-      linesGroup
-        .selectAll("path")
-        .transition()
-        .duration(PLOT_CONFIG.FAST_TRANSITION_MS)
-        .attr("stroke-opacity", PLOT_CONFIG.DIMMED_OPACITY);
+      linesGroup.selectAll("path").attr("stroke-opacity", PLOT_CONFIG.DIMMED_OPACITY);
 
       hoveredLine
-        .transition()
-        .duration(PLOT_CONFIG.FAST_TRANSITION_MS)
         .attr("stroke", highlightColor)
         .attr("stroke-opacity", PLOT_CONFIG.FULL_OPACITY)
         .attr("stroke-width", PLOT_CONFIG.HOVER_HIGHLIGHT_WIDTH);
@@ -111,6 +108,11 @@ export const renderMultiLinePlot = ({
       hoveredLine.raise();
     })
     .on("mouseleave", function () {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+
       verticalHoverLine.style("opacity", 0);
       intersectionPoint.style("opacity", 0);
       pointWrappingCircle.style("opacity", 0);
@@ -118,38 +120,41 @@ export const renderMultiLinePlot = ({
 
       linesGroup
         .selectAll<SVGPathElement, ExtendedRun>("path")
-        .transition()
-        .duration(PLOT_CONFIG.NORMAL_TRANSITION_MS)
         .attr("stroke", (run) => getRunColor(run, selectedFlags, hasSelection))
         .attr("stroke-opacity", PLOT_CONFIG.NORMAL_OPACITY)
         .attr("stroke-width", PLOT_CONFIG.NORMAL_STROKE_WIDTH);
     })
     .on("mousemove", function (event, run) {
-      const [mouseX] = d3.pointer(event, g.node());
-      const nearestData = findClosestDataPoint(mouseX, scales.xScale, run.points);
-      if (!nearestData) return;
+      if (rafId) cancelAnimationFrame(rafId);
 
-      const pointX = scales.xScale(nearestData.year);
-      const pointY = scales.yScale(nearestData.value);
+      rafId = requestAnimationFrame(() => {
+        const [mouseX] = d3.pointer(event, g.node());
+        const nearestData = findClosestDataPoint(mouseX, scales.xScale, run.points);
+        if (!nearestData) return;
 
-      verticalHoverLine
-        .attr("x1", pointX)
-        .attr("x2", pointX)
-        .attr("y1", 0)
-        .attr("y2", dimensions.INNER_HEIGHT);
+        const pointX = scales.xScale(nearestData.year);
+        const pointY = scales.yScale(nearestData.value);
 
-      intersectionPoint.attr("cx", pointX).attr("cy", pointY);
-      pointWrappingCircle.attr("cx", pointX).attr("cy", pointY);
+        verticalHoverLine
+          .attr("x1", pointX)
+          .attr("x2", pointX)
+          .attr("y1", 0)
+          .attr("y2", dimensions.INNER_HEIGHT);
 
-      const tooltipHTML = `
-       <ul class="list-disc m-0 pl-5 flex flex-col gap-1 text-black">
-          <li><strong>Year:</strong> ${nearestData.year}</li>
-          <li><strong>Value:</strong> <span>${formatNumber(nearestData.value)}</span></li>
-          <li><strong>Model:</strong> <span>${run.model.name}</span></li>
-          <li><strong>Scenario:</strong> <span>${run.scenario.name}</span></li>
-      </ul>
+        intersectionPoint.attr("cx", pointX).attr("cy", pointY);
+        pointWrappingCircle.attr("cx", pointX).attr("cy", pointY);
+
+        const tooltipHTML = `
+         <ul class="list-disc m-0 pl-5 flex flex-col gap-1 text-black">
+            <li><strong>Year:</strong> ${nearestData.year}</li>
+            <li><strong>Value:</strong> <span>${formatNumber(nearestData.value)}</span></li>
+            <li><strong>Model:</strong> <span>${run.modelName}</span></li>
+            <li><strong>Scenario:</strong> <span>${run.scenarioName}</span></li>
+        </ul>
       `;
 
-      tooltipManager.update(tooltipHTML, pointX, pointY);
+        tooltipManager.update(tooltipHTML, pointX, pointY);
+        rafId = null;
+      });
     });
 };

@@ -4,13 +4,11 @@ import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/lib/query-keys";
 import { getMetaPoints } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
-import { extractDataPoints } from "@/components/plots/utils";
-import { RunPipelineReturn } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
-import { useMetaIndicatorsLookup } from "@/hooks/runs/lookup-tables/use-meta-indicators-lookup";
-import { useDataPointsLookup } from "@/hooks/runs/lookup-tables/use-data-points-lookup";
 import { useGenerateExtendedRuns } from "@/hooks/runs/pipeline/use-generate-extended-runs";
 import { VARIABLE_TYPE } from "@/lib/constants/variables-options";
 import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
+import { RunPipelineReturn } from "@/hooks/runs/pipeline/types";
+import useTopDataPointsFilter from "@/hooks/runs/filtering/use-top-data-points-filter";
 
 interface RunPipelineParams {
   runId: number;
@@ -18,19 +16,18 @@ interface RunPipelineParams {
 }
 
 export function useSingleRunPipeline({ runId, variable }: RunPipelineParams): RunPipelineReturn {
-  const { geography } = useScenarioDashboardUrlParams();
+  const { geography, startYear, endYear } = useScenarioDashboardUrlParams();
 
   const {
-    data: dataPoints,
+    dataPoints,
     isLoading: isDataPointsLoading,
     isError: isDataPointsError,
-  } = useQuery({
-    ...queryKeys.dataPoints.getForRun({
-      runId: runId,
-      variable: variable,
-      geography: geography || "",
-    }),
-    select: (data) => extractDataPoints(data),
+  } = useTopDataPointsFilter({
+    startYear,
+    endYear,
+    geography,
+    variable,
+    runId,
   });
 
   const {
@@ -46,26 +43,13 @@ export function useSingleRunPipeline({ runId, variable }: RunPipelineParams): Ru
     select: (data) => getMetaPoints(data),
   });
 
-  const {
-    data: runs = [],
-    isLoading: isLoadingRuns,
-    isError: isErrorRuns,
-  } = useQuery({
-    ...queryKeys.runs.details(runId),
-  });
-
-  const metaLookup = useMetaIndicatorsLookup(metaData);
-
-  const dataPointsLookup = useDataPointsLookup(dataPoints);
-
   const extendedRuns = useGenerateExtendedRuns({
-    runs,
-    metaLookup,
-    dataPointsLookup,
+    dataPoints: dataPoints || [],
+    metaIndicators: metaData || [],
   });
 
-  const isLoading = isDataPointsLoading || isLoadingMeta || isLoadingRuns;
-  const isError = isDataPointsError || isErrorMeta || isErrorRuns;
+  const isLoading = isDataPointsLoading || isLoadingMeta;
+  const isError = isDataPointsError || isErrorMeta;
 
   return useMemo(
     () => ({
