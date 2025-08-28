@@ -70,7 +70,7 @@ export const EnergyFilterRow = ({ prefix, onDelete }: RowFilterProps) => {
           Energy:
         </Label>
         <Select value={energy || ""} onValueChange={setEnergy}>
-          <SelectTrigger size="lg" className="w-fit" id="energy" theme="light">
+          <SelectTrigger size="lg" className="h-10 w-fit" id="energy" theme="light">
             {energy || "Select option"}
           </SelectTrigger>
           <SelectContent>
@@ -84,7 +84,7 @@ export const EnergyFilterRow = ({ prefix, onDelete }: RowFilterProps) => {
       </div>
       {onDelete && (
         <Button variant="ghost" onClick={onDelete}>
-          <Trash2Icon />
+          <Trash2Icon size={16} />
         </Button>
       )}
     </div>

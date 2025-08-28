@@ -11,7 +11,11 @@ export const AccordionItemContent: React.FC<AccordionItemContentProps> = ({ cate
   const keyCounts = useMemo(() => _getKeyCounts(category.runs), [category.runs]);
 
   return (
-    <AccordionContent className="py-4">
+    <AccordionContent className="pt-2 pb-4">
+      <div className="flex items-center justify-between text-xs text-stone-600">
+        <p>Name</p>
+        <p>Scenario runs</p>
+      </div>
       <div className="space-y-2 divide-y">
         {keyCounts.map(([key, count]) => (
           <div key={key} className="flex items-center justify-between gap-2 py-1.5 text-sm">

@@ -70,7 +70,7 @@ export const LandFilterRow = ({ prefix, onDelete }: RowFilterProps) => {
           Land:
         </Label>
         <Select value={land || ""} onValueChange={setLand}>
-          <SelectTrigger size="lg" className="w-fit" id="land" theme="light">
+          <SelectTrigger size="lg" className="h-10 w-fit" id="land" theme="light">
             {land || "Select option"}
           </SelectTrigger>
           <SelectContent>
@@ -84,7 +84,7 @@ export const LandFilterRow = ({ prefix, onDelete }: RowFilterProps) => {
       </div>
       {onDelete && (
         <Button variant="ghost" onClick={onDelete}>
-          <Trash2Icon />
+          <Trash2Icon size={16} />
         </Button>
       )}
     </div>

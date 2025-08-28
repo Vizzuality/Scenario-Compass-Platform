@@ -183,7 +183,10 @@ export default function MainPlotSection({ selectedTab }: { selectedTab: TabItem 
         options={FILTER_OPTIONS}
         onApply={handleApply}
       >
-        <Button>Add filter +</Button>
+        <Button className="gap-2.5">
+          Add filter
+          <span>+</span>
+        </Button>
       </ComparisonFilterPopover>
 
       <div className="grid grid-cols-2 gap-0">

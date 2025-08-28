@@ -13,7 +13,7 @@ export const ColoredScenarioBar: React.FC<ColoredBarProps> = ({ categories, tota
   if (totalRuns === 0) return null;
 
   return (
-    <div className="mb-4 flex h-8 w-full overflow-hidden">
+    <div className="flex h-8 w-full overflow-hidden">
       {Object.entries(categories).map(([key, category]) => {
         const percentage = (category.count / totalRuns) * 100;
         if (percentage === 0) return null;

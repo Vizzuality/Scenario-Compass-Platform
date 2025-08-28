@@ -70,7 +70,7 @@ export const ClimateFilterRow = ({ prefix, onDelete }: RowFilterProps) => {
           Climate:
         </Label>
         <Select value={climate || ""} onValueChange={setClimate}>
-          <SelectTrigger size="lg" className="w-fit" id="climate" theme="light">
+          <SelectTrigger size="lg" className="h-10 w-fit" id="climate" theme="light">
             {climate || "Select option"}
           </SelectTrigger>
           <SelectContent>
@@ -84,7 +84,7 @@ export const ClimateFilterRow = ({ prefix, onDelete }: RowFilterProps) => {
       </div>
       {onDelete && (
         <Button variant="ghost" onClick={onDelete}>
-          <Trash2Icon />
+          <Trash2Icon size={16} />
         </Button>
       )}
     </div>

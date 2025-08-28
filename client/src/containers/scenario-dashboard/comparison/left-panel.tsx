@@ -21,18 +21,18 @@ export default function LeftPanel({ variables, filters }: Props) {
       <div className="divide-y border-t border-b">
         {filters.map((filter, index) => {
           return (
-            <div className="flex items-center gap-2 py-4 pl-6" key={index}>
+            <div className="flex items-center gap-2 py-4" key={index}>
               <filter.component prefix={prefix} />
             </div>
           );
         })}
       </div>
 
-      <div className="pt-6 pr-6">
+      <div className="pt-6 pr-4">
         <MultiRunScenarioFlags result={result} prefix={prefix} />
       </div>
 
-      <div className="flex h-fit w-full flex-col gap-4 pt-6 pr-6">
+      <div className="flex h-fit w-full flex-col gap-4 pt-6 pr-4">
         {variables.map((variable, index) => {
           return (
             <MultipleRunsPlotWidget

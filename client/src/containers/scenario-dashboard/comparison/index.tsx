@@ -18,7 +18,7 @@ export default function ScenarioDashboardComparisonPageContainer() {
           <Suspense>
             <CompareScenariosBackButton />
           </Suspense>
-          <p>
+          <p className="w-170">
             Use the filters above to compare key data points based on your selected criteria. You
             can also browse the interactive dashboards below, grouped by topic, to explore insights
             in more detail.

@@ -5,7 +5,7 @@ export const DATA_COLORS = {
   PINK: "#EC8D82",
   PURPLE: "#832DA4",
   BLUE: "#4599DF",
-  WHITE: "#FFFFFF",
+  GREEN: "#4EAD60",
 } as const;
 
 export const CATEGORY_KEYS = {
@@ -18,7 +18,13 @@ export const CATEGORY_KEYS = {
   NO_FLAGS: "NO_FLAGS",
 } as const;
 
+// Change ordering in order to change the order of colors inside the Scenario Flags
 export const CATEGORY_CONFIG = {
+  [CATEGORY_KEYS.BOTH_HIGH]: {
+    label: "Plausibility vetting flags and reasons for concern, and at least one of them is high",
+    abbrev: "BH",
+    color: DATA_COLORS.PURPLE,
+  },
   [CATEGORY_KEYS.HIGH_PLAUSIBILITY]: {
     label: "High plausibility vetting",
     abbrev: "HP",
@@ -39,11 +45,6 @@ export const CATEGORY_CONFIG = {
     abbrev: "MC",
     color: DATA_COLORS.PINK,
   },
-  [CATEGORY_KEYS.BOTH_HIGH]: {
-    label: "Plausibility vetting flags and reasons for concern, and at least one of them is high",
-    abbrev: "BH",
-    color: DATA_COLORS.PURPLE,
-  },
   [CATEGORY_KEYS.BOTH_MEDIUM]: {
     label: "Plausibility vetting flags and reasons for concern, and they are all medium",
     abbrev: "BM",
@@ -52,7 +53,7 @@ export const CATEGORY_CONFIG = {
   [CATEGORY_KEYS.NO_FLAGS]: {
     label: "No flags",
     abbrev: "NF",
-    color: DATA_COLORS.WHITE,
+    color: DATA_COLORS.GREEN,
   },
 } as const;
 
