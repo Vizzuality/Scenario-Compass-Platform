@@ -9,6 +9,8 @@ import {
   ADDITIONAL_INFORMATION_META_INDICATORS,
   getAdditionalInformationMetaIndicatorCounts,
 } from "@/containers/scenario-dashboard/components/runs-pannel/utils";
+import { Skeleton } from "@/components/ui/skeleton";
+import { DataFetchError } from "@/components/error-state/data-fetch-error";
 import { RunPipelineReturn } from "@/hooks/runs/pipeline/types";
 
 interface Props {
@@ -21,12 +23,29 @@ export default function AdditionalInformation({ result }: Props) {
     [result.runs],
   );
 
-  if (result.isError || result.isLoading) {
+  if (result.isLoading) {
     return (
-      <div className="mb-6">
-        <p className="mb-4 border-b pb-1.5 text-base font-bold text-stone-800">
-          Loading Additional Information...
+      <div className="flex w-full flex-col gap-3">
+        <p className="mb-1.5 border-b pb-1.5 text-base font-bold text-stone-800">
+          Additional Information
         </p>
+        <div className="flex flex-col gap-3">
+          <Skeleton className="h-6 w-full overflow-hidden rounded-md" />
+          <Skeleton className="h-6 w-3/4 overflow-hidden rounded-md" />
+        </div>
+      </div>
+    );
+  }
+
+  if (result.isError) {
+    return (
+      <div className="flex w-full flex-col gap-3">
+        <p className="mb-1.5 border-b pb-1.5 text-base font-bold text-stone-800">
+          Additional Information
+        </p>
+        <div className="flex flex-col gap-3">
+          <DataFetchError />
+        </div>
       </div>
     );
   }
@@ -45,6 +64,10 @@ export default function AdditionalInformation({ result }: Props) {
               </div>
             </AccordionTrigger>
             <AccordionContent className="mt-2 flex flex-col gap-2">
+              <div className="flex items-center justify-between text-xs text-stone-600">
+                <p>Name</p>
+                <p>Scenario runs</p>
+              </div>
               {allCounts[key]?.map(({ value, count }) => (
                 <div key={value} className="flex justify-between">
                   <span>{value}</span>

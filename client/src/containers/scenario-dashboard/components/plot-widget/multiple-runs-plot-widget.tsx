@@ -35,7 +35,7 @@ export function MultipleRunsPlotWidget({ variable, prefix, initialChartType = "a
   const showChartTypeToggle = chartType !== PLOT_TYPE_OPTIONS.DOTS;
 
   return (
-    <div className="w-full rounded-md bg-white p-4 select-none">
+    <div className="h-fit w-full rounded-md bg-white p-4 select-none">
       <VariablePlotWidgetHeader
         variable={variable}
         chartType={chartType}

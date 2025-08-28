@@ -10,6 +10,7 @@ import {
 import { SingleLinePlot } from "@/components/plots/single-line-plot";
 import { DotPlot } from "@/components/plots/dot-plot";
 import { ExtendedRun, RunPipelineReturn } from "@/hooks/runs/pipeline/types";
+import { DataFetchError } from "@/components/error-state/data-fetch-error";
 
 interface Props {
   chartType: ChartType;
@@ -41,7 +42,15 @@ const PlotContent = ({ chartType, data, prefix = "", onRunClick }: Props) => {
   if (data.isError) {
     return (
       <PlotContainer>
-        <div>Error loading data</div>
+        <DataFetchError />
+      </PlotContainer>
+    );
+  }
+
+  if (data.runs.length === 0) {
+    return (
+      <PlotContainer>
+        <div>No Runs for this combination of params</div>
       </PlotContainer>
     );
   }
