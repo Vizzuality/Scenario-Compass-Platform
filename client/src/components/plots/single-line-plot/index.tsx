@@ -2,9 +2,9 @@
 
 import React, { useEffect } from "react";
 import * as d3 from "d3";
-import { ExtendedRun } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
 import { renderSingleLinePlot } from "@/components/plots/single-line-plot/utils";
 import { usePlotContainer } from "@/hooks/plots/use-plot-container";
+import { ExtendedRun } from "@/hooks/runs/pipeline/types";
 
 interface Props {
   run: ExtendedRun;

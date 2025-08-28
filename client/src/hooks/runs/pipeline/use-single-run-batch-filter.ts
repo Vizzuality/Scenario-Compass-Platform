@@ -1,6 +1,6 @@
-import { RunPipelineReturn } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
 import { VARIABLE_TYPE } from "@/lib/constants/variables-options";
 import { useSingleRunPipeline } from "@/hooks/runs/pipeline/use-single-run-pipeline";
+import { RunPipelineReturn } from "@/hooks/runs/pipeline/types";
 
 interface PipelineParams {
   variables: readonly VARIABLE_TYPE[];

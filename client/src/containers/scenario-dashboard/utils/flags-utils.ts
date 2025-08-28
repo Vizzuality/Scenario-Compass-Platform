@@ -1,4 +1,3 @@
-import { ExtendedRun, ShortMetaIndicator } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
 import {
   CATEGORY_CONFIG,
   CATEGORY_KEYS,
@@ -9,6 +8,7 @@ import {
   VALUE_MEDIUM,
 } from "@/containers/scenario-dashboard/utils/category-config";
 import { RunCategory } from "@/containers/scenario-dashboard/components/runs-pannel/utils";
+import { ExtendedRun, ShortMetaIndicator } from "@/hooks/runs/pipeline/types";
 
 /**
  * Represents the flag analysis results for a single run.

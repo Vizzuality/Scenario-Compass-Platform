@@ -12,12 +12,12 @@ import {
   SVGSelection,
 } from "@/components/plots/utils";
 import { PlotDimensions } from "@/components/plots/utils/dimensions";
-import { ExtendedRun } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
 import { CATEGORY_CONFIG } from "@/containers/scenario-dashboard/utils/category-config";
 import * as d3 from "d3";
 import { createTooltipManager } from "@/components/plots/utils/tooltip-manager";
 import { createHoverElements } from "@/components/plots/utils/create-hover-elements";
 import { PLOT_CONFIG } from "@/components/plots/utils/constants";
+import { ExtendedRun } from "@/hooks/runs/pipeline/types";
 
 interface Props {
   svg: SVGSelection;
@@ -35,14 +35,18 @@ export const renderSingleLinePlot = ({ svg, run, dimensions }: Props): void => {
   const lineGenerator = createLineGenerator(scales);
 
   renderGridLines(g, scales.yScale, dimensions.INNER_WIDTH);
-  renderAxes({ g, scales, height: dimensions.INNER_HEIGHT });
+  renderAxes({
+    g,
+    scales,
+    height: dimensions.INNER_HEIGHT,
+    xTickValues: run.points.map((point) => point.year),
+  });
 
-  const sortedPoints = [...run.points].sort((a, b) => a.year - b.year);
   const categoryKey = run.flagCategory as keyof typeof CATEGORY_CONFIG;
   const color = CATEGORY_CONFIG[categoryKey]?.color;
 
   g.append("path")
-    .datum(sortedPoints)
+    .datum(run.points)
     .attr("class", "single-line-run-")
     .attr("fill", "none")
     .attr("stroke", color)
@@ -79,7 +83,7 @@ export const renderSingleLinePlot = ({ svg, run, dimensions }: Props): void => {
     })
     .on("mousemove", function (event) {
       const [mouseX] = d3.pointer(event);
-      const nearestData = findClosestDataPoint(mouseX, scales.xScale, sortedPoints);
+      const nearestData = findClosestDataPoint(mouseX, scales.xScale, run.points);
 
       if (!nearestData) return;
 

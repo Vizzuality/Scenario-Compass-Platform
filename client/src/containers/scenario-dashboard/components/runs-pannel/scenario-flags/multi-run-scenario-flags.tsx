@@ -1,4 +1,3 @@
-import { RunPipelineReturn } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
 import {
   Accordion,
   AccordionContent,
@@ -8,9 +7,10 @@ import {
 import { useMemo } from "react";
 import { categorizeRuns } from "@/containers/scenario-dashboard/utils/flags-utils";
 import { AccordionItemContent } from "@/containers/scenario-dashboard/components/runs-pannel/accordion-item-content";
-import { ColoredScenarioBar } from "@/containers/scenario-dashboard/components/runs-pannel/scenario-flags/collored-scenario-bar";
+import { ColoredScenarioBar } from "@/containers/scenario-dashboard/components/runs-pannel/scenario-flags/colored-scenario-bar";
 import ScenarioFlagTrigger from "@/containers/scenario-dashboard/components/runs-pannel/scenario-flags/scenario-flag-trigger";
 import { CategoryKey } from "@/containers/scenario-dashboard/utils/category-config";
+import { RunPipelineReturn } from "@/hooks/runs/pipeline/types";
 
 interface Props {
   result: RunPipelineReturn;

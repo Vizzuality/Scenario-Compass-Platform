@@ -2,10 +2,10 @@
 
 import React, { useEffect } from "react";
 import * as d3 from "d3";
-import { ExtendedRun } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
 import { renderDotPlot } from "@/components/plots/dot-plot/utils";
 import { useScenarioFlagsSelection } from "@/hooks/nuqs/use-scenario-flags-selection";
 import { usePlotContainer } from "@/hooks/plots/use-plot-container";
+import { ExtendedRun } from "@/hooks/runs/pipeline/types";
 
 interface DotPlotProps {
   runs: ExtendedRun[];

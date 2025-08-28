@@ -12,7 +12,6 @@ import {
   Run,
 } from "@iiasa/ixmp4-ts";
 import * as z from "zod/v4";
-import { VARIABLE_TYPE } from "@/lib/constants/variables-options";
 
 export const IIASAConfigSchema = z.object({
   appName: z.string(),
@@ -157,7 +156,7 @@ export class IIASA_API_CLIENT {
 
   public getMetaIndicators(filters?: MetaIndicatorFilter) {
     this.validatePlatform();
-    return this.platform.meta.tabulate(filters);
+    return this.platform.meta.tabulate({ joinRunIndex: false, ...filters });
   }
 
   public getModelsTabulate(filters?: ModelFilter) {
@@ -172,31 +171,7 @@ export class IIASA_API_CLIENT {
 
   public getDataTabulatedPoints(filters?: IamcDataFilter) {
     this.validatePlatform();
-    return this.platform.iamc.tabulate(filters);
-  }
-
-  public getDataPointsForRun({
-    runId,
-    variable,
-    geography,
-  }: {
-    runId: number;
-    variable?: VARIABLE_TYPE;
-    geography?: string;
-  }) {
-    this.validatePlatform();
-    return this.platform?.iamc.tabulate({
-      variable: {
-        name: variable,
-      },
-      run: {
-        id: runId,
-      },
-      region: {
-        // @ts-expect-error No TS support for geography id yet
-        id: geography,
-      },
-    });
+    return this.platform.iamc.tabulate({ joinRunId: true, ...filters });
   }
 
   public getTabulatedRuns(filters?: RunFilter) {

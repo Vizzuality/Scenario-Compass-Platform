@@ -1,18 +1,10 @@
-import {
-  RunPipelineReturn,
-  useMultipleRunsPipeline,
-} from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
-import { VARIABLE_TYPE } from "@/lib/constants/variables-options";
-
-interface PipelineParams {
-  variables: readonly VARIABLE_TYPE[];
-  prefix?: string;
-}
+import { useMultipleRunsPipeline } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
+import { MultipleRunPipelineParams, RunPipelineReturn } from "@/hooks/runs/pipeline/types";
 
 export default function useMultipleRunsBatchFilter({
   variables,
   prefix = "",
-}: PipelineParams): RunPipelineReturn {
+}: MultipleRunPipelineParams): RunPipelineReturn {
   const result0 = useMultipleRunsPipeline({ variable: variables[0] || "", prefix });
   const result1 = useMultipleRunsPipeline({ variable: variables[1] || "", prefix });
   const result2 = useMultipleRunsPipeline({ variable: variables[2] || "", prefix });

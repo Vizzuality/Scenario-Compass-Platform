@@ -4,7 +4,6 @@ import {
   GREY,
   PLOT_CONFIG,
 } from "@/components/plots/utils/constants";
-import { ExtendedRun } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
 import { PlotDimensions } from "@/components/plots/utils/dimensions";
 import * as d3 from "d3";
 import {
@@ -21,6 +20,7 @@ import {
 } from "@/components/plots/utils";
 import { CATEGORY_CONFIG } from "@/containers/scenario-dashboard/utils/category-config";
 import { createTooltipManager } from "@/components/plots/utils/tooltip-manager";
+import { ExtendedRun } from "@/hooks/runs/pipeline/types";
 
 const DOT_CLASS_PREFIX = "dot-run-";
 
@@ -67,7 +67,7 @@ export const renderDotPlot = ({
     .selectAll(".data-point")
     .data(allPoints)
     .join("circle")
-    .attr("class", (d) => `${DOT_CLASS_PREFIX}${d.run.id}`)
+    .attr("class", (d) => `${DOT_CLASS_PREFIX}${d.run.runId}`)
     .attr("cx", (d) => scales.xScale(d.year))
     .attr("cy", (d) => scales.yScale(d.value))
     .attr("r", PLOT_CONFIG.SINGLE_DOT_RADIUS)
@@ -116,11 +116,11 @@ export const renderDotPlot = ({
             </li>
             <li>
                 <strong> Model: </strong>
-                <span>${hoveredRun.run.model.name}</span>
+                <span>${hoveredRun.run.modelName}</span>
             </li>
             <li>
                 <strong> Scenario: </strong>
-                <span>${hoveredRun.run.scenario.name}</li>
+                <span>${hoveredRun.run.scenarioName}</li>
             </ul>
       `;
 
