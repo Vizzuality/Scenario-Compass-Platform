@@ -3,13 +3,11 @@
 import ScenarioModelMetrics from "@/containers/scenario-dashboard/components/runs-pannel/scenario-model-metrics";
 import AdditionalInformation from "@/containers/scenario-dashboard/components/runs-pannel/additional-information";
 import MultiRunScenarioFlags from "@/containers/scenario-dashboard/components/runs-pannel/scenario-flags/multi-run-scenario-flags";
-import { VARIABLE_TYPE } from "@/lib/constants/variables-options";
 import NavigateToCompareScenarios from "@/containers/scenario-dashboard/components/comparison/navigate-to-compare-scenarios";
-import useMultipleRunsBatchFilter from "@/hooks/runs/pipeline/use-multiple-runs-batch-filter";
+import useSyncRunsPipeline from "@/hooks/runs/pipeline/use-sync-runs-pipeline";
 
-export default function RunsPanel({ variables }: { variables: readonly VARIABLE_TYPE[] }) {
-  const result = useMultipleRunsBatchFilter({ variables });
-
+export default function RunsPanel() {
+  const result = useSyncRunsPipeline({});
   return (
     <div className="mx-auto flex w-120 flex-col gap-6">
       <NavigateToCompareScenarios />

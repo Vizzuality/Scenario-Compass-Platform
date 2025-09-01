@@ -3,7 +3,7 @@
 import { ArrowLeft, Share2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/lib/query-keys";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import GeographyYearInfo from "@/containers/scenario-dashboard/scenario-detail/geography-year-info";
 import { getMetaPoints } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
@@ -21,9 +21,7 @@ const InfoItem: React.FC<InfoItemProps> = ({ title, value }) => (
   </div>
 );
 
-export default function ScenarioDetails() {
-  const params = useParams();
-  const runId = params.runId as unknown as number;
+export default function ScenarioDetails({ runId }: { runId: number }) {
   const router = useRouter();
 
   const { data: runs = [] } = useQuery({

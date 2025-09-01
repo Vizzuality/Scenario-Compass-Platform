@@ -50,7 +50,7 @@ export const renderDotPlot = ({
   const g = createMainGroup(svg, dimensions);
 
   const allPoints = visibleRuns.flatMap((run) =>
-    run.points.map((point) => ({
+    run.orderedPoints.map((point) => ({
       ...point,
       run,
     })),

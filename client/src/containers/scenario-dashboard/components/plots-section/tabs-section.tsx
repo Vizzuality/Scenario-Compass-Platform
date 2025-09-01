@@ -1,28 +1,30 @@
+"use client";
+
 import { cn } from "@/lib/utils";
-import { TabItem, tabsArray } from "@/containers/scenario-dashboard/components/plots-section/utils";
+import { TABS_CONFIG_ARRAY } from "@/lib/config/tabs-config";
+import { useTabAndVariablesParams } from "@/hooks/nuqs/use-tabs-and-variables-params";
 
-interface Props {
-  selectedTab: TabItem;
-  onSelectTab: (tab: TabItem) => void;
-}
+export function TabsSection() {
+  const { selectedTab, setSelectedTab } = useTabAndVariablesParams();
 
-export function TabsSection({ selectedTab, onSelectTab }: Props) {
   return (
     <div className="flex w-full bg-white pt-9">
       <div className="w-full border-b" />
       <div className="container mx-auto flex shrink-0 pt-4">
-        {tabsArray.map((tab, index) => (
+        {TABS_CONFIG_ARRAY.map((tab, index) => (
           <button
             key={index}
             className={cn(
-              "w-full rounded-t-md px-4 py-3 text-xs font-bold uppercase",
-              selectedTab === tab.name ? "bg-background border border-b-0" : "border-b bg-white",
+              "w-full cursor-pointer rounded-t-md px-4 py-3 text-xs font-bold uppercase",
+              selectedTab.tabTitle === tab.tabTitle
+                ? "bg-background border border-b-0"
+                : "border-b bg-white hover:bg-stone-50",
             )}
             onClick={() => {
-              onSelectTab(tab.name as TabItem);
+              setSelectedTab(tab);
             }}
           >
-            {tab.name}
+            {tab.tabTitle}
           </button>
         ))}
       </div>

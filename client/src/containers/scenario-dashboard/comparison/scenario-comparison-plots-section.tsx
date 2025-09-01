@@ -1,6 +1,4 @@
 import React, { ComponentType } from "react";
-import { TabItem, tabsArray } from "@/containers/scenario-dashboard/components/plots-section/utils";
-import { GENERAL_VARIABLES_OPTIONS } from "@/lib/constants/variables-options";
 import { LandFilterRow } from "@/containers/scenario-dashboard/components/meta-scenario-filters/land-filter";
 import { EnergyFilterRow } from "@/containers/scenario-dashboard/components/meta-scenario-filters/energy-filter";
 import { ClimateFilterRow } from "@/containers/scenario-dashboard/components/meta-scenario-filters/climate-filter";
@@ -79,10 +77,6 @@ const FILTER_OPTIONS = MAIN_CONFIG.map((config) => ({
  * The component manages URL state for the left side of the comparison and
  * coordinates with the right side for filter removal operations.
  *
- * @param props - Component props
- * @param props.selectedTab - The currently selected tab which determines
- *                           what variables/visualizations are shown
- *
  * User workflow:
  *  1. User clicks "Add filter +" to open the filter selection popover
  *  2. User selects which filters to include (Climate, Energy, Land)
@@ -90,13 +84,11 @@ const FILTER_OPTIONS = MAIN_CONFIG.map((config) => ({
  *  4. User can configure individual filter values in each panel
  *  5. User can remove filters using the delete button (removes from both sides)
  */
-export default function MainPlotSection({ selectedTab }: { selectedTab: TabItem }) {
+export default function ScenarioComparisonPlotsSection() {
   const { climate, energy, land, setFilters, getActiveScenarioParams } =
     useScenarioDashboardUrlParams(LEFT_COMPARISON_TAG);
   const { setFilters: setRightFilters } = useScenarioDashboardUrlParams(RIGHT_COMPARISON_TAG);
   const activeScenarioParams = getActiveScenarioParams();
-  const currentSelectedVariables =
-    tabsArray.find((tab) => tab.name === selectedTab)?.variables || GENERAL_VARIABLES_OPTIONS;
 
   /**
    * Filters that currently have non-null values.
@@ -190,12 +182,10 @@ export default function MainPlotSection({ selectedTab }: { selectedTab: TabItem 
       </ComparisonFilterPopover>
 
       <div className="grid grid-cols-2 gap-0">
-        <LeftPanel filters={activeFilters} variables={currentSelectedVariables} />
-
+        <LeftPanel filters={activeFilters} />
         <RightPanel
           onDelete={activeScenarioParams.length > 1 ? removeFilter : undefined}
           filters={activeFilters}
-          variables={currentSelectedVariables}
         />
       </div>
     </div>

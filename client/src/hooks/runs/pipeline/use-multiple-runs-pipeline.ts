@@ -6,9 +6,9 @@ import useTopDataPointsFilter from "@/hooks/runs/filtering/use-top-data-points-f
 import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/lib/query-keys";
 import { getMetaPoints } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
-import { useFilterRunsByMetaIndicators } from "@/hooks/runs/filtering/use-filter-runs-by-meta-indicators";
-import { useGenerateExtendedRuns } from "@/hooks/runs/pipeline/use-generate-extended-runs";
 import { SingleRunPipelineParams, RunPipelineReturn } from "@/hooks/runs/pipeline/types";
+import { generateExtendedRuns } from "@/hooks/runs/pipeline/utils";
+import { filterRunsByMetaIndicators } from "@/hooks/runs/utils/filtering";
 
 export function useMultipleRunsPipeline({
   variable,
@@ -41,7 +41,7 @@ export function useMultipleRunsPipeline({
   } = useQuery({
     ...queryKeys.metaIndicators.tabulate({
       run: {
-        // @ts-expect-error lack of TypeScript support for this query
+        // @ts-expect-error limited TypeScript support for this query
         id_in: uniqueRunIds,
       },
     }),
@@ -49,12 +49,12 @@ export function useMultipleRunsPipeline({
     select: (data) => getMetaPoints(data),
   });
 
-  const extendedRuns = useGenerateExtendedRuns({
+  const extendedRuns = generateExtendedRuns({
     dataPoints: dataPoints || [],
     metaIndicators: metaData || [],
   });
 
-  const filteredRuns = useFilterRunsByMetaIndicators({
+  const filteredRuns = filterRunsByMetaIndicators({
     runs: extendedRuns,
     climate,
     energy,
@@ -64,12 +64,9 @@ export function useMultipleRunsPipeline({
   const isLoading = isLoadingDataPointsFiltering || isLoadingMeta;
   const isError = isErrorDataPointsFiltering || isErrorMeta;
 
-  return useMemo(
-    () => ({
-      runs: filteredRuns,
-      isError,
-      isLoading,
-    }),
-    [filteredRuns, isError, isLoading],
-  );
+  return {
+    runs: filteredRuns,
+    isError,
+    isLoading,
+  };
 }

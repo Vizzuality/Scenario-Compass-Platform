@@ -1,13 +1,13 @@
 import { CategoryKey } from "@/containers/scenario-dashboard/utils/category-config";
-import { VARIABLE_TYPE } from "@/lib/constants/variables-options";
 import { DataPoint } from "@/components/plots/types";
 import { MetaIndicator } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
+import { UseQueryResult } from "@tanstack/react-query";
 
 export interface ExtendedRun {
   runId: string;
   scenarioName: string;
   modelName: string;
-  points: ShortDataPoint[];
+  orderedPoints: ShortDataPoint[];
   flagCategory: CategoryKey;
   metaIndicators: ShortMetaIndicator[];
 }
@@ -19,14 +19,23 @@ export interface RunPipelineReturn {
 }
 
 export interface SingleRunPipelineParams {
-  variable: VARIABLE_TYPE;
+  variable: string;
   prefix?: string;
 }
 
-export interface MultipleRunPipelineParams {
-  variables: readonly VARIABLE_TYPE[];
-  prefix?: string;
-}
+export type DataPointsQueriesReturn = Array<
+  UseQueryResult<{
+    dataPoints: DataPoint[];
+    uniqueIds: Array<string>;
+  }>
+>;
+
+export type MetaPointsQueriesReturn = Array<
+  UseQueryResult<{
+    metaPoints: MetaIndicator[];
+    uniqueIds: Array<string>;
+  }>
+>;
 
 export type ShortDataPoint = Pick<DataPoint, "year" | "value">;
 export type ShortMetaIndicator = Pick<MetaIndicator, "key" | "value">;

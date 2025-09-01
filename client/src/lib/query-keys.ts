@@ -9,7 +9,6 @@ import {
   RunFilter,
 } from "@iiasa/ixmp4-ts";
 import API from "@/lib/api";
-import { VARIABLE_TYPE } from "@/lib/constants/variables-options";
 
 export const queryKeys = createQueryKeyStore({
   scenarios: {
@@ -57,7 +56,7 @@ export const queryKeys = createQueryKeyStore({
       geography = "",
     }: {
       runId: number;
-      variable?: VARIABLE_TYPE;
+      variable?: string;
       geography?: string;
     }) => ({
       queryKey: [{ runId, variable, geography }],
