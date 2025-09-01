@@ -47,7 +47,7 @@ export const renderMultiLinePlot = ({
   if (visibleRuns.length === 0) return;
 
   const g = createMainGroup(svg, dimensions);
-  const allPoints = visibleRuns.flatMap((run) => run.points);
+  const allPoints = visibleRuns.flatMap((run) => run.orderedPoints);
   const allYears = allPoints.map((d) => d.year);
   const uniqueYears = [...new Set(allYears)].sort((a, b) => a - b);
   const hasSelection = selectedFlags.length > 0;
@@ -60,6 +60,7 @@ export const renderMultiLinePlot = ({
     g,
     scales,
     height: dimensions.INNER_HEIGHT,
+    width: dimensions.INNER_WIDTH,
     xTickValues: uniqueYears,
   });
 
@@ -68,7 +69,7 @@ export const renderMultiLinePlot = ({
     .selectAll<SVGPathElement, ExtendedRun>("path")
     .data(visibleRuns, (d) => d.runId)
     .join("path")
-    .attr("d", (run) => lineGenerator(run.points))
+    .attr("d", (run) => lineGenerator(run.orderedPoints))
     .attr("fill", "none")
     .attr("stroke", (run) => getRunColor(run, selectedFlags, hasSelection))
     .attr("stroke-width", PLOT_CONFIG.NORMAL_STROKE_WIDTH)
@@ -140,7 +141,7 @@ export const renderMultiLinePlot = ({
 
       rafId = requestAnimationFrame(() => {
         const [mouseX] = d3.pointer(event, g.node());
-        const nearestData = findClosestDataPoint(mouseX, scales.xScale, run.points);
+        const nearestData = findClosestDataPoint(mouseX, scales.xScale, run.orderedPoints);
         if (!nearestData) return;
 
         const pointX = scales.xScale(nearestData.year);

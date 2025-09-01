@@ -12,7 +12,6 @@ import {
   Run,
 } from "@iiasa/ixmp4-ts";
 import * as z from "zod/v4";
-import { VARIABLE_TYPE } from "@/lib/constants/variables-options";
 
 export const IIASAConfigSchema = z.object({
   appName: z.string(),
@@ -181,7 +180,7 @@ export class IIASA_API_CLIENT {
     geography,
   }: {
     runId: number;
-    variable?: VARIABLE_TYPE;
+    variable?: string;
     geography?: string;
   }) {
     this.validatePlatform();

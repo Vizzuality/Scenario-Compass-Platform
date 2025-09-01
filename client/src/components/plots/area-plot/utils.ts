@@ -30,7 +30,7 @@ export const renderAreaPlot = ({ svg, runs, dimensions }: Props): void => {
   const tooltipManager = createTooltipManager({ svg, dimensions });
   if (!tooltipManager) return;
   if (runs.length === 0) return;
-  const allPoints = runs.flatMap((run) => run.points);
+  const allPoints = runs.flatMap((run) => run.orderedPoints);
   const { aggregatedData, xDomain, yDomain } = processAreaChartData(allPoints);
   const { INNER_WIDTH, INNER_HEIGHT } = dimensions;
   const g = createMainGroup(svg, dimensions);
@@ -44,6 +44,7 @@ export const renderAreaPlot = ({ svg, runs, dimensions }: Props): void => {
     g,
     scales,
     height: INNER_HEIGHT,
+    width: INNER_WIDTH,
     xTickValues: uniqueYears,
   });
 

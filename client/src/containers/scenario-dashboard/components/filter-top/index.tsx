@@ -1,5 +1,6 @@
 import YearIntervalSelectionFilter from "@/containers/scenario-dashboard/components/filter-top/year-interval-selection-filter";
 import GeographyFilter from "@/containers/scenario-dashboard/components/filter-top/geography-filter";
+import { Suspense } from "react";
 
 export default function ScenarioDashboardTopFilter({ children }: { children?: React.ReactNode }) {
   return (
@@ -10,8 +11,10 @@ export default function ScenarioDashboardTopFilter({ children }: { children?: Re
         </p>
       </div>
       <div className="grid w-full grid-rows-3 items-end gap-6 lg:grid-cols-3 lg:grid-rows-none">
-        <GeographyFilter />
-        <YearIntervalSelectionFilter />
+        <Suspense>
+          <GeographyFilter />
+          <YearIntervalSelectionFilter />
+        </Suspense>
         {children}
       </div>
     </div>

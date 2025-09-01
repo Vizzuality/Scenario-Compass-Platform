@@ -2,21 +2,36 @@
 
 import { VariablePlotWidgetHeader } from "@/containers/scenario-dashboard/components/plot-widget/variable-plot-widget-header";
 import PlotContent from "@/containers/scenario-dashboard/components/plot-widget/plot-widget-content";
-import { VARIABLE_TYPE } from "@/lib/constants/variables-options";
 import { useSingleRunPipeline } from "@/hooks/runs/pipeline/use-single-run-pipeline";
 import { PLOT_TYPE_OPTIONS } from "@/containers/scenario-dashboard/components/plot-widget/chart-type-toggle";
+import { PlotConfig } from "@/lib/config/variables-config";
+import { useTabAndVariablesParams } from "@/hooks/nuqs/use-tabs-and-variables-params";
+import { VariableSelect } from "@/containers/scenario-dashboard/components/plot-widget/variable-select";
 
 interface Props {
-  variable: VARIABLE_TYPE;
   runId: number;
+  plotConfig: PlotConfig;
 }
 
-export function SingleRunPlotWidget({ variable, runId }: Props) {
-  const data = useSingleRunPipeline({ runId, variable });
+export function SingleRunPlotWidget({ runId, plotConfig }: Props) {
+  const { getVariable, setVariable } = useTabAndVariablesParams();
+  const currentVariable = getVariable(plotConfig);
+  const data = useSingleRunPipeline({ runId, variable: currentVariable });
+  const handleVariableChange = (variable: string) => {
+    setVariable(plotConfig, variable);
+  };
 
   return (
     <div className="w-full rounded-md bg-white p-4 select-none">
-      <VariablePlotWidgetHeader variable={variable} chartType={PLOT_TYPE_OPTIONS.SINGLE_LINE} />
+      <VariablePlotWidgetHeader
+        title={plotConfig.title}
+        chartType={PLOT_TYPE_OPTIONS.SINGLE_LINE}
+      />
+      <VariableSelect
+        options={plotConfig.variables}
+        onChange={handleVariableChange}
+        currentVariable={currentVariable}
+      />
       <PlotContent chartType={PLOT_TYPE_OPTIONS.SINGLE_LINE} data={data} />
     </div>
   );

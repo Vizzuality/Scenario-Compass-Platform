@@ -1,20 +1,20 @@
-import { VARIABLE_TYPE } from "@/lib/constants/variables-options";
 import MultiRunScenarioFlags from "@/containers/scenario-dashboard/components/runs-pannel/scenario-flags/multi-run-scenario-flags";
-import useMultipleRunsBatchFilter from "@/hooks/runs/pipeline/use-multiple-runs-batch-filter";
-import { FilterArrayItem } from "@/containers/scenario-dashboard/comparison/main-plot-section";
+import { FilterArrayItem } from "@/containers/scenario-dashboard/comparison/scenario-comparison-plots-section";
 import { LEFT_COMPARISON_TAG } from "@/containers/scenario-dashboard/comparison/utils";
 import { MultipleRunsPlotWidget } from "@/containers/scenario-dashboard/components/plot-widget/multiple-runs-plot-widget";
 import { PLOT_TYPE_OPTIONS } from "@/containers/scenario-dashboard/components/plot-widget/chart-type-toggle";
+import { useTabAndVariablesParams } from "@/hooks/nuqs/use-tabs-and-variables-params";
+import useSyncRunsPipeline from "@/hooks/runs/pipeline/use-sync-runs-pipeline";
 
 interface Props {
-  variables: readonly VARIABLE_TYPE[];
   filters: FilterArrayItem[];
 }
 
 const prefix = LEFT_COMPARISON_TAG;
 
-export default function LeftPanel({ variables, filters }: Props) {
-  const result = useMultipleRunsBatchFilter({ variables, prefix });
+export default function LeftPanel({ filters }: Props) {
+  const { selectedTab } = useTabAndVariablesParams();
+  const result = useSyncRunsPipeline({ prefix });
 
   return (
     <div className="border-r">
@@ -33,16 +33,17 @@ export default function LeftPanel({ variables, filters }: Props) {
       </div>
 
       <div className="flex h-fit w-full flex-col gap-4 pt-6 pr-4">
-        {variables.map((variable, index) => {
-          return (
-            <MultipleRunsPlotWidget
-              key={index}
-              variable={variable}
-              prefix={prefix}
-              initialChartType={PLOT_TYPE_OPTIONS.MULTIPLE_LINE}
-            />
-          );
-        })}
+        {!selectedTab.isCustom &&
+          selectedTab.explorationPlotConfigArray.map((plotConfig) => {
+            return (
+              <MultipleRunsPlotWidget
+                plotConfig={plotConfig}
+                key={plotConfig.title}
+                prefix={prefix}
+                initialChartType={PLOT_TYPE_OPTIONS.MULTIPLE_LINE}
+              />
+            );
+          })}
       </div>
     </div>
   );

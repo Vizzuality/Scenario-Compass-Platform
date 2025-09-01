@@ -30,7 +30,7 @@ export const renderSingleLinePlot = ({ svg, run, dimensions }: Props): void => {
   const tooltipManager = createTooltipManager({ svg, dimensions });
   if (!tooltipManager) return;
   const g = createMainGroup(svg, dimensions);
-  const domain = calculateDomain(run.points);
+  const domain = calculateDomain(run.orderedPoints);
   const scales = createScales(domain, dimensions.INNER_WIDTH, dimensions.INNER_HEIGHT);
   const lineGenerator = createLineGenerator(scales);
 
@@ -39,14 +39,15 @@ export const renderSingleLinePlot = ({ svg, run, dimensions }: Props): void => {
     g,
     scales,
     height: dimensions.INNER_HEIGHT,
-    xTickValues: run.points.map((point) => point.year),
+    width: dimensions.INNER_WIDTH,
+    xTickValues: run.orderedPoints.map((point) => point.year),
   });
 
   const categoryKey = run.flagCategory as keyof typeof CATEGORY_CONFIG;
   const color = CATEGORY_CONFIG[categoryKey]?.color;
 
   g.append("path")
-    .datum(run.points)
+    .datum(run.orderedPoints)
     .attr("class", "single-line-run-")
     .attr("fill", "none")
     .attr("stroke", color)
@@ -83,7 +84,7 @@ export const renderSingleLinePlot = ({ svg, run, dimensions }: Props): void => {
     })
     .on("mousemove", function (event) {
       const [mouseX] = d3.pointer(event);
-      const nearestData = findClosestDataPoint(mouseX, scales.xScale, run.points);
+      const nearestData = findClosestDataPoint(mouseX, scales.xScale, run.orderedPoints);
 
       if (!nearestData) return;
 

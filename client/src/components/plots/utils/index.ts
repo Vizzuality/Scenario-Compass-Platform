@@ -1,5 +1,4 @@
-import { DataFrame } from "@iiasa/ixmp4-ts";
-import { AggregatedDataPoint, DataPoint, ProcessedAreaData } from "@/components/plots/types";
+import { AggregatedDataPoint, ProcessedAreaData } from "@/components/plots/types";
 import * as d3 from "d3";
 import {
   FONT_SIZE,
@@ -27,47 +26,6 @@ export interface PlotDomain {
   xDomain: [number, number];
   yDomain: [number, number];
 }
-
-export const extractDataPoints = (data: DataFrame | undefined): DataPoint[] | [] => {
-  if (data === undefined) {
-    return [];
-  }
-
-  const dataPoints: DataPoint[] = [];
-  const [rows] = data.shape;
-  const columns: string[] = data.columns;
-
-  const runIdCol = columns.find((col) => col.toLowerCase() === "run__id");
-  const scenarioCol = columns.find((col) => col.toLowerCase().includes("scenario"));
-  const modelCol = columns.find((col) => col.toLowerCase().includes("model"));
-  const yearCol = columns.find((col) => col.toLowerCase().includes("year"));
-  const valueCol = columns.find((col) => col.toLowerCase().includes("value"));
-
-  if (!scenarioCol || !yearCol || !valueCol || !modelCol || !runIdCol) {
-    console.error("Missing required columns: scenario, year, value or model");
-    return [];
-  }
-
-  for (let i = 0; i < rows; i++) {
-    const runId = data.at(i, runIdCol);
-    const scenario = data.at(i, scenarioCol);
-    const model = data.at(i, modelCol);
-    const year = data.at(i, yearCol);
-    const value = data.at(i, valueCol);
-
-    if (scenario != null && year != null && value != null) {
-      dataPoints.push({
-        runId: runId,
-        scenarioName: String(scenario),
-        modelName: String(model),
-        year: Number(year),
-        value: Number(value),
-      });
-    }
-  }
-
-  return dataPoints;
-};
 
 export const aggregateDataByYear = (dataPoints: ShortDataPoint[]): AggregatedDataPoint[] => {
   const groupedByYear = d3.group(dataPoints, (d) => d.year);
@@ -128,21 +86,59 @@ export const renderGridLines = (
     .attr("stroke-width", 1);
 };
 
+const calculateOptimalTicksWithNiceYears = (years: number[], availableWidth: number): number[] => {
+  const MIN_TICK_SPACING = 80;
+  const maxTicks = Math.floor(availableWidth / MIN_TICK_SPACING);
+
+  if (years.length <= 2) return years;
+  if (years.length <= maxTicks) return years;
+
+  const firstYear = years[0];
+  const lastYear = years[years.length - 1];
+  const middleTicks = maxTicks - 2;
+
+  if (middleTicks <= 0) {
+    return [firstYear, lastYear];
+  }
+
+  // Try to find nice intervals (multiples of 5, 10, etc.)
+  const middleYears = years.slice(1, -1);
+  const intervals = [5, 10, 20, 25];
+
+  for (const interval of intervals) {
+    const niceYears = middleYears.filter((year) => year % interval === 0);
+    if (niceYears.length > 0 && niceYears.length <= middleTicks) {
+      return [firstYear, ...niceYears, lastYear];
+    }
+  }
+
+  // Fallback to evenly spaced years
+  const step = Math.ceil(middleYears.length / middleTicks);
+  const selectedMiddleYears = middleYears.filter((_, index) => index % step === 0);
+
+  return [firstYear, ...selectedMiddleYears, lastYear];
+};
+
 export const renderAxes = ({
   g,
   scales,
   height,
+  width,
   yTickCount = 5,
   xTickValues,
 }: {
   g: GroupSelection;
   scales: PlotScales;
   height: number;
+  width?: number;
   xTickValues?: number[];
   yTickCount?: number;
 }): void => {
-  const xAxisGenerator = xTickValues
-    ? d3.axisBottom(scales.xScale).tickValues(xTickValues).tickFormat(d3.format("d"))
+  const optimizedXTickValues =
+    xTickValues && width ? calculateOptimalTicksWithNiceYears(xTickValues, width) : undefined;
+
+  const xAxisGenerator = optimizedXTickValues
+    ? d3.axisBottom(scales.xScale).tickValues(optimizedXTickValues).tickFormat(d3.format("d"))
     : d3.axisBottom(scales.xScale).tickFormat(d3.format("d"));
 
   const xAxis = g

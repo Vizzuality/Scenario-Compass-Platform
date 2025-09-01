@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { VariablePlotWidgetHeader } from "@/containers/scenario-dashboard/components/plot-widget/variable-plot-widget-header";
 import { useRouter } from "next/navigation";
@@ -7,26 +9,32 @@ import {
 } from "@/containers/scenario-dashboard/components/plot-widget/chart-type-toggle";
 import { useMultipleRunsPipeline } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
 import { INTERNAL_PATHS } from "@/lib/paths";
-import { VARIABLE_TYPE } from "@/lib/constants/variables-options";
+import { PlotConfig } from "@/lib/config/variables-config";
 import { VariableSelect } from "@/containers/scenario-dashboard/components/plot-widget/variable-select";
 import PlotContent from "@/containers/scenario-dashboard/components/plot-widget/plot-widget-content";
 import { ExtendedRun } from "@/hooks/runs/pipeline/types";
+import { useTabAndVariablesParams } from "@/hooks/nuqs/use-tabs-and-variables-params";
 
 interface Props {
-  variable: VARIABLE_TYPE;
+  plotConfig: PlotConfig;
   prefix?: string;
   initialChartType?: ChartType;
 }
 
-export function MultipleRunsPlotWidget({ variable, prefix, initialChartType = "area" }: Props) {
+export function MultipleRunsPlotWidget({ plotConfig, prefix, initialChartType = "area" }: Props) {
   const [chartType, setChartType] = useState<ChartType>(initialChartType);
+  const { getVariable, setVariable } = useTabAndVariablesParams(prefix);
+  const currentVariable = getVariable(plotConfig);
+  const data = useMultipleRunsPipeline({ variable: currentVariable, prefix });
+  const router = useRouter();
 
   useEffect(() => {
     setChartType(initialChartType);
   }, [initialChartType]);
 
-  const data = useMultipleRunsPipeline({ variable, prefix });
-  const router = useRouter();
+  const handleVariableChange = (variable: string) => {
+    setVariable(plotConfig, variable);
+  };
 
   const handleRunClick = (run: ExtendedRun) => {
     router.push(`${INTERNAL_PATHS.SCENARIO_DASHBOARD}/${run.runId}`);
@@ -37,11 +45,15 @@ export function MultipleRunsPlotWidget({ variable, prefix, initialChartType = "a
   return (
     <div className="h-fit w-full rounded-md bg-white p-4 select-none">
       <VariablePlotWidgetHeader
-        variable={variable}
+        title={plotConfig.title}
         chartType={chartType}
         onChange={showChartTypeToggle ? setChartType : undefined}
       />
-      <VariableSelect variable={variable} />
+      <VariableSelect
+        options={plotConfig.variables}
+        onChange={handleVariableChange}
+        currentVariable={currentVariable}
+      />
       <PlotContent chartType={chartType} data={data} prefix={prefix} onRunClick={handleRunClick} />
     </div>
   );
