@@ -1,13 +1,13 @@
 "use client";
 
-import { useTabAndVariablesParams } from "@/hooks/nuqs/use-tabs-and-variables-params";
-import { SingleRunPlotWidget } from "@/containers/scenario-dashboard/components/plot-widget/single-run-plot-widget";
+import { SingleRunPlotWidget } from "@/containers/scenario-dashboard/components/plot-widget/single-line/single-run-plot-widget";
 import SingleRunScenarioFlags from "@/containers/scenario-dashboard/components/runs-pannel/scenario-flags/single-run-scenario-flags";
-import useSyncRunsPipeline from "@/hooks/runs/pipeline/use-sync-runs-pipeline";
+import { CustomSelectMultipleRunsPlotWidget } from "@/containers/scenario-dashboard/components/plot-widget/multiple-line/custom-select-multiple-runs-plot-widget";
+import { PLOT_TYPE_OPTIONS } from "@/containers/scenario-dashboard/components/plot-widget/components/chart-type-toggle";
+import useSyncVariables from "@/hooks/runs/pipeline/use-sync-variables";
 
 export default function ScenarioTabs({ runId }: { runId: number }) {
-  const { selectedTab } = useTabAndVariablesParams();
-  const result = useSyncRunsPipeline({ runId });
+  const { result, selectedTab } = useSyncVariables({ runId });
 
   return (
     <div className="bg-background w-full">
@@ -19,6 +19,16 @@ export default function ScenarioTabs({ runId }: { runId: number }) {
                 <SingleRunPlotWidget plotConfig={plotConfig} key={plotConfig.title} runId={runId} />
               );
             })}
+          {selectedTab.isCustom &&
+            Array(4)
+              .fill(null)
+              .map((_, index) => (
+                <CustomSelectMultipleRunsPlotWidget
+                  key={index}
+                  index={index}
+                  initialChartType={PLOT_TYPE_OPTIONS.SINGLE_LINE}
+                />
+              ))}
         </div>
         <SingleRunScenarioFlags result={result} />
       </div>

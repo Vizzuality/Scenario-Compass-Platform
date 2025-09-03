@@ -1,9 +1,7 @@
-"use client";
-
 import { PlotGrid } from "@/containers/scenario-dashboard/components/plots-section/plot-grid";
 import { TabsSection } from "@/containers/scenario-dashboard/components/plots-section/tabs-section";
-import RunsPanel from "@/containers/scenario-dashboard/components/runs-pannel";
 import ClearFilterButton from "@/containers/scenario-dashboard/components/filter-top/clear-filter-button";
+import RunsPanel from "@/containers/scenario-dashboard/components/runs-pannel/runs-panel";
 
 export default function ScenarioExplorationPlotsSection() {
   return (
