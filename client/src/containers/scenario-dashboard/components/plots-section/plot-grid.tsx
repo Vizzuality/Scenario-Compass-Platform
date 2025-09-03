@@ -1,7 +1,10 @@
-import { MultipleRunsPlotWidget } from "@/containers/scenario-dashboard/components/plot-widget/multiple-runs-plot-widget";
+"use client";
+
+import { MultipleRunsPlotWidget } from "@/containers/scenario-dashboard/components/plot-widget/multiple-line/multiple-runs-plot-widget";
 import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
-import { PLOT_TYPE_OPTIONS } from "@/containers/scenario-dashboard/components/plot-widget/chart-type-toggle";
+import { PLOT_TYPE_OPTIONS } from "@/containers/scenario-dashboard/components/plot-widget/components/chart-type-toggle";
 import { useTabAndVariablesParams } from "@/hooks/nuqs/use-tabs-and-variables-params";
+import { CustomSelectMultipleRunsPlotWidget } from "@/containers/scenario-dashboard/components/plot-widget/multiple-line/custom-select-multiple-runs-plot-widget";
 
 export function PlotGrid() {
   const { year } = useScenarioDashboardUrlParams();
@@ -20,6 +23,16 @@ export function PlotGrid() {
             />
           );
         })}
+      {selectedTab.isCustom &&
+        Array(4)
+          .fill(null)
+          .map((_, index) => (
+            <CustomSelectMultipleRunsPlotWidget
+              key={index}
+              index={index}
+              initialChartType={chartType}
+            />
+          ))}
     </div>
   );
 }

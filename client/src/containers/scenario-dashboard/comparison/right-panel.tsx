@@ -1,10 +1,10 @@
 import MultiRunScenarioFlags from "@/containers/scenario-dashboard/components/runs-pannel/scenario-flags/multi-run-scenario-flags";
 import { FilterArrayItem } from "@/containers/scenario-dashboard/comparison/scenario-comparison-plots-section";
 import { RIGHT_COMPARISON_TAG } from "@/containers/scenario-dashboard/comparison/utils";
-import { MultipleRunsPlotWidget } from "@/containers/scenario-dashboard/components/plot-widget/multiple-runs-plot-widget";
-import { PLOT_TYPE_OPTIONS } from "@/containers/scenario-dashboard/components/plot-widget/chart-type-toggle";
-import { useTabAndVariablesParams } from "@/hooks/nuqs/use-tabs-and-variables-params";
-import useSyncRunsPipeline from "@/hooks/runs/pipeline/use-sync-runs-pipeline";
+import { MultipleRunsPlotWidget } from "@/containers/scenario-dashboard/components/plot-widget/multiple-line/multiple-runs-plot-widget";
+import { PLOT_TYPE_OPTIONS } from "@/containers/scenario-dashboard/components/plot-widget/components/chart-type-toggle";
+import { CustomSelectMultipleRunsPlotWidget } from "@/containers/scenario-dashboard/components/plot-widget/multiple-line/custom-select-multiple-runs-plot-widget";
+import useSyncVariables from "@/hooks/runs/pipeline/use-sync-variables";
 
 interface Props {
   filters: FilterArrayItem[];
@@ -14,8 +14,7 @@ interface Props {
 const prefix = RIGHT_COMPARISON_TAG;
 
 export default function RightPanel({ filters, onDelete }: Props) {
-  const { selectedTab } = useTabAndVariablesParams();
-  const result = useSyncRunsPipeline({ prefix });
+  const { result, selectedTab } = useSyncVariables({ prefix });
 
   const handleOnDelete = (name: string) => {
     onDelete?.(name);
@@ -52,6 +51,17 @@ export default function RightPanel({ filters, onDelete }: Props) {
               />
             );
           })}
+        {selectedTab.isCustom &&
+          Array(4)
+            .fill(null)
+            .map((_, index) => (
+              <CustomSelectMultipleRunsPlotWidget
+                key={index}
+                index={index}
+                prefix={prefix}
+                initialChartType={PLOT_TYPE_OPTIONS.MULTIPLE_LINE}
+              />
+            ))}
       </div>
     </div>
   );

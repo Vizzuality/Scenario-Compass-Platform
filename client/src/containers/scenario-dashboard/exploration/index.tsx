@@ -22,8 +22,8 @@ export default function ScenarioDashboardExploreContainer() {
       </ScenarioDashboardHero>
       <Suspense>
         <MetaIndicatorsFilters />
-        <ScenarioExplorationPlotsSection />
       </Suspense>
+      <ScenarioExplorationPlotsSection />
     </>
   );
 }
