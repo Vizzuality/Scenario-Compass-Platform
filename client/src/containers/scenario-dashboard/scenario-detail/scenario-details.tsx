@@ -49,11 +49,19 @@ export default function ScenarioDetails({ runId }: { runId: number }) {
     (item) => item.key === ADDITIONAL_INFORMATION_META_INDICATORS[1].key,
   ) || { value: "Loading Study" };
 
+  const yearNetZeroCO2 = metaData?.find((item) =>
+    item.key.includes("Climate Assessment|Year of Peak Warming|Median [MAGICCv7.5.3]"),
+  ) || { value: "Loading Year" };
+
+  const cumulativeEmissions = metaData?.find((item) =>
+    item.key.includes("Emissions Diagnostics|Cumulative CCS [2020-2100 Gt CO2]"),
+  ) || { value: "Loading Emissions" };
+
   const scenarioName = runs[0]?.scenario?.name || "Loading Scenario";
   const modelName = runs[0]?.model?.name || "Loading Model";
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto mb-8">
       <div className="mb-8 flex items-center justify-between">
         <Button
           onClick={() => router.back()}
@@ -76,9 +84,9 @@ export default function ScenarioDetails({ runId }: { runId: number }) {
         <GeographyYearInfo />
         <div className="grid h-full grid-cols-4 grid-rows-2 justify-between">
           <InfoItem title="Climate category" value={climateCategory.value} />
-          <InfoItem title="Cumulative emissions" value="Info goes here" />
+          <InfoItem title="Cumulative emissions" value={cumulativeEmissions.value} />
           <InfoItem title="Peak temperature" value="Info goes here" />
-          <InfoItem title="Year of CO2/GHG net-zero" value="Info goes here" />
+          <InfoItem title="Year of CO2/GHG net-zero" value={yearNetZeroCO2.value} />
           <InfoItem title="Model" value={modelName} />
           <InfoItem title="Project" value={projectName.value} />
           <InfoItem title="Study" value={studyName.value} />

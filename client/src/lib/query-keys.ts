@@ -44,6 +44,10 @@ export const queryKeys = createQueryKeyStore({
       queryKey: [{ filters }],
       queryFn: async (): Promise<Variable[]> => API.getVariablesList(filters),
     }),
+    tabulate: (filters?: VariableFilter) => ({
+      queryKey: [{ filters }],
+      queryFn: async () => API.getVariablesTabulate(filters),
+    }),
   },
   dataPoints: {
     tabulate: (filters?: IamcDataFilter) => ({

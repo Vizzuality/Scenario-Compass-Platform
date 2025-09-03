@@ -10,22 +10,19 @@ import {
   MetaPointsQueriesReturn,
   RunPipelineReturn,
 } from "@/hooks/runs/pipeline/types";
-import { useTabAndVariablesParams } from "@/hooks/nuqs/use-tabs-and-variables-params";
 
 export default function useSyncRunsPipeline({
   prefix,
   runId,
+  variablesNames = [],
 }: {
+  variablesNames: string[];
   runId?: number;
   prefix?: string;
 }): RunPipelineReturn {
   const { year, endYear, startYear, geography } = useScenarioDashboardUrlParams(prefix);
-  const { allSelectedVariables } = useTabAndVariablesParams(prefix);
-
-  const variables = allSelectedVariables();
-
   const dataPointQueries: DataPointsQueriesReturn = useQueries({
-    queries: variables.map((variable) => {
+    queries: variablesNames.map((variable) => {
       const filter = getDataPointsFilter({ geography, year, startYear, endYear, variable });
       const queryKey = {
         ...(runId ? { run: { id: runId } } : {}),

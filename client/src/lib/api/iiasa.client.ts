@@ -10,6 +10,7 @@ import {
   DataFrame,
   RunFilter,
   Run,
+  Variable,
 } from "@iiasa/ixmp4-ts";
 import * as z from "zod/v4";
 
@@ -149,9 +150,14 @@ export class IIASA_API_CLIENT {
     return this.platform.scenarios.tabulate(filters);
   }
 
-  public getVariablesList(filters?: VariableFilter) {
+  public getVariablesList(filters?: VariableFilter): Promise<Variable[]> {
     this.validatePlatform();
     return this.platform.iamc.variables.list(filters);
+  }
+
+  public getVariablesTabulate(filters?: VariableFilter) {
+    this.validatePlatform();
+    return this.platform.iamc.variables.tabulate(filters);
   }
 
   public getMetaIndicators(filters?: MetaIndicatorFilter) {
