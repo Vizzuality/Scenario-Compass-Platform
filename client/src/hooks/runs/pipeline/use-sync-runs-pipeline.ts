@@ -25,6 +25,7 @@ export default function useSyncRunsPipeline({
 }): RunPipelineReturn {
   const { year, endYear, startYear, geography, climate, energy, land } =
     useScenarioDashboardUrlParams(prefix);
+
   const dataPointQueries: DataPointsQueriesReturn = useQueries({
     queries: variablesNames.map((variable) => {
       const filter = getDataPointsFilter({ geography, year, startYear, endYear, variable });
@@ -32,13 +33,14 @@ export default function useSyncRunsPipeline({
         ...(runId ? { run: { id: runId } } : {}),
         ...filter,
       };
+
       return {
         ...queryKeys.dataPoints.tabulate({ ...queryKey }),
         enabled: !!geography,
         select: (data: DataFrame) => {
           const dataPoints = extractDataPoints(data);
           const uniqueIds = [...new Set(dataPoints.map((dp) => dp.runId))];
-          return { dataPoints, uniqueIds };
+          return { dataPoints, uniqueIds, variable };
         },
       };
     }),
@@ -67,6 +69,7 @@ export default function useSyncRunsPipeline({
     isLoading: isLoadingEnergyShares,
     isError: isErrorEnergyShares,
   } = useComputeEnergyShare();
+
   const { gfaIncreaseArray, isLoading: isGfaLoading, isError: isGfaError } = useComputeLandUse();
 
   const runs = () => {

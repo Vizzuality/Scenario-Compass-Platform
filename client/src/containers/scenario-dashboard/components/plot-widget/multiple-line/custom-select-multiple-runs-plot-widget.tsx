@@ -9,7 +9,7 @@ import {
 } from "@/containers/scenario-dashboard/components/plot-widget/components/chart-type-toggle";
 import { useMultipleRunsPipeline } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
 import { INTERNAL_PATHS } from "@/lib/paths";
-import PlotContent from "@/containers/scenario-dashboard/components/plot-widget/components/plot-widget-content";
+import PlotContentWrapper from "@/containers/scenario-dashboard/components/plot-widget/components/plot-content-wrapper";
 import { ExtendedRun } from "@/hooks/runs/pipeline/types";
 import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/lib/query-keys";
@@ -108,7 +108,12 @@ export function CustomSelectMultipleRunsPlotWidget({
           onChange={showChartTypeToggle ? setChartType : undefined}
         />
       </div>
-      <PlotContent chartType={chartType} data={data} prefix={prefix} onRunClick={handleRunClick} />
+      <PlotContentWrapper
+        chartType={chartType}
+        data={data}
+        prefix={prefix}
+        onRunClick={handleRunClick}
+      />
     </div>
   );
 }

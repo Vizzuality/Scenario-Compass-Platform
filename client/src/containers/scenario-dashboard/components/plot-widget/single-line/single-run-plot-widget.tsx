@@ -1,41 +1,33 @@
 "use client";
 
 import { VariablePlotWidgetHeader } from "@/containers/scenario-dashboard/components/plot-widget/components/variable-plot-widget-header";
-import PlotContent from "@/containers/scenario-dashboard/components/plot-widget/components/plot-widget-content";
+import PlotContentWrapper from "@/containers/scenario-dashboard/components/plot-widget/components/plot-content-wrapper";
 import { PLOT_TYPE_OPTIONS } from "@/containers/scenario-dashboard/components/plot-widget/components/chart-type-toggle";
-import { PlotConfig } from "@/lib/config/tabs/variables-config";
-import { useTabAndVariablesParams } from "@/hooks/nuqs/use-tabs-and-variables-params";
-import { VariableSelect } from "@/containers/scenario-dashboard/components/plot-widget/components/variable-select";
+import { SingleScenarioPlotConfig } from "@/lib/config/tabs/variables-config";
+import useSyncRunsPipeline from "@/hooks/runs/pipeline/use-sync-runs-pipeline";
+import PlotLegend from "@/containers/scenario-dashboard/components/plot-widget/components/plot-legend";
 
 interface Props {
   runId: number;
-  plotConfig: PlotConfig;
+  plotConfig: SingleScenarioPlotConfig;
 }
 
-export function SingleRunPlotWidget({ plotConfig }: Props) {
-  const { getVariable, setVariable } = useTabAndVariablesParams();
-  const currentVariable = getVariable(plotConfig);
-  const data = {
-    runs: [],
-    isLoading: false,
-    isError: false,
-  };
-  const handleVariableChange = (variable: string) => {
-    setVariable(plotConfig, variable);
-  };
+export function SingleRunPlotWidget({ runId, plotConfig }: Props) {
+  const data = useSyncRunsPipeline({
+    variablesNames: plotConfig.variables as string[],
+    runId,
+  });
 
   return (
-    <div className="w-full rounded-md bg-white p-4 select-none">
-      <VariablePlotWidgetHeader
-        title={plotConfig.title}
-        chartType={PLOT_TYPE_OPTIONS.SINGLE_LINE}
-      />
-      <VariableSelect
-        options={plotConfig.variables}
-        onChange={handleVariableChange}
-        currentVariable={currentVariable}
-      />
-      <PlotContent chartType={PLOT_TYPE_OPTIONS.SINGLE_LINE} data={data} />
+    <div className="flex w-full flex-col justify-between rounded-md bg-white p-4 select-none">
+      <div>
+        <VariablePlotWidgetHeader
+          title={plotConfig.title}
+          chartType={PLOT_TYPE_OPTIONS.SINGLE_LINE}
+        />
+        {data.runs[0] && <PlotLegend run={data.runs[0]} plotConfig={plotConfig} />}
+      </div>
+      <PlotContentWrapper chartType={PLOT_TYPE_OPTIONS.STACKED_AREA} data={data} />
     </div>
   );
 }

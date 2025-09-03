@@ -3,7 +3,7 @@ import { Accordion, AccordionItem, AccordionTrigger } from "@/components/ui/acco
 import { useMemo } from "react";
 import { categorizeRuns } from "@/containers/scenario-dashboard/utils/flags-utils";
 import { AccordionItemContent } from "@/containers/scenario-dashboard/components/runs-pannel/components/accordion-item-content";
-import { CategoryKey } from "@/containers/scenario-dashboard/utils/category-config";
+import { CategoryKey } from "@/lib/config/reasons-of-concern/category-config";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { InfoIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";

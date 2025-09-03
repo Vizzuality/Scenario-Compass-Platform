@@ -1,4 +1,4 @@
-import { CategoryKey } from "@/containers/scenario-dashboard/utils/category-config";
+import { CategoryKey } from "@/lib/config/reasons-of-concern/category-config";
 import { DataPoint } from "@/components/plots/types";
 import { MetaIndicator } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
 import { UseQueryResult } from "@tanstack/react-query";
@@ -7,6 +7,7 @@ export interface ExtendedRun {
   runId: string;
   scenarioName: string;
   modelName: string;
+  variableName: string;
   orderedPoints: ShortDataPoint[];
   flagCategory: CategoryKey;
   metaIndicators: ShortMetaIndicator[];
@@ -27,6 +28,7 @@ export type DataPointsQueriesReturn = Array<
   UseQueryResult<{
     dataPoints: DataPoint[];
     uniqueIds: Array<string>;
+    variable: string;
   }>
 >;
 

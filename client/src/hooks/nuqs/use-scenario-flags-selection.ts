@@ -1,5 +1,5 @@
 import { useQueryState } from "nuqs";
-import { CATEGORY_CONFIG } from "@/containers/scenario-dashboard/utils/category-config";
+import { CATEGORY_CONFIG } from "@/lib/config/reasons-of-concern/category-config";
 
 type FlagState = "selected" | "hidden" | "default";
 type FlagsState = Record<string, FlagState>;

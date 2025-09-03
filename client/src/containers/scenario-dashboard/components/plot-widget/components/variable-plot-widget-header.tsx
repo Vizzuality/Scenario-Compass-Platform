@@ -6,7 +6,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 interface Props {
-  chartType: ChartType;
+  chartType?: ChartType;
   onChange?: (chartType: ChartType) => void;
   title?: string;
 }

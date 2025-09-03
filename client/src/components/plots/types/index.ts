@@ -13,6 +13,7 @@ interface DataPoint {
   modelName: string;
   year: number;
   value: number;
+  variable: string;
 }
 
 /**

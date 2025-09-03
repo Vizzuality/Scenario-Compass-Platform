@@ -11,7 +11,7 @@ import { useMultipleRunsPipeline } from "@/hooks/runs/pipeline/use-multiple-runs
 import { INTERNAL_PATHS } from "@/lib/paths";
 import { PlotConfig } from "@/lib/config/tabs/variables-config";
 import { VariableSelect } from "@/containers/scenario-dashboard/components/plot-widget/components/variable-select";
-import PlotContent from "@/containers/scenario-dashboard/components/plot-widget/components/plot-widget-content";
+import PlotContentWrapper from "@/containers/scenario-dashboard/components/plot-widget/components/plot-content-wrapper";
 import { ExtendedRun } from "@/hooks/runs/pipeline/types";
 import { useTabAndVariablesParams } from "@/hooks/nuqs/use-tabs-and-variables-params";
 
@@ -37,7 +37,8 @@ export function MultipleRunsPlotWidget({ plotConfig, prefix, initialChartType = 
   };
 
   const handleRunClick = (run: ExtendedRun) => {
-    router.push(`${INTERNAL_PATHS.SCENARIO_DASHBOARD}/${run.runId}`);
+    const params = new URLSearchParams(window.location.search);
+    router.push(`${INTERNAL_PATHS.SCENARIO_DASHBOARD}/${run.runId}?${params.toString()}`);
   };
 
   const showChartTypeToggle = chartType !== PLOT_TYPE_OPTIONS.DOTS;
@@ -54,7 +55,12 @@ export function MultipleRunsPlotWidget({ plotConfig, prefix, initialChartType = 
         onChange={handleVariableChange}
         currentVariable={currentVariable}
       />
-      <PlotContent chartType={chartType} data={data} prefix={prefix} onRunClick={handleRunClick} />
+      <PlotContentWrapper
+        chartType={chartType}
+        data={data}
+        prefix={prefix}
+        onRunClick={handleRunClick}
+      />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { AccordionTrigger } from "@/components/ui/accordion";
 import { Eye, EyeOff, InfoIcon } from "lucide-react";
 import { useScenarioFlagsSelection } from "@/hooks/nuqs/use-scenario-flags-selection";
-import { CategoryKey } from "@/containers/scenario-dashboard/utils/category-config";
+import { CategoryKey } from "@/lib/config/reasons-of-concern/category-config";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { RunCategory } from "@/containers/scenario-dashboard/components/runs-pannel/utils";
 import { cn } from "@/lib/utils";

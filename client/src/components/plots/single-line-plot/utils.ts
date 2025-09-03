@@ -12,7 +12,7 @@ import {
   SVGSelection,
 } from "@/components/plots/utils";
 import { PlotDimensions } from "@/components/plots/utils/dimensions";
-import { CATEGORY_CONFIG } from "@/containers/scenario-dashboard/utils/category-config";
+import { CATEGORY_CONFIG } from "@/lib/config/reasons-of-concern/category-config";
 import * as d3 from "d3";
 import { createTooltipManager } from "@/components/plots/utils/tooltip-manager";
 import { createHoverElements } from "@/components/plots/utils/create-hover-elements";

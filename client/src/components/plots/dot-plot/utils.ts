@@ -18,7 +18,7 @@ import {
   getRunColor,
   formatNumber,
 } from "@/components/plots/utils";
-import { CATEGORY_CONFIG } from "@/containers/scenario-dashboard/utils/category-config";
+import { CATEGORY_CONFIG } from "@/lib/config/reasons-of-concern/category-config";
 import { createTooltipManager } from "@/components/plots/utils/tooltip-manager";
 import { ExtendedRun } from "@/hooks/runs/pipeline/types";
 

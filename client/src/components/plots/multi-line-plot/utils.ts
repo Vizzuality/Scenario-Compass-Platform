@@ -4,7 +4,7 @@ import { PlotDimensions } from "@/components/plots/utils/dimensions";
 import {
   CATEGORY_CONFIG,
   getCategoryAbbrev,
-} from "@/containers/scenario-dashboard/utils/category-config";
+} from "@/lib/config/reasons-of-concern/category-config";
 import {
   SVGSelection,
   calculateDomain,

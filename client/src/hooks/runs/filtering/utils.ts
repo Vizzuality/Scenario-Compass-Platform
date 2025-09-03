@@ -68,9 +68,9 @@ export const extractDataPoints = (data: DataFrame | undefined): DataPoint[] | []
   const modelCol = columns.find((col) => col.toLowerCase().includes("model"));
   const yearCol = columns.find((col) => col.toLowerCase().includes("year"));
   const valueCol = columns.find((col) => col.toLowerCase().includes("value"));
+  const variableCol = columns.find((col) => col.toLowerCase().includes("variable"));
 
-  if (!scenarioCol || !yearCol || !valueCol || !modelCol || !runIdCol) {
-    console.error("Missing required columns: scenario, year, value or model");
+  if (!scenarioCol || !yearCol || !valueCol || !modelCol || !runIdCol || !variableCol) {
     return [];
   }
 
@@ -80,6 +80,7 @@ export const extractDataPoints = (data: DataFrame | undefined): DataPoint[] | []
     const model = data.at(i, modelCol);
     const year = data.at(i, yearCol);
     const value = data.at(i, valueCol);
+    const variable = data.at(i, variableCol);
 
     if (scenario != null && year != null && value != null) {
       dataPoints.push({
@@ -88,6 +89,7 @@ export const extractDataPoints = (data: DataFrame | undefined): DataPoint[] | []
         modelName: String(model),
         year: Number(year),
         value: Number(value),
+        variable: String(variable),
       });
     }
   }

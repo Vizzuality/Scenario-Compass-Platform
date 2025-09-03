@@ -10,17 +10,19 @@ import {
 } from "@/lib/config/filters/energy-filter-config";
 import { INCREASE_IN_GLOBAL_FOREST_AREA_KEY } from "@/lib/config/filters/land-filter-config";
 
+interface Params {
+  metaIndicators: MetaIndicator[];
+  dataPoints: DataPoint[];
+  energyShares: EnergyShareMap | null;
+  gfaIncreaseArray: Record<string, number>;
+}
+
 export const generateExtendedRuns = ({
   metaIndicators,
   dataPoints,
   energyShares,
   gfaIncreaseArray,
-}: {
-  metaIndicators: MetaIndicator[];
-  dataPoints: DataPoint[];
-  energyShares: EnergyShareMap | null;
-  gfaIncreaseArray: Record<string, number>;
-}): ExtendedRun[] => {
+}: Params): ExtendedRun[] => {
   if (!metaIndicators.length || !dataPoints.length || !energyShares) {
     return [];
   }
@@ -68,6 +70,7 @@ export const generateExtendedRuns = ({
     const firstDataPoint = runDataPoints[0];
     const extendedRun: ExtendedRun = {
       runId,
+      variableName: firstDataPoint.variable,
       scenarioName: firstDataPoint.scenarioName,
       modelName: firstDataPoint.modelName,
       orderedPoints: createShortDataPoints(runDataPoints),
