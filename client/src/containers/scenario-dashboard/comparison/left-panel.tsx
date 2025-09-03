@@ -1,10 +1,10 @@
 import MultiRunScenarioFlags from "@/containers/scenario-dashboard/components/runs-pannel/scenario-flags/multi-run-scenario-flags";
 import { FilterArrayItem } from "@/containers/scenario-dashboard/comparison/scenario-comparison-plots-section";
 import { LEFT_COMPARISON_TAG } from "@/containers/scenario-dashboard/comparison/utils";
-import { MultipleRunsPlotWidget } from "@/containers/scenario-dashboard/components/plot-widget/multiple-runs-plot-widget";
-import { PLOT_TYPE_OPTIONS } from "@/containers/scenario-dashboard/components/plot-widget/chart-type-toggle";
-import { useTabAndVariablesParams } from "@/hooks/nuqs/use-tabs-and-variables-params";
-import useSyncRunsPipeline from "@/hooks/runs/pipeline/use-sync-runs-pipeline";
+import { MultipleRunsPlotWidget } from "@/containers/scenario-dashboard/components/plot-widget/multiple-line/multiple-runs-plot-widget";
+import { PLOT_TYPE_OPTIONS } from "@/containers/scenario-dashboard/components/plot-widget/components/chart-type-toggle";
+import useSyncVariables from "@/hooks/runs/pipeline/use-sync-variables";
+import CustomTabPlotGrid from "@/containers/scenario-dashboard/components/plots-section/custom-tab-plot-grid";
 
 interface Props {
   filters: FilterArrayItem[];
@@ -13,8 +13,7 @@ interface Props {
 const prefix = LEFT_COMPARISON_TAG;
 
 export default function LeftPanel({ filters }: Props) {
-  const { selectedTab } = useTabAndVariablesParams();
-  const result = useSyncRunsPipeline({ prefix });
+  const { result, selectedTab } = useSyncVariables({ prefix });
 
   return (
     <div className="border-r">
@@ -45,6 +44,13 @@ export default function LeftPanel({ filters }: Props) {
             );
           })}
       </div>
+      {selectedTab.isCustom && (
+        <CustomTabPlotGrid
+          prefix={prefix}
+          className="flex h-fit w-full flex-col gap-4 pt-6 pr-4"
+          initialChartType={PLOT_TYPE_OPTIONS.MULTIPLE_LINE}
+        />
+      )}
     </div>
   );
 }

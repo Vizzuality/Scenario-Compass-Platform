@@ -20,7 +20,7 @@ export const AccordionItemContent: React.FC<AccordionItemContentProps> = ({ cate
         {keyCounts.map(([key, count]) => (
           <div key={key} className="flex items-center justify-between gap-2 py-1.5 text-sm">
             <div className="font-medium text-gray-800">{key}</div>
-            <strong>({count})</strong>
+            <strong>{count}</strong>
           </div>
         ))}
       </div>

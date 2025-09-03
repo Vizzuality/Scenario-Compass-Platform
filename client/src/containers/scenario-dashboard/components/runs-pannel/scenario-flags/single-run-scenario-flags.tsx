@@ -2,7 +2,7 @@ import { RunPipelineReturn } from "@/hooks/runs/pipeline/types";
 import { Accordion, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useMemo } from "react";
 import { categorizeRuns } from "@/containers/scenario-dashboard/utils/flags-utils";
-import { AccordionItemContent } from "@/containers/scenario-dashboard/components/runs-pannel/accordion-item-content";
+import { AccordionItemContent } from "@/containers/scenario-dashboard/components/runs-pannel/components/accordion-item-content";
 import { CategoryKey } from "@/containers/scenario-dashboard/utils/category-config";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { InfoIcon } from "lucide-react";
