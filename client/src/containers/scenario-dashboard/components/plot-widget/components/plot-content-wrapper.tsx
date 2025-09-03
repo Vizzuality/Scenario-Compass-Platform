@@ -1,8 +1,6 @@
 import LoadingDots from "@/components/animations/loading-dots";
 import { MultiLinePlot } from "@/components/plots/multi-line-plot";
 import { AreaPlot } from "@/components/plots/area-plot";
-import { getPlotDimensions } from "@/components/plots/utils/dimensions";
-import { ReactNode } from "react";
 import {
   ChartType,
   PLOT_TYPE_OPTIONS,
@@ -11,8 +9,10 @@ import { SingleLinePlot } from "@/components/plots/single-line-plot";
 import { DotPlot } from "@/components/plots/dot-plot";
 import { ExtendedRun, RunPipelineReturn } from "@/hooks/runs/pipeline/types";
 import { DataFetchError } from "@/components/error-state/data-fetch-error";
-import notFoundImage from "@/assets/images/not-found.webp";
+import { StackedAreaPlot } from "@/components/plots/stacked-area";
+import { PlotContainer } from "@/containers/scenario-dashboard/components/plot-widget/components/plot-container";
 import Image from "next/image";
+import notFoundImage from "@/assets/images/not-found.webp";
 
 interface Props {
   chartType: ChartType;
@@ -21,18 +21,7 @@ interface Props {
   prefix?: string;
 }
 
-const PlotContainer = ({ children }: { children: ReactNode }) => {
-  const dimensions = getPlotDimensions();
-  const aspectRatio = dimensions.WIDTH / dimensions.HEIGHT;
-
-  return (
-    <div className={"relative flex w-full items-center justify-center"} style={{ aspectRatio }}>
-      {children}
-    </div>
-  );
-};
-
-const PlotContent = ({ chartType, data, prefix = "", onRunClick }: Props) => {
+const PlotContentWrapper = ({ chartType, data, prefix = "", onRunClick }: Props) => {
   if (data.isLoading) {
     return (
       <PlotContainer>
@@ -77,6 +66,7 @@ const PlotContent = ({ chartType, data, prefix = "", onRunClick }: Props) => {
     [PLOT_TYPE_OPTIONS.SINGLE_LINE]: <SingleLinePlot run={data.runs[0]} />,
     [PLOT_TYPE_OPTIONS.AREA]: <AreaPlot runs={data.runs} />,
     [PLOT_TYPE_OPTIONS.DOTS]: <DotPlot runs={data.runs} />,
+    [PLOT_TYPE_OPTIONS.STACKED_AREA]: <StackedAreaPlot runs={data.runs} />,
   };
 
   return (
@@ -86,4 +76,4 @@ const PlotContent = ({ chartType, data, prefix = "", onRunClick }: Props) => {
   );
 };
 
-export default PlotContent;
+export default PlotContentWrapper;

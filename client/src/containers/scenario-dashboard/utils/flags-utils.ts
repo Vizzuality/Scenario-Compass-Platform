@@ -6,7 +6,7 @@ import {
   SUSTAINABILITY_META_KEY,
   VALUE_HIGH,
   VALUE_MEDIUM,
-} from "@/containers/scenario-dashboard/utils/category-config";
+} from "@/lib/config/reasons-of-concern/category-config";
 import { RunCategory } from "@/containers/scenario-dashboard/components/runs-pannel/utils";
 import { ExtendedRun, ShortMetaIndicator } from "@/hooks/runs/pipeline/types";
 

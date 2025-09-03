@@ -1,7 +1,4 @@
-import {
-  CATEGORY_CONFIG,
-  CategoryKey,
-} from "@/containers/scenario-dashboard/utils/category-config";
+import { CATEGORY_CONFIG, CategoryKey } from "@/lib/config/reasons-of-concern/category-config";
 import { RunCategory } from "@/containers/scenario-dashboard/components/runs-pannel/utils";
 
 interface ColoredBarProps {
