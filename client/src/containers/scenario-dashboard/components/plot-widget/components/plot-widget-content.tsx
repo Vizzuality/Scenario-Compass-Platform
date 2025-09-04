@@ -6,7 +6,7 @@ import { ReactNode } from "react";
 import {
   ChartType,
   PLOT_TYPE_OPTIONS,
-} from "@/containers/scenario-dashboard/components/plot-widget/chart-type-toggle";
+} from "@/containers/scenario-dashboard/components/plot-widget/components/chart-type-toggle";
 import { SingleLinePlot } from "@/components/plots/single-line-plot";
 import { DotPlot } from "@/components/plots/dot-plot";
 import { ExtendedRun, RunPipelineReturn } from "@/hooks/runs/pipeline/types";
@@ -19,7 +19,7 @@ interface Props {
   prefix?: string;
 }
 
-const PlotContainer = ({ children }: { children: ReactNode }) => {
+export const PlotContainer = ({ children }: { children: ReactNode }) => {
   const dimensions = getPlotDimensions();
   const aspectRatio = dimensions.WIDTH / dimensions.HEIGHT;
 
