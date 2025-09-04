@@ -19,7 +19,7 @@ interface Props {
   prefix?: string;
 }
 
-const PlotContainer = ({ children }: { children: ReactNode }) => {
+export const PlotContainer = ({ children }: { children: ReactNode }) => {
   const dimensions = getPlotDimensions();
   const aspectRatio = dimensions.WIDTH / dimensions.HEIGHT;
 
