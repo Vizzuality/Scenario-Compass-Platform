@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/accordion";
 import { useMemo, useState } from "react";
 import { categorizeRuns } from "@/containers/scenario-dashboard/utils/flags-utils";
-import { AccordionItemContent } from "@/containers/scenario-dashboard/components/runs-pannel/accordion-item-content";
+import { AccordionItemContent } from "@/containers/scenario-dashboard/components/runs-pannel/components/accordion-item-content";
 import ScenarioFlagTrigger from "@/containers/scenario-dashboard/components/runs-pannel/scenario-flags/scenario-flag-trigger";
 import { CategoryKey } from "@/containers/scenario-dashboard/utils/category-config";
 import { Skeleton } from "@/components/ui/skeleton";
