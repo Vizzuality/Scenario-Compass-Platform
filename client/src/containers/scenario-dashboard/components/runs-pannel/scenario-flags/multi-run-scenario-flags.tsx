@@ -80,7 +80,7 @@ export default function MultiRunScenarioFlags({ result, prefix }: Props) {
     <Accordion value={isOpen} onValueChange={setIsOpen} type="single" collapsible>
       <AccordionItem value={SCENARIO_FLAGS_ACCORDION_VALUE} className={isOpen && "border-b-0"}>
         <AccordionTrigger className="pt-0 pb-1.5 text-base font-bold text-stone-800">
-          <p className="text-base">Flags</p>
+          <p className="text-base">Reasons for Concern</p>
         </AccordionTrigger>
         <AccordionContent className="flex flex-col gap-3 border-t pt-4">
           <div className="flex flex-col gap-2">
@@ -125,14 +125,17 @@ export default function MultiRunScenarioFlags({ result, prefix }: Props) {
               </div>
             )}
             {okCategories.length > 0 && (
-              <Accordion type="single" collapsible className="w-full">
-                {okCategories.map(([key, category]) => (
-                  <AccordionItem key={key} value={key}>
-                    <ScenarioFlagTrigger categoryKey={key} category={category} prefix={prefix} />
-                    <AccordionItemContent category={category} />
-                  </AccordionItem>
-                ))}
-              </Accordion>
+              <div className="flex flex-col gap-2">
+                <strong className="text-foreground text-xs">NONE</strong>
+                <Accordion type="single" collapsible className="w-full">
+                  {okCategories.map(([key, category]) => (
+                    <AccordionItem key={key} value={key}>
+                      <ScenarioFlagTrigger categoryKey={key} category={category} prefix={prefix} />
+                      <AccordionItemContent category={category} />
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              </div>
             )}
           </div>
         </AccordionContent>
