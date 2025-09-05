@@ -2,8 +2,8 @@ import {
   CATEGORY_CONFIG,
   CATEGORY_KEYS,
   CategoryKey,
-  PLAUSIBILITY_META_KEY,
-  REASON_FOR_CONCERN_META_KEY,
+  FEASIBILITY_META_KEY,
+  SUSTAINABILITY_META_KEY,
   VALUE_HIGH,
   VALUE_MEDIUM,
 } from "@/containers/scenario-dashboard/utils/category-config";
@@ -34,8 +34,8 @@ type RunFlagAnalysis = {
  */
 export const _filterFlagMetaIndicators = (metaIndicators: Array<ShortMetaIndicator>) => {
   return metaIndicators.filter((meta) => {
-    const isPlausibilityFlag = meta.key.startsWith(PLAUSIBILITY_META_KEY);
-    const isConcernFlag = meta.key.startsWith(REASON_FOR_CONCERN_META_KEY);
+    const isPlausibilityFlag = meta.key.startsWith(FEASIBILITY_META_KEY);
+    const isConcernFlag = meta.key.startsWith(SUSTAINABILITY_META_KEY);
 
     return isPlausibilityFlag || isConcernFlag;
   });
@@ -89,12 +89,12 @@ const _analyzeRunFlags = (flagMetas: Array<ShortMetaIndicator>): RunFlagAnalysis
   flagMetas.forEach((meta) => {
     const value = meta.value.toLowerCase();
 
-    if (meta.key.startsWith(PLAUSIBILITY_META_KEY)) {
+    if (meta.key.startsWith(FEASIBILITY_META_KEY)) {
       if (value === VALUE_HIGH) flags.highPlausibility = true;
       else if (value === VALUE_MEDIUM) flags.mediumPlausibility = true;
     }
 
-    if (meta.key.startsWith(REASON_FOR_CONCERN_META_KEY)) {
+    if (meta.key.startsWith(SUSTAINABILITY_META_KEY)) {
       if (value === VALUE_HIGH) flags.highConcern = true;
       else if (value === VALUE_MEDIUM) flags.mediumConcern = true;
     }
@@ -118,14 +118,16 @@ const _categorizeSingleRun = (flags: RunFlagAnalysis) => {
 
   // Case 2: Run has ONLY concern flags
   if (hasAnyConcernFlag && !hasAnyPlausibilityFlag) {
-    return flags.highConcern ? CATEGORY_KEYS.HIGH_CONCERN : CATEGORY_KEYS.MEDIUM_CONCERN;
+    return flags.highConcern
+      ? CATEGORY_KEYS.HIGH_SUSTAINABILITY
+      : CATEGORY_KEYS.MEDIUM_SUSTAINABILITY;
   }
 
   // Case 3: Run has ONLY plausibility flags
   if (hasAnyPlausibilityFlag && !hasAnyConcernFlag) {
     return flags.highPlausibility
-      ? CATEGORY_KEYS.HIGH_PLAUSIBILITY
-      : CATEGORY_KEYS.MEDIUM_PLAUSIBILITY;
+      ? CATEGORY_KEYS.HIGH_FEASIBILITY
+      : CATEGORY_KEYS.MEDIUM_FEASIBILITY;
   }
 
   // Case 4: Run has NO relevant flags or all flags are OK

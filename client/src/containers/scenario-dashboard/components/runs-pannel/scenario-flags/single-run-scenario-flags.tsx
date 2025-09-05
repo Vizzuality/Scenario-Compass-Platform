@@ -50,7 +50,9 @@ export default function SingleRunScenarioFlags({ result }: Props) {
 
   return (
     <div className="mt-8 w-140">
-      <p className="w-full border-b pb-1.5 text-base font-bold text-stone-800">Flags</p>
+      <p className="w-full border-b pb-1.5 text-base font-bold text-stone-800">
+        Reasons for Concern
+      </p>
       {categoriesWithRuns.map(([key, category]) => (
         <Accordion type="single" value={key} key={key}>
           <AccordionItem value={key}>

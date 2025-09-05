@@ -9,10 +9,10 @@ export const DATA_COLORS = {
 } as const;
 
 export const CATEGORY_KEYS = {
-  HIGH_PLAUSIBILITY: "HIGH_PLAUSIBILITY",
-  HIGH_CONCERN: "HIGH_CONCERN",
-  MEDIUM_PLAUSIBILITY: "MEDIUM_PLAUSIBILITY",
-  MEDIUM_CONCERN: "MEDIUM_CONCERN",
+  HIGH_FEASIBILITY: "HIGH_FEASIBILITY",
+  HIGH_SUSTAINABILITY: "HIGH_SUSTAINABILITY",
+  MEDIUM_FEASIBILITY: "MEDIUM_FEASIBILITY",
+  MEDIUM_SUSTAINABILITY: "MEDIUM_SUSTAINABILITY",
   BOTH_HIGH: "BOTH_HIGH",
   BOTH_MEDIUM: "BOTH_MEDIUM",
   NO_FLAGS: "NO_FLAGS",
@@ -21,37 +21,37 @@ export const CATEGORY_KEYS = {
 // Change ordering in order to change the order of colors inside the Scenario Flags
 export const CATEGORY_CONFIG = {
   [CATEGORY_KEYS.BOTH_HIGH]: {
-    label: "Plausibility vetting flags and reasons for concern, and at least one of them is high",
+    label: "Sustainability and feasibility concerns, and at least one of them is high",
     abbrev: "BH",
     color: DATA_COLORS.PURPLE,
   },
-  [CATEGORY_KEYS.HIGH_PLAUSIBILITY]: {
-    label: "High plausibility vetting",
-    abbrev: "HP",
-    color: DATA_COLORS.RED,
-  },
-  [CATEGORY_KEYS.HIGH_CONCERN]: {
-    label: "High reasons for concern",
+  [CATEGORY_KEYS.HIGH_SUSTAINABILITY]: {
+    label: "High sustainability concerns",
     abbrev: "HC",
     color: DATA_COLORS.BROWN,
   },
-  [CATEGORY_KEYS.MEDIUM_PLAUSIBILITY]: {
-    label: "Medium plausibility vetting",
-    abbrev: "MP",
-    color: DATA_COLORS.YELLOW,
-  },
-  [CATEGORY_KEYS.MEDIUM_CONCERN]: {
-    label: "Medium reasons for concern",
-    abbrev: "MC",
-    color: DATA_COLORS.PINK,
+  [CATEGORY_KEYS.HIGH_FEASIBILITY]: {
+    label: "High feasibility concerns",
+    abbrev: "HP",
+    color: DATA_COLORS.RED,
   },
   [CATEGORY_KEYS.BOTH_MEDIUM]: {
-    label: "Plausibility vetting flags and reasons for concern, and they are all medium",
+    label: "Medium sustainability and feasibility concerns",
     abbrev: "BM",
     color: DATA_COLORS.BLUE,
   },
+  [CATEGORY_KEYS.MEDIUM_SUSTAINABILITY]: {
+    label: "Medium sustainability concerns",
+    abbrev: "MC",
+    color: DATA_COLORS.PINK,
+  },
+  [CATEGORY_KEYS.MEDIUM_FEASIBILITY]: {
+    label: "Medium feasibility concerns",
+    abbrev: "MP",
+    color: DATA_COLORS.YELLOW,
+  },
   [CATEGORY_KEYS.NO_FLAGS]: {
-    label: "No flags",
+    label: "No reasons for concern",
     abbrev: "NF",
     color: DATA_COLORS.GREEN,
   },
@@ -59,8 +59,8 @@ export const CATEGORY_CONFIG = {
 
 export type CategoryKey = keyof typeof CATEGORY_CONFIG;
 
-export const PLAUSIBILITY_META_KEY = "Plausibility Vetting";
-export const REASON_FOR_CONCERN_META_KEY = "Reason For Concern";
+export const FEASIBILITY_META_KEY = "Feasibility Concern";
+export const SUSTAINABILITY_META_KEY = "Sustainability Concern";
 export const VALUE_HIGH = "high";
 export const VALUE_MEDIUM = "medium";
 
