@@ -4,6 +4,7 @@ import { ModuleLearnByTopic } from "@/containers/landing-page/module-learn-by-to
 import { ModuleScenarioDashboard } from "@/containers/landing-page/module-scenario-dashboard";
 import { ModuleShareFeedback } from "@/containers/landing-page/module-share-feedback";
 import { ModuleGuidedExploration } from "@/containers/landing-page/module-guided-exploration";
+import { env } from "@/env";
 
 export function LandingPage() {
   return (
@@ -11,7 +12,7 @@ export function LandingPage() {
       <ModuleHero />
       <ModuleGuidedIntro />
       <ModuleScenarioDashboard />
-      <ModuleLearnByTopic />
+      {!env.NEXT_PUBLIC_FEATURE_FLAG_HIDE_LEARN_BY_TOPIC_PAGE && <ModuleLearnByTopic />}
       <ModuleGuidedExploration />
       <ModuleShareFeedback />
     </main>
