@@ -4,7 +4,7 @@ import { VariablePlotWidgetHeader } from "@/containers/scenario-dashboard/compon
 import PlotContent from "@/containers/scenario-dashboard/components/plot-widget/components/plot-widget-content";
 import { useSingleRunPipeline } from "@/hooks/runs/pipeline/use-single-run-pipeline";
 import { PLOT_TYPE_OPTIONS } from "@/containers/scenario-dashboard/components/plot-widget/components/chart-type-toggle";
-import { PlotConfig } from "@/lib/config/variables-config";
+import { PlotConfig } from "@/lib/config/tabs/variables-config";
 import { useTabAndVariablesParams } from "@/hooks/nuqs/use-tabs-and-variables-params";
 import { VariableSelect } from "@/containers/scenario-dashboard/components/plot-widget/components/variable-select";
 

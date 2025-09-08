@@ -1,6 +1,6 @@
 import { DataFrame } from "@iiasa/ixmp4-ts";
 import { DataPoint } from "@/components/plots/types";
-import { geographyOptions } from "@/lib/constants";
+import { geographyConfig } from "@/lib/config/filters/geography-filter-config";
 
 export interface DataPointsFilterParams {
   runId?: number | null;
@@ -60,7 +60,7 @@ export const getDataPointsFilter = ({
   variable,
 }: Omit<DataPointsFilterParams, "runId">) => {
   const baseFilter = {
-    region: { name: geographyOptions.find((g) => g.value === geography)?.lookupName },
+    region: { name: geographyConfig.find((g) => g.value === geography)?.lookupName },
     variable: {
       name: variable,
     },

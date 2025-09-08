@@ -16,7 +16,7 @@ export const AdvancedFilter = () => {
         </Label>
         <TooltipInfo info={tooltipInfo} />
       </div>
-      <Select>
+      <Select disabled>
         <SelectTrigger size="lg" className="w-full" id="advanced" theme="light">
           Select option
         </SelectTrigger>

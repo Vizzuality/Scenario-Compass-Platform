@@ -2,8 +2,8 @@
 
 import { parseAsString, useQueryState } from "nuqs";
 import { useMemo } from "react";
-import { TabConfig, TABS_CONFIG_ARRAY } from "@/lib/config/tabs-config";
-import { PlotConfig } from "@/lib/config/variables-config";
+import { TabConfig, TABS_CONFIG_ARRAY } from "@/lib/config/tabs/tabs-config";
+import { PlotConfig } from "@/lib/config/tabs/variables-config";
 import { Variable } from "@iiasa/ixmp4-ts";
 
 function hashString(str: string): string {

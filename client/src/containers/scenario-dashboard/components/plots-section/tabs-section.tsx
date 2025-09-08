@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { TABS_CONFIG_ARRAY } from "@/lib/config/tabs-config";
+import { TABS_CONFIG_ARRAY } from "@/lib/config/tabs/tabs-config";
 import { useTabAndVariablesParams } from "@/hooks/nuqs/use-tabs-and-variables-params";
 
 export function TabsSection() {

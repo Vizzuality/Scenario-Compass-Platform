@@ -198,7 +198,7 @@ export class IIASA_API_CLIENT {
         id: runId,
       },
       region: {
-        // @ts-expect-error No TS support for geography id yet
+        // @ts-expect-error No TS support for geography-filter-config id yet
         id: geography,
       },
     });
