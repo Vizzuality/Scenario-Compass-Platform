@@ -1,5 +1,11 @@
-import { GuidedExplorationPageContainer } from "@/containers/guided-exploration-page";
+import ComingSoon from "@/containers/coming-soon";
+import { Navbar } from "@/components/layout/navbar/navbar";
 
 export default function GuidedExplorationPage() {
-  return <GuidedExplorationPageContainer />;
+  return (
+    <div className="flex flex-1 flex-col">
+      <Navbar theme="light" sheetTheme="lilac" />
+      <ComingSoon />
+    </div>
+  );
 }

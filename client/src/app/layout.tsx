@@ -31,7 +31,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${oswaldSans.variable} ${sourceSans.variable} font-sans`}>
+      <body
+        className={`${oswaldSans.variable} ${sourceSans.variable} flex min-h-screen flex-col font-sans`}
+      >
         <ClientProviders>
           <>
             {children}
