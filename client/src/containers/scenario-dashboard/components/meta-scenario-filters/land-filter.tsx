@@ -1,58 +1,61 @@
 "use client";
 
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 import {
-  getMetaPoints,
-  RowFilterProps,
-} from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { RowFilterProps } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
 import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
-import { useQuery } from "@tanstack/react-query";
-import queryKeys from "@/lib/query-keys";
 import TooltipInfo from "@/containers/scenario-dashboard/components/tooltip-info";
 import { Button } from "@/components/ui/button";
 import { Trash2Icon } from "lucide-react";
+import {
+  CLIMATE_CATEGORY_FILTER_CONFIG,
+  YEAR_NET_ZERO_FILTER_CONFIG,
+} from "@/lib/config/filters/climate-filter-config";
+import { useId } from "react";
 
 const tooltipInfo =
   "Land refers to the use and management of land resources in scenarios, including aspects like deforestation, urbanization, and agricultural practices. This filter allows you to categorize scenarios based on their land use impact.";
 
-const useGetLandOptions = () => {
-  const { data } = useQuery({
-    ...queryKeys.metaIndicators.tabulate({
-      // @ts-expect-error Not sufficient ts support
-      key_like: "Climate Assessment|Category [Name]",
-    }),
-    select: (data) => {
-      const metaPoints = getMetaPoints(data);
-      return [...new Set(metaPoints?.map((obj) => obj.value))].sort();
-    },
-  });
-
-  return data ?? [];
-};
-
 export const LandFilter = () => {
-  const uniqueValues = useGetLandOptions();
-  const { land, setLand } = useScenarioDashboardUrlParams();
+  const id = useId();
 
   return (
-    <div className="flex w-full flex-col gap-2">
+    <div className="flex w-full flex-col items-start gap-2">
       <div className="flex items-center gap-2">
-        <Label htmlFor="land" className="leading-6 font-bold">
-          Land
+        <Label htmlFor={id} className="leading-6 font-bold">
+          Land use
         </Label>
         <TooltipInfo info={tooltipInfo} />
       </div>
-      <Select value={land || ""} onValueChange={setLand}>
-        <SelectTrigger size="lg" className="w-full" id="land" theme="light">
-          {land || "Select option"}
+      <Select disabled value="" onValueChange={() => {}}>
+        <SelectTrigger size="lg" className="w-full" id={id} theme="light">
+          <SelectValue placeholder="Select option">Select option</SelectValue>
         </SelectTrigger>
         <SelectContent>
-          {uniqueValues.map((value) => (
-            <SelectItem key={value} value={value}>
-              {value}
-            </SelectItem>
-          ))}
+          <SelectGroup>
+            <SelectLabel>{CLIMATE_CATEGORY_FILTER_CONFIG.name}</SelectLabel>
+            {CLIMATE_CATEGORY_FILTER_CONFIG.values.map((value) => (
+              <SelectItem key={value} value={value}>
+                {value}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+          <SelectGroup>
+            <SelectLabel>{YEAR_NET_ZERO_FILTER_CONFIG.name}</SelectLabel>
+            {YEAR_NET_ZERO_FILTER_CONFIG.values.map((value) => (
+              <SelectItem key={value} value={value}>
+                {value}
+              </SelectItem>
+            ))}
+          </SelectGroup>
         </SelectContent>
       </Select>
     </div>
@@ -60,25 +63,28 @@ export const LandFilter = () => {
 };
 
 export const LandFilterRow = ({ prefix, onDelete }: RowFilterProps) => {
-  const uniqueValues = useGetLandOptions();
-  const { land, setLand } = useScenarioDashboardUrlParams(prefix);
+  const {} = useScenarioDashboardUrlParams(prefix);
+  const id = useId();
 
   return (
     <div className="flex w-full items-center justify-between gap-2">
       <div className="flex w-full gap-2">
-        <Label htmlFor="land" className="w-20 leading-5">
-          Land:
+        <Label htmlFor={id} className="w-20 leading-5">
+          Land use:
         </Label>
-        <Select value={land || ""} onValueChange={setLand}>
-          <SelectTrigger size="lg" className="h-10 w-fit" id="land" theme="light">
-            {land || "Select option"}
+        <Select disabled value="" onValueChange={() => {}}>
+          <SelectTrigger size="lg" className="h-10 w-fit" id={id} theme="light">
+            <SelectValue placeholder="Select option">Select option</SelectValue>
           </SelectTrigger>
           <SelectContent>
-            {uniqueValues.map((value) => (
-              <SelectItem key={value} value={value}>
-                {value}
-              </SelectItem>
-            ))}
+            <SelectGroup>
+              <SelectLabel>{CLIMATE_CATEGORY_FILTER_CONFIG.name}</SelectLabel>
+              {CLIMATE_CATEGORY_FILTER_CONFIG.values.map((value) => (
+                <SelectItem key={value} value={value}>
+                  {value}
+                </SelectItem>
+              ))}
+            </SelectGroup>
           </SelectContent>
         </Select>
       </div>

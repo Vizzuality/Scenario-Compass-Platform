@@ -1,9 +1,9 @@
 import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
-import { geographyOptions } from "@/lib/constants";
+import { geographyConfig } from "@/lib/config/filters/geography-filter-config";
 
 export default function GeographyYearInfo() {
   const { geography, year, startYear, endYear } = useScenarioDashboardUrlParams();
-  const geographyName = geographyOptions.find((option) => option.value === geography)?.label;
+  const geographyName = geographyConfig.find((option) => option.value === geography)?.label;
 
   return (
     <div className="flex flex-col gap-2">

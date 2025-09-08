@@ -3,12 +3,13 @@
 import { ArrowLeftIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
-import { geographyOptions } from "@/lib/constants";
+import { geographyConfig } from "@/lib/config/filters/geography-filter-config";
+import { Button } from "@/components/ui/button";
 
 export default function CompareScenariosBackButton() {
   const router = useRouter();
   const { year, startYear, endYear, geography } = useScenarioDashboardUrlParams();
-  const geoName = geographyOptions.find((option) => option.value === geography);
+  const geoName = geographyConfig.find((option) => option.value === geography);
 
   const handleGoBack = () => {
     if (window.history.length > 1) {
@@ -19,15 +20,16 @@ export default function CompareScenariosBackButton() {
   };
 
   return (
-    <button
+    <Button
+      variant="ghost"
       onClick={handleGoBack}
       className="text-primary flex items-center gap-2 rounded text-2xl leading-8 font-normal"
     >
       <ArrowLeftIcon size={16} />
-      <p>
+      <p className="leading-none">
         {geoName ? ` ${geoName.lookupName}` : ""} |{year ? ` for ${year}` : ""}
         {startYear && endYear ? ` ${startYear} - ${endYear}` : ""}
       </p>
-    </button>
+    </Button>
   );
 }

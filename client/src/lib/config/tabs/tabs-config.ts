@@ -4,7 +4,7 @@ import {
   EXPLORATION_GENERAL_TAB_PLOT_CONFIG,
   EXPLORATION_LAND_USE_TAB_PLOT_CONFIG,
   PlotConfig,
-} from "@/lib/config/variables-config";
+} from "@/lib/config/tabs/variables-config";
 
 export type DefaultTabTitles = "land use" | "energy" | "general" | "climate";
 

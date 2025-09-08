@@ -9,7 +9,7 @@ import {
 } from "@/containers/scenario-dashboard/components/plot-widget/components/chart-type-toggle";
 import { useMultipleRunsPipeline } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
 import { INTERNAL_PATHS } from "@/lib/paths";
-import { PlotConfig } from "@/lib/config/variables-config";
+import { PlotConfig } from "@/lib/config/tabs/variables-config";
 import { VariableSelect } from "@/containers/scenario-dashboard/components/plot-widget/components/variable-select";
 import PlotContent from "@/containers/scenario-dashboard/components/plot-widget/components/plot-widget-content";
 import { ExtendedRun } from "@/hooks/runs/pipeline/types";

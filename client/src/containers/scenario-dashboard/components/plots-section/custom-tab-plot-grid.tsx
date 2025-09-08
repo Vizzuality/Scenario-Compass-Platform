@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NUMBER_OF_PLOTS_PER_TAB } from "@/lib/config/tabs-config";
+import { NUMBER_OF_PLOTS_PER_TAB } from "@/lib/config/tabs/tabs-config";
 import { CustomSelectMultipleRunsPlotWidget } from "@/containers/scenario-dashboard/components/plot-widget/multiple-line/custom-select-multiple-runs-plot-widget";
 import { ChartType } from "@/containers/scenario-dashboard/components/plot-widget/components/chart-type-toggle";
 

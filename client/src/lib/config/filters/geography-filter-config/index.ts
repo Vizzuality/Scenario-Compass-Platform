@@ -5,7 +5,7 @@ interface GeographyOption {
   hierarchy: string;
 }
 
-export const geographyOptions: GeographyOption[] = [
+export const geographyConfig: GeographyOption[] = [
   {
     value: "318",
     lookupName: "World",
@@ -536,4 +536,4 @@ export const geographyOptions: GeographyOption[] = [
   },
 ];
 
-export const GEOGRAPHY_VALUES = geographyOptions.map((option) => option.value);
+export const GEOGRAPHY_VALUES = geographyConfig.map((option) => option.value);

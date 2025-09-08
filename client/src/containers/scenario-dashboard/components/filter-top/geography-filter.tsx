@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Label } from "@/components/ui/label";
-import { geographyOptions } from "@/lib/constants";
+import { geographyConfig } from "@/lib/config/filters/geography-filter-config";
 import { filterGeography } from "@/containers/scenario-dashboard/utils";
 import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
 
@@ -51,8 +51,8 @@ export default function GeographyFilter() {
             id="geography-combobox"
           >
             {geography
-              ? geographyOptions.find((option) => option.value === geography)?.label
-              : "Select geography..."}
+              ? geographyConfig.find((option) => option.value === geography)?.label
+              : "Select geography-filter-config..."}
             <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" aria-hidden="true" />
           </Button>
         </PopoverTrigger>
@@ -67,7 +67,7 @@ export default function GeographyFilter() {
             >
               <CommandEmpty>No geography found.</CommandEmpty>
               <CommandGroup>
-                {geographyOptions.map((option) => (
+                {geographyConfig.map((option) => (
                   <CommandItem
                     key={option.value}
                     value={option.value}

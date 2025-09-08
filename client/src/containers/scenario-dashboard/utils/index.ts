@@ -1,7 +1,7 @@
-import { geographyOptions } from "@/lib/constants";
+import { geographyConfig } from "@/lib/config/filters/geography-filter-config";
 
 export const filterGeography = (value: string, search: string): number => {
-  const option = geographyOptions.find((opt) => opt.value === value);
+  const option = geographyConfig.find((opt) => opt.value === value);
   if (!option) return 0;
 
   const label = option.label.toLowerCase();
