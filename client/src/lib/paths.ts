@@ -1,4 +1,5 @@
 import { ComponentProps } from "react";
+import { env } from "@/env";
 
 type LinkItem = {
   label: string;
@@ -57,7 +58,14 @@ export const EXTERNAL_LINKS: Record<"BLUESKY" | "LINKEDIN" | "OTHER_PRODUCTS" | 
 
 export const desktopPaths: LinkItem[] = [
   { href: INTERNAL_PATHS.GUIDED_EXPLORATION, label: "Guided Exploration" },
-  { href: INTERNAL_PATHS.LEARN_BY_TOPIC, label: "Learn By Topic" },
+  ...(env.NEXT_PUBLIC_FEATURE_FLAG_HIDE_LEARN_BY_TOPIC_PAGE
+    ? []
+    : [
+        {
+          href: INTERNAL_PATHS.LEARN_BY_TOPIC,
+          label: "Learn By Topic",
+        },
+      ]),
   { href: INTERNAL_PATHS.SCENARIO_DASHBOARD, label: "Scenario Dashboard" },
   { href: INTERNAL_PATHS.METHODOLOGY, label: "Methodology" },
   { ...EXTERNAL_LINKS.OTHER_PRODUCTS },
