@@ -7,7 +7,7 @@ import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { cva, VariantProps } from "class-variance-authority";
 
-const selectTriggerVariants = cva(
+export const selectTriggerVariants = cva(
   [
     "border-input flex w-fit items-center justify-between gap-2.5 rounded-[4px] border bg-transparent p-4 text-sm leading-5 whitespace-nowrap  outline-none",
     "disabled:cursor-not-allowed disabled:opacity-50",

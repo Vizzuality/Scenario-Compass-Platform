@@ -76,8 +76,6 @@ export const EXPLORATION_LAND_USE_TAB_PLOT_CONFIG: ReadonlyArray<PlotConfig> = [
 export const EXPLORATION_CLIMATE_TAB_PLOT_CONFIG: ReadonlyArray<PlotConfig> = [
   {
     title: "Emissions",
-    variables: ["Emissions|Kyoto", "Emissions|CO2", "Emissions|CH4", "Emissions|N20"],
+    variables: ["Emissions|Kyoto Gases", "Emissions|CO2", "Emissions|CH4", "Emissions|N20"],
   },
 ];
-
-// Single Run View Plot Configurations @TODO: customize these

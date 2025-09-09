@@ -9,6 +9,7 @@ import { getMetaPoints } from "@/containers/scenario-dashboard/components/meta-s
 import { SingleRunPipelineParams, RunPipelineReturn } from "@/hooks/runs/pipeline/types";
 import { generateExtendedRuns } from "@/hooks/runs/pipeline/utils";
 import { filterRunsByMetaIndicators } from "@/hooks/runs/utils/filtering";
+import useComputeEnergyShare from "@/hooks/runs/filtering/use-compute-energy-share";
 
 export function useMultipleRunsPipeline({
   variable,
@@ -28,6 +29,12 @@ export function useMultipleRunsPipeline({
     geography,
     variable,
   });
+
+  const {
+    energyShares,
+    isLoading: isEnergyShareLoading,
+    isError: isEnergyShareError,
+  } = useComputeEnergyShare();
 
   const uniqueRunIds = useMemo(() => {
     if (!dataPoints?.length) return [];
@@ -52,6 +59,7 @@ export function useMultipleRunsPipeline({
   const extendedRuns = generateExtendedRuns({
     dataPoints: dataPoints || [],
     metaIndicators: metaData || [],
+    energyShares,
   });
 
   const filteredRuns = filterRunsByMetaIndicators({
@@ -61,8 +69,8 @@ export function useMultipleRunsPipeline({
     land,
   });
 
-  const isLoading = isLoadingDataPointsFiltering || isLoadingMeta;
-  const isError = isErrorDataPointsFiltering || isErrorMeta;
+  const isLoading = isLoadingDataPointsFiltering || isLoadingMeta || isEnergyShareLoading;
+  const isError = isErrorDataPointsFiltering || isErrorMeta || isEnergyShareError;
 
   return {
     runs: filteredRuns,
