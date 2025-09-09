@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ComponentType, useEffect, useState } from "react";
+import React, { ComponentType, useMemo } from "react";
 import { LandFilterRow } from "@/containers/scenario-dashboard/components/meta-scenario-filters/land-filter";
 import { EnergyFilterRow } from "@/containers/scenario-dashboard/components/meta-scenario-filters/energy-filter";
 import { ClimateFilterRow } from "@/containers/scenario-dashboard/components/meta-scenario-filters/climate-filter";
@@ -18,6 +18,7 @@ import { ComparisonFilterPopover } from "@/containers/scenario-dashboard/compone
 import { Button } from "@/components/ui/button";
 import LeftPanel from "@/containers/scenario-dashboard/comparison/left-panel";
 import RightPanel from "@/containers/scenario-dashboard/comparison/right-panel";
+import { ScenarioDashboardURLParamsKey } from "@/hooks/nuqs/types";
 
 export interface FilterArrayItem {
   name: string;
@@ -53,33 +54,17 @@ const FILTER_OPTIONS = MAIN_CONFIG.map((config) => ({
 }));
 
 export default function ScenarioComparisonPlotsSection() {
-  const { climate, energy, land, setFilters, getActiveScenarioParams } =
-    useScenarioDashboardUrlParams(LEFT_COMPARISON_TAG);
   const { setFilters: setRightFilters } = useScenarioDashboardUrlParams(RIGHT_COMPARISON_TAG);
+  const { setFilters: setLeftFilters, getActiveScenarioParams } =
+    useScenarioDashboardUrlParams(LEFT_COMPARISON_TAG);
+
   const activeScenarioParams = getActiveScenarioParams();
 
-  const [clientActiveFilters, setClientActiveFilters] = useState<FilterArrayItem[]>([]);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const urlParams = new URLSearchParams(window.location.search);
-
-      const active = FILTER_ARRAY.filter((filter) => {
-        if (filter.name === LEFT_PARAM_NAMES.climate) {
-          return urlParams.has("leftClimate");
-        }
-        if (filter.name === LEFT_PARAM_NAMES.energy) {
-          return urlParams.has("leftEnergy");
-        }
-        if (filter.name === LEFT_PARAM_NAMES.land) {
-          return urlParams.has("leftLand");
-        }
-        return false;
-      });
-
-      setClientActiveFilters(active);
-    }
-  }, [climate, energy, land]);
+  const activeFilters = useMemo(() => {
+    return FILTER_ARRAY.filter((filter) => {
+      return activeScenarioParams.includes(filter.name as ScenarioDashboardURLParamsKey);
+    });
+  }, [activeScenarioParams]);
 
   const removeFilter = async (name: string) => {
     const filterConfig = MAIN_CONFIG.find((config) =>
@@ -91,15 +76,31 @@ export default function ScenarioComparisonPlotsSection() {
     const leftParam = LEFT_PARAM_NAMES[filterConfig.key];
     const rightParam = RIGHT_PARAM_NAMES[filterConfig.key];
 
-    await Promise.all([setFilters({ [leftParam]: null }), setRightFilters({ [rightParam]: null })]);
+    await Promise.all([
+      setLeftFilters({ [leftParam]: null }),
+      setRightFilters({ [rightParam]: null }),
+    ]);
+  };
+
+  const handleApply = async (selectedFilters: string[]) => {
+    const allParamNames = Object.values(LEFT_PARAM_NAMES);
+
+    const updates = Object.fromEntries(
+      allParamNames.map((paramName) => [
+        paramName,
+        selectedFilters.includes(paramName) ? [""] : null,
+      ]),
+    );
+
+    await setLeftFilters(updates);
   };
 
   return (
     <div className="container mx-auto my-8 space-y-4">
       <ComparisonFilterPopover
-        selectedFilters={clientActiveFilters.map((filter) => filter.name)}
+        selectedFilters={activeScenarioParams}
         options={FILTER_OPTIONS}
-        onApply={() => {}}
+        onApply={handleApply}
       >
         <Button className="gap-2.5">
           Add filter
@@ -108,10 +109,10 @@ export default function ScenarioComparisonPlotsSection() {
       </ComparisonFilterPopover>
 
       <div className="grid grid-cols-2 gap-0">
-        <LeftPanel filters={clientActiveFilters} />
+        <LeftPanel filters={activeFilters} />
         <RightPanel
           onDelete={activeScenarioParams.length > 1 ? removeFilter : undefined}
-          filters={clientActiveFilters}
+          filters={activeFilters}
         />
       </div>
     </div>

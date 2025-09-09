@@ -31,7 +31,7 @@ const getCurrentValue = (climate: string[] | null) => {
 
 const getDisplayText = (climate: string[] | null) => {
   if (!climate || climate.length < 2) return "Select option";
-  return climate[1];
+  return climate[0] + " - " + climate[1];
 };
 
 const getKey = (value: string) => {

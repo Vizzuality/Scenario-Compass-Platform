@@ -1,3 +1,5 @@
+"use client";
+
 import { useQueryStates, parseAsInteger, parseAsString, parseAsArrayOf } from "nuqs";
 import { useMemo, useCallback } from "react";
 import {
@@ -152,22 +154,20 @@ export function useScenarioSetters(prefix: string = ""): ScenarioFilterSetters {
 }
 
 export function useScenarioHelpers(prefix: string = ""): ScenarioHelpers {
-  const { filters, params } = useScenarioUrlState(prefix);
+  const { params } = useScenarioUrlState(prefix);
 
   const getActiveScenarioParams = useCallback((): ScenarioDashboardURLParamsKey[] => {
     const activeParams: ScenarioDashboardURLParamsKey[] = [];
-    const climateArray = filters[params.climate] as string[];
-    const energyArray = filters[params.energy] as string[];
-    const landArray = filters[params.land] as string[];
+    const urlParams = new URLSearchParams(window.location.search);
 
-    if (climateArray && climateArray.length > 0)
+    if (urlParams.has(params.climate))
       activeParams.push(params.climate as ScenarioDashboardURLParamsKey);
-    if (energyArray && energyArray.length > 0)
+    if (urlParams.has(params.energy))
       activeParams.push(params.energy as ScenarioDashboardURLParamsKey);
-    if (landArray && landArray.length > 0)
-      activeParams.push(params.land as ScenarioDashboardURLParamsKey);
+    if (urlParams.has(params.land)) activeParams.push(params.land as ScenarioDashboardURLParamsKey);
+
     return activeParams;
-  }, [filters, params]);
+  }, [params]);
 
   return { getActiveScenarioParams };
 }
