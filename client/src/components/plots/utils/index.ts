@@ -27,6 +27,28 @@ export interface PlotDomain {
   yDomain: [number, number];
 }
 
+export const formatShortenedNumber = (value: number): string => {
+  if (Math.abs(value) >= 1000000) {
+    const millions = value / 1000000;
+    return millions % 1 === 0 ? millions + "M" : millions.toFixed(1) + "M";
+  } else if (Math.abs(value) >= 1000) {
+    const thousands = value / 1000;
+    return thousands % 1 === 0 ? thousands + "k" : thousands.toFixed(1) + "k";
+  } else {
+    return value.toString();
+  }
+};
+
+export const formatNumber = (value: number, precision: number = 2): string => {
+  if (Math.abs(value) >= 1e6) {
+    return d3.format(`.${precision}s`)(value);
+  } else if (Math.abs(value) >= 1000) {
+    return d3.format(",.0f")(value);
+  } else {
+    return d3.format(`.${precision}~f`)(value);
+  }
+};
+
 export const aggregateDataByYear = (dataPoints: ShortDataPoint[]): AggregatedDataPoint[] => {
   const groupedByYear = d3.group(dataPoints, (d) => d.year);
   const aggregatedData: AggregatedDataPoint[] = [];
@@ -87,7 +109,7 @@ export const renderGridLines = (
 };
 
 const calculateOptimalTicksWithNiceYears = (years: number[], availableWidth: number): number[] => {
-  const MIN_TICK_SPACING = 80;
+  const MIN_TICK_SPACING = 50;
   const maxTicks = Math.floor(availableWidth / MIN_TICK_SPACING);
 
   if (years.length <= 2) return years;
@@ -112,7 +134,6 @@ const calculateOptimalTicksWithNiceYears = (years: number[], availableWidth: num
     }
   }
 
-  // Fallback to evenly spaced years
   const step = Math.ceil(middleYears.length / middleTicks);
   const selectedMiddleYears = middleYears.filter((_, index) => index % step === 0);
 
@@ -147,7 +168,9 @@ export const renderAxes = ({
     .attr("transform", `translate(0,${height})`)
     .call(xAxisGenerator);
 
-  const yAxisGenerator = d3.axisLeft(scales.yScale);
+  const yAxisGenerator = d3
+    .axisLeft(scales.yScale)
+    .tickFormat((d) => formatShortenedNumber(Number(d)));
 
   if (yTickCount !== undefined) {
     yAxisGenerator.ticks(yTickCount);
@@ -163,7 +186,7 @@ export const renderAxes = ({
   g.append("text")
     .attr("class", "y-axis-label")
     .attr("transform", "rotate(-90)")
-    .attr("y", -60)
+    .attr("y", -50)
     .attr("x", -height / 2)
     .attr("text-anchor", "middle")
     .style("font-size", FONT_SIZE)
@@ -198,16 +221,6 @@ export const findClosestDataPoint = <T extends { year: number }>(
       ? currentElement
       : closestElement;
   }, data[0]);
-};
-
-export const formatNumber = (value: number, precision: number = 2): string => {
-  if (Math.abs(value) >= 1e6) {
-    return d3.format(`.${precision}s`)(value);
-  } else if (Math.abs(value) >= 1000) {
-    return d3.format(",.0f")(value);
-  } else {
-    return d3.format(`.${precision}~f`)(value);
-  }
 };
 
 export const createLineGenerator = (scales: PlotScales): d3.Line<ShortDataPoint> => {

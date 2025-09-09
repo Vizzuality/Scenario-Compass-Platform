@@ -21,7 +21,7 @@ const sourceSans = Source_Sans_3({
 
 export const metadata: Metadata = {
   title: "Scenario Compass Platform | IIASA",
-  description: "[TBD]",
+  description: "Explore, compare and understand pathways to a sustainable future",
 };
 
 export default function RootLayout({

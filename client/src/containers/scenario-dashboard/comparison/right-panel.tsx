@@ -5,6 +5,7 @@ import { MultipleRunsPlotWidget } from "@/containers/scenario-dashboard/componen
 import { PLOT_TYPE_OPTIONS } from "@/containers/scenario-dashboard/components/plot-widget/components/chart-type-toggle";
 import useSyncVariables from "@/hooks/runs/pipeline/use-sync-variables";
 import CustomTabPlotGrid from "@/containers/scenario-dashboard/components/plots-section/custom-tab-plot-grid";
+import useShowReasonsForConcern from "@/hooks/nuqs/use-show-reasons-for-concer";
 
 interface Props {
   filters: FilterArrayItem[];
@@ -15,6 +16,7 @@ const prefix = RIGHT_COMPARISON_TAG;
 
 export default function RightPanel({ filters, onDelete }: Props) {
   const { result, selectedTab } = useSyncVariables({ prefix });
+  const showMetric = useShowReasonsForConcern({ prefix });
 
   const handleOnDelete = (name: string) => {
     onDelete?.(name);
@@ -35,9 +37,11 @@ export default function RightPanel({ filters, onDelete }: Props) {
         })}
       </div>
 
-      <div className="pt-6 pl-4">
-        <MultiRunScenarioFlags result={result} prefix={prefix} />
-      </div>
+      {showMetric && (
+        <div className="pt-6 pl-4">
+          <MultiRunScenarioFlags result={result} prefix={prefix} />
+        </div>
+      )}
 
       <div className="flex h-fit w-full flex-col gap-4 pt-6 pl-4">
         {!selectedTab.isCustom &&
