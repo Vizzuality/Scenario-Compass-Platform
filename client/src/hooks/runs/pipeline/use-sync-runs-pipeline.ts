@@ -10,6 +10,8 @@ import {
   MetaPointsQueriesReturn,
   RunPipelineReturn,
 } from "@/hooks/runs/pipeline/types";
+import useComputeEnergyShare from "@/hooks/runs/filtering/use-compute-energy-share";
+import { filterRunsByMetaIndicators } from "@/hooks/runs/utils/filtering";
 
 export default function useSyncRunsPipeline({
   prefix,
@@ -20,7 +22,8 @@ export default function useSyncRunsPipeline({
   runId?: number;
   prefix?: string;
 }): RunPipelineReturn {
-  const { year, endYear, startYear, geography } = useScenarioDashboardUrlParams(prefix);
+  const { year, endYear, startYear, geography, climate, energy, land } =
+    useScenarioDashboardUrlParams(prefix);
   const dataPointQueries: DataPointsQueriesReturn = useQueries({
     queries: variablesNames.map((variable) => {
       const filter = getDataPointsFilter({ geography, year, startYear, endYear, variable });
@@ -58,6 +61,8 @@ export default function useSyncRunsPipeline({
       }),
   });
 
+  const { energyShares } = useComputeEnergyShare();
+
   const runs = () => {
     if (!geography) return [];
 
@@ -78,9 +83,17 @@ export default function useSyncRunsPipeline({
 
       if (!metaQuery) return [];
 
-      return generateExtendedRuns({
+      const extendedRuns = generateExtendedRuns({
+        energyShares,
         dataPoints,
         metaIndicators: metaQuery.data!.metaPoints,
+      });
+
+      return filterRunsByMetaIndicators({
+        runs: extendedRuns,
+        climate,
+        energy,
+        land,
       });
     });
 
