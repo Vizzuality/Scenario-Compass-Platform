@@ -1,5 +1,9 @@
 import { ExtendedRun } from "@/hooks/runs/pipeline/types";
-import { CLIMATE_CATEGORY_FILTER_CONFIG } from "@/lib/config/filters/climate-filter-config";
+import {
+  CLIMATE_CATEGORY_FILTER_CONFIG,
+  YEAR_NET_ZERO_FILTER_CONFIG,
+  YEAR_NET_ZERO_META_INDICATOR_KEY,
+} from "@/lib/config/filters/climate-filter-config";
 
 interface FilterRunsByMetaIndicatorsParams {
   runs: ExtendedRun[];
@@ -17,8 +21,32 @@ function matchesClimateFilter(run: ExtendedRun, climate: string[] | null): boole
   if (key === CLIMATE_CATEGORY_FILTER_CONFIG.name) {
     return run.metaIndicators.some((mp) => mp.value === value);
   }
+  if (key === YEAR_NET_ZERO_FILTER_CONFIG.name) {
+    return run.metaIndicators.some(
+      (mp) => mp.key === YEAR_NET_ZERO_META_INDICATOR_KEY && mp.value === value,
+    );
+  }
 
   return run.metaIndicators.some((mp) => mp.key === key && mp.value === value);
+}
+
+function matchesEnergyFilter(run: ExtendedRun, energy: string[] | null): boolean {
+  if (!energy || energy.length < 2) return true;
+  if (!run.metaIndicators?.length) return false;
+
+  const [key, value] = energy;
+  const [min, max] = value.split("-").map(Number);
+
+  if (isNaN(min) || isNaN(max)) return false;
+
+  return run.metaIndicators.some((mp) => {
+    if (mp.key !== key) return false;
+
+    const metaValue = Number(mp.value);
+    if (isNaN(metaValue)) return false;
+
+    return metaValue >= min && metaValue <= max;
+  });
 }
 
 export function filterRunsByMetaIndicators({
@@ -32,7 +60,7 @@ export function filterRunsByMetaIndicators({
   return runs.filter((run) => {
     return (
       matchesClimateFilter(run, climate) &&
-      matchesClimateFilter(run, energy) &&
+      matchesEnergyFilter(run, energy) &&
       matchesClimateFilter(run, land)
     );
   });

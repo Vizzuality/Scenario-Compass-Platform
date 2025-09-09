@@ -8,6 +8,10 @@ import { Button } from "@/components/ui/button";
 import GeographyYearInfo from "@/containers/scenario-dashboard/scenario-detail/geography-year-info";
 import { getMetaPoints } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
 import { ADDITIONAL_INFORMATION_META_INDICATORS } from "@/containers/scenario-dashboard/components/runs-pannel/utils";
+import {
+  CUMULATIVE_EMISSIONS_META_INDICATOR_KEY,
+  YEAR_NET_ZERO_META_INDICATOR_KEY,
+} from "@/lib/config/filters/climate-filter-config";
 
 interface InfoItemProps {
   title: string;
@@ -50,12 +54,14 @@ export default function ScenarioDetails({ runId }: { runId: number }) {
   ) || { value: "Loading Study" };
 
   const yearNetZeroCO2 = metaData?.find((item) =>
-    item.key.includes("Climate Assessment|Year of Peak Warming|Median [MAGICCv7.5.3]"),
+    item.key.includes(YEAR_NET_ZERO_META_INDICATOR_KEY),
   ) || { value: "Loading Year" };
 
   const cumulativeEmissions = metaData?.find((item) =>
-    item.key.includes("Emissions Diagnostics|Cumulative CCS [2020-2100 Gt CO2]"),
-  ) || { value: "Loading Emissions" };
+    item.key.includes(CUMULATIVE_EMISSIONS_META_INDICATOR_KEY),
+  ) || {
+    value: "Loading Emissions",
+  };
 
   const scenarioName = runs[0]?.scenario?.name || "Loading Scenario";
   const modelName = runs[0]?.model?.name || "Loading Model";

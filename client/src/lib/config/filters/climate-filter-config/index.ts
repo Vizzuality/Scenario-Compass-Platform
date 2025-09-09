@@ -15,5 +15,11 @@ export const CLIMATE_CATEGORY_FILTER_CONFIG = {
 
 export const YEAR_NET_ZERO_FILTER_CONFIG = {
   name: "Year of global net-zero",
-  values: ["2030", "2040", "2050", "2060", "2070", "2080", "2090", "2100"],
+  values: ["2010", "2020", "2030", "2040", "2050", "2060", "2070", "2080", "2090", "2100"],
 };
+
+export const YEAR_NET_ZERO_META_INDICATOR_KEY =
+  "Climate Assessment|Year of Peak Warming|Median [MAGICCv7.5.3]";
+
+export const CUMULATIVE_EMISSIONS_META_INDICATOR_KEY =
+  "Emissions Diagnostics|Cumulative CCS [2020-2100 Gt CO2]";

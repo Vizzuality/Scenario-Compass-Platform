@@ -2,13 +2,21 @@ import { getRunCategory } from "@/containers/scenario-dashboard/utils/flags-util
 import { MetaIndicator } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
 import { DataPoint } from "@/components/plots/types";
 import { ExtendedRun, ShortDataPoint, ShortMetaIndicator } from "@/hooks/runs/pipeline/types";
+import { EnergyShareMap } from "@/hooks/runs/filtering/use-compute-energy-share";
+import {
+  BIOMASS_SHARE_2050,
+  FOSSIL_SHARE_2050,
+  RENEWABLES_SHARE_2050,
+} from "@/lib/config/filters/energy-filter-config";
 
 export const generateExtendedRuns = ({
   metaIndicators,
   dataPoints,
+  energyShares,
 }: {
   metaIndicators: MetaIndicator[];
   dataPoints: DataPoint[];
+  energyShares?: EnergyShareMap | null;
 }): ExtendedRun[] => {
   if (!metaIndicators.length || !dataPoints.length) {
     return [];
@@ -48,6 +56,11 @@ export const generateExtendedRuns = ({
       continue;
     }
 
+    const metaIndicators = [
+      ...createShortMetaIndicators(runMetaIndicators),
+      ...createEnergyShareMetaIndicators(energyShares, runId),
+    ];
+
     const firstDataPoint = runDataPoints[0];
     const extendedRun: ExtendedRun = {
       runId,
@@ -55,7 +68,7 @@ export const generateExtendedRuns = ({
       modelName: firstDataPoint.modelName,
       orderedPoints: createShortDataPoints(runDataPoints),
       flagCategory: getRunCategory(runMetaIndicators),
-      metaIndicators: createShortMetaIndicators(runMetaIndicators),
+      metaIndicators,
     };
 
     extendedRuns.push(extendedRun);
@@ -90,4 +103,21 @@ function createShortMetaIndicators(metaIndicators: MetaIndicator[]): ShortMetaIn
   }
 
   return shortMetaIndicators;
+}
+
+function createEnergyShareMetaIndicators(
+  energyShares: EnergyShareMap | null | undefined,
+  runId: string,
+): ShortMetaIndicator[] {
+  if (!energyShares || !energyShares[runId]) {
+    return [];
+  }
+
+  const energyShare = energyShares[runId];
+
+  return [
+    { key: RENEWABLES_SHARE_2050, value: energyShare[RENEWABLES_SHARE_2050].toString() },
+    { key: FOSSIL_SHARE_2050, value: energyShare[FOSSIL_SHARE_2050].toString() },
+    { key: BIOMASS_SHARE_2050, value: energyShare[BIOMASS_SHARE_2050].toString() },
+  ];
 }

@@ -113,6 +113,14 @@ export const ClimateFilterRow = ({ prefix, onDelete }: RowFilterProps) => {
                 </SelectItem>
               ))}
             </SelectGroup>
+            <SelectGroup>
+              <SelectLabel>{YEAR_NET_ZERO_FILTER_CONFIG.name}</SelectLabel>
+              {YEAR_NET_ZERO_FILTER_CONFIG.values.map((value) => (
+                <SelectItem key={value} value={value}>
+                  {value}
+                </SelectItem>
+              ))}
+            </SelectGroup>
           </SelectContent>
         </Select>
       </div>
