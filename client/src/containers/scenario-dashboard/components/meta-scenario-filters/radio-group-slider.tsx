@@ -5,7 +5,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { selectTriggerVariants } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
 export interface SliderSelectItem {
@@ -65,7 +64,7 @@ const SliderSelect: React.FC<SliderSelectProps> = ({
   const [selectedItem, setSelectedItem] = useState<string | null>(initialSelectedId);
   const [range, setRange] = useState<[number, number]>(initialRange);
 
-  const handleSelectionChange = (itemId: string | null) => {
+  const handleSelectionChange = (itemId: string) => {
     setSelectedItem(itemId);
     onSelectionChange?.(itemId);
   };
@@ -79,6 +78,7 @@ const SliderSelect: React.FC<SliderSelectProps> = ({
   };
 
   const selectedType = items.find((item) => item.id === selectedItem);
+  const radioGroupName = `slider-select-${id || "default"}`;
 
   return (
     <div className="relative w-full">
@@ -104,17 +104,20 @@ const SliderSelect: React.FC<SliderSelectProps> = ({
           className="w-[var(--radix-popover-trigger-width)] min-w-100 p-0"
           align="start"
         >
-          <div className="py-2">
+          <div className="divide-y divide-gray-200 py-2">
             {items.map((item) => (
-              <div key={item.id} className="px-4 py-2">
+              <div key={item.id} className="px-4 py-3">
                 <div className="flex items-start space-x-3">
-                  <Checkbox
+                  <input
+                    type="radio"
                     id={item.id}
+                    name={radioGroupName}
+                    value={item.id}
                     checked={selectedItem === item.id}
-                    onCheckedChange={(checked) => {
-                      handleSelectionChange(checked ? item.id : null);
+                    onChange={(e) => {
+                      handleSelectionChange(e.target.value);
                     }}
-                    className="mt-0.5"
+                    className="accent-primary mt-0.5 h-4 w-4"
                   />
                   <Label htmlFor={item.id} className="flex-1 cursor-pointer text-sm leading-5">
                     {item.label}
@@ -125,7 +128,7 @@ const SliderSelect: React.FC<SliderSelectProps> = ({
                   <div className="mt-3 px-2">
                     <div className="space-y-2">
                       <div className="text-center">
-                        <span className="text-sm font-medium text-gray-900">
+                        <span className="text-sm font-bold text-gray-900">
                           {range[0]}% - {range[1]}%
                         </span>
                       </div>

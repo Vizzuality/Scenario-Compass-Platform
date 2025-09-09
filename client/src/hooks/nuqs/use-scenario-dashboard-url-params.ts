@@ -155,19 +155,27 @@ export function useScenarioSetters(prefix: string = ""): ScenarioFilterSetters {
 
 export function useScenarioHelpers(prefix: string = ""): ScenarioHelpers {
   const { params } = useScenarioUrlState(prefix);
+  const { filters } = useScenarioUrlState(prefix);
 
   const getActiveScenarioParams = useCallback((): ScenarioDashboardURLParamsKey[] => {
     const activeParams: ScenarioDashboardURLParamsKey[] = [];
-    const urlParams = new URLSearchParams(window.location.search);
 
-    if (urlParams.has(params.climate))
+    const hasValidValue = (value: string | number | string[] | null) => {
+      return value !== null && value !== undefined && Array.isArray(value) && value.length > 0;
+    };
+
+    if (hasValidValue(filters[params.climate])) {
       activeParams.push(params.climate as ScenarioDashboardURLParamsKey);
-    if (urlParams.has(params.energy))
+    }
+    if (hasValidValue(filters[params.energy])) {
       activeParams.push(params.energy as ScenarioDashboardURLParamsKey);
-    if (urlParams.has(params.land)) activeParams.push(params.land as ScenarioDashboardURLParamsKey);
+    }
+    if (hasValidValue(filters[params.land])) {
+      activeParams.push(params.land as ScenarioDashboardURLParamsKey);
+    }
 
     return activeParams;
-  }, [params]);
+  }, [filters, params.climate, params.energy, params.land]);
 
   return { getActiveScenarioParams };
 }

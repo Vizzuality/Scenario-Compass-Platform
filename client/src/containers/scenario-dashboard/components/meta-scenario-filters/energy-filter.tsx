@@ -64,7 +64,7 @@ export const EnergyFilterRow = ({ prefix, onDelete }: RowFilterProps) => {
   return (
     <div className="flex w-full items-center justify-between gap-2">
       <div className="flex w-full gap-2">
-        <Label htmlFor={id} className="w-20 leading-5">
+        <Label htmlFor={id} className="w-20 flex-shrink-0 leading-5">
           Energy:
         </Label>
         <SliderSelect
