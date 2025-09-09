@@ -86,9 +86,9 @@ export default function ScenarioDetails({ runId }: { runId: number }) {
         <Share2 />
       </div>
 
-      <div className="grid grid-cols-[1fr_3fr] gap-6">
+      <div className="grid grid-cols-[1fr_3fr] items-end gap-16">
         <GeographyYearInfo />
-        <div className="grid h-full grid-cols-4 grid-rows-2 justify-between">
+        <div className="grid h-fit grid-cols-4 grid-rows-2 justify-between gap-4">
           <InfoItem title="Climate category" value={climateCategory.value} />
           <InfoItem title="Cumulative emissions" value={cumulativeEmissions.value} />
           <InfoItem title="Peak temperature" value="Info goes here" />

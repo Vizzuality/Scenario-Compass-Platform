@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
+import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,7 +19,21 @@ import { geographyConfig } from "@/lib/config/filters/geography-filter-config";
 import { filterGeography } from "@/containers/scenario-dashboard/utils";
 import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
 
-export default function GeographyFilter() {
+const geographyFilterVariants = cva("flex flex-1 flex-col gap-2", {
+  variants: {
+    variant: {
+      light: "",
+      dark: "[&_label]:text-stone-950 [&_button]:border-border [&_button]:text-foreground [&_button]:bg-transparent",
+    },
+  },
+  defaultVariants: {
+    variant: "light",
+  },
+});
+
+type Props = VariantProps<typeof geographyFilterVariants>;
+
+export default function GeographyFilter({ variant }: Props) {
   const { geography, setGeography } = useScenarioDashboardUrlParams();
   const [open, setOpen] = React.useState(false);
 
@@ -32,7 +47,7 @@ export default function GeographyFilter() {
   };
 
   return (
-    <div className="flex flex-1 flex-col gap-2">
+    <div className={cn(geographyFilterVariants({ variant }))}>
       <Label
         htmlFor="geography-combobox"
         className="text-beige-light text-base leading-6 font-bold"
