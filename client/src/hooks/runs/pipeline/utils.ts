@@ -8,17 +8,20 @@ import {
   FOSSIL_SHARE_2050,
   RENEWABLES_SHARE_2050,
 } from "@/lib/config/filters/energy-filter-config";
+import { INCREASE_IN_GLOBAL_FOREST_AREA_KEY } from "@/lib/config/filters/land-filter-config";
 
 export const generateExtendedRuns = ({
   metaIndicators,
   dataPoints,
   energyShares,
+  gfaIncreaseArray,
 }: {
   metaIndicators: MetaIndicator[];
   dataPoints: DataPoint[];
-  energyShares?: EnergyShareMap | null;
+  energyShares: EnergyShareMap | null;
+  gfaIncreaseArray: Record<string, number>;
 }): ExtendedRun[] => {
-  if (!metaIndicators.length || !dataPoints.length) {
+  if (!metaIndicators.length || !dataPoints.length || !energyShares) {
     return [];
   }
 
@@ -59,6 +62,7 @@ export const generateExtendedRuns = ({
     const metaIndicators = [
       ...createShortMetaIndicators(runMetaIndicators),
       ...createEnergyShareMetaIndicators(energyShares, runId),
+      ...createForestAreaMetaIndicator(gfaIncreaseArray, runId),
     ];
 
     const firstDataPoint = runDataPoints[0];
@@ -76,6 +80,8 @@ export const generateExtendedRuns = ({
 
   return extendedRuns;
 };
+
+// Helper functions
 
 function createShortDataPoints(dataPoints: DataPoint[]): ShortDataPoint[] {
   const shortPoints: ShortDataPoint[] = [];
@@ -119,5 +125,21 @@ function createEnergyShareMetaIndicators(
     { key: RENEWABLES_SHARE_2050, value: energyShare[RENEWABLES_SHARE_2050].toString() },
     { key: FOSSIL_SHARE_2050, value: energyShare[FOSSIL_SHARE_2050].toString() },
     { key: BIOMASS_SHARE_2050, value: energyShare[BIOMASS_SHARE_2050].toString() },
+  ];
+}
+
+function createForestAreaMetaIndicator(
+  forestAreaIncreases: Record<string, number> | null | undefined,
+  runId: string,
+): ShortMetaIndicator[] {
+  if (!forestAreaIncreases || forestAreaIncreases[runId] === undefined) {
+    return [];
+  }
+
+  return [
+    {
+      key: INCREASE_IN_GLOBAL_FOREST_AREA_KEY,
+      value: forestAreaIncreases[runId].toString(),
+    },
   ];
 }

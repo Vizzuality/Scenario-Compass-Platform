@@ -10,6 +10,7 @@ import { SingleRunPipelineParams, RunPipelineReturn } from "@/hooks/runs/pipelin
 import { generateExtendedRuns } from "@/hooks/runs/pipeline/utils";
 import { filterRunsByMetaIndicators } from "@/hooks/runs/utils/filtering";
 import useComputeEnergyShare from "@/hooks/runs/filtering/use-compute-energy-share";
+import useComputeLandUse from "@/hooks/runs/filtering/use-compute-land-use";
 
 export function useMultipleRunsPipeline({
   variable,
@@ -36,6 +37,8 @@ export function useMultipleRunsPipeline({
     isError: isEnergyShareError,
   } = useComputeEnergyShare();
 
+  const { gfaIncreaseArray, isLoading: isGfaLoading, isError: isGfaError } = useComputeLandUse();
+
   const uniqueRunIds = useMemo(() => {
     if (!dataPoints?.length) return [];
     return [...new Set(dataPoints.map((dp) => dp.runId))];
@@ -60,6 +63,7 @@ export function useMultipleRunsPipeline({
     dataPoints: dataPoints || [],
     metaIndicators: metaData || [],
     energyShares,
+    gfaIncreaseArray,
   });
 
   const filteredRuns = filterRunsByMetaIndicators({
@@ -69,8 +73,9 @@ export function useMultipleRunsPipeline({
     land,
   });
 
-  const isLoading = isLoadingDataPointsFiltering || isLoadingMeta || isEnergyShareLoading;
-  const isError = isErrorDataPointsFiltering || isErrorMeta || isEnergyShareError;
+  const isLoading =
+    isLoadingDataPointsFiltering || isLoadingMeta || isEnergyShareLoading || isGfaLoading;
+  const isError = isErrorDataPointsFiltering || isErrorMeta || isEnergyShareError || isGfaError;
 
   return {
     runs: filteredRuns,

@@ -1,31 +1,37 @@
 "use client";
 
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { RowFilterProps } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
 import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
 import TooltipInfo from "@/containers/scenario-dashboard/components/tooltip-info";
 import { Button } from "@/components/ui/button";
 import { Trash2Icon } from "lucide-react";
-import {
-  CLIMATE_CATEGORY_FILTER_CONFIG,
-  YEAR_NET_ZERO_FILTER_CONFIG,
-} from "@/lib/config/filters/climate-filter-config";
 import { useId } from "react";
+import SliderSelect from "@/containers/scenario-dashboard/components/meta-scenario-filters/radio-group-slider";
+import {
+  INCREASE_IN_GLOBAL_FOREST_AREA_KEY,
+  INCREASE_IN_GLOBAL_FOREST_AREA_LABEL,
+} from "@/lib/config/filters/land-filter-config";
 
 const tooltipInfo =
   "Land refers to the use and management of land resources in scenarios, including aspects like deforestation, urbanization, and agricultural practices. This filter allows you to categorize scenarios based on their land use impact.";
 
+const item = {
+  id: INCREASE_IN_GLOBAL_FOREST_AREA_KEY,
+  label: INCREASE_IN_GLOBAL_FOREST_AREA_LABEL,
+};
+
 export const LandFilter = () => {
   const id = useId();
+  const { land, setLand } = useScenarioDashboardUrlParams();
+
+  const handleValueChange = (selectedKey: string | null, rangeString: string) => {
+    if (selectedKey) {
+      setLand([selectedKey, rangeString]);
+    } else {
+      setLand(null);
+    }
+  };
 
   return (
     <div className="flex w-full flex-col items-start gap-2">
@@ -35,58 +41,49 @@ export const LandFilter = () => {
         </Label>
         <TooltipInfo info={tooltipInfo} />
       </div>
-      <Select disabled value="" onValueChange={() => {}}>
-        <SelectTrigger size="lg" className="w-full" id={id} theme="light">
-          <SelectValue placeholder="Select option">Select option</SelectValue>
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>{CLIMATE_CATEGORY_FILTER_CONFIG.name}</SelectLabel>
-            {CLIMATE_CATEGORY_FILTER_CONFIG.values.map((value) => (
-              <SelectItem key={value} value={value}>
-                {value}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-          <SelectGroup>
-            <SelectLabel>{YEAR_NET_ZERO_FILTER_CONFIG.name}</SelectLabel>
-            {YEAR_NET_ZERO_FILTER_CONFIG.values.map((value) => (
-              <SelectItem key={value} value={value}>
-                {value}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+      <SliderSelect
+        id={id}
+        min={-100}
+        max={100}
+        defaultRange={[-10, 10]}
+        items={[item]}
+        placeholder="Select land filter"
+        currentValue={land}
+        onApply={handleValueChange}
+      />
     </div>
   );
 };
 
 export const LandFilterRow = ({ prefix, onDelete }: RowFilterProps) => {
-  const {} = useScenarioDashboardUrlParams(prefix);
+  const { land, setLand } = useScenarioDashboardUrlParams(prefix);
   const id = useId();
+
+  const handleValueChange = (selectedKey: string | null, rangeString: string) => {
+    if (selectedKey) {
+      setLand([selectedKey, rangeString]);
+    } else {
+      setLand(null);
+    }
+  };
 
   return (
     <div className="flex w-full items-center justify-between gap-2">
       <div className="flex w-full gap-2">
-        <Label htmlFor={id} className="w-20 leading-5">
+        <Label htmlFor={id} className="w-20 flex-shrink-0 leading-5">
           Land use:
         </Label>
-        <Select disabled value="" onValueChange={() => {}}>
-          <SelectTrigger size="lg" className="h-10 w-fit" id={id} theme="light">
-            <SelectValue placeholder="Select option">Select option</SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>{CLIMATE_CATEGORY_FILTER_CONFIG.name}</SelectLabel>
-              {CLIMATE_CATEGORY_FILTER_CONFIG.values.map((value) => (
-                <SelectItem key={value} value={value}>
-                  {value}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+        <SliderSelect
+          id={id}
+          min={-100}
+          max={100}
+          className="h-10 w-fit"
+          defaultRange={[-10, 10]}
+          items={[item]}
+          placeholder="Select land filter"
+          currentValue={land}
+          onApply={handleValueChange}
+        />
       </div>
       {onDelete && (
         <Button variant="ghost" onClick={onDelete}>

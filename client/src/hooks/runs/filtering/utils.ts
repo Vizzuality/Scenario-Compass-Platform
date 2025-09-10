@@ -10,13 +10,18 @@ export interface DataPointsFilterParams {
   endYear: string | null;
   variable: string;
 }
+export type DataPointWithVariable = Pick<DataPoint, "year" | "runId" | "value"> & {
+  variable: string;
+};
 
-export const extractDataPointsWithVariable = (data: DataFrame | undefined) => {
+export const extractDataPointsWithVariable = (
+  data: DataFrame | undefined,
+): DataPointWithVariable[] => {
   if (data === undefined) {
     return [];
   }
 
-  const dataPoints: Array<Pick<DataPoint, "year" | "runId" | "value"> & { variable: string }> = [];
+  const dataPoints: Array<DataPointWithVariable> = [];
   const [rows] = data.shape;
   const columns: string[] = data.columns;
 
