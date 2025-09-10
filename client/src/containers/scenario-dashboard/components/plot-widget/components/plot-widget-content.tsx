@@ -11,6 +11,8 @@ import { SingleLinePlot } from "@/components/plots/single-line-plot";
 import { DotPlot } from "@/components/plots/dot-plot";
 import { ExtendedRun, RunPipelineReturn } from "@/hooks/runs/pipeline/types";
 import { DataFetchError } from "@/components/error-state/data-fetch-error";
+import notFoundImage from "@/assets/images/not-found.webp";
+import Image from "next/image";
 
 interface Props {
   chartType: ChartType;
@@ -50,7 +52,20 @@ const PlotContent = ({ chartType, data, prefix = "", onRunClick }: Props) => {
   if (data.runs.length === 0) {
     return (
       <PlotContainer>
-        <div>No Runs for this combination of params</div>
+        <div className="text-center">
+          <Image
+            src={notFoundImage}
+            alt="No results"
+            width={160}
+            height={128}
+            className="mx-auto"
+          />
+          <p className="font-bold">No results available</p>
+          <p className="leading-5 text-stone-600">
+            There are no runs available for the selected combination of parameters. Try adjusting
+            the filters to see results.
+          </p>
+        </div>
       </PlotContainer>
     );
   }

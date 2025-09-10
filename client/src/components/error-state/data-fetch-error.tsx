@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import errorImage from "@/assets/images/error.webp";
+import errorImage from "@/assets/images/warning.webp";
 interface Props {
   className?: string;
 }
