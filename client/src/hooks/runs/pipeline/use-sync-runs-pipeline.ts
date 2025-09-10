@@ -12,6 +12,7 @@ import {
 } from "@/hooks/runs/pipeline/types";
 import useComputeEnergyShare from "@/hooks/runs/filtering/use-compute-energy-share";
 import { filterRunsByMetaIndicators } from "@/hooks/runs/utils/filtering";
+import useComputeLandUse from "@/hooks/runs/filtering/use-compute-land-use";
 
 export default function useSyncRunsPipeline({
   prefix,
@@ -61,7 +62,12 @@ export default function useSyncRunsPipeline({
       }),
   });
 
-  const { energyShares } = useComputeEnergyShare();
+  const {
+    energyShares,
+    isLoading: isLoadingEnergyShares,
+    isError: isErrorEnergyShares,
+  } = useComputeEnergyShare();
+  const { gfaIncreaseArray, isLoading: isGfaLoading, isError: isGfaError } = useComputeLandUse();
 
   const runs = () => {
     if (!geography) return [];
@@ -87,6 +93,7 @@ export default function useSyncRunsPipeline({
         energyShares,
         dataPoints,
         metaIndicators: metaQuery.data!.metaPoints,
+        gfaIncreaseArray,
       });
 
       return filterRunsByMetaIndicators({
@@ -101,8 +108,15 @@ export default function useSyncRunsPipeline({
   };
 
   const isLoading =
-    dataPointQueries.some((q) => q.isLoading) || metaQueries.some((q) => q.isLoading);
-  const isError = dataPointQueries.some((q) => q.isError) || metaQueries.some((q) => q.isError);
+    dataPointQueries.some((q) => q.isLoading) ||
+    metaQueries.some((q) => q.isLoading) ||
+    isGfaLoading ||
+    isLoadingEnergyShares;
+  const isError =
+    dataPointQueries.some((q) => q.isError) ||
+    metaQueries.some((q) => q.isError) ||
+    isGfaError ||
+    isErrorEnergyShares;
 
   return { runs: runs(), isLoading, isError };
 }

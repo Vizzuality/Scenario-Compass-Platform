@@ -4,6 +4,7 @@ import {
   YEAR_NET_ZERO_FILTER_CONFIG,
   YEAR_NET_ZERO_META_INDICATOR_KEY,
 } from "@/lib/config/filters/climate-filter-config";
+import { URL_VALUES_FILTER_SEPARATOR } from "@/containers/scenario-dashboard/utils/url-store";
 
 interface FilterRunsByMetaIndicatorsParams {
   runs: ExtendedRun[];
@@ -30,12 +31,12 @@ function matchesClimateFilter(run: ExtendedRun, climate: string[] | null): boole
   return run.metaIndicators.some((mp) => mp.key === key && mp.value === value);
 }
 
-function matchesEnergyFilter(run: ExtendedRun, energy: string[] | null): boolean {
+function matchesSliderValue(run: ExtendedRun, energy: string[] | null): boolean {
   if (!energy || energy.length < 2) return true;
   if (!run.metaIndicators?.length) return false;
 
   const [key, value] = energy;
-  const [min, max] = value.split("-").map(Number);
+  const [min, max] = value.split(URL_VALUES_FILTER_SEPARATOR).map(Number);
 
   if (isNaN(min) || isNaN(max)) return false;
 
@@ -60,8 +61,8 @@ export function filterRunsByMetaIndicators({
   return runs.filter((run) => {
     return (
       matchesClimateFilter(run, climate) &&
-      matchesEnergyFilter(run, energy) &&
-      matchesClimateFilter(run, land)
+      matchesSliderValue(run, energy) &&
+      matchesSliderValue(run, land)
     );
   });
 }

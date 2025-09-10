@@ -6,6 +6,7 @@ import { selectTriggerVariants } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { URL_VALUES_FILTER_SEPARATOR } from "@/containers/scenario-dashboard/utils/url-store";
 
 export interface SliderSelectItem {
   id: string;
@@ -46,7 +47,7 @@ const SliderSelect: React.FC<SliderSelectProps> = ({
   const parseCurrentValue = (): { selectedId: string | null; range: [number, number] } => {
     if (currentValue && currentValue.length === 2) {
       const [selectedId, rangeString] = currentValue;
-      const rangeParts = rangeString.split("-");
+      const rangeParts = rangeString.split(URL_VALUES_FILTER_SEPARATOR);
       if (rangeParts.length === 2) {
         const min = parseInt(rangeParts[0], 10);
         const max = parseInt(rangeParts[1], 10);
@@ -129,7 +130,7 @@ const SliderSelect: React.FC<SliderSelectProps> = ({
                     <div className="space-y-2">
                       <div className="text-center">
                         <span className="text-sm font-bold text-gray-900">
-                          {range[0]}% - {range[1]}%
+                          {range[0]}% : {range[1]}%
                         </span>
                       </div>
 
@@ -157,7 +158,7 @@ const SliderSelect: React.FC<SliderSelectProps> = ({
             <Button
               className="w-full"
               onClick={() => {
-                const rangeString = `${range[0]}-${range[1]}`;
+                const rangeString = `${range[0]}${URL_VALUES_FILTER_SEPARATOR}${range[1]}`;
                 onApply?.(selectedItem, rangeString);
                 setIsOpen(false);
               }}
