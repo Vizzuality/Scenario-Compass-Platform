@@ -3,7 +3,10 @@ export type PlotConfig = {
   variables: ReadonlyArray<string>;
 };
 
-export type SingleScenarioPlotConfig = PlotConfig & { parent: string };
+export type SingleScenarioPlotConfig = PlotConfig & {
+  legendVariables: string[];
+  variablesMap: Record<string, string>;
+};
 
 export const EXPLORATION_GENERAL_TAB_PLOT_CONFIG: ReadonlyArray<PlotConfig> = [
   {

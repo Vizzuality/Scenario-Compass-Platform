@@ -18,6 +18,7 @@ interface Props {
   svg: SVGSelection;
   runs: ExtendedRun[];
   dimensions: PlotDimensions;
+  variablesMap: Record<string, string>;
 }
 
 interface StackedDataPoint {
@@ -33,7 +34,7 @@ const getColorsFromRuns = (runs: ExtendedRun[], variableCount: number): string[]
   return [...palette].reverse().slice(0, variableCount);
 };
 
-export const renderStackedAreaPlot = ({ svg, runs, dimensions }: Props): void => {
+export const renderStackedAreaPlot = ({ svg, runs, dimensions, variablesMap }: Props): void => {
   clearSVG(svg);
 
   if (runs.length === 0) {
@@ -149,7 +150,7 @@ export const renderStackedAreaPlot = ({ svg, runs, dimensions }: Props): void =>
             `<div class="flex items-center gap-2 mb-1">
         <div class="border border-foreground" style="width: 10px; height: 10px; background-color: ${d.color}; border-radius: 100px; flex-shrink: 0;" ></div>
         <div class="text-black">
-          <strong>${d.key.split("|").slice(1).join("|")}:</strong> ${formatNumber(d.value)}
+          <strong>${variablesMap[d.key]}:</strong> ${formatNumber(d.value)}
         </div>
       </div>`,
         )

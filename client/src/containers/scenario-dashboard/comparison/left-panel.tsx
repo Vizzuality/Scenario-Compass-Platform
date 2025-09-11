@@ -1,8 +1,8 @@
 import MultiRunScenarioFlags from "@/containers/scenario-dashboard/components/runs-pannel/scenario-flags/multi-run-scenario-flags";
 import { FilterArrayItem } from "@/containers/scenario-dashboard/comparison/scenario-comparison-plots-section";
 import { LEFT_COMPARISON_TAG } from "@/containers/scenario-dashboard/comparison/utils";
-import { MultipleRunsPlotWidget } from "@/containers/scenario-dashboard/components/plot-widget/multiple-line/multiple-runs-plot-widget";
-import { PLOT_TYPE_OPTIONS } from "@/containers/scenario-dashboard/components/plot-widget/components/chart-type-toggle";
+import { MultipleRunsPlotWidget } from "@/components/plots/widgets/multiple-runs/multiple-runs-plot-widget";
+import { PLOT_TYPE_OPTIONS } from "@/components/plots/components/chart-type-toggle";
 import useSyncVariables from "@/hooks/runs/pipeline/use-sync-variables";
 import CustomTabPlotGrid from "@/containers/scenario-dashboard/components/plots-section/custom-tab-plot-grid";
 import useShowReasonsForConcern from "@/hooks/nuqs/use-show-reasons-for-concer";

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NUMBER_OF_PLOTS_PER_TAB } from "@/lib/config/tabs/tabs-config";
-import { CustomSelectMultipleRunsPlotWidget } from "@/containers/scenario-dashboard/components/plot-widget/multiple-line/custom-select-multiple-runs-plot-widget";
-import { ChartType } from "@/containers/scenario-dashboard/components/plot-widget/components/chart-type-toggle";
+import { CustomMultipleRunsPlotWidget } from "@/components/plots/widgets/multiple-runs/custom-multiple-runs-plot-widget";
+import { ChartType } from "@/components/plots/components/chart-type-toggle";
 
 interface Props {
   initialChartType: ChartType;
@@ -30,7 +30,7 @@ export default function CustomTabPlotGrid({ initialChartType, className, prefix 
       {Array(NUMBER_OF_PLOTS_PER_TAB)
         .fill(null)
         .map((_, index) => (
-          <CustomSelectMultipleRunsPlotWidget
+          <CustomMultipleRunsPlotWidget
             isEnabled={checkIfIndexIsActive(index)}
             key={index}
             index={index}

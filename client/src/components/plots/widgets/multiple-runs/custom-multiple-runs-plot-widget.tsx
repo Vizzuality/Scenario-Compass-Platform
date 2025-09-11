@@ -1,22 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { VariablePlotWidgetHeader } from "@/containers/scenario-dashboard/components/plot-widget/components/variable-plot-widget-header";
+import { PlotWidgetHeader } from "@/components/plots/components";
 import { useRouter } from "next/navigation";
-import {
-  ChartType,
-  PLOT_TYPE_OPTIONS,
-} from "@/containers/scenario-dashboard/components/plot-widget/components/chart-type-toggle";
+import { ChartType, PLOT_TYPE_OPTIONS } from "@/components/plots/components";
 import { useMultipleRunsPipeline } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
 import { INTERNAL_PATHS } from "@/lib/paths";
-import PlotContentWrapper from "@/containers/scenario-dashboard/components/plot-widget/components/plot-content-wrapper";
 import { ExtendedRun } from "@/hooks/runs/pipeline/types";
 import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/lib/query-keys";
-import { ComboboxVariableSelect } from "@/containers/scenario-dashboard/components/plot-widget/components/combobox-variable-select";
+import { ComboboxVariableSelect } from "@/components/plots/components";
 import { Variable } from "@iiasa/ixmp4-ts";
 import { useTabAndVariablesParams } from "@/hooks/nuqs/use-tabs-and-variables-params";
-import { VariableSelectWrapper } from "@/containers/scenario-dashboard/components/plot-widget/components/variable-select-wrapper";
+import { VariableSelectWrapper } from "@/components/plots/components";
+import { AreaPlot, MultiLinePlot } from "@/components/plots/plot-variations";
 
 interface Props {
   prefix?: string;
@@ -28,7 +25,7 @@ interface Props {
 
 const queryKey = queryKeys.variables.list();
 
-export function CustomSelectMultipleRunsPlotWidget({
+export function CustomMultipleRunsPlotWidget({
   prefix,
   isEnabled,
   index,
@@ -103,17 +100,15 @@ export function CustomSelectMultipleRunsPlotWidget({
             onSelectAction={handleVariableChange}
           />
         </div>
-        <VariablePlotWidgetHeader
+        <PlotWidgetHeader
           chartType={chartType}
           onChange={showChartTypeToggle ? setChartType : undefined}
         />
       </div>
-      <PlotContentWrapper
-        chartType={chartType}
-        data={data}
-        prefix={prefix}
-        onRunClick={handleRunClick}
-      />
+      {chartType === PLOT_TYPE_OPTIONS.DOTS && <AreaPlot data={data} />}
+      {chartType === PLOT_TYPE_OPTIONS.MULTIPLE_LINE && (
+        <MultiLinePlot data={data} prefix={prefix} onRunClick={handleRunClick} />
+      )}
     </div>
   );
 }

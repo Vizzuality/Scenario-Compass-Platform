@@ -2,17 +2,18 @@
 
 import React, { useEffect } from "react";
 import * as d3 from "d3";
-import { renderDotPlot } from "@/components/plots/dot-plot/utils";
+import { renderDotPlot } from "@/components/plots/plot-variations/dot-plot/utils";
 import { useScenarioFlagsSelection } from "@/hooks/nuqs/use-scenario-flags-selection";
 import { usePlotContainer } from "@/hooks/plots/use-plot-container";
-import { ExtendedRun } from "@/hooks/runs/pipeline/types";
+import { ExtendedRun, RunPipelineReturn } from "@/hooks/runs/pipeline/types";
+import { PlotStateHandler } from "@/components/plots/components";
 
 interface DotPlotProps {
   runs: ExtendedRun[];
   prefix?: string;
 }
 
-export const DotPlot: React.FC<DotPlotProps> = ({ runs, prefix }) => {
+export const BasePlot: React.FC<DotPlotProps> = ({ runs, prefix }) => {
   const { svgRef, dimensions, plotContainer } = usePlotContainer();
   const { selectedFlags, hiddenFlags } = useScenarioFlagsSelection(prefix);
 
@@ -29,4 +30,17 @@ export const DotPlot: React.FC<DotPlotProps> = ({ runs, prefix }) => {
   }, [dimensions, hiddenFlags, runs, selectedFlags, svgRef]);
 
   return plotContainer;
+};
+
+interface Props {
+  data: RunPipelineReturn;
+  prefix?: string;
+}
+
+export const DotPlot: React.FC<Props> = ({ data, prefix }) => {
+  return (
+    <PlotStateHandler data={data}>
+      {(runs) => <BasePlot runs={runs} prefix={prefix} />}
+    </PlotStateHandler>
+  );
 };

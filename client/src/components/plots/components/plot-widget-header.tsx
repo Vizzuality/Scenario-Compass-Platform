@@ -1,8 +1,5 @@
 import { DownloadIcon } from "lucide-react";
-import {
-  ChartTypeToggle,
-  ChartType,
-} from "@/containers/scenario-dashboard/components/plot-widget/components/chart-type-toggle";
+import { ChartTypeToggle, ChartType } from "@/components/plots/components/chart-type-toggle";
 import { Button } from "@/components/ui/button";
 
 interface Props {
@@ -11,7 +8,7 @@ interface Props {
   title?: string;
 }
 
-export function VariablePlotWidgetHeader({ chartType, onChange, title }: Props) {
+export function PlotWidgetHeader({ chartType, onChange, title }: Props) {
   return (
     <div className="mb-4 flex items-center justify-between">
       {title && (
