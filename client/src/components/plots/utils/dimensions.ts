@@ -16,7 +16,7 @@ export interface PlotDimensions {
 export const getPlotDimensions = (
   WIDTH: number = 800,
   HEIGHT: number = 500,
-  MARGIN: Margin = { TOP: 10, RIGHT: 15, BOTTOM: 25, LEFT: 60 },
+  MARGIN: Margin = { TOP: 10, RIGHT: 15, BOTTOM: 25, LEFT: 55 },
 ): PlotDimensions => ({
   WIDTH: WIDTH,
   HEIGHT: HEIGHT,
