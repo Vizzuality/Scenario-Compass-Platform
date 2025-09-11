@@ -36,7 +36,7 @@ export default function ScenarioFlagTrigger({
           <input
             disabled={isHidden}
             type="checkbox"
-            className="accent-primary mt-0.5 h-4 w-4 rounded border-gray-300"
+            className="accent-primary mt-0.5 h-4 w-4 cursor-pointer rounded border-gray-300"
             checked={isChecked}
             onChange={(e) => {
               e.stopPropagation();
