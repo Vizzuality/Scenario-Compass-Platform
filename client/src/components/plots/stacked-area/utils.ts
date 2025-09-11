@@ -139,6 +139,7 @@ export const renderStackedAreaPlot = ({ svg, runs, dimensions }: Props): void =>
         cumulative += value;
         return { key, value, start, end: cumulative, color: colors[i] };
       });
+      const total = cumulative;
 
       tooltipData.reverse();
 
@@ -146,7 +147,7 @@ export const renderStackedAreaPlot = ({ svg, runs, dimensions }: Props): void =>
         .map(
           (d) =>
             `<div class="flex items-center gap-2 mb-1">
-        <div style="width: 10px; height: 10px; background-color: ${d.color}; border-radius: 2px; flex-shrink: 0;"></div>
+        <div class="border border-foreground" style="width: 10px; height: 10px; background-color: ${d.color}; border-radius: 100px; flex-shrink: 0;" ></div>
         <div class="text-black">
           <strong>${d.key.split("|").slice(1).join("|")}:</strong> ${formatNumber(d.value)}
         </div>
@@ -154,12 +155,10 @@ export const renderStackedAreaPlot = ({ svg, runs, dimensions }: Props): void =>
         )
         .join("");
 
-      const total = cumulative;
-
       tooltipManager?.update(
         `<div class="text-black">
-          <div class="font-bold mb-2">Year: ${dataPoint.year}</div>
-          <div class="font-bold text-stone-700">Total: ${formatNumber(total)}</div>
+          <div class="mb-1"> <strong>Year: </strong>  ${dataPoint.year}</div>
+          <div class="mb-2"> <strong> Total sum:</strong>  ${formatNumber(total)}</div>
           <ul class="list-disc pl-4">${content}</ul>
         </div>`,
         x,

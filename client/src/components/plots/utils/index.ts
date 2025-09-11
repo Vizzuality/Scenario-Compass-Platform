@@ -186,7 +186,7 @@ export const renderAxes = ({
   g.append("text")
     .attr("class", "y-axis-label")
     .attr("transform", "rotate(-90)")
-    .attr("y", -50)
+    .attr("y", -45)
     .attr("x", -height / 2)
     .attr("text-anchor", "middle")
     .style("font-size", FONT_SIZE)

@@ -24,11 +24,11 @@ export default function PlotLegend({ plotConfig, run }: PlotWidgetProps) {
   );
 
   return (
-    <div className="flex flex-wrap gap-4 pt-5">
+    <div className="flex flex-wrap gap-2 pt-5">
       {shortVariables.map((variable) => (
         <div key={variable} className="flex items-center">
           <div
-            className="mr-2 h-2.5 w-2.5 rounded"
+            className="border-foreground mr-2 h-2.5 w-2.5 rounded-full border"
             style={{ backgroundColor: variableColorMap.get(variable) }}
           />
           <span className="text-primary text-sm">{variable}</span>
