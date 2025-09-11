@@ -14,6 +14,7 @@ import { Variable } from "@iiasa/ixmp4-ts";
 import { useTabAndVariablesParams } from "@/hooks/nuqs/use-tabs-and-variables-params";
 import { VariableSelectWrapper } from "@/components/plots/components";
 import { AreaPlot, MultiLinePlot } from "@/components/plots/plot-variations";
+import { useDownloadPlotImage } from "@/hooks/plots/use-download-plot-image";
 
 interface Props {
   prefix?: string;
@@ -46,6 +47,7 @@ export function CustomMultipleRunsPlotWidget({
   const currentVariable = variableOptions?.find(
     (variable) => variable.id === selectedVariableIndex,
   );
+  const { chartRef, downloadChart } = useDownloadPlotImage();
 
   const data = useMultipleRunsPipeline({ variable: currentVariable?.name || "", prefix });
 
@@ -75,6 +77,14 @@ export function CustomMultipleRunsPlotWidget({
 
   const showChartTypeToggle = chartType !== PLOT_TYPE_OPTIONS.DOTS;
 
+  const handleDownload = () => {
+    if (!currentVariable) return;
+    downloadChart(currentVariable.name, undefined, {
+      padding: { all: 30 },
+      includeInFilename: true,
+    });
+  };
+
   if (!currentVariable) {
     return (
       <VariableSelectWrapper
@@ -103,12 +113,15 @@ export function CustomMultipleRunsPlotWidget({
         <PlotWidgetHeader
           chartType={chartType}
           onChange={showChartTypeToggle ? setChartType : undefined}
+          onDownload={handleDownload}
         />
       </div>
-      {chartType === PLOT_TYPE_OPTIONS.DOTS && <AreaPlot data={data} />}
-      {chartType === PLOT_TYPE_OPTIONS.MULTIPLE_LINE && (
-        <MultiLinePlot data={data} prefix={prefix} onRunClick={handleRunClick} />
-      )}
+      <div ref={chartRef}>
+        {chartType === PLOT_TYPE_OPTIONS.AREA && <AreaPlot data={data} />}
+        {chartType === PLOT_TYPE_OPTIONS.MULTIPLE_LINE && (
+          <MultiLinePlot data={data} prefix={prefix} onRunClick={handleRunClick} />
+        )}
+      </div>
     </div>
   );
 }

@@ -11,6 +11,7 @@ import { VariableSelect } from "@/components/plots/components";
 import { ExtendedRun } from "@/hooks/runs/pipeline/types";
 import { useTabAndVariablesParams } from "@/hooks/nuqs/use-tabs-and-variables-params";
 import { AreaPlot, DotPlot, MultiLinePlot } from "@/components/plots/plot-variations";
+import { useDownloadPlotImage } from "@/hooks/plots/use-download-plot-image";
 
 interface Props {
   plotConfig: PlotConfig;
@@ -24,6 +25,7 @@ export function MultipleRunsPlotWidget({ plotConfig, prefix, initialChartType = 
   const currentVariable = getVariable(plotConfig);
   const data = useMultipleRunsPipeline({ variable: currentVariable, prefix });
   const router = useRouter();
+  const { chartRef, downloadChart } = useDownloadPlotImage();
 
   useEffect(() => {
     setChartType(initialChartType);
@@ -40,23 +42,34 @@ export function MultipleRunsPlotWidget({ plotConfig, prefix, initialChartType = 
 
   const showChartTypeToggle = chartType !== PLOT_TYPE_OPTIONS.DOTS;
 
+  const handleDownload = () => {
+    if (!plotConfig.title) return;
+    downloadChart(plotConfig.title, undefined, {
+      padding: { all: 30 },
+      includeInFilename: true,
+    });
+  };
+
   return (
     <div className="h-fit w-full rounded-md bg-white p-4 select-none">
       <PlotWidgetHeader
         title={plotConfig.title}
         chartType={chartType}
         onChange={showChartTypeToggle ? setChartType : undefined}
+        onDownload={handleDownload}
       />
       <VariableSelect
         options={plotConfig.variables}
         onChange={handleVariableChange}
         currentVariable={currentVariable}
       />
-      {chartType === PLOT_TYPE_OPTIONS.AREA && <AreaPlot data={data} />}
-      {chartType === PLOT_TYPE_OPTIONS.DOTS && <DotPlot data={data} />}
-      {chartType === PLOT_TYPE_OPTIONS.MULTIPLE_LINE && (
-        <MultiLinePlot data={data} prefix={prefix} onRunClick={handleRunClick} />
-      )}
+      <div ref={chartRef}>
+        {chartType === PLOT_TYPE_OPTIONS.AREA && <AreaPlot data={data} />}
+        {chartType === PLOT_TYPE_OPTIONS.DOTS && <DotPlot data={data} />}
+        {chartType === PLOT_TYPE_OPTIONS.MULTIPLE_LINE && (
+          <MultiLinePlot data={data} prefix={prefix} onRunClick={handleRunClick} />
+        )}
+      </div>
     </div>
   );
 }
