@@ -1,48 +1,57 @@
 "use client";
 
-import React, { JSX } from "react";
-import { motion, Variants } from "framer-motion";
+import React, { useEffect, useRef, useState, ReactNode } from "react";
 
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-    },
-  },
-};
+interface StaggeredFadeInProps {
+  children: ReactNode;
+  className?: string;
+}
 
-const itemVariants: Variants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      duration: 0.5,
-      ease: "easeOut",
-    },
-  },
-};
+export function StaggeredFadeIn({ children, className = "" }: StaggeredFadeInProps) {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
-export function StaggeredFadeIn({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className: string;
-}): JSX.Element {
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.2 },
+    );
+
+    observer.observe(element);
+    return () => observer.unobserve(element);
+  }, []);
+
+  useEffect(() => {
+    if (!isVisible) return;
+
+    const childElements = ref.current?.children;
+    if (!childElements) return;
+
+    Array.from(childElements).forEach((child, index) => {
+      setTimeout(() => {
+        (child as HTMLElement).style.opacity = "1";
+        (child as HTMLElement).style.transform = "translateY(0)";
+      }, index * 150);
+    });
+  }, [isVisible]);
+
   return (
-    <motion.div
-      className={className}
-      variants={containerVariants}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: false, amount: 0.2 }}
-    >
-      {React.Children.map(children, (child) => (
-        <motion.div variants={itemVariants}>{child}</motion.div>
+    <div ref={ref} className={className}>
+      {React.Children.map(children, (child, index) => (
+        <div
+          key={index}
+          className="translate-y-5 opacity-0 transition-all duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]"
+        >
+          {child}
+        </div>
       ))}
-    </motion.div>
+    </div>
   );
 }

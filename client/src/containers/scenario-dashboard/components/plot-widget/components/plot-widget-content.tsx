@@ -52,7 +52,7 @@ const PlotContent = ({ chartType, data, prefix = "", onRunClick }: Props) => {
   if (data.runs.length === 0) {
     return (
       <PlotContainer>
-        <div className="-mt-10 text-center">
+        <div className="-mt-10 px-4 text-center">
           <Image
             src={notFoundImage}
             alt="No results"

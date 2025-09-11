@@ -9,7 +9,7 @@ import { cva, VariantProps } from "class-variance-authority";
 
 export const selectTriggerVariants = cva(
   [
-    "border-input flex w-fit items-center justify-between gap-2.5 rounded-[4px] border bg-transparent p-4 text-sm leading-5 whitespace-nowrap  outline-none",
+    "border-input flex w-fit items-center justify-between gap-2.5 rounded-[4px] border bg-transparent p-4 text-sm leading-5 whitespace-nowrap cursor-pointer  outline-none",
     "disabled:cursor-not-allowed disabled:opacity-50",
     "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
     "aria-invalid:ring-destructive/20 aria-invalid:border-destructive",

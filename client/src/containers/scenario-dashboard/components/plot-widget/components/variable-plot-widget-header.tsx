@@ -3,6 +3,7 @@ import {
   ChartTypeToggle,
   ChartType,
 } from "@/containers/scenario-dashboard/components/plot-widget/components/chart-type-toggle";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   chartType: ChartType;
@@ -19,7 +20,9 @@ export function VariablePlotWidgetHeader({ chartType, onChange, title }: Props) 
         </div>
       )}
       <div className="flex items-center gap-4">
-        <DownloadIcon className="h-4 w-4" />
+        <Button variant="ghost">
+          <DownloadIcon className="h-4 w-4" />
+        </Button>
         {onChange && <ChartTypeToggle currentType={chartType} onChange={onChange} />}
       </div>
     </div>
