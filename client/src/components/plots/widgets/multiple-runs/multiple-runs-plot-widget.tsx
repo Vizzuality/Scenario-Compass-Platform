@@ -1,19 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { VariablePlotWidgetHeader } from "@/containers/scenario-dashboard/components/plot-widget/components/variable-plot-widget-header";
+import { PlotWidgetHeader } from "@/components/plots/components";
 import { useRouter } from "next/navigation";
-import {
-  ChartType,
-  PLOT_TYPE_OPTIONS,
-} from "@/containers/scenario-dashboard/components/plot-widget/components/chart-type-toggle";
+import { ChartType, PLOT_TYPE_OPTIONS } from "@/components/plots/components";
 import { useMultipleRunsPipeline } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
 import { INTERNAL_PATHS } from "@/lib/paths";
 import { PlotConfig } from "@/lib/config/tabs/variables-config";
-import { VariableSelect } from "@/containers/scenario-dashboard/components/plot-widget/components/variable-select";
-import PlotContentWrapper from "@/containers/scenario-dashboard/components/plot-widget/components/plot-content-wrapper";
+import { VariableSelect } from "@/components/plots/components";
 import { ExtendedRun } from "@/hooks/runs/pipeline/types";
 import { useTabAndVariablesParams } from "@/hooks/nuqs/use-tabs-and-variables-params";
+import { AreaPlot, DotPlot, MultiLinePlot } from "@/components/plots/plot-variations";
 
 interface Props {
   plotConfig: PlotConfig;
@@ -45,7 +42,7 @@ export function MultipleRunsPlotWidget({ plotConfig, prefix, initialChartType = 
 
   return (
     <div className="h-fit w-full rounded-md bg-white p-4 select-none">
-      <VariablePlotWidgetHeader
+      <PlotWidgetHeader
         title={plotConfig.title}
         chartType={chartType}
         onChange={showChartTypeToggle ? setChartType : undefined}
@@ -55,12 +52,11 @@ export function MultipleRunsPlotWidget({ plotConfig, prefix, initialChartType = 
         onChange={handleVariableChange}
         currentVariable={currentVariable}
       />
-      <PlotContentWrapper
-        chartType={chartType}
-        data={data}
-        prefix={prefix}
-        onRunClick={handleRunClick}
-      />
+      {chartType === PLOT_TYPE_OPTIONS.AREA && <AreaPlot data={data} />}
+      {chartType === PLOT_TYPE_OPTIONS.DOTS && <DotPlot data={data} />}
+      {chartType === PLOT_TYPE_OPTIONS.MULTIPLE_LINE && (
+        <MultiLinePlot data={data} prefix={prefix} onRunClick={handleRunClick} />
+      )}
     </div>
   );
 }

@@ -2,15 +2,16 @@
 
 import React, { useEffect } from "react";
 import * as d3 from "d3";
-import { renderAreaPlot } from "@/components/plots/area-plot/utils";
+import { renderAreaPlot } from "@/components/plots/plot-variations/area-plot/utils";
 import { usePlotContainer } from "@/hooks/plots/use-plot-container";
-import { ExtendedRun } from "@/hooks/runs/pipeline/types";
+import { ExtendedRun, RunPipelineReturn } from "@/hooks/runs/pipeline/types";
+import { PlotStateHandler } from "@/components/plots/components";
 
 interface AreaChartProps {
   runs: ExtendedRun[];
 }
 
-export const AreaPlot: React.FC<AreaChartProps> = ({ runs }) => {
+const BasePlot: React.FC<AreaChartProps> = ({ runs }) => {
   const { svgRef, dimensions, plotContainer } = usePlotContainer();
 
   useEffect(() => {
@@ -24,4 +25,8 @@ export const AreaPlot: React.FC<AreaChartProps> = ({ runs }) => {
   }, [dimensions, runs, svgRef]);
 
   return plotContainer;
+};
+
+export const AreaPlot = ({ data }: { data: RunPipelineReturn }) => {
+  return <PlotStateHandler data={data}>{(runs) => <BasePlot runs={runs} />}</PlotStateHandler>;
 };

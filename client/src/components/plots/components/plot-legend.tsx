@@ -10,28 +10,23 @@ interface PlotWidgetProps {
 export default function PlotLegend({ plotConfig, run }: PlotWidgetProps) {
   const categoryKey = run.flagCategory as keyof typeof CATEGORY_CONFIG;
   const palette = [...CATEGORY_CONFIG[categoryKey]?.palette];
-  const variables = plotConfig.variables;
-
-  const shortVariables = variables
-    .map((variable) => {
-      return variable.replace(plotConfig.parent, "").trim();
-    })
-    .sort()
-    .reverse();
 
   const variableColorMap = new Map(
-    shortVariables.map((variable, index) => [variable, palette[index % palette.length]]),
+    plotConfig.legendVariables.map((variable, index) => [
+      variable,
+      palette[index % palette.length],
+    ]),
   );
 
   return (
-    <div className="flex flex-wrap gap-2 pt-5">
-      {shortVariables.map((variable) => (
+    <div className="flex flex-wrap gap-x-5 gap-y-2 pb-2">
+      {plotConfig.legendVariables.map((variable) => (
         <div key={variable} className="flex items-center">
           <div
             className="border-foreground mr-2 h-2.5 w-2.5 rounded-full border"
             style={{ backgroundColor: variableColorMap.get(variable) }}
           />
-          <span className="text-primary text-sm">{variable}</span>
+          <span className="text-primary text-sm whitespace-nowrap">{variable}</span>
         </div>
       ))}
     </div>

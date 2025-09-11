@@ -3,9 +3,10 @@
 import React, { useEffect } from "react";
 import * as d3 from "d3";
 import { useScenarioFlagsSelection } from "@/hooks/nuqs/use-scenario-flags-selection";
-import { renderMultiLinePlot } from "@/components/plots/multi-line-plot/utils";
+import { renderMultiLinePlot } from "@/components/plots/plot-variations/multi-line/utils";
 import { usePlotContainer } from "@/hooks/plots/use-plot-container";
-import { ExtendedRun } from "@/hooks/runs/pipeline/types";
+import { ExtendedRun, RunPipelineReturn } from "@/hooks/runs/pipeline/types";
+import { PlotStateHandler } from "@/components/plots/components";
 
 interface Props {
   runs: ExtendedRun[];
@@ -13,7 +14,7 @@ interface Props {
   onRunClick?: (run: ExtendedRun) => void;
 }
 
-export const MultiLinePlot: React.FC<Props> = ({ runs, prefix, onRunClick }) => {
+const BasePlot: React.FC<Props> = ({ runs, prefix, onRunClick }) => {
   const { svgRef, dimensions, plotContainer } = usePlotContainer();
   const { selectedFlags, hiddenFlags } = useScenarioFlagsSelection(prefix);
 
@@ -31,4 +32,18 @@ export const MultiLinePlot: React.FC<Props> = ({ runs, prefix, onRunClick }) => 
   }, [runs, dimensions, selectedFlags, hiddenFlags, onRunClick, svgRef]);
 
   return plotContainer;
+};
+
+interface MultiLinePlotProps {
+  data: RunPipelineReturn;
+  prefix?: string;
+  onRunClick?: (run: ExtendedRun) => void;
+}
+
+export const MultiLinePlot: React.FC<MultiLinePlotProps> = ({ data, prefix, onRunClick }) => {
+  return (
+    <PlotStateHandler data={data}>
+      {(runs) => <BasePlot runs={runs} prefix={prefix} onRunClick={onRunClick} />}
+    </PlotStateHandler>
+  );
 };

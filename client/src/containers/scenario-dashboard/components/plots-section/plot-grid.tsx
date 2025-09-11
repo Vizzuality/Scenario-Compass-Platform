@@ -1,8 +1,8 @@
 "use client";
 
-import { MultipleRunsPlotWidget } from "@/containers/scenario-dashboard/components/plot-widget/multiple-line/multiple-runs-plot-widget";
+import { MultipleRunsPlotWidget } from "@/components/plots/widgets/multiple-runs/multiple-runs-plot-widget";
 import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
-import { PLOT_TYPE_OPTIONS } from "@/containers/scenario-dashboard/components/plot-widget/components/chart-type-toggle";
+import { PLOT_TYPE_OPTIONS } from "@/components/plots/components/chart-type-toggle";
 import { useTabAndVariablesParams } from "@/hooks/nuqs/use-tabs-and-variables-params";
 import CustomTabPlotGrid from "@/containers/scenario-dashboard/components/plots-section/custom-tab-plot-grid";
 
