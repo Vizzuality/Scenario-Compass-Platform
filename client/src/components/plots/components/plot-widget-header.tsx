@@ -6,9 +6,10 @@ interface Props {
   chartType?: ChartType;
   onChange?: (chartType: ChartType) => void;
   title?: string;
+  onDownload?: () => void;
 }
 
-export function PlotWidgetHeader({ chartType, onChange, title }: Props) {
+export function PlotWidgetHeader({ chartType, onChange, title, onDownload }: Props) {
   return (
     <div className="mb-4 flex items-center justify-between">
       {title && (
@@ -17,7 +18,7 @@ export function PlotWidgetHeader({ chartType, onChange, title }: Props) {
         </div>
       )}
       <div className="flex items-center gap-4">
-        <Button variant="ghost">
+        <Button variant="ghost" onClick={onDownload}>
           <DownloadIcon className="h-4 w-4" />
         </Button>
         {onChange && <ChartTypeToggle currentType={chartType} onChange={onChange} />}
