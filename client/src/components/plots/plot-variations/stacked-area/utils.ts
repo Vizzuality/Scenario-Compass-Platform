@@ -138,11 +138,9 @@ export const renderStackedAreaPlot = ({ svg, runs, dimensions, variablesMap }: P
         const value = dataPoint[key];
         const start = cumulative;
         cumulative += value;
-        return { key, value, start, end: cumulative, color: colors[i] };
+        return { key, value, start, end: cumulative, color: colors[colors.length - 1 - i] };
       });
       const total = cumulative;
-
-      tooltipData.reverse();
 
       const content = tooltipData
         .map(
