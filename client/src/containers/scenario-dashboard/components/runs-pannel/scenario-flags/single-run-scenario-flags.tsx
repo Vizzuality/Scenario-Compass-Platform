@@ -3,7 +3,7 @@ import { Accordion, AccordionItem, AccordionTrigger } from "@/components/ui/acco
 import { useMemo } from "react";
 import { categorizeRuns } from "@/containers/scenario-dashboard/utils/flags-utils";
 import { AccordionItemContent } from "@/containers/scenario-dashboard/components/runs-pannel/components/accordion-item-content";
-import { CategoryKey } from "@/lib/config/reasons-of-concern/category-config";
+import { CATEGORY_KEYS, CategoryKey } from "@/lib/config/reasons-of-concern/category-config";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { InfoIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -48,6 +48,9 @@ export default function SingleRunScenarioFlags({ result }: Props) {
     );
   }
 
+  const hasNoReasonsForConcern =
+    categoriesWithRuns.length === 1 && categoriesWithRuns[0][0] === CATEGORY_KEYS.NO_FLAGS;
+
   return (
     <div className="mt-8 w-140">
       <p className="w-full border-b pb-1.5 text-base font-bold text-stone-800">
@@ -73,7 +76,7 @@ export default function SingleRunScenarioFlags({ result }: Props) {
                 </Tooltip>
               </div>
             </AccordionTrigger>
-            <AccordionItemContent category={category} />
+            {!hasNoReasonsForConcern && <AccordionItemContent category={category} />}
           </AccordionItem>
         </Accordion>
       ))}

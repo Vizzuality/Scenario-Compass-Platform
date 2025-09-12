@@ -14,6 +14,7 @@ interface DataPoint {
   year: number;
   value: number;
   variable: string;
+  unit: string;
 }
 
 /**

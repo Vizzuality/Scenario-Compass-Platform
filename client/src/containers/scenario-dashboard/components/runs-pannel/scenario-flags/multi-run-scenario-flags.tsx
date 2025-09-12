@@ -99,7 +99,11 @@ export default function MultiRunScenarioFlags({ result, prefix }: Props) {
                 </p>
               </div>
             </div>
-            <ColoredScenarioBar categories={categories} totalRuns={result.runs.length} />
+            <ColoredScenarioBar
+              categories={categories}
+              totalRuns={result.runs.length}
+              prefix={prefix}
+            />
           </div>
           <div className="flex flex-col gap-5">
             {highCategories.length > 0 && (

@@ -8,6 +8,7 @@ export interface ExtendedRun {
   scenarioName: string;
   modelName: string;
   variableName: string;
+  unit: string;
   orderedPoints: ShortDataPoint[];
   flagCategory: CategoryKey;
   metaIndicators: ShortMetaIndicator[];

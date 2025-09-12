@@ -7,10 +7,19 @@ import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboa
 export default function ClearFilterButton() {
   const { clearAll } = useScenarioDashboardUrlParams();
 
+  const handleClearAll = () => {
+    clearAll().then(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    });
+  };
+
   return (
     <Button
       variant="ghost"
-      onClick={clearAll}
+      onClick={handleClearAll}
       className={cn(
         "text-primary text-sm leading-5 font-normal text-nowrap underline underline-offset-2",
         "hover:text-primary hover:bg-transparent",

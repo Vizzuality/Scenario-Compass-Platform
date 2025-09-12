@@ -147,6 +147,7 @@ export const renderAxes = ({
   width,
   yTickCount = 5,
   xTickValues,
+  unit,
 }: {
   g: GroupSelection;
   scales: PlotScales;
@@ -154,6 +155,7 @@ export const renderAxes = ({
   width?: number;
   xTickValues?: number[];
   yTickCount?: number;
+  unit?: string;
 }): void => {
   const optimizedXTickValues =
     xTickValues && width ? calculateOptimalTicksWithNiceYears(xTickValues, width) : undefined;
@@ -191,7 +193,7 @@ export const renderAxes = ({
     .attr("text-anchor", "middle")
     .style("font-size", FONT_SIZE)
     .style("fill", GRID_TEXT_COLOR)
-    .text("Value");
+    .html(unit ? `Value <tspan dx="7">(${unit})</tspan>` : "Value");
 };
 
 export const createInteractionOverlay = (

@@ -73,6 +73,7 @@ export const generateExtendedRuns = ({
       variableName: firstDataPoint.variable,
       scenarioName: firstDataPoint.scenarioName,
       modelName: firstDataPoint.modelName,
+      unit: firstDataPoint.unit,
       orderedPoints: createShortDataPoints(runDataPoints),
       flagCategory: getRunCategory(runMetaIndicators),
       metaIndicators,
