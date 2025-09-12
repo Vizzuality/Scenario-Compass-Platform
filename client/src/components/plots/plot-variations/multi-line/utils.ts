@@ -62,6 +62,7 @@ export const renderMultiLinePlot = ({
     height: dimensions.INNER_HEIGHT,
     width: dimensions.INNER_WIDTH,
     xTickValues: uniqueYears,
+    unit: runs[0].unit,
   });
 
   const linesGroup = g.append("g").attr("class", "lines-group");
@@ -73,9 +74,18 @@ export const renderMultiLinePlot = ({
     .attr("fill", "none")
     .attr("stroke", (run) => getRunColor(run, selectedFlags, hasSelection))
     .attr("stroke-width", PLOT_CONFIG.NORMAL_STROKE_WIDTH)
-    .attr("stroke-opacity", PLOT_CONFIG.NORMAL_OPACITY)
-    .style("cursor", "pointer")
-    .style("pointer-events", "stroke");
+    .attr("stroke-opacity", PLOT_CONFIG.NORMAL_OPACITY);
+
+  const isRunHoverable = (run: ExtendedRun): boolean => {
+    if (!hasSelection) return true;
+
+    const abbrev = getCategoryAbbrev(run.flagCategory);
+    return abbrev ? selectedFlags.includes(abbrev) : false;
+  };
+
+  lines
+    .style("cursor", (run) => (isRunHoverable(run) ? "pointer" : "default"))
+    .style("pointer-events", (run) => (isRunHoverable(run) ? "stroke" : "none"));
 
   lines
     .filter((run) => {
@@ -92,7 +102,9 @@ export const renderMultiLinePlot = ({
 
   let rafId: number | null = null;
 
-  lines
+  const hoverableLines = lines.filter((run) => isRunHoverable(run));
+
+  hoverableLines
     .on("click", (event, run) => {
       event.stopPropagation();
       onRunClick?.(run);

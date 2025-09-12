@@ -7,8 +7,8 @@ import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/lib/query-keys";
 import { getMetaPoints } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
 import { SingleRunPipelineParams, RunPipelineReturn } from "@/hooks/runs/pipeline/types";
-import { generateExtendedRuns } from "@/hooks/runs/pipeline/utils";
-import { filterRunsByMetaIndicators } from "@/hooks/runs/utils/filtering";
+import { generateExtendedRuns } from "@/hooks/runs/utils/utils";
+import { filterRunsByMetaIndicators } from "@/hooks/runs/utils";
 import useComputeEnergyShare from "@/hooks/runs/filtering/use-compute-energy-share";
 import useComputeLandUse from "@/hooks/runs/filtering/use-compute-land-use";
 

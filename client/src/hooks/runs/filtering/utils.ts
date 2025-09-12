@@ -69,8 +69,9 @@ export const extractDataPoints = (data: DataFrame | undefined): DataPoint[] | []
   const yearCol = columns.find((col) => col.toLowerCase().includes("year"));
   const valueCol = columns.find((col) => col.toLowerCase().includes("value"));
   const variableCol = columns.find((col) => col.toLowerCase().includes("variable"));
+  const unitCol = columns.find((col) => col.toLowerCase().includes("unit"));
 
-  if (!scenarioCol || !yearCol || !valueCol || !modelCol || !runIdCol || !variableCol) {
+  if (!scenarioCol || !yearCol || !valueCol || !modelCol || !runIdCol || !variableCol || !unitCol) {
     return [];
   }
 
@@ -81,6 +82,7 @@ export const extractDataPoints = (data: DataFrame | undefined): DataPoint[] | []
     const year = data.at(i, yearCol);
     const value = data.at(i, valueCol);
     const variable = data.at(i, variableCol);
+    const unit = data.at(i, unitCol);
 
     if (scenario != null && year != null && value != null) {
       dataPoints.push({
@@ -90,6 +92,7 @@ export const extractDataPoints = (data: DataFrame | undefined): DataPoint[] | []
         year: Number(year),
         value: Number(value),
         variable: String(variable),
+        unit: String(unit),
       });
     }
   }

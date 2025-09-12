@@ -79,6 +79,7 @@ export function ComboboxVariableSelect({
                     <CommandItem
                       key={variable.id}
                       value={variable.id.toString()}
+                      keywords={[variable.name]}
                       onSelect={handleSelect}
                     >
                       {variable.name}

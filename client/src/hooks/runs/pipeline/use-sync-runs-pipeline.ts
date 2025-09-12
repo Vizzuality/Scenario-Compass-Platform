@@ -1,4 +1,4 @@
-import { generateExtendedRuns } from "@/hooks/runs/pipeline/utils";
+import { generateExtendedRuns } from "@/hooks/runs/utils/utils";
 import { getMetaPoints } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
 import { DataFrame } from "@iiasa/ixmp4-ts";
 import { useQueries } from "@tanstack/react-query";
@@ -11,7 +11,7 @@ import {
   RunPipelineReturn,
 } from "@/hooks/runs/pipeline/types";
 import useComputeEnergyShare from "@/hooks/runs/filtering/use-compute-energy-share";
-import { filterRunsByMetaIndicators } from "@/hooks/runs/utils/filtering";
+import { filterRunsByMetaIndicators } from "@/hooks/runs/utils";
 import useComputeLandUse from "@/hooks/runs/filtering/use-compute-land-use";
 
 export default function useSyncRunsPipeline({

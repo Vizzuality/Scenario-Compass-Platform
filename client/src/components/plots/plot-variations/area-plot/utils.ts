@@ -46,6 +46,7 @@ export const renderAreaPlot = ({ svg, runs, dimensions }: Props): void => {
     height: INNER_HEIGHT,
     width: INNER_WIDTH,
     xTickValues: uniqueYears,
+    unit: runs[0].unit,
   });
 
   const areaSurface = d3

@@ -61,7 +61,7 @@ export const renderDotPlot = ({
   const scales = createScales(domain, dimensions.INNER_WIDTH, dimensions.INNER_HEIGHT);
 
   renderGridLines(g, scales.yScale, dimensions.INNER_WIDTH);
-  renderAxes({ g, scales, height: dimensions.INNER_HEIGHT });
+  renderAxes({ g, scales, height: dimensions.INNER_HEIGHT, unit: runs[0].unit });
 
   const dots = g
     .selectAll(".data-point")
