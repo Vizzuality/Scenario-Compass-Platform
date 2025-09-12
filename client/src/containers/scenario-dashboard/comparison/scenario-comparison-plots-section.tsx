@@ -4,7 +4,10 @@ import React, { ComponentType, useMemo } from "react";
 import { LandFilterRow } from "@/containers/scenario-dashboard/components/meta-scenario-filters/land-filter";
 import { EnergyFilterRow } from "@/containers/scenario-dashboard/components/meta-scenario-filters/energy-filter";
 import { ClimateFilterRow } from "@/containers/scenario-dashboard/components/meta-scenario-filters/climate-filter";
-import { SCENARIO_FILTER_OPTIONS } from "@/containers/scenario-dashboard/utils/url-store";
+import {
+  SCENARIO_FILTER_OPTIONS,
+  UNSET_FILTER_VALUE,
+} from "@/containers/scenario-dashboard/utils/url-store";
 import { RowFilterProps } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
 import {
   getParamName,
@@ -83,16 +86,17 @@ export default function ScenarioComparisonPlotsSection() {
   };
 
   const handleApply = async (selectedFilters: string[]) => {
-    const allParamNames = Object.values(LEFT_PARAM_NAMES);
+    const updates: Record<string, string[]> = {};
 
-    const updates = Object.fromEntries(
-      allParamNames.map((paramName) => [
-        paramName,
-        selectedFilters.includes(paramName) ? [""] : null,
-      ]),
-    );
+    selectedFilters.forEach((filter) => {
+      if (!activeScenarioParams.includes(filter as ScenarioDashboardURLParamsKey)) {
+        updates[filter] = [UNSET_FILTER_VALUE];
+      }
+    });
 
-    await setLeftFilters(updates);
+    if (Object.keys(updates).length > 0) {
+      await setLeftFilters(updates);
+    }
   };
 
   return (

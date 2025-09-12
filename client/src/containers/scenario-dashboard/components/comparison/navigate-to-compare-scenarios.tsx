@@ -4,7 +4,10 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { INTERNAL_PATHS } from "@/lib/paths";
 import { ComparisonFilterPopover } from "@/containers/scenario-dashboard/components/comparison/comparison-filter-popover";
-import { SCENARIO_FILTER_OPTIONS } from "@/containers/scenario-dashboard/utils/url-store";
+import {
+  SCENARIO_FILTER_OPTIONS,
+  UNSET_FILTER_VALUE,
+} from "@/containers/scenario-dashboard/utils/url-store";
 import {
   getParamName,
   useScenarioDashboardUrlParams,
@@ -39,15 +42,15 @@ const buildComparisonParams = ({
   selectedFilters.forEach((filter) => {
     switch (filter) {
       case SCENARIO_FILTER_OPTIONS.CLIMATE:
-        const climateValue = climate && climate.length > 0 ? climate.join(",") : "";
+        const climateValue = climate && climate.length > 0 ? climate.join(",") : UNSET_FILTER_VALUE;
         urlParams.set(LEFT_PARAM_NAMES.climate, climateValue);
         break;
       case SCENARIO_FILTER_OPTIONS.ENERGY:
-        const energyValue = energy && energy.length > 0 ? energy.join(",") : "";
+        const energyValue = energy && energy.length > 0 ? energy.join(",") : UNSET_FILTER_VALUE;
         urlParams.set(LEFT_PARAM_NAMES.energy, energyValue);
         break;
       case SCENARIO_FILTER_OPTIONS.LAND:
-        const landValue = land && land.length > 0 ? land.join(",") : "";
+        const landValue = land && land.length > 0 ? land.join(",") : UNSET_FILTER_VALUE;
         urlParams.set(LEFT_PARAM_NAMES.land, landValue);
         break;
     }
