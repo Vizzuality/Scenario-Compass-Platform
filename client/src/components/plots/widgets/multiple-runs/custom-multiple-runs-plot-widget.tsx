@@ -14,7 +14,7 @@ import { Variable } from "@iiasa/ixmp4-ts";
 import { useTabAndVariablesParams } from "@/hooks/nuqs/use-tabs-and-variables-params";
 import { VariableSelectWrapper } from "@/components/plots/components";
 import { AreaPlot, MultiLinePlot } from "@/components/plots/plot-variations";
-import { useDownloadPlotImage } from "@/hooks/plots/use-download-plot-image";
+import { usePlotDownload } from "@/hooks/plots/download/use-plot-download";
 
 interface Props {
   prefix?: string;
@@ -47,9 +47,16 @@ export function CustomMultipleRunsPlotWidget({
   const currentVariable = variableOptions?.find(
     (variable) => variable.id === selectedVariableIndex,
   );
-  const { chartRef, downloadChart } = useDownloadPlotImage();
-
   const data = useMultipleRunsPipeline({ variable: currentVariable?.name || "", prefix });
+
+  const { chartRef, handleDownload } = usePlotDownload({
+    runs: data.runs,
+    title: currentVariable?.name || "plot",
+    imageOptions: {
+      padding: { all: 30 },
+      includeInFilename: true,
+    },
+  });
 
   useEffect(() => {
     setChartType(initialChartType);
@@ -76,14 +83,6 @@ export function CustomMultipleRunsPlotWidget({
   };
 
   const showChartTypeToggle = chartType !== PLOT_TYPE_OPTIONS.DOTS;
-
-  const handleDownload = () => {
-    if (!currentVariable) return;
-    downloadChart(currentVariable.name, undefined, {
-      padding: { all: 30 },
-      includeInFilename: true,
-    });
-  };
 
   if (!currentVariable) {
     return (

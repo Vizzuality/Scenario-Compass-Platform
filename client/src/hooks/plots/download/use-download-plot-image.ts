@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
 import { geographyConfig } from "@/lib/config/filters/geography-filter-config";
-import { downloadDivAsPNG } from "@/hooks/plots/utils";
+import { downloadDivAsPNG } from "@/hooks/plots/download/image-utils";
 
 interface DownloadOptions {
   padding?: {

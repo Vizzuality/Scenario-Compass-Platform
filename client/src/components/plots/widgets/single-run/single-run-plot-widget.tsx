@@ -5,7 +5,7 @@ import { SingleScenarioPlotConfig } from "@/lib/config/tabs/variables-config";
 import useSyncRunsPipeline from "@/hooks/runs/pipeline/use-sync-runs-pipeline";
 import PlotLegend from "@/components/plots/components/plot-legend";
 import { StackedAreaPlot } from "@/components/plots/plot-variations";
-import { useDownloadPlotImage } from "@/hooks/plots/use-download-plot-image";
+import { usePlotDownload } from "@/hooks/plots/download/use-plot-download";
 
 interface Props {
   runId: number;
@@ -13,20 +13,19 @@ interface Props {
 }
 
 export function SingleRunPlotWidget({ runId, plotConfig }: Props) {
-  const { chartRef, legendRef, downloadChart } = useDownloadPlotImage();
-
   const data = useSyncRunsPipeline({
     variablesNames: plotConfig.variables as string[],
     runId,
   });
 
-  const handleDownload = () => {
-    if (!plotConfig.title) return;
-    downloadChart(plotConfig.title, undefined, {
+  const { chartRef, legendRef, handleDownload } = usePlotDownload({
+    runs: data.runs,
+    title: plotConfig.title || "plot",
+    imageOptions: {
       padding: { all: 30 },
       includeInFilename: true,
-    });
-  };
+    },
+  });
 
   return (
     <div className="flex w-full flex-col justify-between rounded-md bg-white p-4 select-none">
