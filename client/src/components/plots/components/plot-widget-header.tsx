@@ -1,12 +1,13 @@
-import { DownloadIcon } from "lucide-react";
 import { ChartTypeToggle, ChartType } from "@/components/plots/components/chart-type-toggle";
-import { Button } from "@/components/ui/button";
+import DownloadPlotButton, {
+  DOWNLOAD_TYPE,
+} from "@/components/plots/components/download-plot-button";
 
 interface Props {
   chartType?: ChartType;
   onChange?: (chartType: ChartType) => void;
   title?: string;
-  onDownload?: () => void;
+  onDownload?: (selectedTypes: DOWNLOAD_TYPE[]) => void;
 }
 
 export function PlotWidgetHeader({ chartType, onChange, title, onDownload }: Props) {
@@ -18,9 +19,7 @@ export function PlotWidgetHeader({ chartType, onChange, title, onDownload }: Pro
         </div>
       )}
       <div className="flex items-center gap-4">
-        <Button variant="ghost" onClick={onDownload}>
-          <DownloadIcon className="h-4 w-4" />
-        </Button>
+        <DownloadPlotButton onClick={onDownload} />
         {onChange && <ChartTypeToggle currentType={chartType} onChange={onChange} />}
       </div>
     </div>
