@@ -14,21 +14,37 @@ interface FilterRunsByMetaIndicatorsParams {
 }
 
 function matchesClimateFilter(run: ExtendedRun, climate: string[] | null): boolean {
-  if (!climate || climate.length < 2) return true;
+  if (!climate || climate.length === 0) return true;
   if (!run.metaIndicators?.length) return false;
 
-  const [key, value] = climate;
+  const filters: Array<{ key: string; value: string }> = [];
 
-  if (key === CLIMATE_CATEGORY_FILTER_CONFIG.name) {
-    return run.metaIndicators.some((mp) => mp.value === value);
-  }
-  if (key === YEAR_NET_ZERO_FILTER_CONFIG.name) {
-    return run.metaIndicators.some(
-      (mp) => mp.key === YEAR_NET_ZERO_META_INDICATOR_KEY && mp.value === value,
-    );
+  for (let i = 0; i < climate.length; i += 2) {
+    if (i + 1 < climate.length) {
+      filters.push({
+        key: climate[i],
+        value: climate[i + 1],
+      });
+    }
   }
 
-  return run.metaIndicators.some((mp) => mp.key === key && mp.value === value);
+  if (filters.length === 0) return true;
+
+  return filters.every((filter) => {
+    const { key, value } = filter;
+
+    if (key === CLIMATE_CATEGORY_FILTER_CONFIG.name) {
+      return run.metaIndicators.some((mp) => mp.value === value);
+    }
+
+    if (key === YEAR_NET_ZERO_FILTER_CONFIG.name) {
+      return run.metaIndicators.some(
+        (mp) => mp.key === YEAR_NET_ZERO_META_INDICATOR_KEY && mp.value === value,
+      );
+    }
+
+    return run.metaIndicators.some((mp) => mp.key === key && mp.value === value);
+  });
 }
 
 function matchesSliderValue(run: ExtendedRun, energy: string[] | null): boolean {

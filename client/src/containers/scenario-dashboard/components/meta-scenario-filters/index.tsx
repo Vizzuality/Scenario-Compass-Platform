@@ -5,6 +5,7 @@ import { ClimateFilter } from "@/containers/scenario-dashboard/components/meta-s
 import { EnergyFilter } from "@/containers/scenario-dashboard/components/meta-scenario-filters/energy-filter";
 import { LandFilter } from "@/containers/scenario-dashboard/components/meta-scenario-filters/land-filter";
 import { AdvancedFilter } from "@/containers/scenario-dashboard/components/meta-scenario-filters/advanced-filter";
+import FilterValueRows from "@/containers/scenario-dashboard/components/meta-scenario-filters/filter-value-rows";
 
 export default function MetaIndicatorsFilters() {
   const filterRef = useRef<HTMLDivElement | null>(null);
@@ -26,6 +27,7 @@ export default function MetaIndicatorsFilters() {
         <LandFilter />
         <AdvancedFilter />
       </div>
+      <FilterValueRows />
     </div>
   );
 }
