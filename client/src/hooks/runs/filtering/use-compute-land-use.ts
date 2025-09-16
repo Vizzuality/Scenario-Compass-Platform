@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/lib/query-keys";
-import { DataPointWithVariable, extractDataPointsWithVariable } from "@/hooks/runs/filtering/utils";
 import { LAND_FOREST_COVER } from "@/lib/config/filters/land-filter-config";
 import { DataFrame } from "@iiasa/ixmp4-ts";
+import { DataPoint } from "@/components/plots/types";
+import { extractDataPoints } from "@/hooks/runs/filtering/utils";
 
 interface Result {
   gfaIncreaseArray: Record<string, number>;
@@ -15,16 +16,13 @@ const fetchForestData = (stepYear: number) => ({
     variable: { name: LAND_FOREST_COVER },
     stepYear,
   }),
-  select: (data: DataFrame) => extractDataPointsWithVariable(data),
+  select: (data: DataFrame) => extractDataPoints(data),
 });
 
-const createDataMap = (data: DataPointWithVariable[]) =>
+const createDataMap = (data: DataPoint[]) =>
   new Map(data.map((point) => [point.runId, point.value]));
 
-const calculatePercentageChanges = (
-  data2020: DataPointWithVariable[],
-  data2050: DataPointWithVariable[],
-) => {
+const calculatePercentageChanges = (data2020: DataPoint[], data2050: DataPoint[]) => {
   const results: Record<string, number> = {};
   const map2020 = createDataMap(data2020);
   const map2050 = createDataMap(data2050);

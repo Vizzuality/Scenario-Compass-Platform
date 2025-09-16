@@ -1,7 +1,7 @@
 import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
 import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/lib/query-keys";
-import { extractDataPointsWithVariable } from "@/hooks/runs/filtering/utils";
+import { extractDataPoints } from "@/hooks/runs/filtering/utils";
 import { useMemo } from "react";
 import { geographyConfig } from "@/lib/config/filters/geography-filter-config";
 import {
@@ -42,7 +42,7 @@ export default function useComputeEnergyShare() {
       stepYear: 2050,
       region: { name: geographyConfig.find((g) => g.value === geography)?.lookupName },
     }),
-    select: (data) => extractDataPointsWithVariable(data),
+    select: (data) => extractDataPoints(data),
   });
 
   const energyShares: EnergyShareMap | null = useMemo(() => {

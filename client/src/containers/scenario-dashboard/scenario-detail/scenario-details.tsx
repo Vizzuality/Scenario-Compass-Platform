@@ -9,6 +9,7 @@ import GeographyYearInfo from "@/containers/scenario-dashboard/scenario-detail/g
 import { getMetaPoints } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
 import { ADDITIONAL_INFORMATION_META_INDICATORS } from "@/containers/scenario-dashboard/components/runs-pannel/utils";
 import {
+  CLIMATE_CATEGORY_META_INDICATOR_KEY,
   CUMULATIVE_EMISSIONS_META_INDICATOR_KEY,
   YEAR_NET_ZERO_META_INDICATOR_KEY,
   YEAR_PEAK_TEMPERATURE_META_INDICATOR_KEY,
@@ -43,7 +44,7 @@ export default function ScenarioDetails({ runId }: { runId: number }) {
   });
 
   const climateCategory = metaData?.find((item) =>
-    item.key.includes("Climate Assessment|Category [Name]"),
+    item.key.includes(CLIMATE_CATEGORY_META_INDICATOR_KEY),
   ) || { value: "Loading Category" };
 
   const projectName = metaData?.find(

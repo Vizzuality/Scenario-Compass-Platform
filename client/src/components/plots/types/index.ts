@@ -1,11 +1,5 @@
 /**
  * Data point extracted from IAMC format.
- *
- * @interface DataPoint
- * @property {string} scenarioName - The name of the scenario.
- * @property {string} modelName - The name of the model.
- * @property {number} year - The year of the data point.
- * @property {number} value - The value of the data point.
  */
 interface DataPoint {
   runId: string;

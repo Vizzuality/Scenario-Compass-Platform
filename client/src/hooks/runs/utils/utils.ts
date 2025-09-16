@@ -85,9 +85,7 @@ export const generateExtendedRuns = ({
   return extendedRuns;
 };
 
-// Helper functions
-
-function createShortDataPoints(dataPoints: DataPoint[]): ShortDataPoint[] {
+export function createShortDataPoints(dataPoints: DataPoint[]): ShortDataPoint[] {
   const shortPoints: ShortDataPoint[] = [];
 
   for (const dataPoint of dataPoints) {
@@ -102,7 +100,7 @@ function createShortDataPoints(dataPoints: DataPoint[]): ShortDataPoint[] {
   return shortPoints;
 }
 
-function createShortMetaIndicators(metaIndicators: MetaIndicator[]): ShortMetaIndicator[] {
+export function createShortMetaIndicators(metaIndicators: MetaIndicator[]): ShortMetaIndicator[] {
   const shortMetaIndicators: ShortMetaIndicator[] = [];
 
   for (const metaIndicator of metaIndicators) {
@@ -115,7 +113,7 @@ function createShortMetaIndicators(metaIndicators: MetaIndicator[]): ShortMetaIn
   return shortMetaIndicators;
 }
 
-function createEnergyShareMetaIndicators(
+export function createEnergyShareMetaIndicators(
   energyShares: EnergyShareMap | null | undefined,
   runId: string,
 ): ShortMetaIndicator[] {
@@ -132,7 +130,7 @@ function createEnergyShareMetaIndicators(
   ];
 }
 
-function createForestAreaMetaIndicator(
+export function createForestAreaMetaIndicator(
   forestAreaIncreases: Record<string, number> | null | undefined,
   runId: string,
 ): ShortMetaIndicator[] {

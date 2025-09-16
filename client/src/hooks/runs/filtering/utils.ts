@@ -10,49 +10,14 @@ export interface DataPointsFilterParams {
   endYear: string | null;
   variable: string;
 }
-export type DataPointWithVariable = Pick<DataPoint, "year" | "runId" | "value"> & {
-  variable: string;
-};
 
-export const extractDataPointsWithVariable = (
-  data: DataFrame | undefined,
-): DataPointWithVariable[] => {
-  if (data === undefined) {
-    return [];
-  }
-
-  const dataPoints: Array<DataPointWithVariable> = [];
-  const [rows] = data.shape;
-  const columns: string[] = data.columns;
-
-  const runIdCol = columns.find((col) => col.toLowerCase() === "run__id");
-  const yearCol = columns.find((col) => col.toLowerCase().includes("year"));
-  const valueCol = columns.find((col) => col.toLowerCase().includes("value"));
-  const variableCol = columns.find((col) => col.toLowerCase().includes("variable"));
-
-  if (!yearCol || !valueCol || !runIdCol || !variableCol) {
-    console.error("Missing required columns: scenario, year, value, model or variable");
-    return [];
-  }
-
-  for (let i = 0; i < rows; i++) {
-    const runId = data.at(i, runIdCol);
-    const year = data.at(i, yearCol);
-    const value = data.at(i, valueCol);
-    const variable = data.at(i, variableCol);
-
-    if (year != null && value != null && variable != null) {
-      dataPoints.push({
-        runId: runId,
-        year: Number(year),
-        value: Number(value),
-        variable: String(variable),
-      });
-    }
-  }
-
-  return dataPoints;
-};
+const RUN__ID_COL = "run__id";
+const SCENARIO_COL = "scenario";
+const MODEL_COL = "model";
+const YEAR_COL = "year";
+const VALUE_COL = "value";
+const VARIABLE_COL = "variable";
+const UNIT_COL = "unit";
 
 export const extractDataPoints = (data: DataFrame | undefined): DataPoint[] | [] => {
   if (data === undefined) {
@@ -63,13 +28,13 @@ export const extractDataPoints = (data: DataFrame | undefined): DataPoint[] | []
   const [rows] = data.shape;
   const columns: string[] = data.columns;
 
-  const runIdCol = columns.find((col) => col.toLowerCase() === "run__id");
-  const scenarioCol = columns.find((col) => col.toLowerCase().includes("scenario"));
-  const modelCol = columns.find((col) => col.toLowerCase().includes("model"));
-  const yearCol = columns.find((col) => col.toLowerCase().includes("year"));
-  const valueCol = columns.find((col) => col.toLowerCase().includes("value"));
-  const variableCol = columns.find((col) => col.toLowerCase().includes("variable"));
-  const unitCol = columns.find((col) => col.toLowerCase().includes("unit"));
+  const runIdCol = columns.find((col) => col.toLowerCase() === RUN__ID_COL);
+  const scenarioCol = columns.find((col) => col.toLowerCase().includes(SCENARIO_COL));
+  const modelCol = columns.find((col) => col.toLowerCase().includes(MODEL_COL));
+  const yearCol = columns.find((col) => col.toLowerCase().includes(YEAR_COL));
+  const valueCol = columns.find((col) => col.toLowerCase().includes(VALUE_COL));
+  const variableCol = columns.find((col) => col.toLowerCase().includes(VARIABLE_COL));
+  const unitCol = columns.find((col) => col.toLowerCase().includes(UNIT_COL));
 
   if (!scenarioCol || !yearCol || !valueCol || !modelCol || !runIdCol || !variableCol || !unitCol) {
     return [];
