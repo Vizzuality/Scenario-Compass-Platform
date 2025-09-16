@@ -13,7 +13,7 @@ interface FilterRunsByMetaIndicatorsParams {
   land: string[] | null;
 }
 
-function matchesClimateFilter(run: ExtendedRun, climate: string[] | null): boolean {
+export function matchesClimateFilter(run: ExtendedRun, climate: string[] | null): boolean {
   if (!climate || climate.length < 2) return true;
   if (!run.metaIndicators?.length) return false;
 
@@ -31,7 +31,7 @@ function matchesClimateFilter(run: ExtendedRun, climate: string[] | null): boole
   return run.metaIndicators.some((mp) => mp.key === key && mp.value === value);
 }
 
-function matchesSliderValue(run: ExtendedRun, energy: string[] | null): boolean {
+export function matchesSliderValue(run: ExtendedRun, energy: string[] | null): boolean {
   if (!energy || energy.length < 2) return true;
   if (!run.metaIndicators?.length) return false;
 
