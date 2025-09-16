@@ -31,7 +31,7 @@ export function SingleRunPlotWidget({ runId, plotConfig }: Props) {
     <div className="flex w-full flex-col justify-between rounded-md bg-white p-4 select-none">
       <PlotWidgetHeader title={plotConfig.title} onDownload={handleDownload} />
       <div ref={legendRef}>
-        {data.runs[0] && <PlotLegend run={data.runs[0]} plotConfig={plotConfig} />}
+        {data.runs[0] && <PlotLegend runs={data.runs} plotConfig={plotConfig} />}
       </div>
       <div ref={chartRef}>
         <StackedAreaPlot data={data} variablesMap={plotConfig.variablesMap} />
