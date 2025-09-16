@@ -23,15 +23,35 @@ interface Props {
 
 interface StackedDataPoint {
   year: number;
-
   [key: string]: number;
 }
 
-const getColorsFromRuns = (runs: ExtendedRun[], variableCount: number): string[] => {
+export const getOrderedVariableNames = (runs: ExtendedRun[]): string[] => {
+  const variableNames = [...new Set(runs.map((run) => run.variableName))];
+  return variableNames.sort((a, b) => a.localeCompare(b));
+};
+
+export const getColorsForVariables = (runs: ExtendedRun[], variableCount: number): string[] => {
   const firstRun = runs[0];
   const categoryKey = firstRun.flagCategory as keyof typeof CATEGORY_CONFIG;
   const palette = CATEGORY_CONFIG[categoryKey].palette;
-  return [...palette].reverse().slice(0, variableCount);
+
+  const colors = [];
+
+  const startIndex = Math.max(0, palette.length - variableCount);
+  for (let i = 0; i < variableCount; i++) {
+    colors.push(palette[startIndex + i]);
+  }
+
+  return colors.reverse();
+};
+
+const createVariableColorMap = (variableNames: string[], colors: string[]): Map<string, string> => {
+  const colorMap = new Map<string, string>();
+  variableNames.forEach((variable, index) => {
+    colorMap.set(variable, colors[index]);
+  });
+  return colorMap;
 };
 
 export const renderStackedAreaPlot = ({ svg, runs, dimensions, variablesMap }: Props): void => {
@@ -44,14 +64,13 @@ export const renderStackedAreaPlot = ({ svg, runs, dimensions, variablesMap }: P
   const g = createMainGroup(svg, dimensions);
   const tooltipManager = createTooltipManager({ svg, dimensions });
 
-  const variableNames = [...new Set(runs.map((run) => run.variableName))].sort();
+  const variableNames = getOrderedVariableNames(runs);
+  const colors = getColorsForVariables(runs, variableNames.length);
+  const variableColorMap = createVariableColorMap(variableNames, colors);
 
   const allYears = [...new Set(runs.flatMap((run) => run.orderedPoints.map((p) => p.year)))].sort(
     (a, b) => a - b,
   );
-
-  const keys = variableNames;
-  const colors = getColorsFromRuns(runs, variableNames.length);
 
   const data: StackedDataPoint[] = allYears.map((year) => {
     const dataPoint: StackedDataPoint = { year };
@@ -64,8 +83,7 @@ export const renderStackedAreaPlot = ({ svg, runs, dimensions, variablesMap }: P
     return dataPoint;
   });
 
-  const stackedData = d3.stack<StackedDataPoint>().keys(keys)(data);
-
+  const stackedData = d3.stack<StackedDataPoint>().keys(variableNames)(data);
   const allValues = stackedData.flatMap((series) => series.flatMap((d) => [d[0], d[1]]));
 
   const xScale = d3
@@ -100,11 +118,10 @@ export const renderStackedAreaPlot = ({ svg, runs, dimensions, variablesMap }: P
     .append("path")
     .attr("class", "stacked-area")
     .attr("d", area)
-    .attr("fill", (d, i) => colors[i])
+    .attr("fill", (d) => variableColorMap.get(d.key) || colors[0])
     .attr("opacity", 0.8);
 
   const { verticalHoverLine } = createHoverElements(g, dimensions.INNER_HEIGHT);
-
   const dataByYear = new Map(data.map((d) => [d.year, d]));
 
   createInteractionOverlay(g, dimensions.INNER_WIDTH, dimensions.INNER_HEIGHT)
@@ -115,7 +132,6 @@ export const renderStackedAreaPlot = ({ svg, runs, dimensions, variablesMap }: P
     .on("mouseleave", () => {
       verticalHoverLine.style("opacity", 0);
       tooltipManager?.hide();
-      g.selectAll(".stacked-area").attr("opacity", 0.8);
     })
     .on("mousemove", function (event) {
       const [mouseX] = d3.pointer(event);
@@ -134,31 +150,41 @@ export const renderStackedAreaPlot = ({ svg, runs, dimensions, variablesMap }: P
       verticalHoverLine.attr("x1", x).attr("x2", x);
 
       let cumulative = 0;
-      const tooltipData = keys.map((key, i) => {
-        const value = dataPoint[key];
-        const start = cumulative;
-        cumulative += value;
-        return { key, value, start, end: cumulative, color: colors[colors.length - 1 - i] };
-      });
+
+      const tooltipData = variableNames
+        .map((variableName) => {
+          const value = dataPoint[variableName] || 0;
+          const start = cumulative;
+          cumulative += value;
+          return {
+            key: variableName,
+            value,
+            start,
+            end: cumulative,
+            color: variableColorMap.get(variableName) || colors[0],
+          };
+        })
+        .reverse();
+
       const total = cumulative;
 
       const content = tooltipData
         .map(
           (d) =>
             `<div class="flex items-center gap-2 mb-1">
-        <div class="border border-foreground" style="width: 10px; height: 10px; background-color: ${d.color}; border-radius: 100px; flex-shrink: 0;" ></div>
-        <div class="text-black">
-          <strong>${variablesMap[d.key]}:</strong> ${formatNumber(d.value)}
-        </div>
-      </div>`,
+              <div class="border border-foreground" style="width: 10px; height: 10px; background-color: ${d.color}; border-radius: 100px; flex-shrink: 0;"></div>
+              <div class="text-black">
+                <strong>${variablesMap[d.key] || d.key}:</strong> ${formatNumber(d.value)}
+              </div>
+            </div>`,
         )
         .join("");
 
       tooltipManager?.update(
         `<div class="text-black">
-          <div class="mb-1"> <strong>Year: </strong>  ${dataPoint.year}</div>
-          <div class="mb-2"> <strong> Total sum:</strong>  ${formatNumber(total)}</div>
-          <ul class="list-disc pl-4">${content}</ul>
+          <div class="mb-1"><strong>Year:</strong> ${dataPoint.year}</div>
+          <div class="mb-2"><strong>Total sum:</strong> ${formatNumber(total)}</div>
+          <div>${content}</div>
         </div>`,
         x,
         dimensions.INNER_HEIGHT / 2,

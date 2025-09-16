@@ -1,22 +1,24 @@
 import { RunPipelineReturn } from "@/hooks/runs/pipeline/types";
-import { Accordion, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { useMemo } from "react";
-import { categorizeRuns } from "@/containers/scenario-dashboard/utils/flags-utils";
-import { AccordionItemContent } from "@/containers/scenario-dashboard/components/runs-pannel/components/accordion-item-content";
+import { _getKeyCounts, categorizeRuns } from "@/containers/scenario-dashboard/utils/flags-utils";
 import { CATEGORY_KEYS, CategoryKey } from "@/lib/config/reasons-of-concern/category-config";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { InfoIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DataFetchError } from "@/components/error-state/data-fetch-error";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface Props {
   result: RunPipelineReturn;
-  prefix?: string;
 }
 
 export default function SingleRunScenarioFlags({ result }: Props) {
   const categories = useMemo(() => categorizeRuns(result.runs), [result.runs]);
-
   const categoriesWithRuns = useMemo(
     () =>
       (Object.keys(categories) as CategoryKey[])
@@ -27,9 +29,11 @@ export default function SingleRunScenarioFlags({ result }: Props) {
 
   if (result.isLoading) {
     return (
-      <div className="flex w-140 flex-col gap-3">
-        <p className="mb-1.5 border-b pb-1.5 text-base font-bold text-stone-800">Flags </p>
-        <div className="flex w-full flex-col gap-3">
+      <div className="mt-8 w-140">
+        <p className="mb-1.5 border-b pb-1.5 text-base font-bold text-stone-800">
+          Reasons for Concern
+        </p>
+        <div className="flex flex-col gap-3">
           <Skeleton className="h-6 w-full rounded-md" />
           <Skeleton className="h-6 w-3/4 rounded-md" />
         </div>
@@ -39,23 +43,21 @@ export default function SingleRunScenarioFlags({ result }: Props) {
 
   if (result.isError) {
     return (
-      <div className="flex w-140 flex-col gap-3">
-        <p className="mb-1.5 border-b pb-1.5 text-base font-bold text-stone-800">Flags </p>
-        <div className="flex flex-col gap-3">
-          <DataFetchError />
-        </div>
+      <div className="mt-8 w-140">
+        <p className="mb-1.5 border-b pb-1.5 text-base font-bold text-stone-800">
+          Reasons for Concern
+        </p>
+        <DataFetchError />
       </div>
     );
   }
 
-  const hasNoReasonsForConcern =
+  const hasOnlyNoFlags =
     categoriesWithRuns.length === 1 && categoriesWithRuns[0][0] === CATEGORY_KEYS.NO_FLAGS;
 
   return (
     <div className="mt-8 w-140">
-      <p className="w-full border-b pb-1.5 text-base font-bold text-stone-800">
-        Reasons for Concern
-      </p>
+      <p className="border-b pb-1.5 text-base font-bold text-stone-800">Reasons for Concern</p>
       {categoriesWithRuns.map(([key, category]) => (
         <Accordion type="single" value={key} key={key}>
           <AccordionItem value={key}>
@@ -76,7 +78,17 @@ export default function SingleRunScenarioFlags({ result }: Props) {
                 </Tooltip>
               </div>
             </AccordionTrigger>
-            {!hasNoReasonsForConcern && <AccordionItemContent category={category} />}
+            {!hasOnlyNoFlags && (
+              <AccordionContent className="pt-2 pb-4">
+                <div className="space-y-2">
+                  {_getKeyCounts(category.runs).map(([key]) => (
+                    <div key={key} className="border-b py-1.5 text-sm last:border-0">
+                      {key}
+                    </div>
+                  ))}
+                </div>
+              </AccordionContent>
+            )}
           </AccordionItem>
         </Accordion>
       ))}
