@@ -45,7 +45,7 @@ export const LandFilter = () => {
         id={id}
         min={-100}
         max={100}
-        defaultRange={[-10, 10]}
+        defaultRange={[-100, 100]}
         items={[item]}
         placeholder="Select land filter"
         currentValue={land}
@@ -78,7 +78,7 @@ export const LandFilterRow = ({ prefix, onDelete }: RowFilterProps) => {
           min={-100}
           max={100}
           className="h-10 w-fit"
-          defaultRange={[-10, 10]}
+          defaultRange={[-100, 100]}
           items={[item]}
           placeholder="Select land filter"
           currentValue={land}

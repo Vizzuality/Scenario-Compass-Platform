@@ -126,14 +126,11 @@ const SliderSelect: React.FC<SliderSelectProps> = ({
                 </div>
 
                 {selectedItem === item.id && (
-                  <div className="mt-3 px-2">
-                    <div className="space-y-2">
-                      <div className="text-center">
-                        <span className="text-sm font-bold text-gray-900">
-                          {range[0]}% : {range[1]}%
-                        </span>
+                  <div className="mt-3">
+                    <div className="flex gap-2 py-1.5">
+                      <div className="text-primary rounded-md border border-stone-400 px-4 py-1.5 text-sm font-bold">
+                        {range[0]}%
                       </div>
-
                       <Slider
                         value={range}
                         onValueChange={handleRangeChange}
@@ -143,10 +140,8 @@ const SliderSelect: React.FC<SliderSelectProps> = ({
                         minStepsBetweenThumbs={1}
                         className="w-full"
                       />
-
-                      <div className="flex justify-between text-xs text-gray-500">
-                        <span>{min}%</span>
-                        <span>{max}%</span>
+                      <div className="text-primary rounded-md border border-stone-400 px-4 py-1.5 text-sm font-bold">
+                        {range[1]}%
                       </div>
                     </div>
                   </div>
