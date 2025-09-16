@@ -7,7 +7,7 @@ import {
 import { useMemo, useState } from "react";
 import { categorizeRuns } from "@/containers/scenario-dashboard/utils/flags-utils";
 import { AccordionItemContent } from "@/containers/scenario-dashboard/components/runs-pannel/components/accordion-item-content";
-import ScenarioFlagTrigger from "@/containers/scenario-dashboard/components/runs-pannel/scenario-flags/scenario-flag-trigger";
+import { BaseFlagTrigger } from "@/containers/scenario-dashboard/components/runs-pannel/scenario-flags/scenario-flag-trigger";
 import { CategoryKey } from "@/lib/config/reasons-of-concern/category-config";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DataFetchError } from "@/components/error-state/data-fetch-error";
@@ -84,18 +84,15 @@ export default function MultiRunScenarioFlags({ result, prefix }: Props) {
     <Accordion value={isOpen} onValueChange={setIsOpen} type="single" collapsible>
       <AccordionItem value={SCENARIO_FLAGS_ACCORDION_VALUE} className={isOpen && "border-b-0"}>
         <AccordionTrigger className="pt-0 pb-1.5 text-base font-bold text-stone-800">
-          <p className="text-base">Reasons for Concern</p>
+          <p className="text-base">Reasons For Concern</p>
         </AccordionTrigger>
         <AccordionContent className="flex flex-col gap-3 border-t pt-4">
           <div className="flex flex-col gap-2">
             <div className="flex">
               <div className="flex">
                 <p>
-                  Flags (<strong>{totalCategories}</strong>)
-                </p>
-                /
-                <p>
-                  Scenario runs (<strong>{result.runs.length}</strong>)
+                  <strong>{totalCategories}</strong> Flags (in <strong>{result.runs.length}</strong>
+                  ) Scenario runs
                 </p>
               </div>
             </div>
@@ -112,7 +109,9 @@ export default function MultiRunScenarioFlags({ result, prefix }: Props) {
                 <Accordion type="single" collapsible className="w-full">
                   {highCategories.map(([key, category]) => (
                     <AccordionItem key={key} value={key}>
-                      <ScenarioFlagTrigger categoryKey={key} category={category} prefix={prefix} />
+                      <AccordionTrigger className="[&_svg]:text-foreground flex w-full items-start px-0 py-2">
+                        <BaseFlagTrigger categoryKey={key} category={category} prefix={prefix} />
+                      </AccordionTrigger>
                       <AccordionItemContent category={category} />
                     </AccordionItem>
                   ))}
@@ -125,7 +124,9 @@ export default function MultiRunScenarioFlags({ result, prefix }: Props) {
                 <Accordion type="single" collapsible className="w-full">
                   {mediumCategories.map(([key, category]) => (
                     <AccordionItem key={key} value={key}>
-                      <ScenarioFlagTrigger categoryKey={key} category={category} prefix={prefix} />
+                      <AccordionTrigger className="[&_svg]:text-foreground flex w-full items-start px-0 py-2">
+                        <BaseFlagTrigger categoryKey={key} category={category} prefix={prefix} />
+                      </AccordionTrigger>
                       <AccordionItemContent category={category} />
                     </AccordionItem>
                   ))}
@@ -138,8 +139,12 @@ export default function MultiRunScenarioFlags({ result, prefix }: Props) {
                 <Accordion type="single" collapsible className="w-full">
                   {okCategories.map(([key, category]) => (
                     <AccordionItem key={key} value={key}>
-                      <ScenarioFlagTrigger categoryKey={key} category={category} prefix={prefix} />
-                      <AccordionItemContent category={category} />
+                      <BaseFlagTrigger
+                        className="pb-2"
+                        categoryKey={key}
+                        category={category}
+                        prefix={prefix}
+                      />
                     </AccordionItem>
                   ))}
                 </Accordion>

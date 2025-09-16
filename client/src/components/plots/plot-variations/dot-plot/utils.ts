@@ -63,12 +63,29 @@ export const renderDotPlot = ({
   renderGridLines(g, scales.yScale, dimensions.INNER_WIDTH);
   renderAxes({ g, scales, height: dimensions.INNER_HEIGHT, unit: runs[0].unit });
 
+  const JITTER_AMOUNT = 250;
+
+  const getJitter = (runId: string, year: number) => {
+    const seed =
+      runId.split("").reduce((a, b) => {
+        a = (a << 5) - a + b.charCodeAt(0);
+        return a & a;
+      }, 0) + year;
+
+    const pseudo = Math.sin(seed) * 10000;
+    return (pseudo - Math.floor(pseudo) - 0.5) * JITTER_AMOUNT;
+  };
+
   const dots = g
     .selectAll(".data-point")
     .data(allPoints)
     .join("circle")
     .attr("class", (d) => `${DOT_CLASS_PREFIX}${d.run.runId}`)
-    .attr("cx", (d) => scales.xScale(d.year))
+    .attr("cx", (d) => {
+      const baseX = scales.xScale(d.year);
+      const jitter = getJitter(d.run.runId, d.year);
+      return baseX + jitter;
+    })
     .attr("cy", (d) => scales.yScale(d.value))
     .attr("r", PLOT_CONFIG.SINGLE_DOT_RADIUS)
     .attr("fill", (d) => getRunColor(d.run, selectedFlags, hasSelection))

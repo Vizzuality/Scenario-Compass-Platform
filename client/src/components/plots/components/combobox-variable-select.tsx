@@ -25,6 +25,28 @@ interface Props {
   value?: Variable["id"];
 }
 
+const groupVariables = (variables: Variable[]) => {
+  const groups: Record<string, Variable[]> = {};
+
+  variables.forEach((variable) => {
+    const firstPart = variable.name.split("|")[0].trim();
+    if (!groups[firstPart]) {
+      groups[firstPart] = [];
+    }
+    groups[firstPart].push(variable);
+  });
+
+  return Object.keys(groups)
+    .sort()
+    .reduce(
+      (acc, key) => {
+        acc[key] = groups[key].sort((a, b) => a.name.localeCompare(b.name));
+        return acc;
+      },
+      {} as Record<string, Variable[]>,
+    );
+};
+
 export function ComboboxVariableSelect({
   options,
   onSelectAction,
@@ -42,6 +64,11 @@ export function ComboboxVariableSelect({
       setOpen(false);
     }
   };
+
+  const groupedVariables = React.useMemo(() => {
+    if (!options) return {};
+    return groupVariables(options);
+  }, [options]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -74,24 +101,33 @@ export function ComboboxVariableSelect({
             ) : (
               <>
                 <CommandEmpty>No results available.</CommandEmpty>
-                <CommandGroup>
-                  {options?.map((variable) => (
-                    <CommandItem
-                      key={variable.id}
-                      value={variable.id.toString()}
-                      keywords={[variable.name]}
-                      onSelect={handleSelect}
-                    >
-                      {variable.name}
-                      <Check
-                        className={cn(
-                          "ml-auto",
-                          value === variable.id ? "opacity-100" : "opacity-0",
-                        )}
-                      />
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
+                {Object.entries(groupedVariables).map(([groupName, variables]) => (
+                  <CommandGroup key={groupName} heading={groupName}>
+                    {variables.map((variable) => {
+                      const displayName =
+                        variables.length > 1
+                          ? variable.name.replace(`${groupName}|`, "").trim()
+                          : variable.name;
+
+                      return (
+                        <CommandItem
+                          key={variable.id}
+                          value={variable.id.toString()}
+                          keywords={[variable.name]}
+                          onSelect={handleSelect}
+                        >
+                          {displayName}
+                          <Check
+                            className={cn(
+                              "ml-auto",
+                              value === variable.id ? "opacity-100" : "opacity-0",
+                            )}
+                          />
+                        </CommandItem>
+                      );
+                    })}
+                  </CommandGroup>
+                ))}
               </>
             )}
           </CommandList>

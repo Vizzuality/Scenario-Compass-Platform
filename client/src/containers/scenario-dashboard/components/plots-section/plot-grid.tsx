@@ -7,8 +7,9 @@ import { useTabAndVariablesParams } from "@/hooks/nuqs/use-tabs-and-variables-pa
 import CustomTabPlotGrid from "@/containers/scenario-dashboard/components/plots-section/custom-tab-plot-grid";
 
 export function PlotGrid() {
-  const { year } = useScenarioDashboardUrlParams();
-  const chartType = year ? PLOT_TYPE_OPTIONS.DOTS : PLOT_TYPE_OPTIONS.AREA;
+  const { startYear, endYear } = useScenarioDashboardUrlParams();
+  const chartType =
+    parseInt(startYear!) === parseInt(endYear!) ? PLOT_TYPE_OPTIONS.DOTS : PLOT_TYPE_OPTIONS.AREA;
   const { selectedTab } = useTabAndVariablesParams();
 
   if (selectedTab.isCustom) {
