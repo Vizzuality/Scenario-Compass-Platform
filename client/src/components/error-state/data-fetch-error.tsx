@@ -16,8 +16,9 @@ export const DataFetchError = ({ className }: Props) => {
       />
       <strong>Unable to load data</strong>
       <p className="text-center">
-        The application was unable to retrieve the requested data. This may be due to a network
-        issue or a temporary issue on our end. Please try again later.
+        The application was unable to retrieve the requested data.
+        <br />
+        Please try refreshing the page.
       </p>
     </div>
   );

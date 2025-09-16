@@ -193,7 +193,7 @@ export const renderAxes = ({
     .attr("text-anchor", "middle")
     .style("font-size", FONT_SIZE)
     .style("fill", GRID_TEXT_COLOR)
-    .html(unit ? `Value <tspan dx="7">(${unit})</tspan>` : "Value");
+    .html(unit ? unit : "Value");
 };
 
 export const createInteractionOverlay = (

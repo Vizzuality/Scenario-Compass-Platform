@@ -8,8 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useState } from "react";
 import { YEAR_OPTIONS } from "@/containers/scenario-dashboard/utils/url-store";
 import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
 
@@ -46,25 +44,14 @@ const SingleYearSelect = ({
 );
 
 export default function YearIntervalSelectionFilter() {
-  const { startYear, endYear, year, setStartYear, setEndYear, setYear } =
-    useScenarioDashboardUrlParams();
-  const [isMultiple, setIsMultiple] = useState(!year);
-
-  const handleMultipleToggle = (checked: boolean) => {
-    setIsMultiple(checked);
-    setYear(null);
-    if (!checked) {
-      setStartYear(null);
-      setEndYear(null);
-    }
-  };
+  const { startYear, endYear, setStartYear, setEndYear } = useScenarioDashboardUrlParams();
 
   const getFilteredYears = (filterType: FilterType) => {
     if (filterType === "end" && startYear) {
-      return YEAR_OPTIONS.filter((year) => year > parseInt(startYear));
+      return YEAR_OPTIONS.filter((year) => year >= parseInt(startYear));
     }
     if (filterType === "start" && endYear && startYear) {
-      return YEAR_OPTIONS.filter((year) => year < parseInt(endYear));
+      return YEAR_OPTIONS.filter((year) => year <= parseInt(endYear));
     }
     return YEAR_OPTIONS;
   };
@@ -79,50 +66,25 @@ export default function YearIntervalSelectionFilter() {
         >
           Year selection
         </Label>
-        <div className="flex items-center gap-2">
-          <Checkbox
-            theme="dark"
-            id="multiple"
-            checked={isMultiple}
-            onCheckedChange={handleMultipleToggle}
-            aria-describedby="multiple-description"
-            data-testid="multiple-checkbox"
-          />
-          <Label htmlFor="multiple" className="text-beige-light cursor-pointer text-sm leading-5">
-            Multiple selection
-          </Label>
-          <span id="multiple-description" className="sr-only">
-            Toggle between single year and year range selection
-          </span>
-        </div>
       </div>
 
-      {isMultiple ? (
-        <div className="flex gap-6" data-testid="year-range-container">
-          <SingleYearSelect
-            value={startYear}
-            onChange={setStartYear}
-            placeholder="Start Year"
-            options={getFilteredYears("start")}
-            testId="start-year-select"
-          />
-          <SingleYearSelect
-            value={endYear}
-            onChange={setEndYear}
-            placeholder="End Year"
-            disabled={!startYear}
-            options={getFilteredYears("end")}
-            testId="end-year-select"
-          />
-        </div>
-      ) : (
+      <div className="flex gap-6" data-testid="year-range-container">
         <SingleYearSelect
-          value={year}
-          onChange={setYear}
-          placeholder="Select Year"
-          testId="single-year-select"
+          value={startYear}
+          onChange={setStartYear}
+          placeholder="Start Year"
+          options={getFilteredYears("start")}
+          testId="start-year-select"
         />
-      )}
+        <SingleYearSelect
+          value={endYear}
+          onChange={setEndYear}
+          placeholder="End Year"
+          disabled={!startYear}
+          options={getFilteredYears("end")}
+          testId="end-year-select"
+        />
+      </div>
     </div>
   );
 }
