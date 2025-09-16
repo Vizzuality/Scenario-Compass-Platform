@@ -43,6 +43,7 @@ export const EnergyFilter = () => {
         items={energyItems}
         placeholder="Select energy type"
         currentValue={energy}
+        defaultRange={[0, 100]}
         onApply={handleValueChange}
       />
     </div>
@@ -72,6 +73,7 @@ export const EnergyFilterRow = ({ prefix, onDelete }: RowFilterProps) => {
           className="h-10 w-fit"
           items={energyItems}
           placeholder="Select energy type"
+          defaultRange={[0, 100]}
           currentValue={energy}
           onApply={handleValueChange}
         />
