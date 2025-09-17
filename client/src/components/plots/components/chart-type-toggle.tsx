@@ -8,6 +8,7 @@ export const PLOT_TYPE_OPTIONS = {
   AREA: "area",
   DOTS: "dots",
   STACKED_AREA: "stackedArea",
+  HISTOGRAM: "histogram",
 } as const;
 
 export type ChartType = (typeof PLOT_TYPE_OPTIONS)[keyof typeof PLOT_TYPE_OPTIONS];

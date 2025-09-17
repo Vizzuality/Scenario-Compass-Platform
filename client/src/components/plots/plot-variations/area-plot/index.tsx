@@ -28,5 +28,9 @@ const BasePlot: React.FC<AreaChartProps> = ({ runs }) => {
 };
 
 export const AreaPlot = ({ data }: { data: RunPipelineReturn }) => {
-  return <PlotStateHandler data={data}>{(runs) => <BasePlot runs={runs} />}</PlotStateHandler>;
+  return (
+    <PlotStateHandler data={data} fieldName="runs">
+      {(runs) => <BasePlot runs={runs} />}
+    </PlotStateHandler>
+  );
 };

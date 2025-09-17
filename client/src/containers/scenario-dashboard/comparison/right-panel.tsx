@@ -1,11 +1,9 @@
 import MultiRunScenarioFlags from "@/containers/scenario-dashboard/components/runs-pannel/scenario-flags/multi-run-scenario-flags";
 import { FilterArrayItem } from "@/containers/scenario-dashboard/comparison/scenario-comparison-plots-section";
 import { RIGHT_COMPARISON_TAG } from "@/containers/scenario-dashboard/comparison/utils";
-import { MultipleRunsPlotWidget } from "@/components/plots/widgets/multiple-runs/multiple-runs-plot-widget";
-import { PLOT_TYPE_OPTIONS } from "@/components/plots/components/chart-type-toggle";
 import useSyncVariables from "@/hooks/runs/pipeline/use-sync-variables";
-import CustomTabPlotGrid from "@/containers/scenario-dashboard/components/plots-section/custom-tab-plot-grid";
 import useShowReasonsForConcern from "@/hooks/nuqs/use-show-reasons-for-concer";
+import { VerticalComparisonPlotGrid } from "@/containers/scenario-dashboard/comparison/vertical-comparison-plot-grid";
 
 interface Props {
   filters: FilterArrayItem[];
@@ -42,27 +40,9 @@ export default function RightPanel({ filters, onDelete }: Props) {
           <MultiRunScenarioFlags result={result} prefix={prefix} />
         </div>
       )}
-
       <div className="flex h-fit w-full flex-col gap-4 pt-6 pl-4">
-        {!selectedTab.isCustom &&
-          selectedTab.explorationPlotConfigArray.map((plotConfig) => {
-            return (
-              <MultipleRunsPlotWidget
-                plotConfig={plotConfig}
-                key={plotConfig.title}
-                prefix={prefix}
-                initialChartType={PLOT_TYPE_OPTIONS.MULTIPLE_LINE}
-              />
-            );
-          })}
+        <VerticalComparisonPlotGrid selectedTab={selectedTab} prefix={prefix} />
       </div>
-      {selectedTab.isCustom && (
-        <CustomTabPlotGrid
-          prefix={prefix}
-          className="flex h-fit w-full flex-col gap-4 pt-6 pl-4"
-          initialChartType={PLOT_TYPE_OPTIONS.MULTIPLE_LINE}
-        />
-      )}
     </div>
   );
 }

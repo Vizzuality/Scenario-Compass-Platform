@@ -39,7 +39,7 @@ interface Props {
 
 export const DotPlot: React.FC<Props> = ({ data, prefix }) => {
   return (
-    <PlotStateHandler data={data}>
+    <PlotStateHandler data={data} fieldName="runs">
       {(runs) => <BasePlot runs={runs} prefix={prefix} />}
     </PlotStateHandler>
   );

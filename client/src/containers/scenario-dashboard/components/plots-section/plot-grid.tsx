@@ -5,6 +5,7 @@ import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboa
 import { PLOT_TYPE_OPTIONS } from "@/components/plots/components/chart-type-toggle";
 import { useTabAndVariablesParams } from "@/hooks/nuqs/use-tabs-and-variables-params";
 import CustomTabPlotGrid from "@/containers/scenario-dashboard/components/plots-section/custom-tab-plot-grid";
+import HistogramWidget from "@/components/plots/widgets/histogram-widget";
 
 export function PlotGrid() {
   const { year } = useScenarioDashboardUrlParams();
@@ -23,7 +24,9 @@ export function PlotGrid() {
   return (
     <div className="my-8 grid h-fit min-h-[600px] w-full grid-cols-2 grid-rows-2 gap-4">
       {selectedTab.explorationPlotConfigArray.map((plotConfig) => {
-        return (
+        return plotConfig.plotType && plotConfig.plotType === PLOT_TYPE_OPTIONS.HISTOGRAM ? (
+          <HistogramWidget plotConfig={plotConfig} key={plotConfig.title} />
+        ) : (
           <MultipleRunsPlotWidget
             plotConfig={plotConfig}
             key={plotConfig.title}

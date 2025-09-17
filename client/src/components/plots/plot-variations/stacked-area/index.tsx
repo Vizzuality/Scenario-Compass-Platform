@@ -38,7 +38,7 @@ export const StackedAreaPlot = ({
   variablesMap: Record<string, string>;
 }) => {
   return (
-    <PlotStateHandler data={data}>
+    <PlotStateHandler data={data} fieldName="runs">
       {(runs) => <BasePlot runs={runs} variablesMap={variablesMap} />}
     </PlotStateHandler>
   );
