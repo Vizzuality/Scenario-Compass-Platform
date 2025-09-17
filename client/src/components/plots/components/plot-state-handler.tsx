@@ -1,16 +1,28 @@
 import LoadingDots from "@/components/animations/loading-dots";
-import { ExtendedRun, RunPipelineReturn } from "@/hooks/runs/pipeline/types";
 import { DataFetchError } from "@/components/error-state/data-fetch-error";
 import { PlotContainer } from "@/components/plots/components/plot-container";
 import Image from "next/image";
 import notFoundImage from "@/assets/images/not-found.webp";
+import React from "react";
 
-interface Props {
-  data: RunPipelineReturn;
-  children: (runs: ExtendedRun[]) => React.ReactNode;
+type EnumerableDataType<T = unknown, K extends string = string> = {
+  isLoading: boolean;
+  isError: boolean;
+} & {
+  [P in K]: T[] | undefined;
+};
+
+interface Props<T, K extends string> {
+  data: EnumerableDataType<T, K>;
+  fieldName: K;
+  children: (items: T[]) => React.ReactNode;
 }
 
-export const PlotStateHandler = ({ data, children }: Props) => {
+export const PlotStateHandler = <T, K extends string>({
+  data,
+  fieldName,
+  children,
+}: Props<T, K>) => {
   if (data.isLoading) {
     return (
       <PlotContainer>
@@ -27,7 +39,9 @@ export const PlotStateHandler = ({ data, children }: Props) => {
     );
   }
 
-  if (data.runs.length === 0) {
+  const items = data[fieldName] || [];
+
+  if (items.length === 0) {
     return (
       <PlotContainer>
         <div className="-mt-10 px-4 text-center">
@@ -50,7 +64,7 @@ export const PlotStateHandler = ({ data, children }: Props) => {
 
   return (
     <PlotContainer>
-      <div className="absolute inset-0">{children(data.runs)}</div>
+      <div className="absolute inset-0">{children(items)}</div>
     </PlotContainer>
   );
 };

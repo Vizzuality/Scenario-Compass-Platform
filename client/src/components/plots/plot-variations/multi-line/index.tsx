@@ -42,7 +42,7 @@ interface MultiLinePlotProps {
 
 export const MultiLinePlot: React.FC<MultiLinePlotProps> = ({ data, prefix, onRunClick }) => {
   return (
-    <PlotStateHandler data={data}>
+    <PlotStateHandler data={data} fieldName="runs">
       {(runs) => <BasePlot runs={runs} prefix={prefix} onRunClick={onRunClick} />}
     </PlotStateHandler>
   );

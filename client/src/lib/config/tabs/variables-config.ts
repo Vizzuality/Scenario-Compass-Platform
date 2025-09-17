@@ -1,6 +1,9 @@
+import { ChartType, PLOT_TYPE_OPTIONS } from "@/components/plots/components";
+
 export type PlotConfig = {
   title: string;
   variables: ReadonlyArray<string>;
+  plotType?: ChartType;
 };
 
 export type SingleScenarioPlotConfig = PlotConfig & {
@@ -74,11 +77,31 @@ export const EXPLORATION_LAND_USE_TAB_PLOT_CONFIG: ReadonlyArray<PlotConfig> = [
       "Land Cover|Cropland|Energy Crops",
     ],
   },
+  {
+    title: "Energy Crops",
+    variables: ["Land Cover|Cropland|Energy Crops", "Agricultural Production|Non-Energy|Crops"],
+  },
 ];
 
 export const EXPLORATION_CLIMATE_TAB_PLOT_CONFIG: ReadonlyArray<PlotConfig> = [
   {
     title: "Emissions",
     variables: ["Emissions|Kyoto Gases", "Emissions|CO2", "Emissions|CH4", "Emissions|N20"],
+  },
+  {
+    title: "Climate System",
+    variables: ["Climate Assessment|Surface Temperature (GSAT)|Median [MAGICCv7.5.3]"],
+  },
+  {
+    title: "Peak Emissions and Warming",
+    variables: [
+      "Climate Assessment|Peak Warming|Median [MAGICCv7.5.3]",
+      "Climate Assessment|Year of Peak Warming|Median [MAGICCv7.5.3]",
+    ],
+    plotType: PLOT_TYPE_OPTIONS.HISTOGRAM,
+  },
+  {
+    title: "Negative Emissions",
+    variables: ["Carbon Capture|Geological Storage"],
   },
 ];
