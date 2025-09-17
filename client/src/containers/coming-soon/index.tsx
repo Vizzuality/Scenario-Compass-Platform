@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-import ComingSoonIllustration from "../../../public/images/coming-soon.webp";
+import ComingSoonIllustration from "../../../public/images/coming-soon.svg";
 import { Heading } from "@/components/custom/heading";
 
 export default function ComingSoon() {
@@ -22,7 +22,7 @@ export default function ComingSoon() {
           </Button>
         </div>
         <div>
-          <Image src={ComingSoonIllustration} alt="cup of coffee - coming soon" />
+          <Image src={ComingSoonIllustration} alt="cup of coffee - coming soon" priority />
         </div>
       </div>
     </div>
