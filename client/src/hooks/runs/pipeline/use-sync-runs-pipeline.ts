@@ -23,7 +23,7 @@ export default function useSyncRunsPipeline({
   runId?: number;
   prefix?: string;
 }): RunPipelineReturn {
-  const { year, endYear, startYear, geography, climate, energy, land } =
+  const { year, endYear, startYear, geography, climate, energy, land, advanced } =
     useScenarioDashboardUrlParams(prefix);
 
   const dataPointQueries: DataPointsQueriesReturn = useQueries({
@@ -104,6 +104,7 @@ export default function useSyncRunsPipeline({
         climate,
         energy,
         land,
+        advanced,
       });
     });
 

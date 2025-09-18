@@ -29,11 +29,11 @@ export default function SingleRunScenarioFlags({ result }: Props) {
 
   if (result.isLoading) {
     return (
-      <div className="mt-8 w-140">
+      <div className="mt-8 flex w-full flex-col gap-3">
         <p className="mb-1.5 border-b pb-1.5 text-base font-bold text-stone-800">
           Reasons for Concern
         </p>
-        <div className="flex flex-col gap-3">
+        <div className="flex w-full flex-col gap-3">
           <Skeleton className="h-6 w-full rounded-md" />
           <Skeleton className="h-6 w-3/4 rounded-md" />
         </div>
@@ -43,11 +43,13 @@ export default function SingleRunScenarioFlags({ result }: Props) {
 
   if (result.isError) {
     return (
-      <div className="mt-8 w-140">
+      <div className="mt-8 flex w-full flex-col gap-3">
         <p className="mb-1.5 border-b pb-1.5 text-base font-bold text-stone-800">
           Reasons for Concern
         </p>
-        <DataFetchError />
+        <div className="flex flex-col gap-3">
+          <DataFetchError />
+        </div>
       </div>
     );
   }
@@ -56,7 +58,7 @@ export default function SingleRunScenarioFlags({ result }: Props) {
     categoriesWithRuns.length === 1 && categoriesWithRuns[0][0] === CATEGORY_KEYS.NO_FLAGS;
 
   return (
-    <div className="mt-8 w-140">
+    <div className="mt-8 w-full">
       <p className="border-b pb-1.5 text-base font-bold text-stone-800">Reasons for Concern</p>
       {categoriesWithRuns.map(([key, category]) => (
         <Accordion type="single" value={key} key={key}>

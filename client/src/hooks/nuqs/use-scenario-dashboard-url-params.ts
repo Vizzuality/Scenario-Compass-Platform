@@ -30,6 +30,7 @@ const createTypedParams = (prefix: string): ScenarioDashboardURLParams => ({
   climate: getParamName(SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS.CLIMATE, prefix),
   energy: getParamName(SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS.ENERGY, prefix),
   land: getParamName(SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS.LAND, prefix),
+  advanced: getParamName(SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS.ADVANCED, prefix),
 });
 
 export function useScenarioUrlState(prefix: string = ""): ScenarioUrlState {
@@ -44,6 +45,7 @@ export function useScenarioUrlState(prefix: string = ""): ScenarioUrlState {
       [params.climate]: parseAsArrayOf(parseAsString).withDefault([]),
       [params.energy]: parseAsArrayOf(parseAsString).withDefault([]),
       [params.land]: parseAsArrayOf(parseAsString).withDefault([]),
+      [params.advanced]: parseAsArrayOf(parseAsString).withDefault([]),
     }),
     [params],
   );
@@ -65,6 +67,7 @@ export function useScenarioValues(prefix: string = ""): ScenarioFilterValues {
       climate: filters[params.climate] as string[] | null,
       energy: filters[params.energy] as string[] | null,
       land: filters[params.land] as string[] | null,
+      advanced: filters[params.advanced] as string[] | null,
     }),
     [filters, params],
   );
@@ -82,6 +85,7 @@ export function useScenarioClearOperations(prefix: string = ""): ScenarioClearOp
       [params.climate]: [],
       [params.energy]: [],
       [params.land]: [],
+      [params.advanced]: [],
     });
   }, [setFilters, params]);
 
@@ -98,6 +102,7 @@ export function useScenarioClearOperations(prefix: string = ""): ScenarioClearOp
       [params.climate]: [],
       [params.energy]: [],
       [params.land]: [],
+      [params.advanced]: [],
     });
   }, [setFilters, params]);
 
@@ -148,6 +153,7 @@ export function useScenarioSetters(prefix: string = ""): ScenarioFilterSetters {
       setClimate: createArraySetter(params.climate),
       setEnergy: createArraySetter(params.energy),
       setLand: createArraySetter(params.land),
+      setAdvanced: createArraySetter(params.advanced),
     }),
     [createNumberSetter, createStringSetter, createArraySetter, params],
   );
@@ -173,9 +179,12 @@ export function useScenarioHelpers(prefix: string = ""): ScenarioHelpers {
     if (hasValidValue(filters[params.land])) {
       activeParams.push(params.land as ScenarioDashboardURLParamsKey);
     }
+    if (hasValidValue(filters[params.advanced])) {
+      activeParams.push(params.advanced as ScenarioDashboardURLParamsKey);
+    }
 
     return activeParams;
-  }, [filters, params.climate, params.energy, params.land]);
+  }, [filters, params.advanced, params.climate, params.energy, params.land]);
 
   return { getActiveScenarioParams };
 }

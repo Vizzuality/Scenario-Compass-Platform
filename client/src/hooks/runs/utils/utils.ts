@@ -9,6 +9,7 @@ import {
   RENEWABLES_SHARE_2050,
 } from "@/lib/config/filters/energy-filter-config";
 import { INCREASE_IN_GLOBAL_FOREST_AREA_KEY } from "@/lib/config/filters/land-filter-config";
+import computeCumulativeEmissionsRemoved from "@/hooks/runs/filtering/compute-cumulative-emissions-removed";
 
 interface Params {
   metaIndicators: MetaIndicator[];
@@ -65,6 +66,7 @@ export const generateExtendedRuns = ({
       ...createShortMetaIndicators(runMetaIndicators),
       ...createEnergyShareMetaIndicators(energyShares, runId),
       ...createForestAreaMetaIndicator(gfaIncreaseArray, runId),
+      computeCumulativeEmissionsRemoved(runMetaIndicators),
     ];
 
     const firstDataPoint = runDataPoints[0];

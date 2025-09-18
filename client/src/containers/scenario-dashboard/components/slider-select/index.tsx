@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { URL_VALUES_FILTER_SEPARATOR } from "@/containers/scenario-dashboard/utils/url-store";
+import { parseCurrentValue } from "@/containers/scenario-dashboard/components/slider-select/utils";
 
 export interface SliderSelectItem {
   id: string;
@@ -44,22 +45,11 @@ const SliderSelect: React.FC<SliderSelectProps> = ({
   className,
   id,
 }) => {
-  const parseCurrentValue = (): { selectedId: string | null; range: [number, number] } => {
-    if (currentValue && currentValue.length === 2) {
-      const [selectedId, rangeString] = currentValue;
-      const rangeParts = rangeString.split(URL_VALUES_FILTER_SEPARATOR);
-      if (rangeParts.length === 2) {
-        const min = parseInt(rangeParts[0], 10);
-        const max = parseInt(rangeParts[1], 10);
-        if (!isNaN(min) && !isNaN(max)) {
-          return { selectedId, range: [min, max] };
-        }
-      }
-    }
-    return { selectedId: defaultSelected, range: defaultRange };
-  };
-
-  const { selectedId: initialSelectedId, range: initialRange } = parseCurrentValue();
+  const { selectedId: initialSelectedId, range: initialRange } = parseCurrentValue(
+    currentValue,
+    defaultSelected,
+    defaultRange,
+  );
 
   const [isOpen, setIsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<string | null>(initialSelectedId);

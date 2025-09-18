@@ -17,6 +17,7 @@ export const SCENARIO_FILTER_OPTIONS = {
   CLIMATE: "climate",
   ENERGY: "energy",
   LAND: "land",
+  ADVANCED: "advanced",
 } as const;
 
 export const SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS = {

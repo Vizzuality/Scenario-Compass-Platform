@@ -16,7 +16,7 @@ export function useMultipleRunsPipeline({
   variable,
   prefix = "",
 }: SingleRunPipelineParams): RunPipelineReturn {
-  const { year, endYear, startYear, geography, climate, energy, land } =
+  const { year, endYear, startYear, geography, climate, energy, land, advanced } =
     useScenarioDashboardUrlParams(prefix);
 
   const {
@@ -71,6 +71,7 @@ export function useMultipleRunsPipeline({
     climate,
     energy,
     land,
+    advanced,
   });
 
   const isLoading =
