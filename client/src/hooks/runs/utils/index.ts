@@ -11,6 +11,7 @@ interface FilterRunsByMetaIndicatorsParams {
   climate: string[] | null;
   energy: string[] | null;
   land: string[] | null;
+  advanced: string[] | null;
 }
 
 function matchesClimateFilter(run: ExtendedRun, climate: string[] | null): boolean {
@@ -55,6 +56,7 @@ export function filterRunsByMetaIndicators({
   climate,
   energy,
   land,
+  advanced,
 }: FilterRunsByMetaIndicatorsParams): ExtendedRun[] {
   if (!runs?.length) return [];
 
@@ -62,7 +64,8 @@ export function filterRunsByMetaIndicators({
     return (
       matchesClimateFilter(run, climate) &&
       matchesSliderValue(run, energy) &&
-      matchesSliderValue(run, land)
+      matchesSliderValue(run, land) &&
+      matchesSliderValue(run, advanced)
     );
   });
 }

@@ -12,6 +12,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { DataFetchError } from "@/components/error-state/data-fetch-error";
 import { RunPipelineReturn } from "@/hooks/runs/pipeline/types";
+import Link from "next/link";
 
 interface Props {
   result: RunPipelineReturn;
@@ -68,12 +69,30 @@ export default function AdditionalInformation({ result }: Props) {
                 <p>Name</p>
                 <p>Scenario runs</p>
               </div>
-              {allCounts[key]?.map(({ value, count }) => (
-                <div key={value} className="flex justify-between">
-                  <span>{value}</span>
-                  <b>({count})</b>
-                </div>
-              ))}
+              {allCounts[key]?.map(({ value, count }) => {
+                if (key === "Scientific Manuscript (DOI)") {
+                  const href = "https://doi.org/" + value;
+                  return (
+                    <Link
+                      key={value}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title={href}
+                      className="hover:underline"
+                    >
+                      {value}
+                    </Link>
+                  );
+                } else {
+                  return (
+                    <div key={value} className="flex justify-between">
+                      <span>{value}</span>
+                      <b>({count})</b>
+                    </div>
+                  );
+                }
+              })}
             </AccordionContent>
           </AccordionItem>
         ))}

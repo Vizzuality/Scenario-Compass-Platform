@@ -7,7 +7,7 @@ import TooltipInfo from "@/containers/scenario-dashboard/components/tooltip-info
 import { Button } from "@/components/ui/button";
 import { Trash2Icon } from "lucide-react";
 import { useId } from "react";
-import SliderSelect from "@/containers/scenario-dashboard/components/meta-scenario-filters/radio-group-slider";
+import SliderSelect from "@/containers/scenario-dashboard/components/slider-select";
 import {
   INCREASE_IN_GLOBAL_FOREST_AREA_KEY,
   INCREASE_IN_GLOBAL_FOREST_AREA_LABEL,

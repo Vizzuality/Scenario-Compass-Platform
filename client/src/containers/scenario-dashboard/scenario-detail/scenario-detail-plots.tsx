@@ -4,6 +4,7 @@ import SingleRunScenarioFlags from "@/containers/scenario-dashboard/components/r
 import useSyncVariables from "@/hooks/runs/pipeline/use-sync-variables";
 import { SINGLE_SCENARIO_VIEW_PLOTS_CONFIG_ARRAY } from "@/lib/config/tabs/tabs-config";
 import { SingleRunPlotWidget } from "@/components/plots/widgets/single-run/single-run-plot-widget";
+import AdditionalInformation from "@/containers/scenario-dashboard/components/runs-pannel/components/additional-information";
 
 export default function ScenarioTabs({ runId }: { runId: number }) {
   const { result } = useSyncVariables({ runId });
@@ -16,7 +17,10 @@ export default function ScenarioTabs({ runId }: { runId: number }) {
             return <SingleRunPlotWidget key={index} runId={runId} plotConfig={plotConfig} />;
           })}
         </div>
-        <SingleRunScenarioFlags result={result} />
+        <div className="flex w-120 flex-col gap-6">
+          <SingleRunScenarioFlags result={result} />
+          <AdditionalInformation result={result} />
+        </div>
       </div>
     </div>
   );

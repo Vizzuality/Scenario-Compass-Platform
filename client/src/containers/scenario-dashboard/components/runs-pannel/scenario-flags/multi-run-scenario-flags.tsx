@@ -57,7 +57,7 @@ export default function MultiRunScenarioFlags({ result, prefix }: Props) {
     return (
       <div className="flex w-full flex-col gap-3">
         <p className="mb-1.5 border-b pb-1.5 text-base font-bold text-stone-800">
-          Reasons for Concern{" "}
+          Reasons for Concern
         </p>
         <div className="flex w-full flex-col gap-3">
           <Skeleton className="h-6 w-full rounded-md" />
@@ -71,7 +71,7 @@ export default function MultiRunScenarioFlags({ result, prefix }: Props) {
     return (
       <div className="flex w-full flex-col gap-3">
         <p className="mb-1.5 border-b pb-1.5 text-base font-bold text-stone-800">
-          Reasons for Concern{" "}
+          Reasons for Concern
         </p>
         <div className="flex flex-col gap-3">
           <DataFetchError />

@@ -10,6 +10,7 @@ export interface ScenarioDashboardURLParams {
   readonly climate: string;
   readonly energy: string;
   readonly land: string;
+  readonly advanced: string;
 }
 
 /**
@@ -41,6 +42,7 @@ export interface ScenarioFilterValues {
   readonly climate: string[] | null;
   readonly energy: string[] | null;
   readonly land: string[] | null;
+  readonly advanced: string[] | null;
 }
 
 /**
@@ -55,6 +57,7 @@ export interface ScenarioFilterSetters {
   readonly setClimate: (value: string[] | null) => Promise<URLSearchParams>;
   readonly setEnergy: (value: string[] | null) => Promise<URLSearchParams>;
   readonly setLand: (value: string[] | null) => Promise<URLSearchParams>;
+  readonly setAdvanced: (value: string[] | null) => Promise<URLSearchParams>;
 }
 
 /**

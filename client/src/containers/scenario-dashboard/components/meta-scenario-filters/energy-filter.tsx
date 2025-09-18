@@ -7,7 +7,7 @@ import TooltipInfo from "@/containers/scenario-dashboard/components/tooltip-info
 import { Button } from "@/components/ui/button";
 import { Trash2Icon } from "lucide-react";
 import { useId } from "react";
-import SliderSelect from "@/containers/scenario-dashboard/components/meta-scenario-filters/radio-group-slider";
+import SliderSelect from "@/containers/scenario-dashboard/components/slider-select";
 import { energyTypes } from "@/lib/config/filters/energy-filter-config";
 
 const tooltipInfo =
