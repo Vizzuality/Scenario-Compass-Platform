@@ -6,6 +6,10 @@ import { cn } from "@/lib/utils";
 import { ActiveLink } from "@/components/layout/navbar/active-link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetClose, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
+import logoDark from "@/assets/logo/logo-dark.svg";
+import logoLight from "@/assets/logo/logo-light.svg";
+import logoLilac from "@/assets/logo/logo-lilac.svg";
+import Image from "next/image";
 
 interface Props {
   className?: string;
@@ -24,12 +28,33 @@ const sheetThemeStyles = {
   white: "bg-white text-stone-900",
 };
 
-const Logo = ({ className }: { className?: string }) => (
-  <Link href={INTERNAL_PATHS.HOME} className={className}>
-    <span className="font-display mr-2 text-xl leading-10 font-bold">SCP</span>
-    <span className="text-lg font-normal">by IIASA</span>
-  </Link>
-);
+const getLogoSvg = (theme: string) => {
+  switch (theme) {
+    case "light":
+      return logoLight;
+    case "dark":
+      return logoDark;
+    case "lilac":
+      return logoLilac;
+    default:
+      return logoDark;
+  }
+};
+
+const Logo = ({ className, theme }: { className?: string; theme: string }) => {
+  const logoSrc = getLogoSvg(theme);
+  const textColor = theme === "light" ? "text-burgundy" : "text-beige-light";
+
+  return (
+    <Link href={INTERNAL_PATHS.HOME} className={cn(className, "flex h-fit gap-2")}>
+      <Image src={logoSrc} alt="IIASA Logo" />
+      <div className={textColor}>
+        <span className="font-display mr-2 text-2xl leading-10 font-bold">SCP</span>
+        <span className="text-sm font-normal">by IIASA</span>
+      </div>
+    </Link>
+  );
+};
 
 export function Navbar({ className, theme, sheetTheme }: Props) {
   const navStyles = themeStyles[theme];
@@ -43,7 +68,7 @@ export function Navbar({ className, theme, sheetTheme }: Props) {
           navStyles,
         )}
       >
-        <Logo />
+        <Logo theme={theme} />
 
         <div className="hidden items-center gap-10 lg:flex">
           {desktopPaths.map((link, index) => (
@@ -64,7 +89,7 @@ export function Navbar({ className, theme, sheetTheme }: Props) {
             <SheetTitle>Mobile Menu Sheet</SheetTitle>
             <SheetContent className={cn("w-full gap-6 border-none px-4 py-2", sheetStyles)}>
               <div className="flex items-center justify-between">
-                <Logo />
+                <Logo theme={sheetStyles} />
                 <SheetClose asChild>
                   <Button variant="ghost" size="icon">
                     <X />
