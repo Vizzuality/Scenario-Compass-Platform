@@ -81,6 +81,10 @@ export const EXPLORATION_LAND_USE_TAB_PLOT_CONFIG: ReadonlyArray<PlotConfig> = [
     title: "Energy Crops",
     variables: ["Land Cover|Cropland|Energy Crops", "Agricultural Production|Non-Energy|Crops"],
   },
+  // {
+  //   title: "Food Waste",
+  //   variables: ["Food Waste", "Food|Availability"],
+  // },
 ];
 
 export const EXPLORATION_CLIMATE_TAB_PLOT_CONFIG: ReadonlyArray<PlotConfig> = [
