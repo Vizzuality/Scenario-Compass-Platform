@@ -57,7 +57,7 @@ export default function ScenarioDetails({ runId }: { runId: number }) {
 
   const yearNetZeroCO2 = metaData?.find((item) =>
     item.key.includes(YEAR_NET_ZERO_META_INDICATOR_KEY),
-  ) || { value: "Loading Year" };
+  ) || { value: "Not available" };
 
   const cumulativeEmissions = metaData?.find((item) =>
     item.key.includes(CUMULATIVE_EMISSIONS_META_INDICATOR_KEY),
@@ -71,6 +71,9 @@ export default function ScenarioDetails({ runId }: { runId: number }) {
 
   const scenarioName = runs[0]?.scenario?.name || "Loading Scenario";
   const modelName = runs[0]?.model?.name || "Loading Model";
+
+  const cumulativeEmissionsWithUnit =
+    Number(cumulativeEmissions.value).toFixed(3).toString() + " Gt CO2";
 
   return (
     <div className="container mx-auto mb-8">
@@ -96,7 +99,7 @@ export default function ScenarioDetails({ runId }: { runId: number }) {
         <GeographyYearInfo />
         <div className="grid h-fit grid-cols-4 grid-rows-2 justify-between gap-4">
           <InfoItem title="Climate category" value={climateCategory.value} />
-          <InfoItem title="Cumulative emissions" value={cumulativeEmissions.value} />
+          <InfoItem title="Cumulative emissions" value={cumulativeEmissionsWithUnit} />
           <InfoItem title="Peak temperature" value={peakTemperature.value} />
           <InfoItem title="Year of CO2/GHG net-zero" value={yearNetZeroCO2.value} />
           <InfoItem title="Model" value={modelName} />

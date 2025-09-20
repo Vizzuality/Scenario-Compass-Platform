@@ -51,17 +51,6 @@ export const TABS_CONFIG_ARRAY: ReadonlyArray<TabConfig> = [
 
 export const SINGLE_SCENARIO_VIEW_PLOTS_CONFIG_ARRAY: ReadonlyArray<SingleScenarioPlotConfig> = [
   {
-    title: "GHG Emissions",
-    variables: ["Emissions|Kyoto Gases", "Emissions|CO2", "Emissions|CH4", "Emissions|N2O"],
-    legendVariables: ["Kyoto Gases", "CO2", "CH4", "N2O"],
-    variablesMap: {
-      "Emissions|Kyoto Gases": "Kyoto Gases",
-      "Emissions|CO2": "CO2",
-      "Emissions|CH4": "CH4",
-      "Emissions|N2O": "N2O",
-    },
-  },
-  {
     title: "Primary Energy Production",
     variables: [
       "Primary Energy|Biomass",

@@ -1,4 +1,3 @@
-import { SingleScenarioPlotConfig } from "@/lib/config/tabs/variables-config";
 import { ExtendedRun } from "@/hooks/runs/pipeline/types";
 import {
   getColorsForVariables,
@@ -6,7 +5,7 @@ import {
 } from "@/components/plots/plot-variations/stacked-area/utils";
 
 interface PlotWidgetProps {
-  plotConfig: SingleScenarioPlotConfig;
+  variablesMap: Record<string, string>;
   runs: ExtendedRun[];
 }
 
@@ -14,18 +13,18 @@ const getActiveVariables = (runs: ExtendedRun[]) => {
   return new Set([...runs.map((run) => run.variableName)]);
 };
 
-export default function PlotLegend({ plotConfig, runs }: PlotWidgetProps) {
+export default function PlotLegend({ variablesMap, runs }: PlotWidgetProps) {
   const activeVariables = getActiveVariables(runs);
 
   const orderedVariableNames = getOrderedVariableNames(runs);
   const activeOrderedVariables = orderedVariableNames.filter((variable) =>
     activeVariables.has(variable),
   );
-  const colors = getColorsForVariables(runs, activeOrderedVariables.length);
+  const colors = getColorsForVariables(runs[0].flagCategory, activeOrderedVariables.length);
 
   const variableColorMap = new Map<string, string>();
   activeOrderedVariables.forEach((variable, index) => {
-    const displayName = plotConfig.variablesMap[variable] || variable;
+    const displayName = variablesMap[variable] || variable;
     variableColorMap.set(displayName, colors[index]);
   });
 

@@ -1,10 +1,17 @@
-import { useDownloadPlotImage } from "@/hooks/plots/download/use-download-plot-image";
-import { downloadPlotCsv } from "@/hooks/plots/download/csv-utils";
+import {
+  DownloadOptions,
+  SubtitleData,
+  useDownloadPlotImage,
+} from "@/hooks/plots/download/use-download-plot-image";
+import { downloadMetaIndicatorCsv, downloadPlotCsv } from "@/hooks/plots/download/csv-utils";
 import { DOWNLOAD_TYPE } from "@/components/plots/components/download-plot-button";
 import { ExtendedRun } from "@/hooks/runs/pipeline/types";
+import { RefObject } from "react";
+import { MetaIndicator } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
 
 interface UsePlotDownloadOptions {
-  runs: ExtendedRun[] | null;
+  runs?: ExtendedRun[] | null;
+  metaIndicators?: MetaIndicator[] | null;
   title: string;
   imageOptions?: {
     padding?: { all: number };
@@ -16,12 +23,20 @@ interface UsePlotDownloadOptions {
   };
 }
 
+interface UsePlotDownloadReturn {
+  chartRef: RefObject<HTMLDivElement | null>;
+  legendRef: RefObject<HTMLDivElement | null>;
+  handleDownload: (selectedTypes: DOWNLOAD_TYPE[]) => void;
+  downloadChart: (title: string, subtitleData?: SubtitleData, options?: DownloadOptions) => void;
+}
+
 export function usePlotDownload({
   runs,
+  metaIndicators,
   title,
   imageOptions = { padding: { all: 30 }, includeInFilename: true },
   csvOptions,
-}: UsePlotDownloadOptions) {
+}: UsePlotDownloadOptions): UsePlotDownloadReturn {
   const { chartRef, legendRef, downloadChart } = useDownloadPlotImage();
 
   const handleDownload = (selectedTypes: DOWNLOAD_TYPE[]) => {
@@ -32,6 +47,8 @@ export function usePlotDownload({
         case "csv":
           if (runs) {
             downloadPlotCsv(runs, title, csvOptions);
+          } else if (metaIndicators) {
+            downloadMetaIndicatorCsv(metaIndicators, title, csvOptions);
           }
           break;
         case "png":

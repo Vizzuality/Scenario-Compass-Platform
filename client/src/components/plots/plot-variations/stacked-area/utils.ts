@@ -11,7 +11,7 @@ import { PlotDimensions } from "@/components/plots/utils/dimensions";
 import * as d3 from "d3";
 import { ExtendedRun } from "@/hooks/runs/pipeline/types";
 import { createTooltipManager } from "@/components/plots/utils/tooltip-manager";
-import { CATEGORY_CONFIG } from "@/lib/config/reasons-of-concern/category-config";
+import { CATEGORY_CONFIG, CategoryKey } from "@/lib/config/reasons-of-concern/category-config";
 import { createHoverElements } from "@/components/plots/utils/create-hover-elements";
 
 interface Props {
@@ -31,9 +31,11 @@ export const getOrderedVariableNames = (runs: ExtendedRun[]): string[] => {
   return variableNames.sort((a, b) => a.localeCompare(b));
 };
 
-export const getColorsForVariables = (runs: ExtendedRun[], variableCount: number): string[] => {
-  const firstRun = runs[0];
-  const categoryKey = firstRun.flagCategory as keyof typeof CATEGORY_CONFIG;
+export const getColorsForVariables = (
+  flagCategory: CategoryKey,
+  variableCount: number,
+): string[] => {
+  const categoryKey = flagCategory as keyof typeof CATEGORY_CONFIG;
   const palette = CATEGORY_CONFIG[categoryKey].palette;
 
   const colors = [];
@@ -46,7 +48,10 @@ export const getColorsForVariables = (runs: ExtendedRun[], variableCount: number
   return colors.reverse();
 };
 
-const createVariableColorMap = (variableNames: string[], colors: string[]): Map<string, string> => {
+export const createVariableColorMap = (
+  variableNames: string[],
+  colors: string[],
+): Map<string, string> => {
   const colorMap = new Map<string, string>();
   variableNames.forEach((variable, index) => {
     colorMap.set(variable, colors[index]);
@@ -65,7 +70,7 @@ export const renderStackedAreaPlot = ({ svg, runs, dimensions, variablesMap }: P
   const tooltipManager = createTooltipManager({ svg, dimensions });
 
   const variableNames = getOrderedVariableNames(runs);
-  const colors = getColorsForVariables(runs, variableNames.length);
+  const colors = getColorsForVariables(runs[0].flagCategory, variableNames.length);
   const variableColorMap = createVariableColorMap(variableNames, colors);
 
   const allYears = [...new Set(runs.flatMap((run) => run.orderedPoints.map((p) => p.year)))].sort(
@@ -110,6 +115,7 @@ export const renderStackedAreaPlot = ({ svg, runs, dimensions, variablesMap }: P
     height: dimensions.INNER_HEIGHT,
     width: dimensions.INNER_WIDTH,
     xTickValues: allYears,
+    unit: runs[0].unit,
   });
 
   g.selectAll(".stacked-area")
