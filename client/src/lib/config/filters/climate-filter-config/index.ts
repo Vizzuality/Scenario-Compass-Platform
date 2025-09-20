@@ -20,8 +20,7 @@ export const YEAR_NET_ZERO_FILTER_CONFIG = {
 
 export const CLIMATE_CATEGORY_META_INDICATOR_KEY = "Climate Assessment|Category [Name]";
 
-export const YEAR_NET_ZERO_META_INDICATOR_KEY =
-  "Climate Assessment|Year of Peak Warming|Median [MAGICCv7.5.3]";
+export const YEAR_NET_ZERO_META_INDICATOR_KEY = "Emissions Diagnostics|Year of Net Zero|CO2";
 
 export const CUMULATIVE_EMISSIONS_META_INDICATOR_KEY =
   "Emissions Diagnostics|Cumulative CCS [2020-2100, Gt CO2]";

@@ -1,5 +1,6 @@
 import { ExtendedRun } from "@/hooks/runs/pipeline/types";
 import { CATEGORY_CONFIG } from "@/lib/config/reasons-of-concern/category-config";
+import { MetaIndicator } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
 
 function extendedRunToCsv(
   runs: ExtendedRun[],
@@ -118,4 +119,75 @@ export function downloadPlotCsv(
 
   const csvContent = extendedRunToCsv(runs, options);
   downloadCsv(csvContent, `${title}.csv`);
+}
+
+function metaIndicatorToCsv(
+  metaIndicators: MetaIndicator[],
+  options?: {
+    delimiter?: string;
+    format?: "long" | "wide";
+  },
+): string {
+  const delimiter = options?.delimiter ?? ",";
+  const format = options?.format ?? "long";
+
+  if (metaIndicators.length === 0) return "";
+
+  if (format === "long") {
+    const headers = ["Run ID", "Key", "Value"];
+    const csvRows = [headers.map((h) => `"${h}"`).join(delimiter)];
+
+    metaIndicators.forEach((indicator) => {
+      const row = [`"${indicator.runId}"`, `"${indicator.key}"`, `"${indicator.value}"`];
+      csvRows.push(row.join(delimiter));
+    });
+
+    return csvRows.join("\n");
+  } else {
+    const allRunIds = [...new Set(metaIndicators.map((indicator) => indicator.runId))].sort();
+    const allKeys = [...new Set(metaIndicators.map((indicator) => indicator.key))].sort();
+
+    const headers = ["Run ID", ...allKeys];
+    const csvRows = [headers.map((h) => `"${h}"`).join(delimiter)];
+
+    allRunIds.forEach((runId) => {
+      const runIndicators = metaIndicators.filter((indicator) => indicator.runId === runId);
+      const keyValueMap = new Map(
+        runIndicators.map((indicator) => [indicator.key, indicator.value]),
+      );
+
+      const row = [
+        `"${runId}"`,
+        ...allKeys.map((key) => {
+          const value = keyValueMap.get(key);
+          return value ? `"${value}"` : "";
+        }),
+      ];
+      csvRows.push(row.join(delimiter));
+    });
+
+    return csvRows.join("\n");
+  }
+}
+
+export function downloadMetaIndicatorCsv(
+  metaIndicators: MetaIndicator[] | null,
+  title: string = "meta_indicators",
+  options?: { delimiter?: string; format?: "long" | "wide" },
+) {
+  if (!metaIndicators || metaIndicators.length === 0) return;
+
+  const csvContent = metaIndicatorToCsv(metaIndicators, options);
+
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+
+  const url = URL.createObjectURL(blob);
+  link.setAttribute("href", url);
+  link.setAttribute("download", `${title}.csv`);
+  link.style.visibility = "hidden";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 }

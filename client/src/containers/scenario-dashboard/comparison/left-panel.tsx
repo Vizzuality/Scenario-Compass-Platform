@@ -29,7 +29,7 @@ export default function LeftPanel({ filters }: Props) {
 
       {showMetric && (
         <div className="pt-6 pr-4">
-          <MultiRunScenarioFlags result={result} prefix={prefix} />
+          <MultiRunScenarioFlags result={result} prefix={prefix} initialOpen={false} />
         </div>
       )}
       <div className="flex h-fit w-full flex-col gap-4 pt-6 pr-4">

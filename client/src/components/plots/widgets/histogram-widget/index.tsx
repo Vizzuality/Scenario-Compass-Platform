@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/lib/query-keys";
 import { getMetaPoints } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
+import { usePlotDownload } from "@/hooks/plots/download/use-plot-download";
 
 interface Props {
   plotConfig: PlotConfig;
@@ -22,22 +23,32 @@ export default function HistogramWidget({ plotConfig }: Props) {
     }),
     select: (data) => getMetaPoints(data),
   });
+  const { chartRef, handleDownload } = usePlotDownload({
+    metaIndicators: metaIndicators,
+    title: currentVariable,
+    imageOptions: {
+      padding: { all: 30 },
+      includeInFilename: true,
+    },
+  });
 
   return (
     <div className="h-fit w-full rounded-md bg-white p-4 select-none">
-      <PlotWidgetHeader title={plotConfig.title} />
+      <PlotWidgetHeader onDownload={handleDownload} title={plotConfig.title} />
       <VariableSelect
         options={plotConfig.variables}
         onChange={setCurrentVariable}
         currentVariable={currentVariable}
       />
-      <HistogramPlot
-        data={{
-          isLoading,
-          isError,
-          metaIndicators,
-        }}
-      />
+      <div ref={chartRef}>
+        <HistogramPlot
+          data={{
+            isLoading,
+            isError,
+            metaIndicators,
+          }}
+        />
+      </div>
     </div>
   );
 }

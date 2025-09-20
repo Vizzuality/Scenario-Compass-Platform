@@ -3,7 +3,7 @@ import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboa
 import { geographyConfig } from "@/lib/config/filters/geography-filter-config";
 import { downloadDivAsPNG } from "@/hooks/plots/download/image-utils";
 
-interface DownloadOptions {
+export interface DownloadOptions {
   padding?: {
     top?: number;
     right?: number;
@@ -14,7 +14,7 @@ interface DownloadOptions {
   includeInFilename?: boolean;
 }
 
-interface SubtitleData {
+export interface SubtitleData {
   startYear?: number;
   endYear?: number;
   geographyName?: string;

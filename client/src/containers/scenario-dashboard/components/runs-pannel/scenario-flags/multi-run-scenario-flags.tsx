@@ -17,12 +17,13 @@ import { ColoredScenarioBar } from "@/containers/scenario-dashboard/components/r
 interface Props {
   result: RunPipelineReturn;
   prefix?: string;
+  initialOpen?: boolean;
 }
 
 const SCENARIO_FLAGS_ACCORDION_VALUE = "scenario-flags";
 
-export default function MultiRunScenarioFlags({ result, prefix }: Props) {
-  const [isOpen, setIsOpen] = useState(SCENARIO_FLAGS_ACCORDION_VALUE);
+export default function MultiRunScenarioFlags({ result, prefix, initialOpen }: Props) {
+  const [isOpen, setIsOpen] = useState(initialOpen ? SCENARIO_FLAGS_ACCORDION_VALUE : undefined);
   const categories = useMemo(() => categorizeRuns(result.runs), [result.runs]);
 
   const categoriesWithRuns = useMemo(
@@ -80,11 +81,23 @@ export default function MultiRunScenarioFlags({ result, prefix }: Props) {
     );
   }
 
+  const showScenarioDetails = () => {
+    return initialOpen !== undefined && !isOpen;
+  };
+
   return (
     <Accordion value={isOpen} onValueChange={setIsOpen} type="single" collapsible>
       <AccordionItem value={SCENARIO_FLAGS_ACCORDION_VALUE} className={isOpen && "border-b-0"}>
         <AccordionTrigger className="pt-0 pb-1.5 text-base font-bold text-stone-800">
-          <p className="text-base">Reasons For Concern</p>
+          <div className="flex items-center gap-4">
+            <p className="text-base">Reasons For Concern</p>
+            {showScenarioDetails() && (
+              <p className="font-normal">
+                <strong>{totalCategories}</strong> Flags (in <strong>{result.runs.length}</strong>)
+                Scenario runs
+              </p>
+            )}
+          </div>
         </AccordionTrigger>
         <AccordionContent className="flex flex-col gap-3 border-t pt-4">
           <div className="flex flex-col gap-2">

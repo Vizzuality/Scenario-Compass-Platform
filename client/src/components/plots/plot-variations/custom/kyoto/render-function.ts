@@ -1,0 +1,262 @@
+import {
+  clearSVG,
+  createInteractionOverlay,
+  createMainGroup,
+  formatNumber,
+  renderAxes,
+  renderGridLines,
+  SVGSelection,
+} from "@/components/plots/utils";
+import { PlotDimensions } from "@/components/plots/utils/dimensions";
+import * as d3 from "d3";
+import { createTooltipManager } from "@/components/plots/utils/tooltip-manager";
+import { createHoverElements } from "@/components/plots/utils/create-hover-elements";
+import { ShortRun, ShortRunReturn } from "@/components/plots/plot-variations/custom/kyoto/types";
+import { ShortDataPoint } from "@/hooks/runs/pipeline/types";
+import {
+  createVariableColorMap,
+  getColorsForVariables,
+} from "@/components/plots/plot-variations/stacked-area/utils";
+import { CATEGORY_CONFIG } from "@/lib/config/reasons-of-concern/category-config";
+
+interface Props {
+  svg: SVGSelection;
+  data: ShortRunReturn;
+  dimensions: PlotDimensions;
+}
+
+interface StackedDataPoint {
+  year: number;
+  [key: string]: number;
+}
+
+export const getOrderedVariableNames = (runs: ShortRun[]): string[] => {
+  const variableNames = [...new Set(runs.map((run) => run.variableName))];
+  return variableNames.sort((a, b) => a.localeCompare(b));
+};
+
+export const renderKyotoPlot = ({ svg, data, dimensions }: Props): void => {
+  clearSVG(svg);
+  const { shortRuns, flagCategory } = data;
+  if (shortRuns.length === 0) {
+    return;
+  }
+
+  const g = createMainGroup(svg, dimensions);
+  const tooltipManager = createTooltipManager({ svg, dimensions });
+
+  // Separate area and line runs
+  const areaRuns = shortRuns.filter((run) => !run.isLine);
+  const lineRuns = shortRuns.filter((run) => run.isLine);
+
+  const areaVariableNames = getOrderedVariableNames(areaRuns);
+
+  // Only get colors for area variables
+  const colors = getColorsForVariables(flagCategory, areaVariableNames.length);
+  const lineColor = CATEGORY_CONFIG[flagCategory].palette;
+  const variableColorMap = createVariableColorMap(areaVariableNames, colors);
+
+  const allYears = [
+    ...new Set(shortRuns.flatMap((run) => run.orderedPoints.map((p) => p.year))),
+  ].sort((a, b) => a - b);
+
+  const stackedAreaData: StackedDataPoint[] = allYears.map((year) => {
+    const dataPoint: StackedDataPoint = { year };
+
+    areaRuns.forEach((run) => {
+      const point = run.orderedPoints.find((p) => p.year === year);
+      dataPoint[run.variableName] = point?.value || 0;
+    });
+
+    return dataPoint;
+  });
+
+  const lineData = lineRuns.map((run) => ({
+    variableName: run.variableName,
+    points: run.orderedPoints,
+  }));
+
+  const allAreaValues =
+    stackedAreaData.length > 0
+      ? d3
+          .stack<StackedDataPoint>()
+          .keys(areaVariableNames)(stackedAreaData)
+          .flatMap((series) => series.flatMap((d) => [d[0], d[1]]))
+      : [];
+
+  const allLineValues = lineRuns.flatMap((run) => run.orderedPoints.map((p) => p.value));
+  const allValues = [...allAreaValues, ...allLineValues];
+
+  const xScale = d3
+    .scaleLinear()
+    .domain(d3.extent(allYears) as [number, number])
+    .range([0, dimensions.INNER_WIDTH]);
+
+  const yScale = d3
+    .scaleLinear()
+    .domain(d3.extent(allValues) as [number, number])
+    .range([dimensions.INNER_HEIGHT, 0]);
+
+  renderGridLines(g, yScale, dimensions.INNER_WIDTH);
+  renderAxes({
+    g,
+    scales: { xScale, yScale },
+    height: dimensions.INNER_HEIGHT,
+    width: dimensions.INNER_WIDTH,
+    xTickValues: allYears,
+    unit: "Mt CO2eq/yr",
+  });
+
+  if (stackedAreaData.length > 0 && areaVariableNames.length > 0) {
+    const stackedData = d3.stack<StackedDataPoint>().keys(areaVariableNames)(stackedAreaData);
+
+    const area = d3
+      .area<d3.SeriesPoint<StackedDataPoint>>()
+      .x((d) => xScale(d.data.year))
+      .y0((d) => yScale(d[0]))
+      .y1((d) => yScale(d[1]))
+      .curve(d3.curveCardinal);
+
+    g.selectAll(".stacked-area")
+      .data(stackedData)
+      .enter()
+      .append("path")
+      .attr("class", "stacked-area")
+      .attr("d", area)
+      .attr("fill", (d) => variableColorMap.get(d.key) || colors[0])
+      .attr("opacity", 0.8);
+  }
+
+  if (lineData.length > 0) {
+    const line = d3
+      .line<ShortDataPoint>()
+      .x((d) => xScale(d.year))
+      .y((d) => yScale(d.value))
+      .curve(d3.curveCardinal);
+
+    g.selectAll(".line-path")
+      .data(lineData)
+      .enter()
+      .append("path")
+      .attr("class", "line-path")
+      .attr("d", (d) => line(d.points))
+      .attr("fill", "none")
+      .attr("stroke", lineColor[0])
+      .attr("stroke-width", 2);
+  }
+
+  const { verticalHoverLine } = createHoverElements(g, dimensions.INNER_HEIGHT);
+
+  const dataByYear = new Map<
+    number,
+    { year: number; areas: Record<string, number>; lines: Record<string, number> }
+  >();
+
+  allYears.forEach((year) => {
+    const areas: Record<string, number> = {};
+    const lines: Record<string, number> = {};
+
+    areaRuns.forEach((run) => {
+      const point = run.orderedPoints.find((p) => p.year === year);
+      areas[run.variableName] = point?.value || 0;
+    });
+
+    lineRuns.forEach((run) => {
+      const point = run.orderedPoints.find((p) => p.year === year);
+      if (point) {
+        lines[run.variableName] = point.value;
+      }
+    });
+
+    dataByYear.set(year, { year, areas, lines });
+  });
+
+  createInteractionOverlay(g, dimensions.INNER_WIDTH, dimensions.INNER_HEIGHT)
+    .on("mouseenter", () => {
+      verticalHoverLine.style("opacity", 1);
+      tooltipManager?.show();
+    })
+    .on("mouseleave", () => {
+      verticalHoverLine.style("opacity", 0);
+      tooltipManager?.hide();
+    })
+    .on("mousemove", function (event) {
+      const [mouseX] = d3.pointer(event);
+      const year = Math.round(xScale.invert(mouseX));
+
+      let dataPoint = dataByYear.get(year);
+      if (!dataPoint) {
+        const availableYears = Array.from(dataByYear.keys());
+        const closestYear = availableYears.reduce((prev, curr) =>
+          Math.abs(curr - year) < Math.abs(prev - year) ? curr : prev,
+        );
+        dataPoint = dataByYear.get(closestYear);
+      }
+
+      if (!dataPoint) return;
+
+      const x = xScale(dataPoint.year);
+      verticalHoverLine.attr("x1", x).attr("x2", x);
+
+      let cumulative = 0;
+      const areaTooltipData = areaVariableNames
+        .map((variableName) => {
+          const value = dataPoint.areas[variableName] || 0;
+          const start = cumulative;
+          cumulative += value;
+          return {
+            key: variableName,
+            value,
+            start,
+            end: cumulative,
+            color: variableColorMap.get(variableName) || colors[0],
+            isLine: false,
+          };
+        })
+        .reverse();
+
+      const lineTooltipData = lineRuns
+        .filter((run) => dataPoint.lines[run.variableName] !== undefined)
+        .map((run) => ({
+          key: run.variableName,
+          value: dataPoint.lines[run.variableName],
+          color: lineColor[0],
+          isLine: true,
+        }));
+
+      const areaTotal = cumulative;
+      const allTooltipData = [...areaTooltipData, ...lineTooltipData];
+
+      const content = allTooltipData
+        .sort((a, b) => Number(b.isLine) - Number(a.isLine))
+        .map((d) => {
+          const lineStyle = d.isLine
+            ? `border: 2px solid ${d.color}; background-color: transparent;`
+            : `background-color: ${d.color}; border: 1px solid #666;`;
+          const shape = d.isLine ? "" : "border-radius: 100px;";
+
+          return `<div class="flex items-center gap-2 mb-1">
+            <div style="width: 10px; height: 10px; ${lineStyle} ${shape} flex-shrink: 0;"></div>
+            <div class="text-black">
+              <strong>${d.key}:</strong> ${formatNumber(d.value)}${d.isLine ? " (line)" : ""}
+            </div>
+          </div>`;
+        })
+        .join("");
+
+      const totalSection =
+        areaTotal > 0
+          ? `<div class="mb-2"><strong>Area total:</strong> ${formatNumber(areaTotal)}</div>`
+          : "";
+
+      tooltipManager?.update(
+        `<div class="text-black">
+          <div class="mb-1"><strong>Year:</strong> ${dataPoint.year}</div>
+          ${totalSection}
+          <div>${content}</div>
+        </div>`,
+        x,
+        dimensions.INNER_HEIGHT / 2,
+      );
+    });
+};

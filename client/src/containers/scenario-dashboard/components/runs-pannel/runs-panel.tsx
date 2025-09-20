@@ -21,7 +21,7 @@ export default function RunsPanel({ prefix }: Props) {
       {showMetric && (
         <>
           <ScenarioModelMetrics result={result} />
-          <MultiRunScenarioFlags result={result} />
+          <MultiRunScenarioFlags result={result} initialOpen={true} />
           <AdditionalInformation result={result} />
         </>
       )}

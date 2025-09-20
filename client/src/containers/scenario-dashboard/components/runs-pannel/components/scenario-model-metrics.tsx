@@ -30,7 +30,7 @@ export default function ScenarioModelMetrics({ result }: { result: RunPipelineRe
     return (
       <div className="flex w-full flex-col gap-3">
         <p className="mb-1.5 border-b pb-1.5 text-base font-bold text-stone-800">
-          Scenario metrics
+          Current Scenario Selection
         </p>
         <div className="flex flex-col gap-3">
           <Skeleton className="h-6 w-full overflow-hidden rounded-md" />
@@ -44,7 +44,7 @@ export default function ScenarioModelMetrics({ result }: { result: RunPipelineRe
     return (
       <div className="flex w-full flex-col gap-3">
         <p className="mb-1.5 border-b pb-1.5 text-base font-bold text-stone-800">
-          Scenario metrics
+          Current Scenario Selection
         </p>
         <div className="flex flex-col gap-3">
           <DataFetchError />
@@ -56,7 +56,7 @@ export default function ScenarioModelMetrics({ result }: { result: RunPipelineRe
   return (
     <div>
       <p className="mb-1.5 border-b pb-1.5 text-base leading-6 font-bold text-stone-800">
-        Current Scenario Set
+        Current Scenario Selection
       </p>
       <ul className="ml-5 list-outside list-disc space-y-2">
         <li className="text-foreground text-sm leading-5">
