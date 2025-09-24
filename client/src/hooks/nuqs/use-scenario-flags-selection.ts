@@ -52,6 +52,7 @@ export const useScenarioFlagsSelection = (prefix: string = "") => {
       });
       return result;
     },
+    shallow: false,
   });
 
   const getFlagState = (categoryKey: string): FlagState => {

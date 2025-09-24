@@ -57,7 +57,7 @@ export const renderMultiLinePlot = ({
 
   renderGridLines(g, scales.yScale, dimensions.INNER_WIDTH);
   renderAxes({
-    g,
+    groupSelection: g,
     scales,
     height: dimensions.INNER_HEIGHT,
     width: dimensions.INNER_WIDTH,

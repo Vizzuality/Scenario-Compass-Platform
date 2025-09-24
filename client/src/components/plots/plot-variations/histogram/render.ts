@@ -73,7 +73,7 @@ export const renderHistogramPlot = ({ svg, metaIndicators, dimensions }: Props):
 
   renderGridLines(g, scales.yScale, INNER_WIDTH);
   renderAxes({
-    g,
+    groupSelection: g,
     scales,
     height: INNER_HEIGHT,
     width: INNER_WIDTH,

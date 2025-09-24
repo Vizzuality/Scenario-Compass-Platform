@@ -13,11 +13,9 @@ import { createTooltipManager } from "@/components/plots/utils/tooltip-manager";
 import { createHoverElements } from "@/components/plots/utils/create-hover-elements";
 import { ShortRun, ShortRunReturn } from "@/components/plots/plot-variations/custom/kyoto/types";
 import { ShortDataPoint } from "@/hooks/runs/pipeline/types";
-import {
-  createVariableColorMap,
-  getColorsForVariables,
-} from "@/components/plots/plot-variations/stacked-area/utils";
 import { CATEGORY_CONFIG } from "@/lib/config/reasons-of-concern/category-config";
+import { getColorsForVariables } from "@/components/plots/utils/utils";
+import { LIGHT_GREY, OTHER_GASES } from "@/components/plots/utils/constants";
 
 interface Props {
   svg: SVGSelection;
@@ -45,16 +43,21 @@ export const renderKyotoPlot = ({ svg, data, dimensions }: Props): void => {
   const g = createMainGroup(svg, dimensions);
   const tooltipManager = createTooltipManager({ svg, dimensions });
 
-  // Separate area and line runs
   const areaRuns = shortRuns.filter((run) => !run.isLine);
   const lineRuns = shortRuns.filter((run) => run.isLine);
 
   const areaVariableNames = getOrderedVariableNames(areaRuns);
 
-  // Only get colors for area variables
-  const colors = getColorsForVariables(flagCategory, areaVariableNames.length);
+  const nonOtherGasVariables = areaVariableNames.filter((name) => name !== "Other Gases");
+  const colors = getColorsForVariables(flagCategory, nonOtherGasVariables.length);
+
+  const variableColorMap = new Map<string, string>();
+  nonOtherGasVariables.forEach((variableName, index) => {
+    variableColorMap.set(variableName, colors[index]);
+  });
+  variableColorMap.set(OTHER_GASES, LIGHT_GREY);
+
   const lineColor = CATEGORY_CONFIG[flagCategory].palette;
-  const variableColorMap = createVariableColorMap(areaVariableNames, colors);
 
   const allYears = [
     ...new Set(shortRuns.flatMap((run) => run.orderedPoints.map((p) => p.year))),
@@ -99,7 +102,7 @@ export const renderKyotoPlot = ({ svg, data, dimensions }: Props): void => {
 
   renderGridLines(g, yScale, dimensions.INNER_WIDTH);
   renderAxes({
-    g,
+    groupSelection: g,
     scales: { xScale, yScale },
     height: dimensions.INNER_HEIGHT,
     width: dimensions.INNER_WIDTH,
@@ -224,35 +227,27 @@ export const renderKyotoPlot = ({ svg, data, dimensions }: Props): void => {
           isLine: true,
         }));
 
-      const areaTotal = cumulative;
       const allTooltipData = [...areaTooltipData, ...lineTooltipData];
 
       const content = allTooltipData
         .sort((a, b) => Number(b.isLine) - Number(a.isLine))
         .map((d) => {
-          const lineStyle = d.isLine
-            ? `border: 2px solid ${d.color}; background-color: transparent;`
-            : `background-color: ${d.color}; border: 1px solid #666;`;
-          const shape = d.isLine ? "" : "border-radius: 100px;";
+          const legendElement = d.isLine
+            ? `<div style="width: 10px; height: 3px; background-color: ${d.color}; flex-shrink: 0;"></div>`
+            : `<div style="width: 10px; height: 10px; background-color: ${d.color}; border: 1px solid #666; border-radius: 100px; flex-shrink: 0;"></div>`;
 
           return `<div class="flex items-center gap-2 mb-1">
-            <div style="width: 10px; height: 10px; ${lineStyle} ${shape} flex-shrink: 0;"></div>
-            <div class="text-black">
-              <strong>${d.key}:</strong> ${formatNumber(d.value)}${d.isLine ? " (line)" : ""}
-            </div>
-          </div>`;
+      ${legendElement}
+      <div class="text-black">
+        <strong>${d.key}:</strong> ${formatNumber(d.value)}
+      </div>
+    </div>`;
         })
         .join("");
-
-      const totalSection =
-        areaTotal > 0
-          ? `<div class="mb-2"><strong>Area total:</strong> ${formatNumber(areaTotal)}</div>`
-          : "";
 
       tooltipManager?.update(
         `<div class="text-black">
           <div class="mb-1"><strong>Year:</strong> ${dataPoint.year}</div>
-          ${totalSection}
           <div>${content}</div>
         </div>`,
         x,

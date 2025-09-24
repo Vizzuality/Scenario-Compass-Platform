@@ -11,8 +11,12 @@ import { PlotDimensions } from "@/components/plots/utils/dimensions";
 import * as d3 from "d3";
 import { ExtendedRun } from "@/hooks/runs/pipeline/types";
 import { createTooltipManager } from "@/components/plots/utils/tooltip-manager";
-import { CATEGORY_CONFIG, CategoryKey } from "@/lib/config/reasons-of-concern/category-config";
 import { createHoverElements } from "@/components/plots/utils/create-hover-elements";
+import {
+  createVariableColorMap,
+  getColorsForVariables,
+  getOrderedVariableNames,
+} from "@/components/plots/utils/utils";
 
 interface Props {
   svg: SVGSelection;
@@ -25,39 +29,6 @@ interface StackedDataPoint {
   year: number;
   [key: string]: number;
 }
-
-export const getOrderedVariableNames = (runs: ExtendedRun[]): string[] => {
-  const variableNames = [...new Set(runs.map((run) => run.variableName))];
-  return variableNames.sort((a, b) => a.localeCompare(b));
-};
-
-export const getColorsForVariables = (
-  flagCategory: CategoryKey,
-  variableCount: number,
-): string[] => {
-  const categoryKey = flagCategory as keyof typeof CATEGORY_CONFIG;
-  const palette = CATEGORY_CONFIG[categoryKey].palette;
-
-  const colors = [];
-
-  const startIndex = Math.max(0, palette.length - variableCount);
-  for (let i = 0; i < variableCount; i++) {
-    colors.push(palette[startIndex + i]);
-  }
-
-  return colors.reverse();
-};
-
-export const createVariableColorMap = (
-  variableNames: string[],
-  colors: string[],
-): Map<string, string> => {
-  const colorMap = new Map<string, string>();
-  variableNames.forEach((variable, index) => {
-    colorMap.set(variable, colors[index]);
-  });
-  return colorMap;
-};
 
 export const renderStackedAreaPlot = ({ svg, runs, dimensions, variablesMap }: Props): void => {
   clearSVG(svg);
@@ -110,7 +81,7 @@ export const renderStackedAreaPlot = ({ svg, runs, dimensions, variablesMap }: P
 
   renderGridLines(g, yScale, dimensions.INNER_WIDTH);
   renderAxes({
-    g,
+    groupSelection: g,
     scales: { xScale, yScale },
     height: dimensions.INNER_HEIGHT,
     width: dimensions.INNER_WIDTH,

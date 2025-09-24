@@ -2,17 +2,20 @@
 
 import React, { useEffect } from "react";
 import * as d3 from "d3";
-import { renderAreaPlot } from "@/components/plots/plot-variations/area-plot/utils";
+import { renderAreaPlot } from "@/components/plots/plot-variations/area-plot/render";
 import { usePlotContainer } from "@/hooks/plots/use-plot-container";
 import { ExtendedRun, RunPipelineReturn } from "@/hooks/runs/pipeline/types";
 import { PlotStateHandler } from "@/components/plots/components";
+import { useScenarioFlagsSelection } from "@/hooks/nuqs/use-scenario-flags-selection";
 
 interface AreaChartProps {
   runs: ExtendedRun[];
+  prefix?: string;
 }
 
-const BasePlot: React.FC<AreaChartProps> = ({ runs }) => {
+const BasePlot: React.FC<AreaChartProps> = ({ runs, prefix }) => {
   const { svgRef, dimensions, plotContainer } = usePlotContainer();
+  const { selectedFlags, hiddenFlags } = useScenarioFlagsSelection(prefix);
 
   useEffect(() => {
     if (!runs.length || !svgRef.current || dimensions.WIDTH === 0) return;
@@ -21,8 +24,10 @@ const BasePlot: React.FC<AreaChartProps> = ({ runs }) => {
       svg,
       runs,
       dimensions,
+      selectedFlags,
+      hiddenFlags,
     });
-  }, [dimensions, runs, svgRef]);
+  }, [dimensions, hiddenFlags, runs, selectedFlags, svgRef]);
 
   return plotContainer;
 };

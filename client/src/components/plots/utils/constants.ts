@@ -9,6 +9,8 @@ export const DOT_STROKE_WIDTH = 2;
 export const DOT_HOVER_RADIUS = DOT_RADIUS + DOT_STROKE_WIDTH;
 export const DOT_HOVER_STROKE = 3;
 export const AREA_BACKGROUND_COLOR = "rgba(68, 64, 60, 0.10)";
+export const STROKE_WIDTH = 1.37;
+export const OTHER_GASES = "Other Gases";
 
 export const PLOT_CONFIG = {
   NORMAL_STROKE_WIDTH: 2.5,

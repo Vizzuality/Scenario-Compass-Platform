@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import * as d3 from "d3";
-import { renderDotPlot } from "@/components/plots/plot-variations/dot-plot/utils";
+import { renderDotPlot } from "@/components/plots/plot-variations/dot-plot/render";
 import { useScenarioFlagsSelection } from "@/hooks/nuqs/use-scenario-flags-selection";
 import { usePlotContainer } from "@/hooks/plots/use-plot-container";
 import { ExtendedRun, RunPipelineReturn } from "@/hooks/runs/pipeline/types";

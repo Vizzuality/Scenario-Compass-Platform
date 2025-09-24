@@ -1,9 +1,7 @@
 import { z } from "zod";
 import { GEOGRAPHY_VALUES } from "@/lib/config/filters/geography-filter-config";
 
-export const YEAR_OPTIONS = [
-  2000, 2010, 2020, 2025, 2030, 2035, 2040, 2045, 2050, 2060, 2070, 2080, 2090, 2100,
-];
+export const YEAR_OPTIONS = [2000, 2010, 2020, 2030, 2040, 2050, 2060, 2070, 2080, 2090, 2100];
 export const URL_VALUES_FILTER_SEPARATOR = ":";
 
 export const UNSET_FILTER_VALUE = "unset";

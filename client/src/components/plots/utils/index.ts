@@ -13,6 +13,7 @@ import {
   getCategoryAbbrev,
 } from "@/lib/config/reasons-of-concern/category-config";
 import { ExtendedRun, ShortDataPoint } from "@/hooks/runs/pipeline/types";
+import { calculateOptimalTicksWithNiceYears } from "@/components/plots/utils/ticks-computation-utils";
 
 export type SVGSelection = d3.Selection<SVGSVGElement, unknown, null, undefined>;
 export type GroupSelection = d3.Selection<SVGGElement, unknown, null, undefined>;
@@ -60,6 +61,7 @@ export const aggregateDataByYear = (dataPoints: ShortDataPoint[]): AggregatedDat
       min: d3.min(valuesArray)!,
       max: d3.max(valuesArray)!,
       average: d3.mean(valuesArray)!,
+      median: d3.median(valuesArray)!,
     });
   });
 
@@ -83,9 +85,7 @@ export const calculateDomain = (points: ShortDataPoint[]): PlotDomain => {
 
 export const createScales = (domain: PlotDomain, width: number, height: number): PlotScales => {
   const xScale = d3.scaleLinear().domain(domain.xDomain).range([0, width]);
-
   const yScale = d3.scaleLinear().domain(domain.yDomain).range([height, 0]);
-
   return { xScale, yScale };
 };
 
@@ -108,40 +108,8 @@ export const renderGridLines = (
     .attr("stroke-width", 1);
 };
 
-const calculateOptimalTicksWithNiceYears = (years: number[], availableWidth: number): number[] => {
-  const MIN_TICK_SPACING = 50;
-  const maxTicks = Math.floor(availableWidth / MIN_TICK_SPACING);
-
-  if (years.length <= 2) return years;
-  if (years.length <= maxTicks) return years;
-
-  const firstYear = years[0];
-  const lastYear = years[years.length - 1];
-  const middleTicks = maxTicks - 2;
-
-  if (middleTicks <= 0) {
-    return [firstYear, lastYear];
-  }
-
-  // Try to find nice intervals (multiples of 5, 10, etc.)
-  const middleYears = years.slice(1, -1);
-  const intervals = [5, 10, 20, 25];
-
-  for (const interval of intervals) {
-    const niceYears = middleYears.filter((year) => year % interval === 0);
-    if (niceYears.length > 0 && niceYears.length <= middleTicks) {
-      return [firstYear, ...niceYears, lastYear];
-    }
-  }
-
-  const step = Math.ceil(middleYears.length / middleTicks);
-  const selectedMiddleYears = middleYears.filter((_, index) => index % step === 0);
-
-  return [firstYear, ...selectedMiddleYears, lastYear];
-};
-
 export const renderAxes = ({
-  g,
+  groupSelection,
   scales,
   height,
   width,
@@ -149,7 +117,7 @@ export const renderAxes = ({
   xTickValues,
   unit,
 }: {
-  g: GroupSelection;
+  groupSelection: GroupSelection;
   scales: PlotScales;
   height: number;
   width?: number;
@@ -164,7 +132,7 @@ export const renderAxes = ({
     ? d3.axisBottom(scales.xScale).tickValues(optimizedXTickValues).tickFormat(d3.format("d"))
     : d3.axisBottom(scales.xScale).tickFormat(d3.format("d"));
 
-  const xAxis = g
+  const xAxis = groupSelection
     .append("g")
     .attr("class", "x-axis")
     .attr("transform", `translate(0,${height})`)
@@ -178,14 +146,15 @@ export const renderAxes = ({
     yAxisGenerator.ticks(yTickCount);
   }
 
-  const yAxis = g.append("g").attr("class", "y-axis").call(yAxisGenerator);
+  const yAxis = groupSelection.append("g").attr("class", "y-axis").call(yAxisGenerator);
 
   [xAxis, yAxis].forEach((axis) => {
     axis.selectAll("path, line").attr("stroke", GRID_STROKE_COLOR);
     axis.selectAll("text").style("font-size", FONT_SIZE).style("fill", GRID_TEXT_COLOR);
   });
 
-  g.append("text")
+  groupSelection
+    .append("text")
     .attr("class", "y-axis-label")
     .attr("transform", "rotate(-90)")
     .attr("y", -45)
@@ -273,5 +242,20 @@ export const filterVisibleRuns = (runs: ExtendedRun[], hiddenFlags: string[]): E
     if (!run.flagCategory) return true;
     const abbrev = getCategoryAbbrev(run.flagCategory);
     return !abbrev || !hiddenFlags.includes(abbrev);
+  });
+};
+
+export const filterDecadePoints = (extenedRuns: ExtendedRun[]) => {
+  return extenedRuns.map((run) => {
+    return {
+      ...run,
+      orderedPoints: run.orderedPoints.filter((point) => {
+        if (point.year > 2050) {
+          return point.year % 10 === 0;
+        } else {
+          return point.year % 5 === 0;
+        }
+      }),
+    };
   });
 };
