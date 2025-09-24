@@ -4,8 +4,6 @@ import { Label } from "@/components/ui/label";
 import { RowFilterProps } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
 import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
 import TooltipInfo from "@/containers/scenario-dashboard/components/tooltip-info";
-import { Button } from "@/components/ui/button";
-import { Trash2Icon } from "lucide-react";
 import { useId } from "react";
 import SliderSelect from "@/containers/scenario-dashboard/components/slider-select";
 import {
@@ -21,9 +19,9 @@ const item = {
   label: INCREASE_IN_GLOBAL_FOREST_AREA_LABEL,
 };
 
-export const LandFilter = () => {
+const useLandFilter = (prefix?: string) => {
   const id = useId();
-  const { land, setLand } = useScenarioDashboardUrlParams();
+  const { land, setLand } = useScenarioDashboardUrlParams(prefix);
 
   const handleValueChange = (selectedKey: string | null, rangeString: string) => {
     if (selectedKey) {
@@ -32,6 +30,12 @@ export const LandFilter = () => {
       setLand(null);
     }
   };
+
+  return { id, land, handleValueChange };
+};
+
+export const LandFilter = () => {
+  const { id, land, handleValueChange } = useLandFilter();
 
   return (
     <div className="flex w-full flex-col items-start gap-2">
@@ -55,17 +59,8 @@ export const LandFilter = () => {
   );
 };
 
-export const LandFilterRow = ({ prefix, onDelete }: RowFilterProps) => {
-  const { land, setLand } = useScenarioDashboardUrlParams(prefix);
-  const id = useId();
-
-  const handleValueChange = (selectedKey: string | null, rangeString: string) => {
-    if (selectedKey) {
-      setLand([selectedKey, rangeString]);
-    } else {
-      setLand(null);
-    }
-  };
+export const LandFilterRow = ({ prefix }: RowFilterProps) => {
+  const { id, land, handleValueChange } = useLandFilter(prefix);
 
   return (
     <div className="flex w-full items-center justify-between gap-2">
@@ -85,11 +80,6 @@ export const LandFilterRow = ({ prefix, onDelete }: RowFilterProps) => {
           onApply={handleValueChange}
         />
       </div>
-      {onDelete && (
-        <Button variant="ghost" onClick={onDelete}>
-          <Trash2Icon size={16} />
-        </Button>
-      )}
     </div>
   );
 };

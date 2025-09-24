@@ -13,8 +13,6 @@ import {
 import { RowFilterProps } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
 import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
 import TooltipInfo from "@/containers/scenario-dashboard/components/tooltip-info";
-import { Button } from "@/components/ui/button";
-import { Trash2Icon } from "lucide-react";
 import {
   CLIMATE_CATEGORY_FILTER_CONFIG,
   YEAR_NET_ZERO_FILTER_CONFIG,
@@ -39,15 +37,42 @@ const getKey = (value: string) => {
   return isClimateCategory ? CLIMATE_CATEGORY_FILTER_CONFIG.name : YEAR_NET_ZERO_FILTER_CONFIG.name;
 };
 
-export const ClimateFilter = () => {
-  const { climate, setClimate } = useScenarioDashboardUrlParams();
-  const value = getCurrentValue(climate);
+const ClimateSelectContent = () => (
+  <SelectContent>
+    <SelectGroup>
+      <SelectLabel>{CLIMATE_CATEGORY_FILTER_CONFIG.name}</SelectLabel>
+      {CLIMATE_CATEGORY_FILTER_CONFIG.values.map((value) => (
+        <SelectItem key={value} value={value}>
+          {value}
+        </SelectItem>
+      ))}
+    </SelectGroup>
+    <SelectGroup>
+      <SelectLabel>{YEAR_NET_ZERO_FILTER_CONFIG.name}</SelectLabel>
+      {YEAR_NET_ZERO_FILTER_CONFIG.values.map((value) => (
+        <SelectItem key={value} value={value}>
+          {value}
+        </SelectItem>
+      ))}
+    </SelectGroup>
+  </SelectContent>
+);
+
+const useClimateFilter = (prefix?: string) => {
   const id = useId();
+  const { climate, setClimate } = useScenarioDashboardUrlParams(prefix);
+  const value = getCurrentValue(climate);
 
   const handleValueChange = (newValue: string) => {
     const key = getKey(newValue);
     setClimate([key, newValue]);
   };
+
+  return { id, climate, value, handleValueChange };
+};
+
+export const ClimateFilter = () => {
+  const { id, climate, value, handleValueChange } = useClimateFilter();
 
   return (
     <div className="flex w-full flex-col items-start gap-2">
@@ -61,38 +86,14 @@ export const ClimateFilter = () => {
         <SelectTrigger size="lg" className="w-full" id={id} theme="light">
           <SelectValue placeholder="Select option">{getDisplayText(climate)}</SelectValue>
         </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>{CLIMATE_CATEGORY_FILTER_CONFIG.name}</SelectLabel>
-            {CLIMATE_CATEGORY_FILTER_CONFIG.values.map((value) => (
-              <SelectItem key={value} value={value}>
-                {value}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-          <SelectGroup>
-            <SelectLabel>{YEAR_NET_ZERO_FILTER_CONFIG.name}</SelectLabel>
-            {YEAR_NET_ZERO_FILTER_CONFIG.values.map((value) => (
-              <SelectItem key={value} value={value}>
-                {value}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
+        <ClimateSelectContent />
       </Select>
     </div>
   );
 };
 
-export const ClimateFilterRow = ({ prefix, onDelete }: RowFilterProps) => {
-  const { climate, setClimate } = useScenarioDashboardUrlParams(prefix);
-  const value = getCurrentValue(climate);
-  const id = useId();
-
-  const handleValueChange = (newValue: string) => {
-    const key = getKey(newValue);
-    setClimate([key, newValue]);
-  };
+export const ClimateFilterRow = ({ prefix }: RowFilterProps) => {
+  const { id, climate, value, handleValueChange } = useClimateFilter(prefix);
 
   return (
     <div className="flex w-full items-center justify-between gap-2">
@@ -104,31 +105,9 @@ export const ClimateFilterRow = ({ prefix, onDelete }: RowFilterProps) => {
           <SelectTrigger size="lg" className="h-10 w-fit" id={id} theme="light">
             <SelectValue placeholder="Select option">{getDisplayText(climate)}</SelectValue>
           </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>{CLIMATE_CATEGORY_FILTER_CONFIG.name}</SelectLabel>
-              {CLIMATE_CATEGORY_FILTER_CONFIG.values.map((value) => (
-                <SelectItem key={value} value={value}>
-                  {value}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-            <SelectGroup>
-              <SelectLabel>{YEAR_NET_ZERO_FILTER_CONFIG.name}</SelectLabel>
-              {YEAR_NET_ZERO_FILTER_CONFIG.values.map((value) => (
-                <SelectItem key={value} value={value}>
-                  {value}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
+          <ClimateSelectContent />
         </Select>
       </div>
-      {onDelete && (
-        <Button variant="ghost" onClick={onDelete}>
-          <Trash2Icon size={16} />
-        </Button>
-      )}
     </div>
   );
 };

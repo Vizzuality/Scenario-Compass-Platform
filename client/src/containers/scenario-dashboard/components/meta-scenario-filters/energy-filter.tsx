@@ -4,8 +4,6 @@ import { Label } from "@/components/ui/label";
 import { RowFilterProps } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
 import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
 import TooltipInfo from "@/containers/scenario-dashboard/components/tooltip-info";
-import { Button } from "@/components/ui/button";
-import { Trash2Icon } from "lucide-react";
 import { useId } from "react";
 import SliderSelect from "@/containers/scenario-dashboard/components/slider-select";
 import { energyTypes } from "@/lib/config/filters/energy-filter-config";
@@ -18,9 +16,9 @@ const energyItems = energyTypes.map((energy) => ({
   label: energy.label,
 }));
 
-export const EnergyFilter = () => {
+const useEnergyFilter = (prefix?: string) => {
   const id = useId();
-  const { energy, setEnergy } = useScenarioDashboardUrlParams();
+  const { energy, setEnergy } = useScenarioDashboardUrlParams(prefix);
 
   const handleValueChange = (selectedKey: string | null, rangeString: string) => {
     if (selectedKey) {
@@ -29,6 +27,12 @@ export const EnergyFilter = () => {
       setEnergy(null);
     }
   };
+
+  return { id, energy, handleValueChange };
+};
+
+export const EnergyFilter = () => {
+  const { id, energy, handleValueChange } = useEnergyFilter();
 
   return (
     <div className="flex w-full flex-col items-start gap-2">
@@ -50,17 +54,8 @@ export const EnergyFilter = () => {
   );
 };
 
-export const EnergyFilterRow = ({ prefix, onDelete }: RowFilterProps) => {
-  const id = useId();
-  const { energy, setEnergy } = useScenarioDashboardUrlParams(prefix);
-
-  const handleValueChange = (selectedKey: string | null, rangeString: string) => {
-    if (selectedKey) {
-      setEnergy([selectedKey, rangeString]);
-    } else {
-      setEnergy(null);
-    }
-  };
+export const EnergyFilterRow = ({ prefix }: RowFilterProps) => {
+  const { id, energy, handleValueChange } = useEnergyFilter(prefix);
 
   return (
     <div className="flex w-full items-center justify-between gap-2">
@@ -78,11 +73,6 @@ export const EnergyFilterRow = ({ prefix, onDelete }: RowFilterProps) => {
           onApply={handleValueChange}
         />
       </div>
-      {onDelete && (
-        <Button variant="ghost" onClick={onDelete}>
-          <Trash2Icon size={16} />
-        </Button>
-      )}
     </div>
   );
 };
