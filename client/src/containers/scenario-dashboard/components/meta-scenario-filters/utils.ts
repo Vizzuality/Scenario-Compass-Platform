@@ -8,7 +8,6 @@ export interface MetaIndicator {
 
 export interface RowFilterProps {
   prefix?: string;
-  onDelete?: () => void;
 }
 
 /**
