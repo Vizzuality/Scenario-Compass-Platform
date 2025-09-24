@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import * as d3 from "d3";
 import { usePlotContainer } from "@/hooks/plots/use-plot-container";
-import { renderStackedAreaPlot } from "@/components/plots/plot-variations/stacked-area/utils";
+import { renderStackedAreaPlot } from "@/components/plots/plot-variations/stacked-area/render";
 import { ExtendedRun, RunPipelineReturn } from "@/hooks/runs/pipeline/types";
 import { PlotStateHandler } from "@/components/plots/components";
 

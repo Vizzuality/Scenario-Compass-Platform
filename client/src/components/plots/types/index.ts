@@ -21,12 +21,14 @@ interface DataPoint {
  * @property {number} min - The minimum value for the year.
  * @property {number} max - The maximum value for the year.
  * @property {number} average - The average value for the year.
+ * @property {number} median - The median value for the year
  */
 interface AggregatedDataPoint {
   year: number;
   min: number;
   max: number;
   average: number;
+  median: number;
 }
 
 /**

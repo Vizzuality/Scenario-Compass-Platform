@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import * as d3 from "d3";
 import { usePlotContainer } from "@/hooks/plots/use-plot-container";
 import { PlotStateHandler } from "@/components/plots/components";
-import { renderHistogramPlot } from "@/components/plots/plot-variations/histogram/utils";
+import { renderHistogramPlot } from "@/components/plots/plot-variations/histogram/render";
 import { MetaIndicator } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
 
 interface HistogramChartProps {

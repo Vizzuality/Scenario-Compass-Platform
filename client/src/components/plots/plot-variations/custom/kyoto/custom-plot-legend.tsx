@@ -1,5 +1,6 @@
-import { getColorsForVariables } from "@/components/plots/plot-variations/stacked-area/utils";
 import { CategoryKey } from "@/lib/config/reasons-of-concern/category-config";
+import { getColorsForVariables } from "@/components/plots/utils/utils";
+import { LIGHT_GREY, OTHER_GASES } from "@/components/plots/utils/constants";
 
 interface PlotWidgetProps {
   variables: string[];
@@ -8,12 +9,15 @@ interface PlotWidgetProps {
 
 export default function CustomPlotLegend({ flagCategory, variables }: PlotWidgetProps) {
   const orderedVariableNames = variables.sort();
-  const colors = getColorsForVariables(flagCategory, orderedVariableNames.length);
+
+  const nonOtherGasVariables = orderedVariableNames.filter((name) => name !== OTHER_GASES);
+  const colors = getColorsForVariables(flagCategory, nonOtherGasVariables.length);
 
   const variableColorMap = new Map<string, string>();
-  orderedVariableNames.forEach((variable, index) => {
+  nonOtherGasVariables.forEach((variable, index) => {
     variableColorMap.set(variable, colors[index]);
   });
+  variableColorMap.set(OTHER_GASES, LIGHT_GREY);
 
   return (
     <div className="flex flex-wrap gap-x-5 gap-y-2 pb-2">

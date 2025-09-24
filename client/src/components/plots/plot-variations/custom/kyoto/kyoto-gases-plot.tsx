@@ -7,16 +7,17 @@ import { ShortRun, ShortRunReturn } from "@/components/plots/plot-variations/cus
 import { getFinalCH4Points } from "@/components/plots/plot-variations/custom/kyoto/utils";
 import CustomPlotLegend from "@/components/plots/plot-variations/custom/kyoto/custom-plot-legend";
 import { usePlotContainer } from "@/hooks/plots/use-plot-container";
-import { renderKyotoPlot } from "@/components/plots/plot-variations/custom/kyoto/render-function";
+import { renderKyotoPlot } from "@/components/plots/plot-variations/custom/kyoto/render";
 import * as d3 from "d3";
 import { ExtendedRun, ShortDataPoint } from "@/hooks/runs/pipeline/types";
+import { OTHER_GASES } from "@/components/plots/utils/constants";
 
 interface Props {
   runId: number;
 }
 
 const GWP_CH4 = 25;
-const GWP_N2O_WITH_UNIT_CONVERSION = 0.298; // 298 × (1/1000) for kt to Mt
+const GWP_N2O_WITH_UNIT_CONVERSION = 0.298;
 
 /**
  * Converts greenhouse gases to common unit: Mt CO2 equivalent per year
@@ -66,13 +67,31 @@ export function KyotoGasesPlot({ runId }: Props) {
   const CH4_AFOLU_CO2eq = convertGasToMtCO2eq(CH4_AFOLU.runs, GWP_CH4);
   const CH4_ENERGY_CO2eq = convertGasToMtCO2eq(CH4_ENERGY.runs, GWP_CH4);
   const N2O_CO2eq = convertGasToMtCO2eq(N2O.runs, GWP_N2O_WITH_UNIT_CONVERSION);
-  const CO2_CO2eq = structuredClone(CO2.runs); // Already in correct units
+  const CO2_CO2eq = structuredClone(CO2.runs);
 
   // Combine CH4 sources
   const FINAL_CH4_CO2eq = getFinalCH4Points(
     CH4_ENERGY_CO2eq[0].orderedPoints,
     CH4_AFOLU_CO2eq[0].orderedPoints,
   );
+
+  // Calculate Other Gases (Kyoto - CO2 - CH4 - N2O)
+  const otherGasesPoints: ShortDataPoint[] = kyotoGases.runs[0].orderedPoints.map((kyotoPoint) => {
+    const co2Point = CO2_CO2eq[0].orderedPoints.find((p) => p.year === kyotoPoint.year);
+    const ch4Point = FINAL_CH4_CO2eq.find((p) => p.year === kyotoPoint.year);
+    const n2oPoint = N2O_CO2eq[0].orderedPoints.find((p) => p.year === kyotoPoint.year);
+
+    const co2Value = co2Point?.value || 0;
+    const ch4Value = ch4Point?.value || 0;
+    const n2oValue = n2oPoint?.value || 0;
+
+    const otherGasesValue = kyotoPoint.value - co2Value - ch4Value - n2oValue;
+
+    return {
+      year: kyotoPoint.year,
+      value: Math.max(0, otherGasesValue),
+    };
+  });
 
   const createShortRun = (
     variableName: string,
@@ -91,10 +110,11 @@ export function KyotoGasesPlot({ runId }: Props) {
       createShortRun("CO2", false, CO2_CO2eq[0].orderedPoints),
       createShortRun("CH4", false, FINAL_CH4_CO2eq),
       createShortRun("N2O", false, N2O_CO2eq[0].orderedPoints),
+      createShortRun(OTHER_GASES, false, otherGasesPoints),
     ],
   };
 
-  const variables = ["N2O", "CH4", "CO2"];
+  const variables = [OTHER_GASES, "N2O", "CH4", "CO2"];
 
   return (
     <div className="flex w-full flex-col justify-between rounded-md bg-white p-4 select-none">

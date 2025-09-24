@@ -79,8 +79,8 @@ export function useScenarioClearOperations(prefix: string = ""): ScenarioClearOp
   const clearAll = useCallback((): Promise<URLSearchParams> => {
     return setFilters({
       [params.year]: null,
-      [params.startYear]: YEAR_OPTIONS[3],
-      [params.endYear]: YEAR_OPTIONS[5],
+      [params.startYear]: YEAR_OPTIONS[1],
+      [params.endYear]: YEAR_OPTIONS[YEAR_OPTIONS.length - 1],
       [params.geography]: geographyConfig[0].value,
       [params.climate]: [],
       [params.energy]: [],
