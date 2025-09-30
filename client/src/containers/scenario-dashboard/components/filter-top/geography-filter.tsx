@@ -17,7 +17,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Label } from "@/components/ui/label";
 import { geographyConfig } from "@/lib/config/filters/geography-filter-config";
 import { filterGeography } from "@/containers/scenario-dashboard/utils";
-import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
+import { useBaseUrlParams } from "@/hooks/nuqs/url-params/base/use-base-url-params";
 
 const geographyFilterVariants = cva("flex flex-1 flex-col gap-2", {
   variants: {
@@ -34,7 +34,7 @@ const geographyFilterVariants = cva("flex flex-1 flex-col gap-2", {
 type Props = VariantProps<typeof geographyFilterVariants>;
 
 export default function GeographyFilter({ variant }: Props) {
-  const { geography, setGeography } = useScenarioDashboardUrlParams();
+  const { geography, setGeography } = useBaseUrlParams();
   const [open, setOpen] = React.useState(false);
 
   const selectGeography = (currentValue: string) => {

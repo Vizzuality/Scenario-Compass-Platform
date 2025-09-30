@@ -2,13 +2,13 @@
 
 import { ArrowLeftIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
 import { geographyConfig } from "@/lib/config/filters/geography-filter-config";
 import { Button } from "@/components/ui/button";
+import { useBaseUrlParams } from "@/hooks/nuqs/url-params/base/use-base-url-params";
 
 export default function CompareScenariosBackButton() {
   const router = useRouter();
-  const { year, startYear, endYear, geography } = useScenarioDashboardUrlParams();
+  const { year, startYear, endYear, geography } = useBaseUrlParams();
   const geoName = geographyConfig.find((option) => option.value === geography);
 
   const handleGoBack = () => {

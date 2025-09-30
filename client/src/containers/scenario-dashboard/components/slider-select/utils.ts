@@ -1,26 +1,16 @@
 import { URL_VALUES_FILTER_SEPARATOR } from "@/containers/scenario-dashboard/utils/url-store";
 
-export const parseCurrentValue = (
-  currentValue: string[] | null,
-  defaultSelected: string | null,
-  defaultRange: [number, number],
-): {
-  selectedId: string | null;
-  range: [number, number];
-} => {
-  if (currentValue && currentValue.length === 2) {
-    const [selectedId, rangeString] = currentValue;
-    const rangeParts = rangeString.split(URL_VALUES_FILTER_SEPARATOR);
+export const parseRange = (rangeString: string | null): [number, number] | null => {
+  if (!rangeString?.trim()) return null;
 
-    if (rangeParts.length === 2) {
-      const min = parseInt(rangeParts[0], 10);
-      const max = parseInt(rangeParts[1], 10);
+  const [minStr, maxStr, ...rest] = rangeString.split(URL_VALUES_FILTER_SEPARATOR);
 
-      if (!isNaN(min) && !isNaN(max)) {
-        return { selectedId, range: [min, max] };
-      }
-    }
-  }
+  if (!minStr || !maxStr || rest.length > 0) return null;
 
-  return { selectedId: defaultSelected, range: defaultRange };
+  const min = parseInt(minStr.trim(), 10);
+  const max = parseInt(maxStr.trim(), 10);
+
+  if (isNaN(min) || isNaN(max) || min > max) return null;
+
+  return [min, max];
 };

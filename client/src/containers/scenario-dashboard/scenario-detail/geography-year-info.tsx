@@ -1,8 +1,8 @@
-import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
 import GeographyFilter from "@/containers/scenario-dashboard/components/filter-top/geography-filter";
+import { useBaseUrlParams } from "@/hooks/nuqs/url-params/base/use-base-url-params";
 
 export default function GeographyYearInfo() {
-  const { year, startYear, endYear } = useScenarioDashboardUrlParams();
+  const { year, startYear, endYear } = useBaseUrlParams();
 
   return (
     <div className="flex flex-col gap-4">

@@ -2,13 +2,15 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
+import { useBaseUrlParams } from "@/hooks/nuqs/url-params/base/use-base-url-params";
+import { useFilterUrlParams } from "@/hooks/nuqs/url-params/filter/use-filter-url-params";
 
 export default function ClearFilterButton() {
-  const { clearAll } = useScenarioDashboardUrlParams();
+  const { clearAll: clearAllBase } = useBaseUrlParams();
+  const { clearAll: clearAllFilter } = useFilterUrlParams();
 
   const handleClearAll = () => {
-    clearAll().then(() => {
+    Promise.all([clearAllBase(), clearAllFilter()]).then(() => {
       window.scrollTo({
         top: 0,
         behavior: "smooth",

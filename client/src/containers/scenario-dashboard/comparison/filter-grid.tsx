@@ -1,8 +1,8 @@
-import { ClimateFilterRow } from "@/containers/scenario-dashboard/components/meta-scenario-filters/climate-filter";
 import { EnergyFilterRow } from "@/containers/scenario-dashboard/components/meta-scenario-filters/energy-filter";
 import { LandFilterRow } from "@/containers/scenario-dashboard/components/meta-scenario-filters/land-filter";
 import { cn } from "@/lib/utils";
 import React from "react";
+import { ClimateFilterRow } from "@/containers/scenario-dashboard/components/meta-scenario-filters/climate-filter/climate-filter-row";
 
 const filterComponents = [ClimateFilterRow, EnergyFilterRow, LandFilterRow];
 

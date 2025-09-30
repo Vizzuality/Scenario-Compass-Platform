@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { extractDataPoints } from "@/hooks/runs/filtering/utils";
-import { kyotoDataSet } from "@/tests/filtering/utils";
+import { kyotoDataSet } from "@/tests/test-utils/utils";
 
 describe("extractDataPoints", () => {
   it("should return empty array when data is undefined", () => {

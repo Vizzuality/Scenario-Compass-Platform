@@ -1,9 +1,8 @@
-import { generateExtendedRuns } from "@/hooks/runs/utils/utils";
+import { generateExtendedRuns } from "@/hooks/runs/utils/generate-extended-runs";
 import { getMetaPoints } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
 import { DataFrame } from "@iiasa/ixmp4-ts";
 import { useQueries } from "@tanstack/react-query";
 import { extractDataPoints, getDataPointsFilter } from "@/hooks/runs/filtering/utils";
-import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
 import queryKeys from "@/lib/query-keys";
 import {
   DataPointsQueriesReturn,
@@ -13,6 +12,8 @@ import {
 import useComputeEnergyShare from "@/hooks/runs/filtering/use-compute-energy-share";
 import { filterRunsByMetaIndicators } from "@/hooks/runs/utils";
 import useComputeLandUse from "@/hooks/runs/filtering/use-compute-land-use";
+import { useBaseUrlParams } from "@/hooks/nuqs/url-params/base/use-base-url-params";
+import { useFilterUrlParams } from "@/hooks/nuqs/url-params/filter/use-filter-url-params";
 
 export default function useSyncRunsPipeline({
   prefix,
@@ -23,8 +24,16 @@ export default function useSyncRunsPipeline({
   runId?: number;
   prefix?: string;
 }): RunPipelineReturn {
-  const { year, endYear, startYear, geography, climate, energy, land, advanced } =
-    useScenarioDashboardUrlParams(prefix);
+  const { year, endYear, startYear, geography } = useBaseUrlParams(prefix);
+  const {
+    climateCategory,
+    yearNetZero,
+    carbonRemoval,
+    renewablesShare,
+    biomassShare,
+    gfaIncrease,
+    fossilShare,
+  } = useFilterUrlParams(prefix);
 
   const dataPointQueries: DataPointsQueriesReturn = useQueries({
     queries: variablesNames.map((variable) => {
@@ -101,10 +110,13 @@ export default function useSyncRunsPipeline({
 
       return filterRunsByMetaIndicators({
         runs: extendedRuns,
-        climate,
-        energy,
-        land,
-        advanced,
+        climateCategory,
+        yearNetZero,
+        carbonRemoval,
+        renewablesShare,
+        biomassShare,
+        gfaIncrease,
+        fossilShare,
       });
     });
 

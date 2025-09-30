@@ -1,24 +1,57 @@
+const CLIMATE_CATEGORY_SHORT_NAMES = [
+  "GW1a",
+  "GW1b",
+  "GW2",
+  "GW3",
+  "GW4",
+  "GW5",
+  "GW6",
+  "GW7",
+  "GW8",
+];
+
+const CLIMATE_CATEGORY_LONG_NAMES = [
+  "Below 1.5°C with no OS",
+  "Below 1.5°C with low OS",
+  "Below 1.5°C with high OS",
+  "Likely below 2°C",
+  "Below 2°C",
+  "Below 2.5°C",
+  "Below 3.0°C",
+  "Below 4.0°C",
+  "Above 4.0°C",
+];
+
 export const CLIMATE_CATEGORY_FILTER_CONFIG = {
   name: "Climate Category",
-  values: [
-    "C1a: Below 1.5°C with no OS",
-    "C1b: Below 1.5°C with low OS",
-    "C2: Below 1.5°C with high OS",
-    "C3: Likely below 2°C",
-    "C4: Below 2°C",
-    "C5: Below 2.5°C",
-    "C6: Below 3.0°C",
-    "C7: Below 4.0°C",
-    "C8: Above 4.0°C",
-  ],
+  mappings: CLIMATE_CATEGORY_SHORT_NAMES.map((shortName, index) => ({
+    value: shortName,
+    label: CLIMATE_CATEGORY_LONG_NAMES[index],
+  })),
 };
+
+const YEAR_NET_ZERO_VALUES = [
+  "2010",
+  "2020",
+  "2030",
+  "2040",
+  "2050",
+  "2060",
+  "2070",
+  "2080",
+  "2090",
+  "2100",
+];
 
 export const YEAR_NET_ZERO_FILTER_CONFIG = {
   name: "Year of global net-zero",
-  values: ["2010", "2020", "2030", "2040", "2050", "2060", "2070", "2080", "2090", "2100"],
+  mappings: YEAR_NET_ZERO_VALUES.map((year) => ({
+    value: year,
+    label: year,
+  })),
 };
 
-export const CLIMATE_CATEGORY_META_INDICATOR_KEY = "Climate Assessment|Category [Name]";
+export const CLIMATE_CATEGORY_META_INDICATOR_KEY = "Climate Category|SCI 2025 [Name]";
 
 export const YEAR_NET_ZERO_META_INDICATOR_KEY = "Emissions Diagnostics|Year of Net Zero|CO2";
 
