@@ -1,48 +1,63 @@
 import { ExtendedRun } from "@/hooks/runs/pipeline/types";
-import {
-  CLIMATE_CATEGORY_FILTER_CONFIG,
-  YEAR_NET_ZERO_FILTER_CONFIG,
-  YEAR_NET_ZERO_META_INDICATOR_KEY,
-} from "@/lib/config/filters/climate-filter-config";
+import { YEAR_NET_ZERO_META_INDICATOR_KEY } from "@/lib/config/filters/climate-filter-config";
 import { URL_VALUES_FILTER_SEPARATOR } from "@/containers/scenario-dashboard/utils/url-store";
+import { INCREASE_IN_GLOBAL_FOREST_AREA_KEY } from "@/lib/config/filters/land-filter-config";
+import { CARBON_REMOVAL_KEY } from "@/lib/config/filters/advanced-filters-config";
+import {
+  BIOMASS_SHARE_2050,
+  FOSSIL_SHARE_2050,
+  RENEWABLES_SHARE_2050,
+} from "@/lib/config/filters/energy-filter-config";
 
 interface FilterRunsByMetaIndicatorsParams {
   runs: ExtendedRun[];
-  climate: string[] | null;
-  energy: string[] | null;
-  land: string[] | null;
-  advanced: string[] | null;
+  climateCategory: string[] | null;
+  yearNetZero: string[] | null;
+  [BIOMASS_SHARE_2050]: string | null;
+  [FOSSIL_SHARE_2050]: string | null;
+  [RENEWABLES_SHARE_2050]: string | null;
+  [INCREASE_IN_GLOBAL_FOREST_AREA_KEY]: string | null;
+  [CARBON_REMOVAL_KEY]: string | null;
 }
 
-export function matchesClimateFilter(run: ExtendedRun, climate: string[] | null): boolean {
-  if (!climate || climate.length < 2) return true;
+export function matchesClimateCategoryFilter(
+  run: ExtendedRun,
+  climateCategory: string[] | null,
+): boolean {
+  if (!climateCategory || climateCategory.length === 0) return true;
   if (!run.metaIndicators?.length) return false;
 
-  const [key, value] = climate;
-
-  if (key === CLIMATE_CATEGORY_FILTER_CONFIG.name) {
-    return run.metaIndicators.some((mp) => mp.value === value);
-  }
-  if (key === YEAR_NET_ZERO_FILTER_CONFIG.name) {
-    return run.metaIndicators.some(
-      (mp) => mp.key === YEAR_NET_ZERO_META_INDICATOR_KEY && mp.value === value,
-    );
-  }
-
-  return run.metaIndicators.some((mp) => mp.key === key && mp.value === value);
+  return climateCategory.some((categoryValue) =>
+    run.metaIndicators.some((mp) => mp.value === categoryValue),
+  );
 }
 
-export function matchesSliderValue(run: ExtendedRun, energy: string[] | null): boolean {
-  if (!energy || energy.length < 2) return true;
+export function matchesYearNetZeroFilter(run: ExtendedRun, yearNetZero: string[] | null): boolean {
+  if (!yearNetZero || yearNetZero.length === 0) return true;
   if (!run.metaIndicators?.length) return false;
 
-  const [key, value] = energy;
-  const [min, max] = value.split(URL_VALUES_FILTER_SEPARATOR).map(Number);
+  return yearNetZero.some((year) =>
+    run.metaIndicators.some(
+      (mp) => mp.key === YEAR_NET_ZERO_META_INDICATOR_KEY && mp.value === year,
+    ),
+  );
+}
+
+export function matchesSliderFilter(
+  run: ExtendedRun,
+  filterKey: string,
+  filterValues: string | null,
+): boolean {
+  if (!filterValues) return true;
+
+  if (!run.metaIndicators?.length) return false;
+
+  const [min, max] = filterValues.split(URL_VALUES_FILTER_SEPARATOR).map(Number);
 
   if (isNaN(min) || isNaN(max)) return false;
 
   return run.metaIndicators.some((mp) => {
-    if (mp.key !== key) return false;
+    if (mp.key !== filterKey) return false;
 
     const metaValue = Number(mp.value);
     if (isNaN(metaValue)) return false;
@@ -53,19 +68,25 @@ export function matchesSliderValue(run: ExtendedRun, energy: string[] | null): b
 
 export function filterRunsByMetaIndicators({
   runs,
-  climate,
-  energy,
-  land,
-  advanced,
+  climateCategory,
+  yearNetZero,
+  renewablesShare,
+  gfaIncrease,
+  carbonRemoval,
+  biomassShare,
+  fossilShare,
 }: FilterRunsByMetaIndicatorsParams): ExtendedRun[] {
   if (!runs?.length) return [];
 
   return runs.filter((run) => {
     return (
-      matchesClimateFilter(run, climate) &&
-      matchesSliderValue(run, energy) &&
-      matchesSliderValue(run, land) &&
-      matchesSliderValue(run, advanced)
+      matchesClimateCategoryFilter(run, climateCategory) &&
+      matchesYearNetZeroFilter(run, yearNetZero) &&
+      matchesSliderFilter(run, RENEWABLES_SHARE_2050, renewablesShare) &&
+      matchesSliderFilter(run, INCREASE_IN_GLOBAL_FOREST_AREA_KEY, gfaIncrease) &&
+      matchesSliderFilter(run, BIOMASS_SHARE_2050, biomassShare) &&
+      matchesSliderFilter(run, FOSSIL_SHARE_2050, fossilShare) &&
+      matchesSliderFilter(run, CARBON_REMOVAL_KEY, carbonRemoval)
     );
   });
 }

@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { YEAR_OPTIONS } from "@/containers/scenario-dashboard/utils/url-store";
-import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
+import { useBaseUrlParams } from "@/hooks/nuqs/url-params/base/use-base-url-params";
 
 type FilterType = "start" | "end";
 
@@ -44,7 +44,7 @@ const SingleYearSelect = ({
 );
 
 export default function YearIntervalSelectionFilter() {
-  const { startYear, endYear, setStartYear, setEndYear } = useScenarioDashboardUrlParams();
+  const { startYear, endYear, setStartYear, setEndYear } = useBaseUrlParams();
 
   const getFilteredYears = (filterType: FilterType) => {
     if (filterType === "end" && startYear) {

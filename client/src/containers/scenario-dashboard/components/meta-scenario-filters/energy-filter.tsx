@@ -2,37 +2,75 @@
 
 import { Label } from "@/components/ui/label";
 import { RowFilterProps } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
-import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
 import TooltipInfo from "@/containers/scenario-dashboard/components/tooltip-info";
 import { useId } from "react";
-import SliderSelect from "@/containers/scenario-dashboard/components/slider-select";
-import { energyTypes } from "@/lib/config/filters/energy-filter-config";
+import SliderSelect, {
+  ChangeStateAction,
+  SliderSelectItem,
+} from "@/containers/scenario-dashboard/components/slider-select";
+import {
+  BIOMASS_SHARE_2050,
+  FOSSIL_SHARE_2050,
+  RENEWABLES_SHARE_2050,
+} from "@/lib/config/filters/energy-filter-config";
+import { useFilterUrlParams } from "@/hooks/nuqs/url-params/filter/use-filter-url-params";
+import { URL_VALUES_FILTER_SEPARATOR } from "@/containers/scenario-dashboard/utils/url-store";
+import { parseRange } from "@/containers/scenario-dashboard/components/slider-select/utils";
 
 const tooltipInfo =
   "Energy refers to the sources and types of energy used in scenarios, such as renewable energy, fossil fuels, or nuclear power. This filter allows you to categorize scenarios based on their energy profiles.";
 
-const energyItems = energyTypes.map((energy) => ({
-  id: energy.key,
-  label: energy.label,
-}));
-
 const useEnergyFilter = (prefix?: string) => {
   const id = useId();
-  const { energy, setEnergy } = useScenarioDashboardUrlParams(prefix);
+  const {
+    renewablesShare,
+    fossilShare,
+    biomassShare,
+    setFossilShare,
+    setBiomassShare,
+    setRenewablesShare,
+  } = useFilterUrlParams(prefix);
 
-  const handleValueChange = (selectedKey: string | null, rangeString: string) => {
-    if (selectedKey) {
-      setEnergy([selectedKey, rangeString]);
-    } else {
-      setEnergy(null);
-    }
+  const energyItems: Array<SliderSelectItem> = [
+    {
+      id: FOSSIL_SHARE_2050,
+      label: "Share of fossil fuel in primary energy in 2050",
+      value: parseRange(fossilShare as string | null),
+      defaultRange: [0, 100],
+    },
+    {
+      id: RENEWABLES_SHARE_2050,
+      label: "Share of renewables in primary energy in 2050",
+      value: parseRange(renewablesShare as string | null),
+      defaultRange: [0, 100],
+    },
+    {
+      id: BIOMASS_SHARE_2050,
+      label: "Share of biomass in 2050",
+      value: parseRange(biomassShare as string | null),
+      defaultRange: [0, 100],
+    },
+  ];
+
+  const setters: Record<string, (value: string | null) => Promise<URLSearchParams>> = {
+    renewablesShare: setRenewablesShare,
+    fossilShare: setFossilShare,
+    biomassShare: setBiomassShare,
   };
 
-  return { id, energy, handleValueChange };
+  const handleApply = (selections: ChangeStateAction) => {
+    Object.entries(selections).forEach(([key, value]) => {
+      const setter = setters[key];
+      const stringifierValue = value ? value.join(URL_VALUES_FILTER_SEPARATOR) : null;
+      setter?.(stringifierValue);
+    });
+  };
+
+  return { id, energyItems, handleApply };
 };
 
 export const EnergyFilter = () => {
-  const { id, energy, handleValueChange } = useEnergyFilter();
+  const { id, energyItems, handleApply } = useEnergyFilter();
 
   return (
     <div className="flex w-full flex-col items-start gap-2">
@@ -46,16 +84,14 @@ export const EnergyFilter = () => {
         id={id}
         items={energyItems}
         placeholder="Select energy type"
-        currentValue={energy}
-        defaultRange={[0, 100]}
-        onApply={handleValueChange}
+        onApply={handleApply}
       />
     </div>
   );
 };
 
 export const EnergyFilterRow = ({ prefix }: RowFilterProps) => {
-  const { id, energy, handleValueChange } = useEnergyFilter(prefix);
+  const { id, energyItems, handleApply } = useEnergyFilter(prefix);
 
   return (
     <div className="flex w-full items-center justify-between gap-2">
@@ -68,9 +104,7 @@ export const EnergyFilterRow = ({ prefix }: RowFilterProps) => {
           className="h-10 w-fit"
           items={energyItems}
           placeholder="Select energy type"
-          defaultRange={[0, 100]}
-          currentValue={energy}
-          onApply={handleValueChange}
+          onApply={handleApply}
         />
       </div>
     </div>

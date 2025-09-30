@@ -2,40 +2,53 @@
 
 import { Label } from "@/components/ui/label";
 import { RowFilterProps } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
-import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
 import TooltipInfo from "@/containers/scenario-dashboard/components/tooltip-info";
 import { useId } from "react";
-import SliderSelect from "@/containers/scenario-dashboard/components/slider-select";
+import SliderSelect, {
+  ChangeStateAction,
+  SliderSelectItem,
+} from "@/containers/scenario-dashboard/components/slider-select";
 import {
   INCREASE_IN_GLOBAL_FOREST_AREA_KEY,
   INCREASE_IN_GLOBAL_FOREST_AREA_LABEL,
 } from "@/lib/config/filters/land-filter-config";
+import { useFilterUrlParams } from "@/hooks/nuqs/url-params/filter/use-filter-url-params";
+import { parseRange } from "@/containers/scenario-dashboard/components/slider-select/utils";
+import { URL_VALUES_FILTER_SEPARATOR } from "@/containers/scenario-dashboard/utils/url-store";
 
 const tooltipInfo =
   "Land refers to the use and management of land resources in scenarios, including aspects like deforestation, urbanization, and agricultural practices. This filter allows you to categorize scenarios based on their land use impact.";
 
-const item = {
-  id: INCREASE_IN_GLOBAL_FOREST_AREA_KEY,
-  label: INCREASE_IN_GLOBAL_FOREST_AREA_LABEL,
-};
-
 const useLandFilter = (prefix?: string) => {
   const id = useId();
-  const { land, setLand } = useScenarioDashboardUrlParams(prefix);
+  const { gfaIncrease, setGfaIncrease } = useFilterUrlParams(prefix);
 
-  const handleValueChange = (selectedKey: string | null, rangeString: string) => {
-    if (selectedKey) {
-      setLand([selectedKey, rangeString]);
-    } else {
-      setLand(null);
-    }
+  const landItems: Array<SliderSelectItem> = [
+    {
+      id: INCREASE_IN_GLOBAL_FOREST_AREA_KEY,
+      label: INCREASE_IN_GLOBAL_FOREST_AREA_LABEL,
+      defaultRange: [-100, 100],
+      value: parseRange(gfaIncrease as string | null),
+    },
+  ];
+
+  const setters: Record<string, (value: string | null) => Promise<URLSearchParams>> = {
+    gfaIncrease: setGfaIncrease,
   };
 
-  return { id, land, handleValueChange };
+  const handleApply = (selections: ChangeStateAction) => {
+    Object.entries(selections).forEach(([key, value]) => {
+      const setter = setters[key];
+      const stringifierValue = value ? value.join(URL_VALUES_FILTER_SEPARATOR) : null;
+      setter?.(stringifierValue);
+    });
+  };
+
+  return { id, landItems, handleApply };
 };
 
 export const LandFilter = () => {
-  const { id, land, handleValueChange } = useLandFilter();
+  const { id, landItems, handleApply } = useLandFilter();
 
   return (
     <div className="flex w-full flex-col items-start gap-2">
@@ -49,18 +62,16 @@ export const LandFilter = () => {
         id={id}
         min={-100}
         max={100}
-        defaultRange={[-100, 100]}
-        items={[item]}
+        items={landItems}
         placeholder="Select land filter"
-        currentValue={land}
-        onApply={handleValueChange}
+        onApply={handleApply}
       />
     </div>
   );
 };
 
 export const LandFilterRow = ({ prefix }: RowFilterProps) => {
-  const { id, land, handleValueChange } = useLandFilter(prefix);
+  const { id, landItems, handleApply } = useLandFilter(prefix);
 
   return (
     <div className="flex w-full items-center justify-between gap-2">
@@ -70,14 +81,10 @@ export const LandFilterRow = ({ prefix }: RowFilterProps) => {
         </Label>
         <SliderSelect
           id={id}
-          min={-100}
-          max={100}
+          items={landItems}
           className="h-10 w-fit"
-          defaultRange={[-100, 100]}
-          items={[item]}
           placeholder="Select land filter"
-          currentValue={land}
-          onApply={handleValueChange}
+          onApply={handleApply}
         />
       </div>
     </div>

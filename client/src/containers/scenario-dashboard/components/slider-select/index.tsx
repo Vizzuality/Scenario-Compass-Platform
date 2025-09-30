@@ -1,96 +1,117 @@
-import React, { useState } from "react";
-import { ChevronDown } from "lucide-react";
-import { Slider } from "@/components/ui/slider";
+import React, { useEffect, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { selectTriggerVariants } from "@/components/ui/select";
-import { cn } from "@/lib/utils";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { URL_VALUES_FILTER_SEPARATOR } from "@/containers/scenario-dashboard/utils/url-store";
-import { parseCurrentValue } from "@/containers/scenario-dashboard/components/slider-select/utils";
+import RangeSlider from "@/containers/scenario-dashboard/components/slider-select/range-slider";
+import { cn } from "@/lib/utils";
+import { selectTriggerVariants } from "@/components/ui/select";
+import { ChevronDown } from "lucide-react";
+import { PopoverClose } from "@radix-ui/react-popover";
 
 export interface SliderSelectItem {
   id: string;
   label: string;
+  value: [number, number] | null;
+  defaultRange: [number, number];
 }
 
 export interface SliderSelectProps {
   items: SliderSelectItem[];
   placeholder?: string;
-  defaultSelected?: string | null;
-  defaultRange?: [number, number];
   min?: number;
   max?: number;
   step?: number;
-  onSelectionChange?: (selectedId: string | null) => void;
-  onRangeChange?: (range: [number, number]) => void;
-  onApply?: (selectedId: string | null, rangeString: string) => void;
+  onApply: (selections: ChangeStateAction) => void;
   className?: string;
-  id?: string;
-  currentValue: string[] | null;
+  id: string;
 }
+
+export type ChangeStateAction = Record<string, [number, number] | null>;
 
 const SliderSelect: React.FC<SliderSelectProps> = ({
   items,
-  placeholder = "Select an option",
-  defaultSelected = null,
-  defaultRange = [20, 80],
-  currentValue = null,
+  placeholder = "Select options",
   min = 0,
   max = 100,
   step = 1,
-  onSelectionChange,
-  onRangeChange,
-  onApply,
   className,
+  onApply,
   id,
 }) => {
-  const { selectedId: initialSelectedId, range: initialRange } = parseCurrentValue(
-    currentValue,
-    defaultSelected,
-    defaultRange,
-  );
+  const [checkedIds, setCheckedIds] = useState<Array<string>>([]);
+  const [changes, setChanges] = useState<ChangeStateAction>({});
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<string | null>(initialSelectedId);
-  const [range, setRange] = useState<[number, number]>(initialRange);
+  useEffect(() => {
+    const getCheckedIds = () => {
+      return items.filter((item) => item.value !== null).map((item) => item.id);
+    };
 
-  const handleSelectionChange = (itemId: string) => {
-    setSelectedItem(itemId);
-    onSelectionChange?.(itemId);
+    setCheckedIds(getCheckedIds());
+  }, [items]);
+
+  const getText = () => {
+    const selectedCount = items.filter((item) => item.value).length;
+
+    if (!selectedCount) return placeholder;
+    else return `${selectedCount} Selected`;
   };
 
-  const handleRangeChange = (values: number[]) => {
-    if (values.length === 2) {
-      const newRange: [number, number] = [values[0], values[1]];
-      setRange(newRange);
-      onRangeChange?.(newRange);
+  const handleRangeChange = (values: number[], id: string) => {
+    if (values.length !== 2) {
+      console.error("Expected exactly 2 values for range");
+      return;
+    }
+
+    setChanges((prevState) => ({
+      ...prevState,
+      [id]: [values[0], values[1]] as [number, number],
+    }));
+  };
+
+  const isItemChecked = (id: string) => {
+    return checkedIds.includes(id);
+  };
+
+  const handleItemCheck = (id: string) => {
+    if (isItemChecked(id)) {
+      setCheckedIds((prevState) => prevState.filter((checkedId) => checkedId !== id));
+      setChanges((prevState) => ({
+        ...prevState,
+        [id]: null,
+      }));
+    } else {
+      setCheckedIds((prevState) => [...prevState, id]);
     }
   };
 
-  const selectedType = items.find((item) => item.id === selectedItem);
-  const radioGroupName = `slider-select-${id || "default"}`;
+  const handleApply = () => {
+    onApply(changes);
+  };
+
+  const getRangeValue = (item: SliderSelectItem): [number, number] => {
+    const change = changes[item.id];
+    if (change !== undefined && change !== null) return change;
+    if (item.value) return item.value;
+    return item.defaultRange;
+  };
 
   return (
     <div className="relative w-full">
-      <Popover open={isOpen} onOpenChange={setIsOpen}>
+      <Popover>
         <PopoverTrigger asChild>
           <button
             id={id}
             className={cn(
               selectTriggerVariants({ theme: "light", size: "lg" }),
-              "w-full",
+              "hover:bg-hover-secondary w-full",
               className,
             )}
-            type="button"
           >
-            <span className="text-gray-700">{selectedType?.label || placeholder}</span>
-            <ChevronDown
-              className={`h-5 w-5 text-gray-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
-            />
+            <span className="text-gray-700">{getText()}</span>
+            <ChevronDown className="h-5 w-5 text-gray-400 transition-transform" />
           </button>
         </PopoverTrigger>
-
         <PopoverContent
           className="w-[var(--radix-popover-trigger-width)] min-w-100 p-0"
           align="start"
@@ -99,57 +120,35 @@ const SliderSelect: React.FC<SliderSelectProps> = ({
             {items.map((item) => (
               <div key={item.id} className="px-4 py-3">
                 <div className="flex items-start space-x-3">
-                  <input
-                    type="radio"
+                  <Checkbox
                     id={item.id}
-                    name={radioGroupName}
-                    value={item.id}
-                    checked={selectedItem === item.id}
-                    onChange={(e) => {
-                      handleSelectionChange(e.target.value);
-                    }}
-                    className="accent-primary mt-0.5 h-4 w-4"
+                    checked={isItemChecked(item.id)}
+                    onCheckedChange={() => handleItemCheck(item.id)}
+                    className="mt-0.5"
                   />
                   <Label htmlFor={item.id} className="flex-1 cursor-pointer text-sm leading-5">
                     {item.label}
                   </Label>
                 </div>
 
-                {selectedItem === item.id && (
-                  <div className="mt-3">
-                    <div className="flex gap-2 py-1.5">
-                      <div className="text-primary rounded-md border border-stone-400 px-4 py-1.5 text-sm font-bold">
-                        {range[0]}%
-                      </div>
-                      <Slider
-                        value={range}
-                        onValueChange={handleRangeChange}
-                        max={max}
-                        min={min}
-                        step={step}
-                        minStepsBetweenThumbs={1}
-                        className="w-full"
-                      />
-                      <div className="text-primary rounded-md border border-stone-400 px-4 py-1.5 text-sm font-bold">
-                        {range[1]}%
-                      </div>
-                    </div>
-                  </div>
+                {isItemChecked(item.id) && (
+                  <RangeSlider
+                    handleRangeChange={(values) => handleRangeChange(values, item.id)}
+                    max={max}
+                    min={min}
+                    step={step}
+                    range={getRangeValue(item)}
+                  />
                 )}
               </div>
             ))}
           </div>
           <div className="border-t px-4 pt-2 pb-3">
-            <Button
-              className="w-full"
-              onClick={() => {
-                const rangeString = `${range[0]}${URL_VALUES_FILTER_SEPARATOR}${range[1]}`;
-                onApply?.(selectedItem, rangeString);
-                setIsOpen(false);
-              }}
-            >
-              Apply
-            </Button>
+            <PopoverClose asChild>
+              <Button className="w-full" onClick={handleApply}>
+                Apply
+              </Button>
+            </PopoverClose>
           </div>
         </PopoverContent>
       </Popover>

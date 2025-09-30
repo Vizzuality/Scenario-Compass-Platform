@@ -1,16 +1,17 @@
 "use client";
 
 import { useMemo } from "react";
-import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
 import useTopDataPointsFilter from "@/hooks/runs/filtering/use-top-data-points-filter";
 import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/lib/query-keys";
 import { getMetaPoints } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
 import { RunPipelineReturn } from "@/hooks/runs/pipeline/types";
-import { generateExtendedRuns } from "@/hooks/runs/utils/utils";
 import { filterRunsByMetaIndicators } from "@/hooks/runs/utils";
 import useComputeEnergyShare from "@/hooks/runs/filtering/use-compute-energy-share";
 import useComputeLandUse from "@/hooks/runs/filtering/use-compute-land-use";
+import { useFilterUrlParams } from "@/hooks/nuqs/url-params/filter/use-filter-url-params";
+import { useBaseUrlParams } from "@/hooks/nuqs/url-params/base/use-base-url-params";
+import { generateExtendedRuns } from "@/hooks/runs/utils/generate-extended-runs";
 
 interface SingleRunPipelineParams {
   variable: string;
@@ -21,8 +22,16 @@ export function useSingleRunPipeline({
   variable,
   runId,
 }: SingleRunPipelineParams): RunPipelineReturn {
-  const { year, endYear, startYear, geography, climate, energy, land, advanced } =
-    useScenarioDashboardUrlParams();
+  const { year, endYear, startYear, geography } = useBaseUrlParams();
+  const {
+    climateCategory,
+    yearNetZero,
+    carbonRemoval,
+    renewablesShare,
+    biomassShare,
+    gfaIncrease,
+    fossilShare,
+  } = useFilterUrlParams();
 
   const {
     dataPoints,
@@ -74,10 +83,13 @@ export function useSingleRunPipeline({
 
   const filteredRuns = filterRunsByMetaIndicators({
     runs: extendedRuns,
-    climate,
-    energy,
-    land,
-    advanced,
+    climateCategory,
+    yearNetZero,
+    carbonRemoval,
+    renewablesShare,
+    biomassShare,
+    gfaIncrease,
+    fossilShare,
   });
 
   const isLoading =

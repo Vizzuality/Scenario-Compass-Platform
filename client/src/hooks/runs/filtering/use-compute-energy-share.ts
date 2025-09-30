@@ -1,4 +1,3 @@
-import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
 import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/lib/query-keys";
 import { extractDataPoints } from "@/hooks/runs/filtering/utils";
@@ -14,6 +13,7 @@ import {
   PRIMARY_ENERGY_VARIABLES,
   RENEWABLES_SHARE_2050,
 } from "@/lib/config/filters/energy-filter-config";
+import { useBaseUrlParams } from "@/hooks/nuqs/url-params/base/use-base-url-params";
 
 export interface EnergyShare {
   [FOSSIL_SHARE_2050]: number;
@@ -31,7 +31,7 @@ interface EnergyData {
 export type EnergyShareMap = Record<string, EnergyShare>;
 
 export default function useComputeEnergyShare() {
-  const { geography } = useScenarioDashboardUrlParams();
+  const { geography } = useBaseUrlParams();
 
   const { data, isLoading, isError } = useQuery({
     ...queryKeys.dataPoints.tabulate({

@@ -1,14 +1,14 @@
 "use client";
 
 import { MultipleRunsPlotWidget } from "@/components/plots/widgets/multiple-runs/multiple-runs-plot-widget";
-import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
 import { PLOT_TYPE_OPTIONS } from "@/components/plots/components/chart-type-toggle";
 import { useTabAndVariablesParams } from "@/hooks/nuqs/use-tabs-and-variables-params";
 import CustomTabPlotGrid from "@/containers/scenario-dashboard/components/plots-section/custom-tab-plot-grid";
 import HistogramWidget from "@/components/plots/widgets/histogram-widget";
+import { useBaseUrlParams } from "@/hooks/nuqs/url-params/base/use-base-url-params";
 
 export function PlotGrid() {
-  const { startYear, endYear } = useScenarioDashboardUrlParams();
+  const { startYear, endYear } = useBaseUrlParams();
   const chartType =
     parseInt(startYear!) === parseInt(endYear!) ? PLOT_TYPE_OPTIONS.DOTS : PLOT_TYPE_OPTIONS.AREA;
   const { selectedTab } = useTabAndVariablesParams();

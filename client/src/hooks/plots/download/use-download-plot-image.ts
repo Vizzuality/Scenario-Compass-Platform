@@ -1,7 +1,7 @@
 import { useRef } from "react";
-import { useScenarioDashboardUrlParams } from "@/hooks/nuqs/use-scenario-dashboard-url-params";
 import { geographyConfig } from "@/lib/config/filters/geography-filter-config";
 import { downloadDivAsPNG } from "@/hooks/plots/download/image-utils";
+import { useBaseUrlParams } from "@/hooks/nuqs/url-params/base/use-base-url-params";
 
 export interface DownloadOptions {
   padding?: {
@@ -21,7 +21,7 @@ export interface SubtitleData {
 }
 
 export const useDownloadPlotImage = () => {
-  const { endYear, startYear, geography } = useScenarioDashboardUrlParams();
+  const { endYear, startYear, geography } = useBaseUrlParams();
   const geographyName = geographyConfig.find((option) => option.value === geography)?.label;
 
   const chartRef = useRef<HTMLDivElement>(null);
