@@ -1,0 +1,24 @@
+name: deploy
+
+on:
+  release:
+    types: ["published"]
+
+jobs:
+  create_deployment:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    permissions:
+      deployments: write
+    steps:
+      - if: github.event.release.prerelease == false
+        uses: chrnorm/deployment-action@v2
+        name: Create Production Deployment
+        with:
+          token: ${{ github.token }}
+          environment: iiasa-production
+      - uses: chrnorm/deployment-action@v2
+        name: Create Testing Deployment
+        with:
+          token: ${{ github.token }}
+          environment: iiasa-testing
