@@ -13,19 +13,37 @@ const createTypedParams = (prefix: string): BaseURLParams => ({
   startYear: getParamName(SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS.START_YEAR, prefix),
   endYear: getParamName(SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS.END_YEAR, prefix),
   geography: getParamName(SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS.GEOGRAPHY, prefix),
+  model: getParamName(SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS.MODEL, prefix),
+  scenario: getParamName(SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS.SCENARIO, prefix),
 });
 
-export function useScenarioUrlState(prefix: string = "") {
+interface UseScenarioUrlStateParams {
+  prefix?: string;
+  useDefaults?: boolean;
+}
+
+export function useScenarioUrlState({
+  prefix = "",
+  useDefaults = true,
+}: UseScenarioUrlStateParams = {}) {
   const params = useMemo((): BaseURLParams => createTypedParams(prefix), [prefix]);
 
   const queryConfig = useMemo(
     () => ({
       [params.year]: parseAsInteger,
-      [params.startYear]: parseAsInteger.withDefault(YEAR_OPTIONS[1]),
-      [params.endYear]: parseAsInteger.withDefault(YEAR_OPTIONS[YEAR_OPTIONS.length - 1]),
-      [params.geography]: parseAsString.withDefault(geographyConfig[0].value),
+      [params.startYear]: useDefaults
+        ? parseAsInteger.withDefault(YEAR_OPTIONS[1])
+        : parseAsInteger,
+      [params.endYear]: useDefaults
+        ? parseAsInteger.withDefault(YEAR_OPTIONS[YEAR_OPTIONS.length - 1])
+        : parseAsInteger,
+      [params.geography]: useDefaults
+        ? parseAsString.withDefault(geographyConfig[0].value)
+        : parseAsString,
+      [params.scenario]: parseAsString,
+      [params.model]: parseAsString,
     }),
-    [params],
+    [params, useDefaults],
   );
 
   const [filters, setFilters] = useQueryStates(queryConfig);
@@ -33,8 +51,11 @@ export function useScenarioUrlState(prefix: string = "") {
   return { params, filters, setFilters };
 }
 
-export function useScenarioValues(prefix: string = ""): BaseValues {
-  const { params, filters } = useScenarioUrlState(prefix);
+export function useScenarioValues({
+  prefix = "",
+  useDefaults = true,
+}: UseScenarioUrlStateParams = {}): BaseValues {
+  const { params, filters } = useScenarioUrlState({ prefix, useDefaults });
 
   return useMemo(
     (): BaseValues => ({
@@ -42,28 +63,38 @@ export function useScenarioValues(prefix: string = ""): BaseValues {
       startYear: filters[params.startYear]?.toString() ?? null,
       endYear: filters[params.endYear]?.toString() ?? null,
       geography: filters[params.geography] as string | null,
+      scenario: filters[params.scenario] as string | null,
+      model: filters[params.model] as string | null,
     }),
     [filters, params],
   );
 }
 
-export function useScenarioClearOperations(prefix: string = ""): ScenarioClearOperations {
-  const { setFilters, params } = useScenarioUrlState(prefix);
+export function useScenarioClearOperations({
+  prefix = "",
+  useDefaults = true,
+}: UseScenarioUrlStateParams = {}): ScenarioClearOperations {
+  const { setFilters, params } = useScenarioUrlState({ prefix, useDefaults });
 
   const clearAll = useCallback((): Promise<URLSearchParams> => {
     return setFilters({
       [params.year]: null,
-      [params.startYear]: YEAR_OPTIONS[1],
-      [params.endYear]: YEAR_OPTIONS[YEAR_OPTIONS.length - 1],
-      [params.geography]: geographyConfig[0].value,
+      [params.startYear]: useDefaults ? YEAR_OPTIONS[1] : null,
+      [params.endYear]: useDefaults ? YEAR_OPTIONS[YEAR_OPTIONS.length - 1] : null,
+      [params.geography]: useDefaults ? geographyConfig[0].value : null,
+      [params.model]: params.model,
+      [params.scenario]: params.scenario,
     });
-  }, [setFilters, params]);
+  }, [setFilters, params, useDefaults]);
 
   return { clearAll };
 }
 
-export function useScenarioSetters(prefix: string = ""): BaseSetters {
-  const { setFilters, params } = useScenarioUrlState(prefix);
+export function useScenarioSetters({
+  prefix = "",
+  useDefaults = true,
+}: UseScenarioUrlStateParams = {}): BaseSetters {
+  const { setFilters, params } = useScenarioUrlState({ prefix, useDefaults });
 
   const parseNumber = useCallback((value: string | number | null): number | null => {
     if (value === null || value === undefined) return null;
@@ -95,16 +126,21 @@ export function useScenarioSetters(prefix: string = ""): BaseSetters {
       setStartYear: createNumberSetter(params.startYear),
       setEndYear: createNumberSetter(params.endYear),
       setGeography: createStringSetter(params.geography),
+      setScenario: createStringSetter(params.scenario),
+      setModel: createStringSetter(params.model),
     }),
     [createNumberSetter, createStringSetter, params],
   );
 }
 
-export function useBaseUrlParams(prefix: string = "") {
-  const state = useScenarioUrlState(prefix);
-  const values = useScenarioValues(prefix);
-  const operations = useScenarioClearOperations(prefix);
-  const setters = useScenarioSetters(prefix);
+export function useBaseUrlParams({
+  prefix = "",
+  useDefaults = true,
+}: UseScenarioUrlStateParams = {}) {
+  const state = useScenarioUrlState({ prefix, useDefaults });
+  const values = useScenarioValues({ prefix, useDefaults });
+  const operations = useScenarioClearOperations({ prefix, useDefaults });
+  const setters = useScenarioSetters({ prefix, useDefaults });
 
   return {
     ...state,

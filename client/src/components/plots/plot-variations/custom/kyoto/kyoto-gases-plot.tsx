@@ -12,10 +12,6 @@ import * as d3 from "d3";
 import { ExtendedRun, ShortDataPoint } from "@/hooks/runs/pipeline/types";
 import { OTHER_GASES } from "@/components/plots/utils/constants";
 
-interface Props {
-  runId: number;
-}
-
 const GWP_CH4 = 25;
 const GWP_N2O_WITH_UNIT_CONVERSION = 0.298;
 
@@ -29,18 +25,16 @@ const GWP_N2O_WITH_UNIT_CONVERSION = 0.298;
  * - CH4 (Energy): Mt CH4/year → Mt CO2eq/year (GWP = 25)
  * - N2O: kt N2O/year → Mt CO2eq/year (GWP = 298, kt to Mt = ÷1000)
  */
-export function KyotoGasesPlot({ runId }: Props) {
+export function KyotoGasesPlot() {
   const kyotoGases = useGetSingleRunForVariablePipeline({
     variable: "Emissions|Kyoto Gases",
-    runId,
   });
-  const CO2 = useGetSingleRunForVariablePipeline({ variable: "Emissions|CO2", runId });
-  const CH4_AFOLU = useGetSingleRunForVariablePipeline({ variable: "Emissions|CH4|AFOLU", runId });
+  const CO2 = useGetSingleRunForVariablePipeline({ variable: "Emissions|CO2" });
+  const CH4_AFOLU = useGetSingleRunForVariablePipeline({ variable: "Emissions|CH4|AFOLU" });
   const CH4_ENERGY = useGetSingleRunForVariablePipeline({
     variable: "Emissions|CH4|Energy",
-    runId,
   });
-  const N2O = useGetSingleRunForVariablePipeline({ variable: "Emissions|N2O", runId });
+  const N2O = useGetSingleRunForVariablePipeline({ variable: "Emissions|N2O" });
 
   const isError = [kyotoGases, CO2, CH4_AFOLU, CH4_ENERGY, N2O].some(
     (pipeline) => pipeline.isError,

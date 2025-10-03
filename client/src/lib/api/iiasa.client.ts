@@ -11,6 +11,7 @@ import {
   RunFilter,
   Run,
   Variable,
+  RegionFilter,
 } from "@iiasa/ixmp4-ts";
 import * as z from "zod/v4";
 
@@ -204,6 +205,30 @@ export class IIASA_API_CLIENT {
     });
   }
 
+  public getDataPointsForModelScenario({
+    runId,
+    variable,
+    geography,
+  }: {
+    runId: number;
+    variable?: string;
+    geography?: string;
+  }) {
+    this.validatePlatform();
+    return this.platform?.iamc.tabulate({
+      variable: {
+        name: variable,
+      },
+      run: {
+        id: runId,
+      },
+      region: {
+        // @ts-expect-error No TS support for geography-filter-config id yet
+        id: geography,
+      },
+    });
+  }
+
   public getTabulatedRuns(filters?: RunFilter) {
     this.validatePlatform();
     return this.platform.runs.tabulate(filters);
@@ -219,5 +244,10 @@ export class IIASA_API_CLIENT {
     return this.platform.runs.list({
       id,
     });
+  }
+
+  public getRegions(filters?: RegionFilter) {
+    this.validatePlatform();
+    return this.platform?.regions.list(filters);
   }
 }

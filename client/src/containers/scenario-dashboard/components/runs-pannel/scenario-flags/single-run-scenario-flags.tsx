@@ -29,7 +29,7 @@ export default function SingleRunScenarioFlags({ result }: Props) {
 
   if (result.isLoading) {
     return (
-      <div className="mt-8 flex w-full flex-col gap-3">
+      <div className="flex w-full flex-col gap-3">
         <p className="mb-1.5 border-b pb-1.5 text-base font-bold text-stone-800">
           Reasons for Concern
         </p>

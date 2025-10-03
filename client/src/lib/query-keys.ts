@@ -7,6 +7,7 @@ import {
   MetaIndicatorFilter,
   ModelFilter,
   RunFilter,
+  RegionFilter,
 } from "@iiasa/ixmp4-ts";
 import API from "@/lib/api";
 
@@ -66,6 +67,18 @@ export const queryKeys = createQueryKeyStore({
       queryKey: [{ runId, variable, geography }],
       queryFn: async () => API.getDataPointsForRun({ runId, variable, geography }),
     }),
+    getForModelScenario: ({
+      runId,
+      variable,
+      geography = "",
+    }: {
+      runId: number;
+      variable?: string;
+      geography?: string;
+    }) => ({
+      queryKey: [{ runId, variable, geography }],
+      queryFn: async () => API.getDataPointsForModelScenario({ runId, variable, geography }),
+    }),
   },
   metaIndicators: {
     tabulate: (filters: MetaIndicatorFilter) => ({
@@ -85,6 +98,12 @@ export const queryKeys = createQueryKeyStore({
     details: (id: number) => ({
       queryKey: [{ id }],
       queryFn: async () => API.getRunDetails(id),
+    }),
+  },
+  regions: {
+    list: (filters?: RegionFilter) => ({
+      queryKey: [{ filters }],
+      queryFn: async () => API.getRegions(filters),
     }),
   },
 });

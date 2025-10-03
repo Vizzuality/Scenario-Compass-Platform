@@ -7,14 +7,12 @@ import useBaseRunTransformation from "@/hooks/runs/pipeline/getters/use-base-run
 
 interface SingleRunPipelineParams {
   variable: string;
-  runId: number;
 }
 
 export function useGetSingleRunForVariablePipeline({
   variable,
-  runId,
 }: SingleRunPipelineParams): RunPipelineReturn {
-  const { year, endYear, startYear, geography } = useBaseUrlParams();
+  const { year, endYear, startYear, geography, model, scenario } = useBaseUrlParams();
 
   const {
     dataPoints,
@@ -26,7 +24,8 @@ export function useGetSingleRunForVariablePipeline({
     endYear,
     geography,
     variable,
-    runId,
+    model,
+    scenario,
   });
 
   const { runs: filteredRuns, isError, isLoading } = useBaseRunTransformation({ dataPoints });

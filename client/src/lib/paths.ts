@@ -11,6 +11,7 @@ export const INTERNAL_PATHS = {
   GUIDED_EXPLORATION: "/guided-exploration",
   LEARN_BY_TOPIC: "/learn-by-topic",
   SCENARIO_DASHBOARD: "/scenario-dashboard",
+  RUN_DASHBOARD_EXPLORATION: "/scenario-dashboard/details",
   SCENARIO_DASHBOARD_EXPLORATION: "/scenario-dashboard/exploration",
   SCENARIO_DASHBOARD_COMPARISON: "/scenario-dashboard/exploration/comparison",
   METHODOLOGY: "/methodology",

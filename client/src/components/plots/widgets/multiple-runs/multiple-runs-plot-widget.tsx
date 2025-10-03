@@ -12,6 +12,7 @@ import { ExtendedRun } from "@/hooks/runs/pipeline/types";
 import { useTabAndVariablesParams } from "@/hooks/nuqs/use-tabs-and-variables-params";
 import { AreaPlot, DotPlot, MultiLinePlot } from "@/components/plots/plot-variations";
 import { usePlotDownload } from "@/hooks/plots/download/use-plot-download";
+import { useBaseUrlParams } from "@/hooks/nuqs/url-params/base/use-base-url-params";
 
 interface Props {
   plotConfig: PlotConfig;
@@ -21,6 +22,7 @@ interface Props {
 
 export function MultipleRunsPlotWidget({ plotConfig, prefix, initialChartType = "area" }: Props) {
   const [chartType, setChartType] = useState<ChartType>(initialChartType);
+  const { geography, startYear, endYear } = useBaseUrlParams();
   const { getVariable, setVariable } = useTabAndVariablesParams(prefix);
   const currentVariable = getVariable(plotConfig);
   const data = useGetMultipleRunsForVariablePipeline({ variable: currentVariable, prefix });
@@ -43,8 +45,16 @@ export function MultipleRunsPlotWidget({ plotConfig, prefix, initialChartType = 
   };
 
   const handleRunClick = (run: ExtendedRun) => {
-    const params = new URLSearchParams(window.location.search);
-    router.push(`${INTERNAL_PATHS.SCENARIO_DASHBOARD}/${run.runId}?${params.toString()}`);
+    const params = new URLSearchParams();
+
+    params.set("model", run.modelName);
+    params.set("scenario", run.scenarioName);
+
+    if (geography) params.set("geography", geography);
+    if (startYear) params.set("startYear", startYear);
+    if (endYear) params.set("endYear", endYear);
+
+    router.push(`${INTERNAL_PATHS.RUN_DASHBOARD_EXPLORATION}?${params.toString()}`);
   };
 
   const showChartTypeToggle = chartType !== PLOT_TYPE_OPTIONS.DOTS;
