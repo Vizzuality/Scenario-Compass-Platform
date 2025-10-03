@@ -24,6 +24,16 @@ export default function AdditionalInformation({ result }: Props) {
     [result.runs],
   );
 
+  const modelsMap = result.runs.reduce(
+    (acc, run) => {
+      if (run.modelName) {
+        acc[run.modelName] = (acc[run.modelName] || 0) + 1;
+      }
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
+
   if (result.isLoading) {
     return (
       <div className="flex w-full flex-col gap-3">
@@ -57,6 +67,25 @@ export default function AdditionalInformation({ result }: Props) {
         Additional Information
       </p>
       <Accordion type="single" collapsible>
+        <AccordionItem value="modeling-frameworks">
+          <AccordionTrigger className="w-full rounded-none pb-2">
+            <div className="flex gap-2">
+              <span>Modeling Frameworks</span> <b>({Object.keys(modelsMap).length})</b>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="mt-2 flex flex-col gap-2">
+            <div className="flex items-center justify-between text-xs text-stone-600">
+              <p>Name</p>
+              <p>Scenario runs</p>
+            </div>
+            {Object.entries(modelsMap).map(([modelName, count]) => (
+              <div key={modelName} className="flex justify-between">
+                <span>{modelName}</span>
+                <b>({count})</b>
+              </div>
+            ))}
+          </AccordionContent>
+        </AccordionItem>
         {ADDITIONAL_INFORMATION_META_INDICATORS.map(({ key, label }) => (
           <AccordionItem key={key} value={key}>
             <AccordionTrigger className="w-full rounded-none pb-2">

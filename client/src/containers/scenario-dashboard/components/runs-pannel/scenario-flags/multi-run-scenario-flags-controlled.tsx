@@ -30,12 +30,7 @@ export default function ControlledMultiRunScenarioFlags({
   return (
     <Accordion value={value} onValueChange={onValueChange} type="single" collapsible>
       <AccordionItem value={SCENARIO_FLAGS_ACCORDION_VALUE} className={isOpen ? "border-b-0" : ""}>
-        <SharedScenarioFlagsContent
-          result={result}
-          prefix={prefix}
-          isOpen={isOpen}
-          showDetailsWhenClosed
-        />
+        <SharedScenarioFlagsContent result={result} prefix={prefix} />
       </AccordionItem>
     </Accordion>
   );

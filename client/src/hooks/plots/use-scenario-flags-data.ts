@@ -36,14 +36,14 @@ export function useScenarioFlagsData(runs: RunPipelineReturn["runs"]) {
     [categoriesWithRuns],
   );
 
-  const totalCategories = categoriesWithRuns.length;
+  const totalRuns = categoriesWithRuns.reduce((sum, [, category]) => sum + category.runs.length, 0);
 
   return {
+    totalRuns,
     categories,
     categoriesWithRuns,
     highCategories,
     mediumCategories,
     okCategories,
-    totalCategories,
   };
 }
