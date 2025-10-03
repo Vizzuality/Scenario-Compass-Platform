@@ -4,15 +4,17 @@ import ScenarioModelMetrics from "@/containers/scenario-dashboard/components/run
 import AdditionalInformation from "@/containers/scenario-dashboard/components/runs-pannel/components/additional-information";
 import MultiRunScenarioFlags from "@/containers/scenario-dashboard/components/runs-pannel/scenario-flags/multi-run-scenario-flags";
 import NavigateToCompareScenarios from "@/containers/scenario-dashboard/components/comparison/navigate-to-compare-scenarios";
-import useSyncVariables from "@/hooks/runs/pipeline/use-sync-variables";
 import useShowReasonsForConcern from "@/hooks/nuqs/use-show-reasons-for-concer";
+import useGetVariablesForTab from "@/hooks/runs/pipeline/use-get-variables-for-tab";
+import useCombineRunsForVariablesPipeline from "@/hooks/runs/pipeline/use-combine-runs-for-variables-pipeline";
 
 interface Props {
   prefix?: string;
 }
 
 export default function RunsPanel({ prefix }: Props) {
-  const { result } = useSyncVariables({ prefix });
+  const { variables } = useGetVariablesForTab({ prefix });
+  const result = useCombineRunsForVariablesPipeline({ variablesNames: variables, prefix });
   const showMetric = useShowReasonsForConcern({});
 
   return (

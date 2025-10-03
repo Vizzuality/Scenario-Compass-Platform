@@ -62,7 +62,9 @@ export const ClimateFilter = () => {
           <div className="flex flex-col">
             <div className="max-h-[350px] overflow-y-auto p-3">
               <div className="mb-4">
-                <div className="mb-4 text-sm">{CLIMATE_CATEGORY_FILTER_CONFIG.name}</div>
+                <div className="mb-4 text-xs text-stone-600">
+                  {CLIMATE_CATEGORY_FILTER_CONFIG.name}
+                </div>
                 <div className="space-y-4">
                   {CLIMATE_CATEGORY_FILTER_CONFIG.mappings.map((item) => (
                     <div key={item.value} className="flex items-center space-x-2">
@@ -82,7 +84,7 @@ export const ClimateFilter = () => {
                 </div>
               </div>
 
-              <div className="mb-4 text-sm">{YEAR_NET_ZERO_FILTER_CONFIG.name}</div>
+              <div className="mb-4 text-xs text-stone-600">{YEAR_NET_ZERO_FILTER_CONFIG.name}</div>
               <div className="space-y-3.5">
                 {YEAR_NET_ZERO_FILTER_CONFIG.mappings.map((item) => (
                   <div key={item.value} className="flex items-center space-x-2">

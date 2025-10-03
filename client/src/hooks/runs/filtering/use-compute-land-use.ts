@@ -3,7 +3,7 @@ import queryKeys from "@/lib/query-keys";
 import { LAND_FOREST_COVER } from "@/lib/config/filters/land-filter-config";
 import { DataFrame } from "@iiasa/ixmp4-ts";
 import { DataPoint } from "@/components/plots/types";
-import { extractDataPoints } from "@/hooks/runs/filtering/utils";
+import { extractDataPoints } from "@/hooks/runs/utils/extract-data-points";
 
 interface Result {
   gfaIncreaseArray: Record<string, number>;

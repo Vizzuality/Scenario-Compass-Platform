@@ -51,7 +51,7 @@ export const ClimateFilterRow = ({ prefix }: RowFilterProps) => {
             <div className="flex flex-col">
               <div className="max-h-[300px] overflow-y-auto p-3">
                 <div className="mb-4">
-                  <div className="text-muted-foreground mb-2 text-sm font-semibold">
+                  <div className="mb-2 text-xs font-semibold text-stone-600">
                     {CLIMATE_CATEGORY_FILTER_CONFIG.name}
                   </div>
                   <div className="space-y-2">
@@ -73,7 +73,7 @@ export const ClimateFilterRow = ({ prefix }: RowFilterProps) => {
                   </div>
                 </div>
 
-                <div className="text-muted-foreground mb-2 text-sm font-semibold">
+                <div className="mb-2 text-xs font-semibold text-stone-600">
                   {YEAR_NET_ZERO_FILTER_CONFIG.name}
                 </div>
                 <div className="space-y-2">
