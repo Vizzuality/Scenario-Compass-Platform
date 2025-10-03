@@ -32,10 +32,10 @@ const BasePlot: React.FC<AreaChartProps> = ({ runs, prefix }) => {
   return plotContainer;
 };
 
-export const AreaPlot = ({ data }: { data: RunPipelineReturn }) => {
+export const AreaPlot = ({ data, prefix }: { data: RunPipelineReturn; prefix?: string }) => {
   return (
     <PlotStateHandler data={data} fieldName="runs">
-      {(runs) => <BasePlot runs={runs} />}
+      {(runs) => <BasePlot runs={runs} prefix={prefix} />}
     </PlotStateHandler>
   );
 };
