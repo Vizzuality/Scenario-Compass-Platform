@@ -2,7 +2,8 @@ import { generateExtendedRuns } from "@/hooks/runs/utils/generate-extended-runs"
 import { getMetaPoints } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
 import { DataFrame } from "@iiasa/ixmp4-ts";
 import { useQueries } from "@tanstack/react-query";
-import { extractDataPoints, getDataPointsFilter } from "@/hooks/runs/filtering/utils";
+import { extractDataPoints } from "@/hooks/runs/utils/extract-data-points";
+import { getDataPointsFilter } from "@/hooks/runs/filtering/utils";
 import queryKeys from "@/lib/query-keys";
 import {
   DataPointsQueriesReturn,
@@ -10,12 +11,45 @@ import {
   RunPipelineReturn,
 } from "@/hooks/runs/pipeline/types";
 import useComputeEnergyShare from "@/hooks/runs/filtering/use-compute-energy-share";
-import { filterRunsByMetaIndicators } from "@/hooks/runs/utils";
+import { filterRunsByMetaIndicators } from "@/hooks/runs/utils/filtering";
 import useComputeLandUse from "@/hooks/runs/filtering/use-compute-land-use";
 import { useBaseUrlParams } from "@/hooks/nuqs/url-params/base/use-base-url-params";
 import { useFilterUrlParams } from "@/hooks/nuqs/url-params/filter/use-filter-url-params";
 
-export default function useSyncRunsPipeline({
+/**
+ * A React hook that fetches and processes run data for multiple variables with optional filtering.
+ *
+ * This hook orchestrates a multi-step data pipeline:
+ * 1. Fetches data points for each specified variable based on geography and time parameters
+ * 2. Retrieves meta indicators for all unique runs found in the data points
+ * 3. Enriches runs with computed energy shares and land use metrics
+ * 4. Applies meta indicator filters (climate category, net zero year, renewables share, etc.)
+ *
+ * @param params - Configuration object for the pipeline
+ * @param params.variablesNames - Array of variable names to fetch data for
+ * @param params.runId - Optional run ID to filter data points to a specific run
+ * @param params.prefix - Optional URL parameter prefix for reading namespaced query parameters
+ *
+ * @returns An object containing:
+ * - `runs`: Array of filtered and extended run objects
+ * - `isLoading`: Boolean indicating if any queries are still loading
+ * - `isError`: Boolean indicating if any queries have errored
+ *
+ * @example
+ * ```typescript
+ * const { runs, isLoading, isError } = useCombineRunsForVariablesPipeline({
+ *   variablesNames: ['Temperature|Global Mean', 'Emissions|CO2'],
+ *   runId: 123,
+ *   prefix: 'comparison'
+ * });
+ * ```
+ *
+ * @remarks
+ * - Returns an empty array if geography is not specified in URL parameters
+ * - Automatically deduplicates run IDs across multiple variable queries
+ * - Matches data points with their corresponding meta indicators using run ID arrays
+ */
+export default function useCombineRunsForVariablesPipeline({
   prefix,
   runId,
   variablesNames = [],

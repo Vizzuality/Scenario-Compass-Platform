@@ -2,11 +2,8 @@
 
 import queryKeys from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
-import {
-  DataPointsFilterParams,
-  extractDataPoints,
-  getDataPointsFilter,
-} from "@/hooks/runs/filtering/utils";
+import { DataPointsFilterParams, getDataPointsFilter } from "@/hooks/runs/filtering/utils";
+import { extractDataPoints } from "@/hooks/runs/utils/extract-data-points";
 
 export default function useTopDataPointsFilter({
   geography,

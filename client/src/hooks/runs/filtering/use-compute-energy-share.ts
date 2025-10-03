@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/lib/query-keys";
-import { extractDataPoints } from "@/hooks/runs/filtering/utils";
 import { useMemo } from "react";
 import { geographyConfig } from "@/lib/config/filters/geography-filter-config";
 import {
@@ -14,6 +13,7 @@ import {
   RENEWABLES_SHARE_2050,
 } from "@/lib/config/filters/energy-filter-config";
 import { useBaseUrlParams } from "@/hooks/nuqs/url-params/base/use-base-url-params";
+import { extractDataPoints } from "@/hooks/runs/utils/extract-data-points";
 
 export interface EnergyShare {
   [FOSSIL_SHARE_2050]: number;

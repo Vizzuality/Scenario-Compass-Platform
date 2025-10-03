@@ -1,5 +1,5 @@
 import { PlotContainer, PlotWidgetHeader } from "@/components/plots/components";
-import { useSingleRunPipeline } from "@/hooks/runs/pipeline/use-single-run-pipeline";
+import { useGetSingleRunForVariablePipeline } from "@/hooks/runs/pipeline/getters/use-get-single-run-for-variable-pipeline";
 import LoadingDots from "@/components/animations/loading-dots";
 import React, { useEffect } from "react";
 import { DataFetchError } from "@/components/error-state/data-fetch-error";
@@ -30,11 +30,17 @@ const GWP_N2O_WITH_UNIT_CONVERSION = 0.298;
  * - N2O: kt N2O/year → Mt CO2eq/year (GWP = 298, kt to Mt = ÷1000)
  */
 export function KyotoGasesPlot({ runId }: Props) {
-  const kyotoGases = useSingleRunPipeline({ variable: "Emissions|Kyoto Gases", runId });
-  const CO2 = useSingleRunPipeline({ variable: "Emissions|CO2", runId });
-  const CH4_AFOLU = useSingleRunPipeline({ variable: "Emissions|CH4|AFOLU", runId });
-  const CH4_ENERGY = useSingleRunPipeline({ variable: "Emissions|CH4|Energy", runId });
-  const N2O = useSingleRunPipeline({ variable: "Emissions|N2O", runId });
+  const kyotoGases = useGetSingleRunForVariablePipeline({
+    variable: "Emissions|Kyoto Gases",
+    runId,
+  });
+  const CO2 = useGetSingleRunForVariablePipeline({ variable: "Emissions|CO2", runId });
+  const CH4_AFOLU = useGetSingleRunForVariablePipeline({ variable: "Emissions|CH4|AFOLU", runId });
+  const CH4_ENERGY = useGetSingleRunForVariablePipeline({
+    variable: "Emissions|CH4|Energy",
+    runId,
+  });
+  const N2O = useGetSingleRunForVariablePipeline({ variable: "Emissions|N2O", runId });
 
   const isError = [kyotoGases, CO2, CH4_AFOLU, CH4_ENERGY, N2O].some(
     (pipeline) => pipeline.isError,

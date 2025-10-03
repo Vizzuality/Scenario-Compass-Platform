@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { PlotWidgetHeader } from "@/components/plots/components";
 import { useRouter } from "next/navigation";
 import { ChartType, PLOT_TYPE_OPTIONS } from "@/components/plots/components";
-import { useMultipleRunsPipeline } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
+import { useGetMultipleRunsForVariablePipeline } from "@/hooks/runs/pipeline/getters/use-get-multiple-runs-for-variable-pipeline";
 import { INTERNAL_PATHS } from "@/lib/paths";
 import { PlotConfig } from "@/lib/config/tabs/variables-config";
 import { VariableSelect } from "@/components/plots/components";
@@ -23,7 +23,7 @@ export function MultipleRunsPlotWidget({ plotConfig, prefix, initialChartType = 
   const [chartType, setChartType] = useState<ChartType>(initialChartType);
   const { getVariable, setVariable } = useTabAndVariablesParams(prefix);
   const currentVariable = getVariable(plotConfig);
-  const data = useMultipleRunsPipeline({ variable: currentVariable, prefix });
+  const data = useGetMultipleRunsForVariablePipeline({ variable: currentVariable, prefix });
   const router = useRouter();
   const { chartRef, handleDownload } = usePlotDownload({
     runs: data.runs,

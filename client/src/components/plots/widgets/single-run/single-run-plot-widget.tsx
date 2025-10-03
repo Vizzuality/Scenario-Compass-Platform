@@ -2,7 +2,7 @@
 
 import { PlotWidgetHeader } from "@/components/plots/components/plot-widget-header";
 import { SingleScenarioPlotConfig } from "@/lib/config/tabs/variables-config";
-import useSyncRunsPipeline from "@/hooks/runs/pipeline/use-sync-runs-pipeline";
+import useCombineRunsForVariablesPipeline from "@/hooks/runs/pipeline/use-combine-runs-for-variables-pipeline";
 import PlotLegend from "@/components/plots/components/plot-legend";
 import { StackedAreaPlot } from "@/components/plots/plot-variations";
 import { usePlotDownload } from "@/hooks/plots/download/use-plot-download";
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export function SingleRunPlotWidget({ runId, plotConfig }: Props) {
-  const data = useSyncRunsPipeline({
+  const data = useCombineRunsForVariablesPipeline({
     variablesNames: plotConfig.variables as string[],
     runId,
   });

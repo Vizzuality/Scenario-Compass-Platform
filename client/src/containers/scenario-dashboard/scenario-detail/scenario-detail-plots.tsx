@@ -1,14 +1,16 @@
 "use client";
 
 import SingleRunScenarioFlags from "@/containers/scenario-dashboard/components/runs-pannel/scenario-flags/single-run-scenario-flags";
-import useSyncVariables from "@/hooks/runs/pipeline/use-sync-variables";
 import { SINGLE_SCENARIO_VIEW_PLOTS_CONFIG_ARRAY } from "@/lib/config/tabs/tabs-config";
 import { SingleRunPlotWidget } from "@/components/plots/widgets/single-run/single-run-plot-widget";
 import AdditionalInformation from "@/containers/scenario-dashboard/components/runs-pannel/components/additional-information";
 import { KyotoGasesPlot } from "@/components/plots/plot-variations/custom/kyoto/kyoto-gases-plot";
+import useGetVariablesForTab from "@/hooks/runs/pipeline/use-get-variables-for-tab";
+import useCombineRunsForVariablesPipeline from "@/hooks/runs/pipeline/use-combine-runs-for-variables-pipeline";
 
 export default function ScenarioTabs({ runId }: { runId: number }) {
-  const { result } = useSyncVariables({ runId });
+  const { variables } = useGetVariablesForTab({});
+  const result = useCombineRunsForVariablesPipeline({ variablesNames: variables, runId });
 
   return (
     <div className="bg-background w-full">

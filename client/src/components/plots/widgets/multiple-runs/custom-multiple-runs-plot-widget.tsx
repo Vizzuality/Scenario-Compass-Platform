@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { PlotWidgetHeader } from "@/components/plots/components";
 import { useRouter } from "next/navigation";
 import { ChartType, PLOT_TYPE_OPTIONS } from "@/components/plots/components";
-import { useMultipleRunsPipeline } from "@/hooks/runs/pipeline/use-multiple-runs-pipeline";
+import { useGetMultipleRunsForVariablePipeline } from "@/hooks/runs/pipeline/getters/use-get-multiple-runs-for-variable-pipeline";
 import { INTERNAL_PATHS } from "@/lib/paths";
 import { ExtendedRun } from "@/hooks/runs/pipeline/types";
 import { useQuery } from "@tanstack/react-query";
@@ -47,7 +47,10 @@ export function CustomMultipleRunsPlotWidget({
   const currentVariable = variableOptions?.find(
     (variable) => variable.id === selectedVariableIndex,
   );
-  const data = useMultipleRunsPipeline({ variable: currentVariable?.name || "", prefix });
+  const data = useGetMultipleRunsForVariablePipeline({
+    variable: currentVariable?.name || "",
+    prefix,
+  });
 
   const { chartRef, handleDownload } = usePlotDownload({
     runs: data.runs,
