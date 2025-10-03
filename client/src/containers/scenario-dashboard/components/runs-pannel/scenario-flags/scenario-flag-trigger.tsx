@@ -56,7 +56,8 @@ export function BaseFlagTrigger({
           style={{ backgroundColor: category.color }}
         />
         <span className={cn("flex-1 text-left text-sm", isHidden && "opacity-50")}>
-          {category.label} <strong>({category.count})</strong>
+          <p>{category.label}</p>
+          <strong>({category.count} scenarios)</strong>
         </span>
       </div>
       <div className="flex gap-2">

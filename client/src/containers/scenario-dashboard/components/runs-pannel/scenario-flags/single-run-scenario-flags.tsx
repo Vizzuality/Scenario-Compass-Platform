@@ -17,6 +17,7 @@ interface Props {
   result: RunPipelineReturn;
 }
 
+// @TODO update this
 export default function SingleRunScenarioFlags({ result }: Props) {
   const categories = useMemo(() => categorizeRuns(result.runs), [result.runs]);
   const categoriesWithRuns = useMemo(

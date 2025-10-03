@@ -147,6 +147,7 @@ export const getRunCategory = (metaIndicators: Array<ShortMetaIndicator>): Categ
  * based on a priority hierarchy: both types > concern only > plausibility only > no flags.
  */
 export const categorizeRuns = (runs: ExtendedRun[]): Record<CategoryKey, RunCategory> => {
+  const uniqueRuns = Array.from(new Map(runs.map((run) => [run.runId, run])).values());
   const categories = Object.fromEntries(
     Object.entries(CATEGORY_CONFIG).map(([key, config]) => [
       key,
@@ -154,7 +155,7 @@ export const categorizeRuns = (runs: ExtendedRun[]): Record<CategoryKey, RunCate
     ]),
   ) as unknown as Record<CategoryKey, RunCategory>;
 
-  runs.forEach((run) => {
+  uniqueRuns.forEach((run) => {
     categories[run.flagCategory].runs.push(run);
   });
 

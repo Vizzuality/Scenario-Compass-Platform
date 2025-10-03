@@ -18,17 +18,10 @@ export const SCENARIO_FLAGS_ACCORDION_VALUE = "scenario-flags";
 interface SharedContentProps {
   result: RunPipelineReturn;
   prefix?: string;
-  isOpen: boolean;
-  showDetailsWhenClosed?: boolean;
 }
 
-export function SharedScenarioFlagsContent({
-  result,
-  prefix,
-  isOpen,
-  showDetailsWhenClosed = true,
-}: SharedContentProps) {
-  const { categories, highCategories, mediumCategories, okCategories, totalCategories } =
+export function SharedScenarioFlagsContent({ result, prefix }: SharedContentProps) {
+  const { totalRuns, categories, highCategories, mediumCategories, okCategories } =
     useScenarioFlagsData(result.runs);
   const { showVetting, setShowVetting } = useScenarioFlagsSelection(prefix);
 
@@ -37,29 +30,16 @@ export function SharedScenarioFlagsContent({
       <AccordionTrigger className="pt-0 pb-1.5 text-base font-bold text-stone-800">
         <div className="flex items-center gap-4">
           <p className="text-base">Reasons For Concern</p>
-          {!isOpen && showDetailsWhenClosed && (
-            <p className="font-normal">
-              <strong>{totalCategories}</strong> Flags (in <strong>{result.runs.length}</strong>)
-              Scenario runs
-            </p>
-          )}
         </div>
       </AccordionTrigger>
       <AccordionContent className="flex flex-col gap-3 border-t pt-4">
         <div className="flex flex-col gap-2">
           <div className="flex">
             <div className="flex">
-              <p>
-                <strong>{totalCategories}</strong> Flags (in <strong>{result.runs.length}</strong>)
-                Scenario runs
-              </p>
+              <p>Classification of selected scenarios by reasons for concern</p>
             </div>
           </div>
-          <ColoredScenarioBar
-            categories={categories}
-            totalRuns={result.runs.length}
-            prefix={prefix}
-          />
+          <ColoredScenarioBar categories={categories} totalRuns={totalRuns} prefix={prefix} />
         </div>
         <div className="flex flex-col gap-5">
           {okCategories.length > 0 && (

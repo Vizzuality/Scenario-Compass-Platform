@@ -30,12 +30,7 @@ export default function MultiRunScenarioFlags({ result, prefix, initialOpen }: P
         value={SCENARIO_FLAGS_ACCORDION_VALUE}
         className={isAccordionOpen ? "border-b-0" : ""}
       >
-        <SharedScenarioFlagsContent
-          result={result}
-          prefix={prefix}
-          isOpen={isAccordionOpen}
-          showDetailsWhenClosed={initialOpen !== undefined}
-        />
+        <SharedScenarioFlagsContent result={result} prefix={prefix} />
       </AccordionItem>
     </Accordion>
   );
