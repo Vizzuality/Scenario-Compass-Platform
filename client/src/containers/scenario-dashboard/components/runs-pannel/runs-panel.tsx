@@ -2,7 +2,7 @@
 
 import ScenarioModelMetrics from "@/containers/scenario-dashboard/components/runs-pannel/components/scenario-model-metrics";
 import AdditionalInformation from "@/containers/scenario-dashboard/components/runs-pannel/components/additional-information";
-import MultiRunScenarioFlags from "@/containers/scenario-dashboard/components/runs-pannel/scenario-flags/multi-run-scenario-flags";
+import MultiRunScenarioFlags from "@/containers/scenario-dashboard/components/runs-pannel/scenario-flags/multi-run-scenario-flags-uncontrolled";
 import NavigateToCompareScenarios from "@/containers/scenario-dashboard/components/comparison/navigate-to-compare-scenarios";
 import useShowReasonsForConcern from "@/hooks/nuqs/use-show-reasons-for-concer";
 import useGetVariablesForTab from "@/hooks/runs/pipeline/use-get-variables-for-tab";

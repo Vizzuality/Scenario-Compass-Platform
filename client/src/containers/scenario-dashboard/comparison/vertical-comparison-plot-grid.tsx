@@ -9,7 +9,7 @@ export const VerticalComparisonPlotGrid = ({
   prefix,
 }: {
   selectedTab: TabConfig;
-  prefix: string;
+  prefix?: string;
 }) => {
   if (selectedTab.isCustom)
     return (
