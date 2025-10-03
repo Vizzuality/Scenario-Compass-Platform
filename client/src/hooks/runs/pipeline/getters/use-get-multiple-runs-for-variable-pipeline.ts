@@ -9,7 +9,7 @@ export function useGetMultipleRunsForVariablePipeline({
   variable,
   prefix = "",
 }: SingleRunPipelineParams): RunPipelineReturn {
-  const { year, endYear, startYear, geography } = useBaseUrlParams(prefix);
+  const { year, endYear, startYear, geography } = useBaseUrlParams({ prefix });
   const {
     dataPoints,
     isLoading: isLoadingDataPointsFiltering,

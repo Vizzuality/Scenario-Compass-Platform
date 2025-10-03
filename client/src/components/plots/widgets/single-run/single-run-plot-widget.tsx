@@ -8,14 +8,12 @@ import { StackedAreaPlot } from "@/components/plots/plot-variations";
 import { usePlotDownload } from "@/hooks/plots/download/use-plot-download";
 
 interface Props {
-  runId: number;
   plotConfig: SingleScenarioPlotConfig;
 }
 
-export function SingleRunPlotWidget({ runId, plotConfig }: Props) {
+export function SingleRunPlotWidget({ plotConfig }: Props) {
   const data = useCombineRunsForVariablesPipeline({
     variablesNames: plotConfig.variables as string[],
-    runId,
   });
 
   const { chartRef, legendRef, handleDownload } = usePlotDownload({

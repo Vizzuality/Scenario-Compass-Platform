@@ -1,13 +1,5 @@
 import { geographyConfig } from "@/lib/config/filters/geography-filter-config";
-
-export interface DataPointsFilterParams {
-  runId?: number | null;
-  geography: string | null;
-  year?: string | null;
-  startYear: string | null;
-  endYear: string | null;
-  variable: string;
-}
+import { DataPointsFilterParams } from "@/hooks/runs/filtering/types";
 
 export const getDataPointsFilter = ({
   geography,
@@ -15,7 +7,7 @@ export const getDataPointsFilter = ({
   startYear,
   endYear,
   variable,
-}: Omit<DataPointsFilterParams, "runId">) => {
+}: Omit<DataPointsFilterParams, "runId" | "model" | "scenario">) => {
   const baseFilter = {
     region: { name: geographyConfig.find((g) => g.value === geography)?.lookupName },
     variable: {

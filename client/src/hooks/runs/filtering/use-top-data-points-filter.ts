@@ -2,8 +2,9 @@
 
 import queryKeys from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
-import { DataPointsFilterParams, getDataPointsFilter } from "@/hooks/runs/filtering/utils";
+import { getDataPointsFilter } from "@/hooks/runs/filtering/utils";
 import { extractDataPoints } from "@/hooks/runs/utils/extract-data-points";
+import { DataPointsFilterParams } from "@/hooks/runs/filtering/types";
 
 export default function useTopDataPointsFilter({
   geography,
@@ -11,12 +12,21 @@ export default function useTopDataPointsFilter({
   startYear,
   endYear,
   variable,
-  runId,
+  model,
+  scenario,
 }: DataPointsFilterParams) {
   const filter = getDataPointsFilter({ geography, year, startYear, endYear, variable });
 
   const queryKey = queryKeys.dataPoints.tabulate({
-    ...(runId ? { run: { id: runId } } : {}),
+    ...(model &&
+      scenario && {
+        model: {
+          name: String(model),
+        },
+        scenario: {
+          name: String(scenario),
+        },
+      }),
     ...filter,
   });
 

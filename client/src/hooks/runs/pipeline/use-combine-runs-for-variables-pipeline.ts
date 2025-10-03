@@ -51,14 +51,12 @@ import { useFilterUrlParams } from "@/hooks/nuqs/url-params/filter/use-filter-ur
  */
 export default function useCombineRunsForVariablesPipeline({
   prefix,
-  runId,
   variablesNames = [],
 }: {
   variablesNames: string[];
-  runId?: number;
   prefix?: string;
 }): RunPipelineReturn {
-  const { year, endYear, startYear, geography } = useBaseUrlParams(prefix);
+  const { year, endYear, startYear, geography, model, scenario } = useBaseUrlParams({ prefix });
   const {
     climateCategory,
     yearNetZero,
@@ -73,7 +71,16 @@ export default function useCombineRunsForVariablesPipeline({
     queries: variablesNames.map((variable) => {
       const filter = getDataPointsFilter({ geography, year, startYear, endYear, variable });
       const queryKey = {
-        ...(runId ? { run: { id: runId } } : {}),
+        ...(model && scenario
+          ? {
+              model: {
+                name: String(model),
+              },
+              scenario: {
+                name: String(scenario),
+              },
+            }
+          : {}),
         ...filter,
       };
 
