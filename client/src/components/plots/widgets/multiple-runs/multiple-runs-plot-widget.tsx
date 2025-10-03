@@ -63,7 +63,7 @@ export function MultipleRunsPlotWidget({ plotConfig, prefix, initialChartType = 
         currentVariable={currentVariable}
       />
       <div ref={chartRef}>
-        {chartType === PLOT_TYPE_OPTIONS.AREA && <AreaPlot data={data} />}
+        {chartType === PLOT_TYPE_OPTIONS.AREA && <AreaPlot data={data} prefix={prefix} />}
         {chartType === PLOT_TYPE_OPTIONS.DOTS && <DotPlot data={data} />}
         {chartType === PLOT_TYPE_OPTIONS.MULTIPLE_LINE && (
           <MultiLinePlot data={data} prefix={prefix} onRunClick={handleRunClick} />

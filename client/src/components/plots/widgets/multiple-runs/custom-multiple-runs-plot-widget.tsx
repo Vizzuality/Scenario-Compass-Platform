@@ -119,7 +119,7 @@ export function CustomMultipleRunsPlotWidget({
         />
       </div>
       <div ref={chartRef}>
-        {chartType === PLOT_TYPE_OPTIONS.AREA && <AreaPlot data={data} />}
+        {chartType === PLOT_TYPE_OPTIONS.AREA && <AreaPlot data={data} prefix={prefix} />}
         {chartType === PLOT_TYPE_OPTIONS.MULTIPLE_LINE && (
           <MultiLinePlot data={data} prefix={prefix} onRunClick={handleRunClick} />
         )}
