@@ -1,6 +1,6 @@
 import Image from "next/image";
 import tapImage from "@/assets/images/tap-image.webp";
-import { ComboboxVariableSelect } from "@/components/plots/components/combobox-variable-select";
+import { ComboboxVariableSelect } from "@/components/plots/components/variable-select/combobox-variable-select";
 import { Variable } from "@iiasa/ixmp4-ts";
 import { cn } from "@/lib/utils";
 

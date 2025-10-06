@@ -8,7 +8,6 @@ import { useGetMultipleRunsForVariablePipeline } from "@/hooks/runs/pipeline/get
 import { INTERNAL_PATHS } from "@/lib/paths";
 import { ExtendedRun } from "@/hooks/runs/pipeline/types";
 import { useQuery } from "@tanstack/react-query";
-import queryKeys from "@/lib/query-keys";
 import { ComboboxVariableSelect } from "@/components/plots/components";
 import { Variable } from "@iiasa/ixmp4-ts";
 import { useTabAndVariablesParams } from "@/hooks/nuqs/use-tabs-and-variables-params";
@@ -24,8 +23,6 @@ interface Props {
   initialChartType?: ChartType;
 }
 
-const queryKey = queryKeys.variables.list();
-
 export function CustomMultipleRunsPlotWidget({
   prefix,
   isEnabled,
@@ -38,12 +35,25 @@ export function CustomMultipleRunsPlotWidget({
     isError,
     isLoading,
   } = useQuery({
-    ...queryKey,
+    queryKey: ["localVariables"],
+    queryFn: async () => {
+      const response = await fetch("/variables.json");
+      if (!response.ok) {
+        throw new Error("Failed to fetch variables");
+      }
+      const data = await response.json();
+
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      return data as Variable[];
+    },
   });
+
   const [chartType, setChartType] = useState<ChartType>(initialChartType);
   const router = useRouter();
   const { setCustomVariable, getCustomVariable } = useTabAndVariablesParams(prefix);
   const selectedVariableIndex = getCustomVariable(index);
+
   const currentVariable = variableOptions?.find(
     (variable) => variable.id === selectedVariableIndex,
   );
