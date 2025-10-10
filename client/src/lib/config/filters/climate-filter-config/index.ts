@@ -1,6 +1,6 @@
 const CLIMATE_CATEGORY_SHORT_NAMES = [
-  "GW1a",
-  "GW1b",
+  "GW0",
+  "GW1",
   "GW2",
   "GW3",
   "GW4",
@@ -51,7 +51,7 @@ export const YEAR_NET_ZERO_FILTER_CONFIG = {
   })),
 };
 
-export const CLIMATE_CATEGORY_META_INDICATOR_KEY = "Climate Category|SCI 2025 [Name]";
+export const CLIMATE_CATEGORY_META_INDICATOR_KEY = "Climate Category|SCI 2025";
 
 export const YEAR_NET_ZERO_META_INDICATOR_KEY = "Emissions Diagnostics|Year of Net Zero|CO2";
 
