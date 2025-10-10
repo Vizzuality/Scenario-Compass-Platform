@@ -67,7 +67,7 @@ export default function GeographyFilter({ variant }: Props) {
           >
             {geography
               ? geographyConfig.find((option) => option.value === geography)?.label
-              : "Select geography-filter-config..."}
+              : "Select geography..."}
             <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" aria-hidden="true" />
           </Button>
         </PopoverTrigger>
