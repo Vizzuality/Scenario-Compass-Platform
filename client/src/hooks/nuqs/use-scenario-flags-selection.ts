@@ -1,4 +1,4 @@
-import { useQueryState } from "nuqs";
+import { parseAsBoolean, useQueryState } from "nuqs";
 import { CATEGORY_CONFIG } from "@/lib/config/reasons-of-concern/category-config";
 
 type FlagState = "selected" | "hidden" | "default";
@@ -27,6 +27,7 @@ type FlagsState = Record<string, FlagState>;
  */
 export const useScenarioFlagsSelection = (prefix: string = "") => {
   const paramName = prefix ? `${prefix}Flags` : "flags";
+  const showVettingParamName = prefix ? `${prefix}ShowVetting` : "showVetting";
 
   const [flagsState, setFlagsState] = useQueryState<FlagsState>(paramName, {
     defaultValue: {},
@@ -54,6 +55,11 @@ export const useScenarioFlagsSelection = (prefix: string = "") => {
     },
     shallow: false,
   });
+
+  const [showVetting, setShowVetting] = useQueryState(
+    showVettingParamName,
+    parseAsBoolean.withDefault(true),
+  );
 
   const getFlagState = (categoryKey: string): FlagState => {
     const abbrev = CATEGORY_CONFIG[categoryKey as keyof typeof CATEGORY_CONFIG]?.abbrev;
@@ -122,6 +128,8 @@ export const useScenarioFlagsSelection = (prefix: string = "") => {
   return {
     selectedFlags,
     hiddenFlags,
+    showVetting,
+    setShowVetting,
     handleCheckboxChange,
     handleHideToggle,
     isCategorySelected,

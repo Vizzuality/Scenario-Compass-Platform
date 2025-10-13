@@ -9,6 +9,9 @@ import { BaseFlagTrigger } from "@/containers/scenario-dashboard/components/runs
 import { RunPipelineReturn } from "@/hooks/runs/pipeline/types";
 import { ColoredScenarioBar } from "@/containers/scenario-dashboard/components/runs-pannel/scenario-flags/colored-scenario-bar";
 import { useScenarioFlagsData } from "@/hooks/plots/use-scenario-flags-data";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { useScenarioFlagsSelection } from "@/hooks/nuqs/use-scenario-flags-selection";
 
 export const SCENARIO_FLAGS_ACCORDION_VALUE = "scenario-flags";
 
@@ -27,6 +30,7 @@ export function SharedScenarioFlagsContent({
 }: SharedContentProps) {
   const { categories, highCategories, mediumCategories, okCategories, totalCategories } =
     useScenarioFlagsData(result.runs);
+  const { showVetting, setShowVetting } = useScenarioFlagsSelection(prefix);
 
   return (
     <>
@@ -105,6 +109,13 @@ export function SharedScenarioFlagsContent({
               </Accordion>
             </div>
           )}
+          <div className="flex flex-col gap-3">
+            <strong className="text-foreground text-xs">VETTING 2025</strong>
+            <div className="flex items-center space-x-2">
+              <Switch id="show-vetting" checked={showVetting} onCheckedChange={setShowVetting} />
+              <Label htmlFor="show-vetting">Show Vetting 2025 Scenarios</Label>
+            </div>
+          </div>
         </div>
       </AccordionContent>
     </>

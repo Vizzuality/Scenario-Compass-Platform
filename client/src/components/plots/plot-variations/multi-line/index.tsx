@@ -16,7 +16,7 @@ interface Props {
 
 const BasePlot: React.FC<Props> = ({ runs, prefix, onRunClick }) => {
   const { svgRef, dimensions, plotContainer } = usePlotContainer();
-  const { selectedFlags, hiddenFlags } = useScenarioFlagsSelection(prefix);
+  const { selectedFlags, hiddenFlags, showVetting } = useScenarioFlagsSelection(prefix);
 
   useEffect(() => {
     if (!runs.length || !svgRef.current || dimensions.WIDTH === 0) return;
@@ -28,8 +28,9 @@ const BasePlot: React.FC<Props> = ({ runs, prefix, onRunClick }) => {
       selectedFlags,
       hiddenFlags,
       onRunClick,
+      showVetting,
     });
-  }, [runs, dimensions, selectedFlags, hiddenFlags, onRunClick, svgRef]);
+  }, [runs, dimensions, selectedFlags, hiddenFlags, onRunClick, svgRef, showVetting]);
 
   return plotContainer;
 };

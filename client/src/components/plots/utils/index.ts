@@ -11,6 +11,7 @@ import { PlotDimensions } from "@/components/plots/utils/dimensions";
 import {
   CATEGORY_CONFIG,
   getCategoryAbbrev,
+  VETTING2025,
 } from "@/lib/config/reasons-of-concern/category-config";
 import { ExtendedRun, ShortDataPoint } from "@/hooks/runs/pipeline/types";
 import { calculateOptimalTicksWithNiceYears } from "@/components/plots/utils/ticks-computation-utils";
@@ -235,13 +236,23 @@ export const getRunColor = (
   return hasSelection ? LIGHT_GREY : GREY;
 };
 
-export const filterVisibleRuns = (runs: ExtendedRun[], hiddenFlags: string[]): ExtendedRun[] => {
-  if (hiddenFlags.length === 0) return runs;
+const hasVettingFlag = (run: ExtendedRun): boolean =>
+  run.metaIndicators.some((mi) => mi.key === VETTING2025);
 
+const isHiddenByFlag = (run: ExtendedRun, hiddenFlags: string[]): boolean => {
+  if (hiddenFlags.length === 0 || !run.flagCategory) return false;
+  const abbrev = getCategoryAbbrev(run.flagCategory);
+  return abbrev ? hiddenFlags.includes(abbrev) : false;
+};
+
+export const filterVisibleRuns = (
+  runs: ExtendedRun[],
+  hiddenFlags: string[],
+  showVetting: boolean,
+): ExtendedRun[] => {
   return runs.filter((run) => {
-    if (!run.flagCategory) return true;
-    const abbrev = getCategoryAbbrev(run.flagCategory);
-    return !abbrev || !hiddenFlags.includes(abbrev);
+    if (!showVetting && hasVettingFlag(run)) return false;
+    return !isHiddenByFlag(run, hiddenFlags);
   });
 };
 
