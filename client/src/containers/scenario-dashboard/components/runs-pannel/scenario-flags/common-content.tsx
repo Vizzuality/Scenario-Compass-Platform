@@ -58,16 +58,18 @@ export function SharedScenarioFlagsContent({
           />
         </div>
         <div className="flex flex-col gap-5">
-          {highCategories.length > 0 && (
+          {okCategories.length > 0 && (
             <div className="flex flex-col gap-2">
-              <strong className="text-foreground text-xs">HIGH</strong>
+              <strong className="text-foreground text-xs">NO REASONS FOR CONCERN</strong>
               <Accordion type="single" collapsible className="w-full">
-                {highCategories.map(([key, category]) => (
+                {okCategories.map(([key, category]) => (
                   <AccordionItem key={key} value={key}>
-                    <AccordionTrigger className="[&_svg]:text-foreground flex w-full items-start px-0 py-2">
-                      <BaseFlagTrigger categoryKey={key} category={category} prefix={prefix} />
-                    </AccordionTrigger>
-                    <AccordionItemContent category={category} />
+                    <BaseFlagTrigger
+                      className="pb-2"
+                      categoryKey={key}
+                      category={category}
+                      prefix={prefix}
+                    />
                   </AccordionItem>
                 ))}
               </Accordion>
@@ -88,18 +90,16 @@ export function SharedScenarioFlagsContent({
               </Accordion>
             </div>
           )}
-          {okCategories.length > 0 && (
+          {highCategories.length > 0 && (
             <div className="flex flex-col gap-2">
-              <strong className="text-foreground text-xs">NONE</strong>
+              <strong className="text-foreground text-xs">HIGH</strong>
               <Accordion type="single" collapsible className="w-full">
-                {okCategories.map(([key, category]) => (
+                {highCategories.map(([key, category]) => (
                   <AccordionItem key={key} value={key}>
-                    <BaseFlagTrigger
-                      className="pb-2"
-                      categoryKey={key}
-                      category={category}
-                      prefix={prefix}
-                    />
+                    <AccordionTrigger className="[&_svg]:text-foreground flex w-full items-start px-0 py-2">
+                      <BaseFlagTrigger categoryKey={key} category={category} prefix={prefix} />
+                    </AccordionTrigger>
+                    <AccordionItemContent category={category} />
                   </AccordionItem>
                 ))}
               </Accordion>
