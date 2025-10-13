@@ -93,6 +93,8 @@ export const SUSTAINABILITY_META_KEY = "Sustainability Concern";
 export const VALUE_HIGH = "high";
 export const VALUE_MEDIUM = "medium";
 
+export const VETTING2025 = "Vetting|2025";
+
 export const getCategoryAbbrev = (categoryKey: string): string | undefined => {
   return CATEGORY_CONFIG[categoryKey as keyof typeof CATEGORY_CONFIG]?.abbrev;
 };

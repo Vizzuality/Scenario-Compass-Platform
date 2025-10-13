@@ -30,6 +30,7 @@ interface Props {
   dimensions: PlotDimensions;
   selectedFlags?: string[];
   hiddenFlags?: string[];
+  showVetting?: boolean;
   onRunClick?: (run: ExtendedRun) => void;
 }
 
@@ -39,13 +40,14 @@ export const renderAreaPlot = ({
   dimensions,
   selectedFlags = [],
   hiddenFlags = [],
+  showVetting = true,
 }: Props): void => {
   clearSVG(svg);
   const tooltipManager = createTooltipManager({ svg, dimensions });
   if (!tooltipManager) return;
   const COMPUTED_OPACITY = selectedFlags?.length > 0 ? 0.5 : 1;
   const decadeFilteredRuns = filterDecadePoints(runs);
-  const visibleRuns = filterVisibleRuns(decadeFilteredRuns, hiddenFlags);
+  const visibleRuns = filterVisibleRuns(decadeFilteredRuns, hiddenFlags, showVetting);
 
   if (visibleRuns.length === 0) return;
 

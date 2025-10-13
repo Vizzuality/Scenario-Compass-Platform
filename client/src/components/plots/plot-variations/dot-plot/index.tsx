@@ -15,7 +15,7 @@ interface DotPlotProps {
 
 export const BasePlot: React.FC<DotPlotProps> = ({ runs, prefix }) => {
   const { svgRef, dimensions, plotContainer } = usePlotContainer();
-  const { selectedFlags, hiddenFlags } = useScenarioFlagsSelection(prefix);
+  const { selectedFlags, hiddenFlags, showVetting } = useScenarioFlagsSelection(prefix);
 
   useEffect(() => {
     if (!runs.length || !svgRef.current || dimensions.WIDTH === 0) return;
@@ -26,8 +26,9 @@ export const BasePlot: React.FC<DotPlotProps> = ({ runs, prefix }) => {
       dimensions,
       selectedFlags,
       hiddenFlags,
+      showVetting,
     });
-  }, [dimensions, hiddenFlags, runs, selectedFlags, svgRef]);
+  }, [dimensions, hiddenFlags, runs, selectedFlags, showVetting, svgRef]);
 
   return plotContainer;
 };

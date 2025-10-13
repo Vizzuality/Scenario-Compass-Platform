@@ -29,6 +29,7 @@ interface Props {
   dimensions: PlotDimensions;
   selectedFlags: string[];
   hiddenFlags: string[];
+  showVetting?: boolean;
   onRunClick?: (run: ExtendedRun) => void;
 }
 
@@ -39,11 +40,12 @@ export const renderMultiLinePlot = ({
   selectedFlags = [],
   hiddenFlags = [],
   onRunClick,
+  showVetting = true,
 }: Props): void => {
   clearSVG(svg);
   const tooltipManager = createTooltipManager({ svg, dimensions });
   if (!tooltipManager) return;
-  const visibleRuns = filterVisibleRuns(runs, hiddenFlags);
+  const visibleRuns = filterVisibleRuns(runs, hiddenFlags, showVetting);
   if (visibleRuns.length === 0) return;
 
   const g = createMainGroup(svg, dimensions);
