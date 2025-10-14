@@ -160,7 +160,8 @@ export const categorizeRuns = (runs: ExtendedRun[]): Record<CategoryKey, RunCate
   });
 
   Object.values(categories).forEach((category) => {
-    category.count = category.runs.length;
+    const uniqueRunIdsForCategory = [...new Set(category.runs.map((run) => run.runId))];
+    category.count = uniqueRunIdsForCategory.length;
   });
 
   return categories;

@@ -28,9 +28,9 @@ interface Props {
   svg: SVGSelection;
   runs: ExtendedRun[];
   dimensions: PlotDimensions;
-  selectedFlags?: string[];
-  hiddenFlags?: string[];
-  showVetting?: boolean;
+  selectedFlags: string[];
+  hiddenFlags: string[];
+  showVetting: boolean;
   onRunClick?: (run: ExtendedRun) => void;
 }
 
@@ -40,7 +40,7 @@ export const renderAreaPlot = ({
   dimensions,
   selectedFlags = [],
   hiddenFlags = [],
-  showVetting = true,
+  showVetting,
 }: Props): void => {
   clearSVG(svg);
   const tooltipManager = createTooltipManager({ svg, dimensions });

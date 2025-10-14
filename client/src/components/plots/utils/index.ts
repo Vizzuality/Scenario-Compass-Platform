@@ -250,14 +250,24 @@ export const filterVisibleRuns = (
   hiddenFlags: string[],
   showVetting: boolean,
 ): ExtendedRun[] => {
-  return runs.filter((run) => {
-    if (!showVetting && hasVettingFlag(run)) return false;
-    return !isHiddenByFlag(run, hiddenFlags);
+  let workingRuns: ExtendedRun[] = [];
+
+  if (showVetting) {
+    workingRuns = runs.filter((run) => {
+      return hasVettingFlag(run);
+    });
+  } else {
+    workingRuns = runs;
+  }
+
+  return workingRuns.filter((run) => {
+    const isHidden = isHiddenByFlag(run, hiddenFlags);
+    return !isHidden;
   });
 };
 
-export const filterDecadePoints = (extenedRuns: ExtendedRun[]) => {
-  return extenedRuns.map((run) => {
+export const filterDecadePoints = (extendedRuns: ExtendedRun[]) => {
+  return extendedRuns.map((run) => {
     return {
       ...run,
       orderedPoints: run.orderedPoints.filter((point) => {

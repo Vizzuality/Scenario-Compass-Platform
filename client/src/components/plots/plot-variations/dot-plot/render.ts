@@ -30,7 +30,7 @@ interface Props {
   dimensions: PlotDimensions;
   selectedFlags: string[];
   hiddenFlags: string[];
-  showVetting?: boolean;
+  showVetting: boolean;
   onRunClick?: (run: ExtendedRun) => void;
 }
 
@@ -41,7 +41,7 @@ export const renderDotPlot = ({
   dimensions,
   hiddenFlags,
   onRunClick,
-  showVetting = true,
+  showVetting,
 }: Props): void => {
   clearSVG(svg);
   const tooltipManager = createTooltipManager({ svg, dimensions });

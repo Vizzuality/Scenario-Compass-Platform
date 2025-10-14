@@ -82,8 +82,8 @@ export function useScenarioClearOperations({
       [params.startYear]: useDefaults ? YEAR_OPTIONS[1] : null,
       [params.endYear]: useDefaults ? YEAR_OPTIONS[YEAR_OPTIONS.length - 1] : null,
       [params.geography]: useDefaults ? geographyConfig[0].value : null,
-      [params.model]: params.model,
-      [params.scenario]: params.scenario,
+      [params.model]: null,
+      [params.scenario]: null,
     });
   }, [setFilters, params, useDefaults]);
 

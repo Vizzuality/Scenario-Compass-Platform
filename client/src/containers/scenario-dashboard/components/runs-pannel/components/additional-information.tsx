@@ -24,10 +24,12 @@ export default function AdditionalInformation({ result }: Props) {
     [result.runs],
   );
 
-  const modelsMap = result.runs.reduce(
-    (acc, run) => {
-      if (run.modelName) {
-        acc[run.modelName] = (acc[run.modelName] || 0) + 1;
+  const uniqueModels = [...new Set(result.runs.map((result) => result.modelName))];
+
+  const modelsMap = uniqueModels.reduce(
+    (acc, modelName) => {
+      if (modelName) {
+        acc[modelName] = (acc[modelName] || 0) + 1;
       }
       return acc;
     },
