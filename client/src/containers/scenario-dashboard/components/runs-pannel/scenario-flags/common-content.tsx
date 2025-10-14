@@ -90,10 +90,15 @@ export function SharedScenarioFlagsContent({ result, prefix }: SharedContentProp
             </div>
           )}
           <div className="flex flex-col gap-3">
-            <strong className="text-foreground text-xs">VETTING 2025</strong>
-            <div className="flex items-center space-x-2">
+            <strong className="text-foreground text-xs">
+              Validation against historical and current trends
+            </strong>
+            <div className="flex items-start space-x-2">
               <Switch id="show-vetting" checked={showVetting} onCheckedChange={setShowVetting} />
-              <Label htmlFor="show-vetting">Show Vetting 2025 Scenarios</Label>
+              <Label htmlFor="show-vetting">
+                Show/hide scenarios that are not in line with historical reference data for energy
+                and emissions or that are not aligned with current trends in 2025.
+              </Label>
             </div>
           </div>
         </div>

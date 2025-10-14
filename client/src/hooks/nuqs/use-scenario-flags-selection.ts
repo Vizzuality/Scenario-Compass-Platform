@@ -58,7 +58,7 @@ export const useScenarioFlagsSelection = (prefix: string = "") => {
 
   const [showVetting, setShowVetting] = useQueryState(
     showVettingParamName,
-    parseAsBoolean.withDefault(true),
+    parseAsBoolean.withDefault(false),
   );
 
   const getFlagState = (categoryKey: string): FlagState => {
@@ -74,7 +74,11 @@ export const useScenarioFlagsSelection = (prefix: string = "") => {
     if (state === "default") {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { [abbrev]: _, ...rest } = flagsState;
-      setFlagsState(rest);
+      if (Object.keys(rest).length === 0) {
+        setFlagsState(null);
+      } else {
+        setFlagsState(rest);
+      }
     } else {
       setFlagsState({ ...flagsState, [abbrev]: state });
     }
