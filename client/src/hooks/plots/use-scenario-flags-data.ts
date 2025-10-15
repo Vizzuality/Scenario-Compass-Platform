@@ -2,17 +2,14 @@ import { RunPipelineReturn } from "@/hooks/runs/pipeline/types";
 import { categorizeRuns } from "@/containers/scenario-dashboard/utils/flags-utils";
 import { useMemo } from "react";
 import { CategoryKey } from "@/lib/config/reasons-of-concern/category-config";
+import { RunCategorySummary } from "@/containers/scenario-dashboard/components/runs-pannel/utils";
 
 export function useScenarioFlagsData(runs: RunPipelineReturn["runs"]) {
   const categories = useMemo(() => categorizeRuns(runs), [runs]);
 
-  const categoriesWithRuns = useMemo(
-    () =>
-      (Object.keys(categories) as CategoryKey[])
-        .map((key) => [key, categories[key]] as const)
-        .filter(([, category]) => category.count > 0),
-    [categories],
-  );
+  const categoriesWithRuns = (
+    Object.entries(categories) as [CategoryKey, RunCategorySummary][]
+  ).filter(([, category]) => category.count > 0);
 
   const { highCategories, mediumCategories, okCategories } = useMemo(
     () =>
@@ -36,12 +33,14 @@ export function useScenarioFlagsData(runs: RunPipelineReturn["runs"]) {
     [categoriesWithRuns],
   );
 
-  const totalRuns = categoriesWithRuns.reduce((sum, [, category]) => sum + category.runs.length, 0);
+  const totalCountOfUniqueRuns = categoriesWithRuns.reduce(
+    (sum, [, category]) => sum + category.count,
+    0,
+  );
 
   return {
-    totalRuns,
+    totalCountOfUniqueRuns,
     categories,
-    categoriesWithRuns,
     highCategories,
     mediumCategories,
     okCategories,

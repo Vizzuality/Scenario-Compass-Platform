@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/lib/query-keys";
 import { RunPipelineReturn } from "@/hooks/runs/pipeline/types";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ScenarioModelMetrics({ result }: { result: RunPipelineReturn }) {
   const {
@@ -20,6 +21,10 @@ export default function ScenarioModelMetrics({ result }: { result: RunPipelineRe
         <p className="mb-1.5 border-b pb-1.5 text-base font-bold text-stone-800">
           Loading Scenarios
         </p>
+        <div className="flex w-full flex-col gap-3">
+          <Skeleton className="h-6 w-full rounded-md" />
+          <Skeleton className="h-6 w-3/4 rounded-md" />
+        </div>
       </div>
     );
   }

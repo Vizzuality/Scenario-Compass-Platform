@@ -4,7 +4,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { useMemo } from "react";
 import {
   ADDITIONAL_INFORMATION_META_INDICATORS,
   getAdditionalInformationMetaIndicatorCounts,
@@ -19,17 +18,13 @@ interface Props {
 }
 
 export default function AdditionalInformation({ result }: Props) {
-  const allCounts = useMemo(
-    () => getAdditionalInformationMetaIndicatorCounts(result.runs),
-    [result.runs],
-  );
+  const uniqueRuns = [...new Map(result.runs.map((run) => [run.runId, run])).values()];
+  const allCounts = getAdditionalInformationMetaIndicatorCounts(uniqueRuns);
 
-  const uniqueModels = [...new Set(result.runs.map((result) => result.modelName))];
-
-  const modelsMap = uniqueModels.reduce(
-    (acc, modelName) => {
-      if (modelName) {
-        acc[modelName] = (acc[modelName] || 0) + 1;
+  const modelsMap = uniqueRuns.reduce(
+    (acc, run) => {
+      if (run.modelName) {
+        acc[run.modelName] = (acc[run.modelName] || 0) + 1;
       }
       return acc;
     },
@@ -104,16 +99,19 @@ export default function AdditionalInformation({ result }: Props) {
                 if (key === "Scientific Manuscript (DOI)") {
                   const href = "https://doi.org/" + value;
                   return (
-                    <Link
-                      key={value}
-                      href={href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      title={href}
-                      className="hover:underline"
-                    >
-                      {value}
-                    </Link>
+                    <div key={value} className="flex justify-between">
+                      <Link
+                        key={value}
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={href}
+                        className="hover:underline"
+                      >
+                        {value}
+                      </Link>
+                      <b>({count})</b>
+                    </div>
                   );
                 } else {
                   return (

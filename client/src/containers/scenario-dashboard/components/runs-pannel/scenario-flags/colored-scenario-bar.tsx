@@ -1,11 +1,11 @@
 "use client";
 
 import { CATEGORY_CONFIG, CategoryKey } from "@/lib/config/reasons-of-concern/category-config";
-import { RunCategory } from "@/containers/scenario-dashboard/components/runs-pannel/utils";
+import { RunCategorySummary } from "@/containers/scenario-dashboard/components/runs-pannel/utils";
 import { useScenarioFlagsSelection } from "@/hooks/nuqs/use-scenario-flags-selection";
 
 interface ColoredBarProps {
-  categories: Record<CategoryKey, RunCategory>;
+  categories: Record<CategoryKey, RunCategorySummary>;
   totalRuns: number;
   prefix?: string;
 }
@@ -31,7 +31,7 @@ export const ColoredScenarioBar: React.FC<ColoredBarProps> = ({
       } else if (isFlagHidden) {
         return "white";
       } else {
-        return "#E7E5E4"; // Tailwind stone-200
+        return "#E7E5E4";
       }
     }
 

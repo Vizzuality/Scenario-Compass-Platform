@@ -5,34 +5,32 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { useMemo } from "react";
-import { _getKeyCounts, categorizeRuns } from "@/containers/scenario-dashboard/utils/flags-utils";
+import {
+  getMetaIndicatorsOccurrenceCounts,
+  categorizeRuns,
+} from "@/containers/scenario-dashboard/utils/flags-utils";
 import { CATEGORY_KEYS, CategoryKey } from "@/lib/config/reasons-of-concern/category-config";
 import { InfoIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DataFetchError } from "@/components/error-state/data-fetch-error";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { reasonsForConcernMap } from "@/lib/config/reasons-of-concern/tooltips";
 
 interface Props {
   result: RunPipelineReturn;
 }
 
-// @TODO update this
 export default function SingleRunScenarioFlags({ result }: Props) {
-  const categories = useMemo(() => categorizeRuns(result.runs), [result.runs]);
-  const categoriesWithRuns = useMemo(
-    () =>
-      (Object.keys(categories) as CategoryKey[])
-        .map((key) => [key, categories[key]] as const)
-        .filter(([, category]) => category.count > 0),
-    [categories],
-  );
+  const categories = categorizeRuns(result.runs);
+  const categoriesWithRuns = (Object.keys(categories) as CategoryKey[])
+    .map((key) => [key, categories[key]] as const)
+    .filter(([, category]) => category.count > 0);
 
   if (result.isLoading) {
     return (
       <div className="flex w-full flex-col gap-3">
         <p className="mb-1.5 border-b pb-1.5 text-base font-bold text-stone-800">
-          Reasons for Concern
+          Reasons for concern
         </p>
         <div className="flex w-full flex-col gap-3">
           <Skeleton className="h-6 w-full rounded-md" />
@@ -46,7 +44,7 @@ export default function SingleRunScenarioFlags({ result }: Props) {
     return (
       <div className="mt-8 flex w-full flex-col gap-3">
         <p className="mb-1.5 border-b pb-1.5 text-base font-bold text-stone-800">
-          Reasons for Concern
+          Reasons for concern
         </p>
         <div className="flex flex-col gap-3">
           <DataFetchError />
@@ -60,41 +58,69 @@ export default function SingleRunScenarioFlags({ result }: Props) {
 
   return (
     <div className="mt-8 w-full">
-      <p className="border-b pb-1.5 text-base font-bold text-stone-800">Reasons for Concern</p>
-      {categoriesWithRuns.map(([key, category]) => (
-        <Accordion type="single" value={key} key={key}>
-          <AccordionItem value={key}>
-            <AccordionTrigger>
-              <div className="flex w-full items-start justify-between gap-4">
-                <div className="flex w-full gap-4">
-                  <p className="w-fit">{category.label}</p>
+      <p className="border-b pb-1.5 text-base font-bold text-stone-800">Reasons for concern</p>
+      {categoriesWithRuns.map(([key, category]) => {
+        const metaIndicatorOccurrencePairs = getMetaIndicatorsOccurrenceCounts(category.runs);
+
+        return (
+          <Accordion type="single" value={key} key={key}>
+            <AccordionItem value={key}>
+              <AccordionTrigger>
+                <div className="flex w-full items-start justify-between gap-4">
+                  <div className="flex w-full gap-4">
+                    <p className="w-fit">{category.label}</p>
+                  </div>
                 </div>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <InfoIcon className="h-4 w-4 shrink-0" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="text-xs">
-                      For more information about this flag, please refer to the link below:
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-            </AccordionTrigger>
-            {!hasOnlyNoFlags && (
-              <AccordionContent className="pt-2 pb-4">
-                <div className="space-y-2">
-                  {_getKeyCounts(category.runs).map(([key]) => (
-                    <div key={key} className="border-b py-1.5 text-sm last:border-0">
-                      {key}
+              </AccordionTrigger>
+              {!hasOnlyNoFlags && (
+                <AccordionContent className="pt-2 pb-4">
+                  <div className="space-y-2">
+                    <div className="space-y-2 divide-y">
+                      {metaIndicatorOccurrencePairs.map((metaIndicatorOccurrencePair) => {
+                        const mapItem =
+                          reasonsForConcernMap[metaIndicatorOccurrencePair.metaIndicator];
+                        const metaIndicator = metaIndicatorOccurrencePair.metaIndicator;
+                        return (
+                          <div
+                            key={metaIndicator}
+                            className="flex items-center justify-between gap-2 py-1.5 text-sm"
+                          >
+                            <div className="font-medium text-gray-800">
+                              {mapItem?.flagName || metaIndicator}
+                            </div>
+                            <div className="flex items-center justify-between gap-2">
+                              {mapItem && (
+                                <Tooltip>
+                                  <TooltipTrigger>
+                                    <InfoIcon size={16} />
+                                  </TooltipTrigger>
+                                  <TooltipContent className="flex flex-col gap-4">
+                                    <p className="w-60 whitespace-pre-line">
+                                      {mapItem.description}
+                                    </p>
+                                    <a
+                                      className="text-white underline"
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      href={mapItem.link}
+                                    >
+                                      Read more
+                                    </a>
+                                  </TooltipContent>
+                                </Tooltip>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
-                  ))}
-                </div>
-              </AccordionContent>
-            )}
-          </AccordionItem>
-        </Accordion>
-      ))}
+                  </div>
+                </AccordionContent>
+              )}
+            </AccordionItem>
+          </Accordion>
+        );
+      })}
     </div>
   );
 }
