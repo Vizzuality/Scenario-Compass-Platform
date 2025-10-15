@@ -21,7 +21,7 @@ interface SharedContentProps {
 }
 
 export function SharedScenarioFlagsContent({ result, prefix }: SharedContentProps) {
-  const { totalRuns, categories, highCategories, mediumCategories, okCategories } =
+  const { totalCountOfUniqueRuns, categories, highCategories, mediumCategories, okCategories } =
     useScenarioFlagsData(result.runs);
   const { showVetting, setShowVetting } = useScenarioFlagsSelection(prefix);
 
@@ -29,7 +29,7 @@ export function SharedScenarioFlagsContent({ result, prefix }: SharedContentProp
     <>
       <AccordionTrigger className="pt-0 pb-1.5 text-base font-bold text-stone-800">
         <div className="flex items-center gap-4">
-          <p className="text-base">Reasons For Concern</p>
+          <p className="text-base">Reasons for concern</p>
         </div>
       </AccordionTrigger>
       <AccordionContent className="flex flex-col gap-3 border-t pt-4">
@@ -39,7 +39,11 @@ export function SharedScenarioFlagsContent({ result, prefix }: SharedContentProp
               <p>Classification of selected scenarios by reasons for concern</p>
             </div>
           </div>
-          <ColoredScenarioBar categories={categories} totalRuns={totalRuns} prefix={prefix} />
+          <ColoredScenarioBar
+            categories={categories}
+            totalRuns={totalCountOfUniqueRuns}
+            prefix={prefix}
+          />
         </div>
         <div className="flex flex-col gap-5">
           {okCategories.length > 0 && (

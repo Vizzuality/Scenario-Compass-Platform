@@ -22,7 +22,7 @@ export default function ScenarioTabs() {
             return <SingleRunPlotWidget key={index} plotConfig={plotConfig} />;
           })}
         </div>
-        <div className="mt-8 flex w-120 flex-col gap-6">
+        <div className="my-8 flex w-120 flex-col gap-6">
           <ScenarioDetailsInfo />
           <SingleRunScenarioFlags result={result} />
           <AdditionalInformation result={result} />

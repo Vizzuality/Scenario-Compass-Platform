@@ -16,7 +16,7 @@ export default function NavigateToCompareScenarios() {
   };
 
   return (
-    <Button className="mt-8" onClick={handleClick}>
+    <Button className="mt-8" size="lg" onClick={handleClick}>
       <span>Compare this scenario set</span>
     </Button>
   );

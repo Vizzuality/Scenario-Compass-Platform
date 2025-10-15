@@ -10,26 +10,29 @@ import {
 } from "@/lib/config/filters/climate-filter-config";
 import { ADDITIONAL_INFORMATION_META_INDICATORS } from "@/containers/scenario-dashboard/components/runs-pannel/utils";
 import { useBaseUrlParams } from "@/hooks/nuqs/url-params/base/use-base-url-params";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface InfoItemProps {
   title: string;
   value: string;
 }
 
-const InfoItem: React.FC<InfoItemProps> = ({ title, value }) => (
-  <div className="text-foreground flex items-center justify-center gap-2">
-    <span>•</span>
-    <div className="flex flex-1 justify-between text-sm">
-      <p>{title}</p>
-      <p>{value}</p>
+const InfoItem: React.FC<InfoItemProps> = ({ title, value }) => {
+  return (
+    <div className="text-foreground flex items-center justify-center gap-2">
+      <span>•</span>
+      <div className="flex flex-1 justify-between text-sm">
+        <p>{title}</p>
+        <p>{value}</p>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default function ScenarioDetailsInfo() {
   const { scenario, model } = useBaseUrlParams();
 
-  const { data: metaData } = useQuery({
+  const { data: metaData, isLoading } = useQuery({
     ...queryKeys.metaIndicators.tabulate({
       run: {
         scenario: {
@@ -79,13 +82,22 @@ export default function ScenarioDetailsInfo() {
   return (
     <div className="space-y-2">
       <h1 className="w-full border-b text-base font-bold text-stone-800">Scenario Details</h1>
-      <InfoItem title="Climate category" value={climateCategory.value} />
-      <InfoItem title="Cumulative emissions" value={cumulativeEmissionsWithUnit} />
-      <InfoItem title="Peak temperature" value={peakTemperature.value} />
-      <InfoItem title="Year of net-zero CO2" value={yearNetZeroCO2.value} />
-      <InfoItem title="Year of net-zero GHG" value={yearNetZeroGHG.value} />
-      <InfoItem title="Project" value={projectName.value} />
-      <InfoItem title="Study" value={studyName.value} />
+      {isLoading ? (
+        <div className="flex w-full flex-col gap-3">
+          <Skeleton className="h-6 w-full rounded-md" />
+          <Skeleton className="h-6 w-3/4 rounded-md" />
+        </div>
+      ) : (
+        <>
+          <InfoItem title="Climate category" value={climateCategory.value} />
+          <InfoItem title="Cumulative emissions" value={cumulativeEmissionsWithUnit} />
+          <InfoItem title="Peak temperature" value={peakTemperature.value} />
+          <InfoItem title="Year of net-zero CO2" value={yearNetZeroCO2.value} />
+          <InfoItem title="Year of net-zero GHG" value={yearNetZeroGHG.value} />
+          <InfoItem title="Project" value={projectName.value} />
+          <InfoItem title="Study" value={studyName.value} />
+        </>
+      )}
     </div>
   );
 }

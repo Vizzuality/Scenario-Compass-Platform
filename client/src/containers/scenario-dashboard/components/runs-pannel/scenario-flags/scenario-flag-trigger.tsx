@@ -1,7 +1,7 @@
 import { Eye, EyeOff } from "lucide-react";
 import { useScenarioFlagsSelection } from "@/hooks/nuqs/use-scenario-flags-selection";
 import { CategoryKey } from "@/lib/config/reasons-of-concern/category-config";
-import { RunCategory } from "@/containers/scenario-dashboard/components/runs-pannel/utils";
+import { RunCategorySummary } from "@/containers/scenario-dashboard/components/runs-pannel/utils";
 import { cn } from "@/lib/utils";
 
 export function BaseFlagTrigger({
@@ -11,7 +11,7 @@ export function BaseFlagTrigger({
   className,
 }: {
   categoryKey: CategoryKey;
-  category: RunCategory;
+  category: RunCategorySummary;
   prefix?: string;
   className?: string;
 }) {

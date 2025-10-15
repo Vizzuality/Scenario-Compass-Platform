@@ -1,5 +1,4 @@
 import {
-  CATEGORY_CONFIG,
   CATEGORY_KEYS,
   CategoryKey,
   FEASIBILITY_META_KEY,
@@ -7,27 +6,30 @@ import {
   VALUE_HIGH,
   VALUE_MEDIUM,
 } from "@/lib/config/reasons-of-concern/category-config";
-import { RunCategory } from "@/containers/scenario-dashboard/components/runs-pannel/utils";
+import {
+  initializeMetaIndicatorRunCategorySummaryPair,
+  MetaIndicatorRunCategorySummaryPair,
+} from "@/containers/scenario-dashboard/components/runs-pannel/utils";
 import { ExtendedRun, ShortMetaIndicator } from "@/hooks/runs/pipeline/types";
 
 /**
  * Represents the flag analysis results for a single run.
- * Each boolean indicates whether the run contains that specific type of flag.
+ * @property {boolean} highPlausibility True if run has any "high" severity Plausibility Vetting flags.
+ * @property {boolean} mediumPlausibility True if run has any "medium" severity Plausibility Vetting flags.
+ * @property {boolean} highConcern True if run has any "high" severity Reason For Concern flags.
+ * @property {boolean} mediumConcern True if run has any "medium" severity Reason For Concern flags.
  */
 type RunFlagAnalysis = {
-  /** True if run has any "high" severity Plausibility Vetting flags */
   highPlausibility: boolean;
-  /** True if run has any "medium" severity Plausibility Vetting flags */
   mediumPlausibility: boolean;
-  /** True if run has any "high" severity Reason For Concern flags */
   highConcern: boolean;
-  /** True if run has any "medium" severity Reason For Concern flags */
   mediumConcern: boolean;
 };
 
 /**
  * Filters meta indicators to only include flag-related ones.
  * e.g. "Plausibility Vetting" and "Reason For Concern" are the keys we are interested in.
+ *
  * In the dataset we can find meta indicators with keys like:
  * - "Plausibility Vetting|Solar PV"
  * - "Reason For Concern|Wind Turbine"
@@ -41,19 +43,35 @@ export const _filterFlagMetaIndicators = (metaIndicators: Array<ShortMetaIndicat
   });
 };
 
+interface MetaIndicatorOccurrencePair {
+  metaIndicator: string;
+  count: number;
+}
+
 /**
  * Counts occurrences of flag-related meta indicators across runs.
+ *
+ * Returns an array of Map
  */
-export const _getKeyCounts = (runs: ExtendedRun[]): Array<[string, number]> => {
+export const getMetaIndicatorsOccurrenceCounts = (
+  runs: ExtendedRun[],
+): Array<MetaIndicatorOccurrencePair> => {
+  const uniqueRuns = Array.from(new Map(runs.map((run) => [run.runId, run])).values());
+
   const keyCounts = new Map<string, number>();
 
-  runs.forEach((run) => {
+  uniqueRuns.forEach((run) => {
     _filterFlagMetaIndicators(run.metaIndicators).forEach((meta) => {
       keyCounts.set(meta.key, (keyCounts.get(meta.key) || 0) + 1);
     });
   });
 
-  return Array.from(keyCounts.entries()).sort(([a], [b]) => a.localeCompare(b));
+  return Array.from(keyCounts.entries())
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([key, count]) => ({
+      metaIndicator: key,
+      count: count,
+    }));
 };
 
 /**
@@ -141,28 +159,30 @@ export const getRunCategory = (metaIndicators: Array<ShortMetaIndicator>): Categ
 };
 
 /**
- * Categorizes runs based on their flag meta indicators into predefined categories.
+ * Groups a list of runs into predefined categories based on their flag analysis.
  *
- * Analyzes each run's flags to determine which category it belongs to
- * based on a priority hierarchy: both types > concern only > plausibility only > no flags.
+ * This utility deduplicates runs by `runId` and then organizes them into buckets.
+ * The categories are determined by a **strict priority hierarchy**, where a run is placed
+ * in the highest-ranking category it qualifies for:
+ *
+ * 1.  **Both Types**: Runs with both "Reason for Concern" and "Plausibility" flags.
+ * 2.  **Concern Only**: Runs with only "Reason for Concern" flags.
+ * 3.  **Plausibility Only**: Runs with only "Plausibility" flags.
+ * 4.  **No Flags**: Runs with neither type of flag.
+ *
+ * @param {ExtendedRun[]} runs An array of run objects to be categorized, each expected to have a `flagCategory` property reflecting this hierarchy.
+ * @returns {Record<CategoryKey, RunCategorySummary>} An object where each key is a category, containing the runs and the total count of unique runs in that category.
  */
-export const categorizeRuns = (runs: ExtendedRun[]): Record<CategoryKey, RunCategory> => {
-  const uniqueRuns = Array.from(new Map(runs.map((run) => [run.runId, run])).values());
-  const categories = Object.fromEntries(
-    Object.entries(CATEGORY_CONFIG).map(([key, config]) => [
-      key,
-      { ...config, count: 0, runs: [] },
-    ]),
-  ) as unknown as Record<CategoryKey, RunCategory>;
-
-  uniqueRuns.forEach((run) => {
-    categories[run.flagCategory].runs.push(run);
+export const categorizeRuns = (runs: ExtendedRun[]): MetaIndicatorRunCategorySummaryPair => {
+  const activeCategories = initializeMetaIndicatorRunCategorySummaryPair();
+  runs.forEach((run) => {
+    activeCategories[run.flagCategory].runs.push(run);
   });
 
-  Object.values(categories).forEach((category) => {
+  Object.values(activeCategories).forEach((category) => {
     const uniqueRunIdsForCategory = [...new Set(category.runs.map((run) => run.runId))];
     category.count = uniqueRunIdsForCategory.length;
   });
 
-  return categories;
+  return activeCategories;
 };

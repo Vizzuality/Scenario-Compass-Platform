@@ -13,7 +13,7 @@ export default function ScenarioExplorationPlotsSection() {
         </div>
       </div>
       <TabsSection />
-      <div className="container mx-auto flex gap-16 pb-24">
+      <div className="container mx-auto flex gap-8 pb-24 lg:gap-16">
         <PlotGrid />
         <RunsPanel />
       </div>
