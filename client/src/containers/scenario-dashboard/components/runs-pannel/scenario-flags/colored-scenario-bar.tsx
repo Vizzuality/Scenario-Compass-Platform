@@ -3,6 +3,7 @@
 import { CATEGORY_CONFIG, CategoryKey } from "@/lib/config/reasons-of-concern/category-config";
 import { RunCategorySummary } from "@/containers/scenario-dashboard/components/runs-pannel/utils";
 import { useScenarioFlagsSelection } from "@/hooks/nuqs/use-scenario-flags-selection";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface ColoredBarProps {
   categories: Record<CategoryKey, RunCategorySummary>;
@@ -53,19 +54,36 @@ export const ColoredScenarioBar: React.FC<ColoredBarProps> = ({
         if (percentage === 0) return null;
 
         const categoryKey = key as CategoryKey;
+        const abbrev = CATEGORY_CONFIG[categoryKey]?.abbrev;
         const backgroundColor = getBackgroundColor(categoryKey);
 
+        const showContent =
+          (selectedFlags.length > 0 && selectedFlags.includes(abbrev)) || selectedFlags.length == 0;
+
         return (
-          <div
-            key={key}
-            style={{
-              width: `${percentage}%`,
-              backgroundColor,
-            }}
-            title={`${category.label}: ${category.count} runs (${percentage.toFixed(2)}%)`}
-            tabIndex={0}
-            aria-label={`${category.label}: ${category.count} of ${totalRuns} runs, ${percentage.toFixed(1)} percent`}
-          />
+          <Tooltip key={key}>
+            <TooltipTrigger asChild>
+              <div
+                className="h-full"
+                style={{
+                  width: `${percentage}%`,
+                  backgroundColor,
+                }}
+                tabIndex={0}
+                aria-label={`${category.label}: ${category.count} of ${totalRuns} runs, ${percentage.toFixed(1)} percent`}
+              />
+            </TooltipTrigger>
+            {showContent && (
+              <TooltipContent>
+                <p>
+                  {category.label} <br />
+                  <p>
+                    {percentage.toFixed(1)}% - {category.count} of {totalRuns} runs
+                  </p>
+                </p>
+              </TooltipContent>
+            )}
+          </Tooltip>
         );
       })}
     </div>

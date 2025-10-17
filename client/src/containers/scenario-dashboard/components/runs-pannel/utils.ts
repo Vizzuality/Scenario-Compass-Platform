@@ -60,7 +60,13 @@ export const getAdditionalInformationMetaIndicatorCounts = (runs: ExtendedRun[])
   ADDITIONAL_INFORMATION_META_INDICATORS.forEach(({ key }) => {
     result[key] = Array.from(countsMap.get(key)!.entries())
       .map(([value, count]) => ({ value, count }))
-      .sort((a, b) => b.count - a.count);
+      .sort((a, b) => {
+        if (key === "Project") {
+          return a.value.localeCompare(b.value);
+        } else {
+          return b.count - a.count;
+        }
+      });
   });
 
   return result;

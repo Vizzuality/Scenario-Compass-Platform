@@ -13,10 +13,6 @@ export const AccordionItemContent: React.FC<AccordionItemContentProps> = ({ cate
   const metaIndicatorOccurrencePairs = getMetaIndicatorsOccurrenceCounts(category.runs);
   return (
     <AccordionContent className="pt-2 pb-4">
-      <div className="flex items-center justify-between text-xs text-stone-600">
-        <p>Name</p>
-        <p>Scenario runs</p>
-      </div>
       <div className="space-y-2 divide-y">
         {metaIndicatorOccurrencePairs.map((metaIndicatorOccurrencePair) => {
           const mapItem = reasonsForConcernMap[metaIndicatorOccurrencePair.metaIndicator];
@@ -24,10 +20,16 @@ export const AccordionItemContent: React.FC<AccordionItemContentProps> = ({ cate
           return (
             <div
               key={metaIndicator}
-              className="flex items-center justify-between gap-2 py-1.5 text-sm"
+              className="flex items-start justify-between gap-2 py-1.5 text-sm"
             >
               <div className="font-medium">{mapItem?.flagName || metaIndicator}</div>
-              <div className="flex items-center justify-between gap-2">
+              <div className="mr-5.5 flex w-12 items-center justify-end gap-2">
+                <Tooltip>
+                  <TooltipTrigger>
+                    <strong>{metaIndicatorOccurrencePair.count}</strong>
+                  </TooltipTrigger>
+                  <TooltipContent>Number of scenarios</TooltipContent>
+                </Tooltip>
                 {mapItem && (
                   <Tooltip>
                     <TooltipTrigger>
@@ -46,7 +48,6 @@ export const AccordionItemContent: React.FC<AccordionItemContentProps> = ({ cate
                     </TooltipContent>
                   </Tooltip>
                 )}
-                <strong>{metaIndicatorOccurrencePair.count}</strong>
               </div>
             </div>
           );

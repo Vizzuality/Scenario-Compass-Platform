@@ -24,7 +24,6 @@ export function SharedScenarioFlagsContent({ result, prefix }: SharedContentProp
   const { totalCountOfUniqueRuns, categories, highCategories, mediumCategories, okCategories } =
     useScenarioFlagsData(result.runs);
   const { showVetting, setShowVetting } = useScenarioFlagsSelection(prefix);
-
   return (
     <>
       <AccordionTrigger className="pt-0 pb-1.5 text-base font-bold text-stone-800">
@@ -57,6 +56,7 @@ export function SharedScenarioFlagsContent({ result, prefix }: SharedContentProp
                       categoryKey={key}
                       category={category}
                       prefix={prefix}
+                      showChevron
                     />
                   </AccordionItem>
                 ))}
@@ -93,15 +93,15 @@ export function SharedScenarioFlagsContent({ result, prefix }: SharedContentProp
               </Accordion>
             </div>
           )}
-          <div className="flex flex-col gap-3">
-            <strong className="text-foreground text-xs">
+          <div className="mt-4 mb-1 flex flex-col gap-3">
+            <strong className="border-b pb-1 text-base text-stone-800">
               Validation against historical and current trends
             </strong>
             <div className="flex items-start space-x-2">
               <Switch id="show-vetting" checked={showVetting} onCheckedChange={setShowVetting} />
               <Label htmlFor="show-vetting">
-                Show/hide scenarios that are not in line with historical reference data for energy
-                and emissions or that are not aligned with current trends in 2025.
+                Scenarios that are not in line with historical reference data for energy and
+                emissions or that are not aligned with current trends in 2025.
               </Label>
             </div>
           </div>

@@ -71,7 +71,7 @@ export function ComboboxFilter({
 
   const getButtonText = () => {
     if (isLoading) return "Loading data...";
-    if (!options || options.length === 0) return "No data available";
+    if (!options || options.length === 0) return placeholder;
     if (value) return options.find((option) => option.value === value)?.label;
     return placeholder;
   };
@@ -89,7 +89,7 @@ export function ComboboxFilter({
             role="combobox"
             aria-expanded={open}
             aria-haspopup="listbox"
-            className="border-beige-light text-primary-foreground w-full justify-between rounded-[4px] border-1 bg-transparent px-3 py-2 text-left text-sm font-normal hover:bg-transparent"
+            className="text-primary-foreground w-full justify-between rounded-[4px] border-1 border-stone-300 bg-transparent px-3 py-2 text-left text-sm font-normal hover:bg-transparent"
             id={comboboxId}
             disabled={isLoadingOrEmpty}
           >

@@ -51,7 +51,7 @@ export const TABS_CONFIG_ARRAY: ReadonlyArray<TabConfig> = [
 
 export const SINGLE_SCENARIO_VIEW_PLOTS_CONFIG_ARRAY: ReadonlyArray<SingleScenarioPlotConfig> = [
   {
-    title: "Primary Energy Production",
+    title: "Primary energy production",
     variables: [
       "Primary Energy|Biomass",
       "Primary Energy|Coal",
@@ -99,7 +99,7 @@ export const SINGLE_SCENARIO_VIEW_PLOTS_CONFIG_ARRAY: ReadonlyArray<SingleScenar
     },
   },
   {
-    title: "Total Final Energy",
+    title: "Total final energy",
     variables: [
       "Final Energy|Industry",
       "Final Energy|Residential and Commercial",

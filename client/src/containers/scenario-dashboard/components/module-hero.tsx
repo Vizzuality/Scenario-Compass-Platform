@@ -8,7 +8,7 @@ const imgBackgroundStyles = [
   "lg:bg-[length:90%] lg:bg-[position:right_bottom_60%]",
   "xl:bg-[length:40%] xl:bg-[position:right_bottom_160%]",
   "2xl:bg-[length:40%] 2xl:bg-[position:right_bottom_100%]",
-  `bg-[url("/images/illustrations/Illustration_05_cropped_left.webp")]`,
+  `lg:bg-[url("/images/illustrations/Illustration_05_cropped_left.webp")]`,
 ];
 
 interface Props {

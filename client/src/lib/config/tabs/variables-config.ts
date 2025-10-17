@@ -13,7 +13,7 @@ export type SingleScenarioPlotConfig = PlotConfig & {
 
 export const EXPLORATION_GENERAL_TAB_PLOT_CONFIG: ReadonlyArray<PlotConfig> = [
   {
-    title: "Fossil-Fuel Use",
+    title: "Fossil-fuel use",
     variables: ["Primary Energy|Fossil"],
   },
   {
@@ -21,7 +21,7 @@ export const EXPLORATION_GENERAL_TAB_PLOT_CONFIG: ReadonlyArray<PlotConfig> = [
     variables: ["Final Energy|Electricity"],
   },
   {
-    title: "Carbon Dioxide Removal",
+    title: "Carbon dioxide removal",
     variables: ["Carbon Removal"],
   },
   {
@@ -36,7 +36,7 @@ export const EXPLORATION_ENERGY_TAB_PLOT_CONFIG: ReadonlyArray<PlotConfig> = [
     variables: ["Primary Energy|Fossil", "Primary Energy|Gas"],
   },
   {
-    title: "Renewable Scale-Up",
+    title: "Renewable scale-up",
     variables: [
       "Secondary Energy|Electricity",
       "Secondary Energy|Electricity|Biomass",
@@ -48,7 +48,7 @@ export const EXPLORATION_ENERGY_TAB_PLOT_CONFIG: ReadonlyArray<PlotConfig> = [
     ],
   },
   {
-    title: "Sectoral Emission Reductions",
+    title: "Sectoral emission reductions",
     variables: [
       "Emissions|CO2|Energy|Demand|Industry",
       "Emissions|CO2|Energy|Demand|Residential and Commercial",
@@ -60,7 +60,7 @@ export const EXPLORATION_ENERGY_TAB_PLOT_CONFIG: ReadonlyArray<PlotConfig> = [
 
 export const EXPLORATION_LAND_USE_TAB_PLOT_CONFIG: ReadonlyArray<PlotConfig> = [
   {
-    title: "Land Cover Changes",
+    title: "Land cover changes",
     variables: [
       "Land Cover|Built-Up Area",
       "Land Cover|Cropland",
@@ -70,7 +70,7 @@ export const EXPLORATION_LAND_USE_TAB_PLOT_CONFIG: ReadonlyArray<PlotConfig> = [
     ],
   },
   {
-    title: "Land-based CDR Potential",
+    title: "Land-based CDR potential",
     variables: [
       "Carbon Removal|Land Use|Re/Afforestation",
       "Carbon Capture|Energy|Biomass",
@@ -78,13 +78,9 @@ export const EXPLORATION_LAND_USE_TAB_PLOT_CONFIG: ReadonlyArray<PlotConfig> = [
     ],
   },
   {
-    title: "Energy Crops",
+    title: "Energy crops",
     variables: ["Land Cover|Cropland|Energy Crops", "Agricultural Production|Non-Energy|Crops"],
   },
-  // {
-  //   title: "Food Waste",
-  //   variables: ["Food Waste", "Food|Availability"],
-  // },
 ];
 
 export const EXPLORATION_CLIMATE_TAB_PLOT_CONFIG: ReadonlyArray<PlotConfig> = [
@@ -93,11 +89,11 @@ export const EXPLORATION_CLIMATE_TAB_PLOT_CONFIG: ReadonlyArray<PlotConfig> = [
     variables: ["Emissions|Kyoto Gases", "Emissions|CO2", "Emissions|CH4", "Emissions|N20"],
   },
   {
-    title: "Climate System",
+    title: "Climate system",
     variables: ["Climate Assessment|Surface Temperature (GSAT)|Median [MAGICCv7.5.3]"],
   },
   {
-    title: "Peak Emissions and Warming",
+    title: "Peak emissions and warming",
     variables: [
       "Climate Assessment|Peak Warming|Median [MAGICCv7.5.3]",
       "Climate Assessment|Year of Peak Warming|Median [MAGICCv7.5.3]",
@@ -105,7 +101,7 @@ export const EXPLORATION_CLIMATE_TAB_PLOT_CONFIG: ReadonlyArray<PlotConfig> = [
     plotType: PLOT_TYPE_OPTIONS.HISTOGRAM,
   },
   {
-    title: "Negative Emissions",
+    title: "Negative emissions",
     variables: ["Carbon Capture|Geological Storage"],
   },
 ];
