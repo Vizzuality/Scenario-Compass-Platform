@@ -96,7 +96,7 @@ export default function YearSelection() {
         <SingleYearSelect
           value={startYear ?? null}
           onChange={setStartYear}
-          placeholder="Start Year"
+          placeholder="Start year"
           options={getFilteredYears("start")}
           testId="start-year-select"
           disabled={isStartDisabled}
@@ -104,7 +104,7 @@ export default function YearSelection() {
         <SingleYearSelect
           value={endYear ?? null}
           onChange={setEndYear}
-          placeholder="End Year"
+          placeholder="End year"
           disabled={!startYear}
           options={getFilteredYears("end")}
           testId="end-year-select"

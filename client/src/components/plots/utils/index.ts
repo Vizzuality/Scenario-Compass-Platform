@@ -11,6 +11,7 @@ import { PlotDimensions } from "@/components/plots/utils/dimensions";
 import {
   CATEGORY_CONFIG,
   getCategoryAbbrev,
+  VALUE_OK,
   VETTING2025,
 } from "@/lib/config/reasons-of-concern/category-config";
 import { ExtendedRun, ShortDataPoint } from "@/hooks/runs/pipeline/types";
@@ -237,7 +238,7 @@ export const getRunColor = (
 };
 
 const hasVettingFlag = (run: ExtendedRun): boolean =>
-  run.metaIndicators.some((mi) => mi.key === VETTING2025);
+  run.metaIndicators.some((mi) => mi.key === VETTING2025 && mi.value === VALUE_OK);
 
 const isHiddenByFlag = (run: ExtendedRun, hiddenFlags: string[]): boolean => {
   if (hiddenFlags.length === 0 || !run.flagCategory) return false;
@@ -250,9 +251,9 @@ export const filterVisibleRuns = (
   hiddenFlags: string[],
   showVetting: boolean,
 ): ExtendedRun[] => {
-  let workingRuns: ExtendedRun[] = [];
+  let workingRuns: ExtendedRun[];
 
-  if (showVetting) {
+  if (!showVetting) {
     workingRuns = runs.filter((run) => {
       return hasVettingFlag(run);
     });

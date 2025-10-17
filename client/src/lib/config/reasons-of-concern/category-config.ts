@@ -92,6 +92,7 @@ export const FEASIBILITY_META_KEY = "Feasibility Concern";
 export const SUSTAINABILITY_META_KEY = "Sustainability Concern";
 export const VALUE_HIGH = "high";
 export const VALUE_MEDIUM = "medium";
+export const VALUE_OK = "ok";
 
 export const VETTING2025 = "Vetting|2025";
 

@@ -2,6 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/lib/query-keys";
 import { RunPipelineReturn } from "@/hooks/runs/pipeline/types";
 import { Skeleton } from "@/components/ui/skeleton";
+import { filterVisibleRuns } from "@/components/plots/utils";
+import { useScenarioFlagsSelection } from "@/hooks/nuqs/use-scenario-flags-selection";
 
 export default function ScenarioModelMetrics({ result }: { result: RunPipelineReturn }) {
   const {
@@ -11,16 +13,14 @@ export default function ScenarioModelMetrics({ result }: { result: RunPipelineRe
   } = useQuery({
     ...queryKeys.runs.list({}),
   });
-
+  const { hiddenFlags, showVetting } = useScenarioFlagsSelection();
   const isLoadingState = result.isLoading || isLoadingModels;
   const isErrorState = result.isError || isErrorModels;
 
   if (isLoadingState) {
     return (
       <div className="flex w-full flex-col gap-3">
-        <p className="mb-1.5 border-b pb-1.5 text-base font-bold text-stone-800">
-          Loading Scenarios
-        </p>
+        <p className="mb-1.5 pb-1.5 text-base font-bold text-stone-800">Loading Scenarios</p>
         <div className="flex w-full flex-col gap-3">
           <Skeleton className="h-6 w-full rounded-md" />
           <Skeleton className="h-6 w-3/4 rounded-md" />
@@ -32,26 +32,26 @@ export default function ScenarioModelMetrics({ result }: { result: RunPipelineRe
   if (isErrorState || !data) {
     return (
       <div className="flex w-full flex-col gap-3">
-        <p className="mb-1.5 border-b pb-1.5 text-base font-bold text-stone-800">
-          Error loading Scenarios
-        </p>
+        <p className="mb-1.5 pb-1.5 text-base font-bold text-stone-800">Error loading Scenarios</p>
       </div>
     );
   }
 
   const totalRuns = data.length;
-  const currentRuns = new Set(result.runs.map((run) => run.runId)).size;
+  const currentRuns = new Set(result.runs.map((run) => run.runId));
 
+  const visibleRuns = filterVisibleRuns(result.runs, hiddenFlags, showVetting);
+  const uniqueRunsCount = [...new Set(visibleRuns.map((item) => item.runId))].length;
   return (
-    <div className="mb-1.5 border-b pb-1.5 text-base leading-6 text-stone-800">
-      {totalRuns == currentRuns ? (
+    <div className="mb-1.5 pb-1.5 text-base leading-6 text-stone-800">
+      {totalRuns == visibleRuns.length ? (
         <p>
           Currently showing all <strong>{currentRuns}</strong> available scenarios
         </p>
       ) : (
         <p>
-          Currently selected <strong>{currentRuns}</strong> out of <strong>{totalRuns}</strong>{" "}
-          available scenarios
+          Currently selected <strong>{uniqueRunsCount}</strong> out of {totalRuns} available
+          scenarios
         </p>
       )}
     </div>
