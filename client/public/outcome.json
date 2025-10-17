@@ -1,0 +1,101 @@
+{
+  "name": "Agricultural Production",
+  "path": "Agricultural Production",
+  "children": {
+    "Crops": {
+      "name": "Crops",
+      "path": "Agricultural Production|Crops",
+      "children": {
+        "Energy Crops": {
+          "name": "Energy Crops",
+          "path": "Agricultural Production|Crops|Energy Crops",
+          "children": {},
+          "leafItems": [
+            {
+              "id": 2,
+              "name": "Agricultural Production|Crops|Energy Crops",
+              "created_at": "2025-03-28T12:04:25.396617",
+              "created_by": "@unknown"
+            }
+          ]
+        }
+      },
+      "leafItems": []
+    },
+    "Energy": {
+      "name": "Energy",
+      "path": "Agricultural Production|Energy",
+      "children": {
+        "Residues": {
+          "name": "Residues",
+          "path": "Agricultural Production|Energy|Residues",
+          "children": {},
+          "leafItems": [
+            {
+              "id": 1992,
+              "name": "Agricultural Production|Energy|Residues",
+              "created_at": "2025-07-30T12:24:00.239869",
+              "created_by": "@unknown"
+            }
+          ]
+        }
+      },
+      "leafItems": [
+        {
+          "id": 1991,
+          "name": "Agricultural Production|Energy",
+          "created_at": "2025-07-30T12:24:00.186324",
+          "created_by": "@unknown"
+        }
+      ]
+    },
+    "Non-Energy": {
+      "name": "Non-Energy",
+      "path": "Agricultural Production|Non-Energy",
+      "children": {
+        "Crops": {
+          "name": "Crops",
+          "path": "Agricultural Production|Non-Energy|Crops",
+          "children": {},
+          "leafItems": [
+            {
+              "id": 1994,
+              "name": "Agricultural Production|Non-Energy|Crops",
+              "created_at": "2025-07-30T12:24:00.324564",
+              "created_by": "@unknown"
+            }
+          ]
+        },
+        "Livestock": {
+          "name": "Livestock",
+          "path": "Agricultural Production|Non-Energy|Livestock",
+          "children": {},
+          "leafItems": [
+            {
+              "id": 1995,
+              "name": "Agricultural Production|Non-Energy|Livestock",
+              "created_at": "2025-07-30T12:24:00.371493",
+              "created_by": "@unknown"
+            }
+          ]
+        }
+      },
+      "leafItems": [
+        {
+          "id": 1993,
+          "name": "Agricultural Production|Non-Energy",
+          "created_at": "2025-07-30T12:24:00.286742",
+          "created_by": "@unknown"
+        }
+      ]
+    }
+  },
+  "leafItems": [
+    {
+      "id": 294,
+      "name": "Agricultural Production",
+      "created_at": "2025-03-28T17:31:53.199221",
+      "created_by": "@unknown"
+    }
+  ]
+}
