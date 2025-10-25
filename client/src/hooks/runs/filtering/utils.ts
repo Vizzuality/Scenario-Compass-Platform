@@ -9,7 +9,7 @@ export const getDataPointsFilter = ({
   variable,
 }: Omit<DataPointsFilterParams, "runId" | "model" | "scenario">) => {
   const baseFilter = {
-    region: { name: geographyConfig.find((g) => g.value === geography)?.lookupName },
+    region: { name: geographyConfig.find((g) => g.id === geography)?.name },
     variable: {
       name: variable,
     },
