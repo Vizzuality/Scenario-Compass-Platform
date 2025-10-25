@@ -53,7 +53,7 @@ export const ClimateFilter = () => {
                 ? "Select climate options"
                 : allSelected.length === 1
                   ? getDisplayLabel(allSelected[0])
-                  : `${allSelected.length} selected`}
+                  : `${allSelected.length} Selected`}
             </p>
             <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>

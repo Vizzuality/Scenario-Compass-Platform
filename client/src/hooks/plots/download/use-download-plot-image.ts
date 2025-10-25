@@ -22,7 +22,7 @@ export interface SubtitleData {
 
 export const useDownloadPlotImage = () => {
   const { endYear, startYear, geography } = useBaseUrlParams();
-  const geographyName = geographyConfig.find((option) => option.value === geography)?.label;
+  const geographyName = geographyConfig.find((option) => option.id === geography)?.name;
 
   const chartRef = useRef<HTMLDivElement>(null);
   const legendRef = useRef<HTMLDivElement>(null);

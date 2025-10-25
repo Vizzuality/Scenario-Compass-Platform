@@ -9,7 +9,7 @@ import { useBaseUrlParams } from "@/hooks/nuqs/url-params/base/use-base-url-para
 export default function CompareScenariosBackButton() {
   const router = useRouter();
   const { year, startYear, endYear, geography } = useBaseUrlParams();
-  const geoName = geographyConfig.find((option) => option.value === geography);
+  const geoName = geographyConfig.find((option) => option.id === geography);
 
   const handleGoBack = () => {
     if (window.history.length > 1) {
@@ -27,7 +27,7 @@ export default function CompareScenariosBackButton() {
     >
       <ArrowLeftIcon size={16} />
       <p className="leading-none">
-        {geoName ? ` ${geoName.lookupName}` : ""} |{year ? ` for ${year}` : ""}
+        {geoName ? ` ${geoName.name}` : ""} |{year ? ` for ${year}` : ""}
         {startYear && endYear ? ` ${startYear} - ${endYear}` : ""}
       </p>
     </Button>

@@ -21,8 +21,8 @@ export const EXPLORATION_GENERAL_TAB_PLOT_CONFIG: ReadonlyArray<PlotConfig> = [
     variables: ["Final Energy|Electricity"],
   },
   {
-    title: "Carbon dioxide removal",
-    variables: ["Carbon Removal"],
+    title: "Carbon Capture Sequestration",
+    variables: ["Carbon Capture|Geological Storage"],
   },
   {
     title: "Emissions",

@@ -38,7 +38,7 @@ export function useScenarioUrlState({
         ? parseAsInteger.withDefault(YEAR_OPTIONS[YEAR_OPTIONS.length - 1])
         : parseAsInteger,
       [params.geography]: useDefaults
-        ? parseAsString.withDefault(geographyConfig[0].value)
+        ? parseAsString.withDefault(geographyConfig[0].id)
         : parseAsString,
       [params.scenario]: parseAsString,
       [params.model]: parseAsString,
@@ -81,7 +81,7 @@ export function useScenarioClearOperations({
       [params.year]: null,
       [params.startYear]: useDefaults ? YEAR_OPTIONS[1] : null,
       [params.endYear]: useDefaults ? YEAR_OPTIONS[YEAR_OPTIONS.length - 1] : null,
-      [params.geography]: useDefaults ? geographyConfig[0].value : null,
+      [params.geography]: useDefaults ? geographyConfig[0].id : null,
       [params.model]: null,
       [params.scenario]: null,
     });

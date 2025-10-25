@@ -67,18 +67,6 @@ export const queryKeys = createQueryKeyStore({
       queryKey: [{ runId, variable, geography }],
       queryFn: async () => API.getDataPointsForRun({ runId, variable, geography }),
     }),
-    getForModelScenario: ({
-      runId,
-      variable,
-      geography = "",
-    }: {
-      runId: number;
-      variable?: string;
-      geography?: string;
-    }) => ({
-      queryKey: [{ runId, variable, geography }],
-      queryFn: async () => API.getDataPointsForModelScenario({ runId, variable, geography }),
-    }),
   },
   metaIndicators: {
     tabulate: (filters: MetaIndicatorFilter) => ({
