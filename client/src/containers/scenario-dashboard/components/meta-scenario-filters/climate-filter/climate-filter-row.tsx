@@ -43,7 +43,7 @@ export const ClimateFilterRow = ({ prefix }: RowFilterProps) => {
                 ? "Select options"
                 : allSelected.length === 1
                   ? getDisplayLabel(allSelected[0])
-                  : `${allSelected.length} selected`}
+                  : `${allSelected.length} Selected`}
               <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </button>
           </PopoverTrigger>
