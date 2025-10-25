@@ -28,11 +28,7 @@ export const VariableSelectWrapper = ({
       <div className="flex max-w-md flex-col items-center text-center">
         <Image src={tapImage} alt="Tap to select variable" width={120} height={120} />
         <div className="mb-4 space-y-2">
-          <strong className="block">Select a variable</strong>
-          <p>
-            To get started, choose a variable to explore its data through an interactive
-            visualization.
-          </p>
+          <strong className="block">To get started, choose a variable.</strong>
         </div>
         <ComboboxVariableSelect
           isLoading={isLoading}

@@ -34,7 +34,7 @@ export const ClimateFilter = () => {
     <div className="flex w-full flex-col items-start gap-2">
       <div className="flex items-center gap-2">
         <Label htmlFor={id} className="leading-6 font-bold">
-          Climate
+          Filter by climate assessment
         </Label>
         <TooltipInfo info={tooltipInfo} />
       </div>

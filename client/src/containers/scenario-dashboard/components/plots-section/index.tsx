@@ -7,8 +7,7 @@ export default function ScenarioExplorationPlotsSection() {
   return (
     <>
       <div className="w-full bg-white pt-8">
-        <div className="text-foreground container mx-auto flex items-center justify-between">
-          <p>Explore the dashboards below, organised by topic and featuring curated variables</p>
+        <div className="text-foreground container mx-auto flex items-center justify-end">
           <ClearFilterButton />
         </div>
       </div>

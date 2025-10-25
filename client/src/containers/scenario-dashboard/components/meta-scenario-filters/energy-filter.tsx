@@ -76,7 +76,7 @@ export const EnergyFilter = () => {
     <div className="flex w-full flex-col items-start gap-2">
       <div className="flex items-center gap-2">
         <Label htmlFor={id} className="leading-6 font-bold">
-          Energy
+          Filter by energy-related indicator
         </Label>
         <TooltipInfo info={tooltipInfo} />
       </div>

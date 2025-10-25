@@ -77,7 +77,7 @@ export function ComboboxVariableSelect({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-64 justify-between border-1 border-stone-300 font-normal"
+          className="w-52 justify-between border-1 border-stone-300 font-normal 2xl:w-full"
         >
           <p className="truncate">
             {value

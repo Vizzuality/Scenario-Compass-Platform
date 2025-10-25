@@ -28,11 +28,12 @@ export function ModuleHero() {
         <div className="container pb-16 lg:grid lg:h-fit lg:grid-cols-2 lg:pb-0">
           <div className={"flex flex-col gap-16 px-4 py-12 md:gap-14 md:py-20 md:pl-16"}>
             <hgroup className={"flex flex-col gap-6"}>
-              <Heading variant="dark" size="5xl" as="h1" id="hero-title">
-                Navigate Climate Futures with Data-Driven Scenarios
+              <Heading variant="dark" size="4xl" as="h1" id="hero-title">
+                The Scenario Compass - <br /> Science-Based Climate Change Mitigation Scenarios at
+                Your Fingertips
               </Heading>
               <h2 className="text-background text-xl leading-7">
-                Explore, compare, and understand pathways to a sustainable future.
+                Explore, compare, and understand pathways toward a sustainable future
               </h2>
             </hgroup>
             <Button asChild variant="secondary" size="lg">

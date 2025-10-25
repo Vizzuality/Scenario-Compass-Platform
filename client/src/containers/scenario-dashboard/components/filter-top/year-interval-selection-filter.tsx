@@ -64,7 +64,7 @@ export default function YearIntervalSelectionFilter() {
           id="year-selection-label"
           data-testid="year-selection-label"
         >
-          Year selection
+          Select the time period of interest
         </Label>
       </div>
 
