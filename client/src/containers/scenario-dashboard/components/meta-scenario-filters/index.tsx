@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import { ClimateFilter } from "@/containers/scenario-dashboard/components/meta-scenario-filters/climate-filter";
 import { EnergyFilter } from "@/containers/scenario-dashboard/components/meta-scenario-filters/energy-filter";
 import { LandFilter } from "@/containers/scenario-dashboard/components/meta-scenario-filters/land-filter";
-import { AdvancedFilter } from "@/containers/scenario-dashboard/components/meta-scenario-filters/advanced-filter";
 
 export default function MetaIndicatorsFilters() {
   const filterRef = useRef<HTMLDivElement | null>(null);
@@ -24,7 +23,6 @@ export default function MetaIndicatorsFilters() {
         <ClimateFilter />
         <EnergyFilter />
         <LandFilter />
-        <AdvancedFilter />
       </div>
     </div>
   );

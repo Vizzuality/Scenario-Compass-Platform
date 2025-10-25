@@ -54,7 +54,7 @@ export const LandFilter = () => {
     <div className="flex w-full flex-col items-start gap-2">
       <div className="flex items-center gap-2">
         <Label htmlFor={id} className="leading-6 font-bold">
-          Land use
+          Filter by land-related indicator
         </Label>
         <TooltipInfo info={tooltipInfo} />
       </div>

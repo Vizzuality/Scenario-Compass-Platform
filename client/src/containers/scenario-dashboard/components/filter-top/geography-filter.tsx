@@ -52,7 +52,7 @@ export default function GeographyFilter({ variant }: Props) {
         htmlFor="geography-combobox"
         className="text-beige-light text-base leading-6 font-bold"
       >
-        Geography
+        Select the geographical scope of interest
       </Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
