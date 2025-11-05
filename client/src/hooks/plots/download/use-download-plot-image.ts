@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { geographyConfig } from "@/lib/config/filters/geography-filter-config";
-import { downloadDivAsPNG } from "@/hooks/plots/download/image-utils";
-import { useBaseUrlParams } from "@/hooks/nuqs/url-params/base/use-base-url-params";
+import { downloadDivAsPNG } from "@/utils/download-plot-assets-utils/image-utils";
+import { useBaseUrlParams } from "@/hooks/nuqs/url-params/use-base-url-params";
 
 export interface DownloadOptions {
   padding?: {

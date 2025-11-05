@@ -3,8 +3,8 @@ import {
   DOT_HOVER_STROKE,
   GREY,
   PLOT_CONFIG,
-} from "@/components/plots/utils/constants";
-import { PlotDimensions } from "@/components/plots/utils/dimensions";
+} from "@/lib/config/plots/plots-constants";
+import { PlotDimensions } from "@/lib/config/plots/plots-dimensions";
 import * as d3 from "d3";
 import {
   SVGSelection,
@@ -14,13 +14,13 @@ import {
   clearSVG,
   renderGridLines,
   renderAxes,
-  filterVisibleRuns,
-  getRunColor,
-  formatNumber,
-} from "@/components/plots/utils";
+} from "@/utils/plots/render-functions";
 import { CATEGORY_CONFIG } from "@/lib/config/reasons-of-concern/category-config";
-import { createTooltipManager } from "@/components/plots/utils/tooltip-manager";
-import { ExtendedRun } from "@/hooks/runs/pipeline/types";
+import { createTooltipManager } from "@/utils/plots/tooltip-manager";
+import { ExtendedRun } from "@/types/data/run";
+import { filterVisibleRuns } from "@/utils/plots/filtering-functions";
+import { getRunColor } from "@/utils/plots/colors-functions";
+import { formatNumber } from "@/utils/plots/format-functions";
 
 const DOT_CLASS_PREFIX = "dot-run-";
 

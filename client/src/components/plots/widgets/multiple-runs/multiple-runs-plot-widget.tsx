@@ -4,15 +4,15 @@ import { useEffect, useState } from "react";
 import { PlotWidgetHeader } from "@/components/plots/components";
 import { useRouter } from "next/navigation";
 import { ChartType, PLOT_TYPE_OPTIONS } from "@/components/plots/components";
-import { useGetMultipleRunsForVariablePipeline } from "@/hooks/runs/pipeline/getters/use-get-multiple-runs-for-variable-pipeline";
+import { useGetMultipleRunsForVariablePipeline } from "@/hooks/runs/data-pipeline/use-get-multiple-runs-for-variable-pipeline";
 import { INTERNAL_PATHS } from "@/lib/paths";
 import { PlotConfig } from "@/lib/config/tabs/variables-config";
 import { VariableSelect } from "@/components/plots/components";
-import { ExtendedRun } from "@/hooks/runs/pipeline/types";
-import { useTabAndVariablesParams } from "@/hooks/nuqs/use-tabs-and-variables-params";
+import { ExtendedRun } from "@/types/data/run";
+import { useTabAndVariablesParams } from "@/hooks/nuqs/tabs/use-tabs-and-variables-params";
 import { AreaPlot, DotPlot, MultiLinePlot } from "@/components/plots/plot-variations";
-import { usePlotDownload } from "@/hooks/plots/download/use-plot-download";
-import { useBaseUrlParams } from "@/hooks/nuqs/url-params/base/use-base-url-params";
+import { useDownloadPlotAssets } from "@/hooks/plots/download/use-download-plot-assets";
+import { useBaseUrlParams } from "@/hooks/nuqs/url-params/use-base-url-params";
 
 interface Props {
   plotConfig: PlotConfig;
@@ -27,7 +27,7 @@ export function MultipleRunsPlotWidget({ plotConfig, prefix, initialChartType = 
   const currentVariable = getVariable(plotConfig);
   const data = useGetMultipleRunsForVariablePipeline({ variable: currentVariable, prefix });
   const router = useRouter();
-  const { chartRef, handleDownload } = usePlotDownload({
+  const { chartRef, handleDownload } = useDownloadPlotAssets({
     runs: data.runs,
     title: currentVariable,
     imageOptions: {

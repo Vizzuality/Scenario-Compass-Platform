@@ -1,5 +1,5 @@
-import { ExtendedRun } from "@/hooks/runs/pipeline/types";
-import { getColorsForVariables, getOrderedVariableNames } from "@/components/plots/utils/utils";
+import { ExtendedRun } from "@/types/data/run";
+import { getColorsForVariables, getOrderedVariableNames } from "@/utils/plots/colors-functions";
 
 interface PlotWidgetProps {
   variablesMap: Record<string, string>;

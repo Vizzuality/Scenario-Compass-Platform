@@ -4,8 +4,8 @@ import { HistogramPlot } from "@/components/plots/plot-variations/histogram";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/lib/query-keys";
-import { getMetaPoints } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
-import { usePlotDownload } from "@/hooks/plots/download/use-plot-download";
+import { getMetaPoints } from "@/utils/data-manipulation/get-meta-points";
+import { useDownloadPlotAssets } from "@/hooks/plots/download/use-download-plot-assets";
 
 interface Props {
   plotConfig: PlotConfig;
@@ -23,7 +23,7 @@ export default function HistogramWidget({ plotConfig }: Props) {
     }),
     select: (data) => getMetaPoints(data),
   });
-  const { chartRef, handleDownload } = usePlotDownload({
+  const { chartRef, handleDownload } = useDownloadPlotAssets({
     metaIndicators: metaIndicators,
     title: currentVariable,
     imageOptions: {

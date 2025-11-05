@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Scenario Compass Platform - Client
 
-## Getting Started
+## Folder Structure
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+client/
+├── .next/                          # Next.js build output (auto-generated)
+├── docs/                           # Project documentation
+├── node_modules/                   # Dependencies (auto-generated)
+├── public/                         # Static assets
+│   └── images/
+│       ├── illustrations/          # Illustration assets
+│       └── landing-page/           # Landing page images
+├── src/                            # Source code
+│   ├── app/                        # Next.js App Router pages
+│   │   ├── guided-exploration/     # Guided exploration feature pages
+│   │   ├── learn-by-topic/         # Learn by topic feature pages
+│   │   ├── methodology/            # Methodology documentation pages
+│   │   ├── scenario-dashboard/     # Main scenario dashboard pages
+│   │   ├── error.tsx               # Global error boundary
+│   │   ├── favicon.ico             # Application favicon
+│   │   ├── globals.css             # Global styles
+│   │   ├── layout.tsx              # Root layout component
+│   │   ├── not-found.tsx           # 404 page
+│   │   ├── page.tsx                # Home page
+│   │   └── providers.tsx           # React context providers
+│   │
+│   ├── assets/                     # Asset files
+│   │   ├── icons/                  # Icon assets
+│   │   ├── images/                 # Image assets
+│   │   └── logo/                   # Logo files
+│   │
+│   ├── components/                 # React components
+│   │   ├── animations/             # Animation components
+│   │   ├── cross-links/            # Cross-linking components
+│   │   ├── custom/                 # Custom/shared components
+│   │   ├── error-state/            # Error state components
+│   │   ├── layout/                 # Layout components (header, footer, etc.)
+│   │   ├── matomo/                 # Analytics integration
+│   │   ├── plots/                  # Data visualization/plot components
+│   │   ├── slider-select/          # Slider and select components
+│   │   └── ui/                     # Base UI components (shadcn/ui style)
+│   │
+│   ├── containers/                 # Container/page-level components
+│   │   ├── coming-soon-container/  # Coming soon page container
+│   │   ├── guided-exploration-container/  # Guided exploration container
+│   │   ├── landing-page-container/ # Landing page container
+│   │   ├── learn-by-topic-container/      # Learn by topic container
+│   │   └── scenario-dashboard-container/  # Scenario dashboard container
+│   │
+│   ├── hooks/                      # Custom React hooks
+│   │   ├── nuqs/                   # URL state management hooks
+│   │   ├── plots/                  # Plot-related hooks
+│   │   └── runs/                   # Data runs hooks
+│   │
+│   ├── lib/                        # Library code and configurations
+│   │   ├── api/                    # API client and request functions
+│   │   └── config/                 # Application configuration
+│   │
+│   ├── tests/                      # Test files
+│   │   ├── e2e/                    # End-to-end tests
+│   │   └── unit/                   # Unit tests
+│   │
+│   ├── types/                      # TypeScript type definitions
+│   │   ├── data/                   # Data model types
+│   │   └── url-params/             # URL parameter types
+│   │
+│   └── utils/                      # Utility functions
+│       ├── data-manipulation/      # Data transformation utilities
+│       ├── download-plot-assets-utils/  # Plot download utilities
+│       ├── filtering/              # Data filtering utilities
+│       ├── flags-utils/            # Feature flag utilities
+│       └── plots/                  # Plot-related utilities
+│
+├── .eslintrc.json                  # ESLint configuration
+├── next.config.ts                  # Next.js configuration
+├── package.json                    # Project dependencies and scripts
+├── postcss.config.mjs              # PostCSS configuration
+├── tailwind.config.ts              # Tailwind CSS configuration
+├── tsconfig.json                   # TypeScript configuration
+└── vitest.config.ts                # Vitest test configuration
+```

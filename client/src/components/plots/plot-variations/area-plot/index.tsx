@@ -3,10 +3,10 @@
 import React, { useEffect } from "react";
 import * as d3 from "d3";
 import { renderAreaPlot } from "@/components/plots/plot-variations/area-plot/render";
-import { usePlotContainer } from "@/hooks/plots/use-plot-container";
-import { ExtendedRun, RunPipelineReturn } from "@/hooks/runs/pipeline/types";
+import { usePlotContainer } from "@/hooks/plots/plot-container/use-plot-container";
+import { ExtendedRun, RunPipelineReturn } from "@/types/data/run";
 import { PlotStateHandler } from "@/components/plots/components";
-import { useScenarioFlagsSelection } from "@/hooks/nuqs/use-scenario-flags-selection";
+import { useScenarioFlagsSelection } from "@/hooks/nuqs/flags/use-scenario-flags-selection";
 
 interface AreaChartProps {
   runs: ExtendedRun[];

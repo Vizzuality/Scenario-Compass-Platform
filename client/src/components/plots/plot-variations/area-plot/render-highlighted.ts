@@ -1,14 +1,10 @@
 import { getCategoryAbbrev } from "@/lib/config/reasons-of-concern/category-config";
-import {
-  getRunColor,
-  GroupSelection,
-  PlotScales,
-  processAreaChartData,
-} from "@/components/plots/utils";
+import { GroupSelection, PlotScales, processAreaChartData } from "@/utils/plots/render-functions";
 import * as d3 from "d3";
-import { AggregatedDataPoint } from "@/components/plots/types";
-import { ExtendedRun } from "@/hooks/runs/pipeline/types";
-import { STROKE_WIDTH } from "@/components/plots/utils/constants";
+import { AggregatedDataPoint } from "@/types/data/data-point";
+import { ExtendedRun } from "@/types/data/run";
+import { STROKE_WIDTH } from "@/lib/config/plots/plots-constants";
+import { getRunColor } from "@/utils/plots/colors-functions";
 
 interface Params {
   visibleRuns: ExtendedRun[];

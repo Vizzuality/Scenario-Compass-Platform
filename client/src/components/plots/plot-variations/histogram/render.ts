@@ -1,6 +1,6 @@
 import * as d3 from "d3";
-import { PlotDimensions } from "@/components/plots/utils/dimensions";
-import { AREA_BACKGROUND_COLOR, GREY } from "@/components/plots/utils/constants";
+import { PlotDimensions } from "@/lib/config/plots/plots-dimensions";
+import { AREA_BACKGROUND_COLOR, GREY } from "@/lib/config/plots/plots-constants";
 import {
   SVGSelection,
   createScales,
@@ -8,9 +8,9 @@ import {
   clearSVG,
   renderGridLines,
   renderAxes,
-} from "@/components/plots/utils";
-import { createTooltipManager } from "@/components/plots/utils/tooltip-manager";
-import { MetaIndicator } from "@/containers/scenario-dashboard/components/meta-scenario-filters/utils";
+} from "@/utils/plots/render-functions";
+import { createTooltipManager } from "@/utils/plots/tooltip-manager";
+import { MetaIndicator } from "@/types/data/meta-indicator";
 
 interface Props {
   svg: SVGSelection;

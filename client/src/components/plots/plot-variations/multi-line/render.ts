@@ -1,6 +1,6 @@
 import * as d3 from "d3";
-import { GREY, PLOT_CONFIG } from "@/components/plots/utils/constants";
-import { PlotDimensions } from "@/components/plots/utils/dimensions";
+import { GREY, PLOT_CONFIG } from "@/lib/config/plots/plots-constants";
+import { PlotDimensions } from "@/lib/config/plots/plots-dimensions";
 import {
   CATEGORY_CONFIG,
   getCategoryAbbrev,
@@ -14,14 +14,14 @@ import {
   renderGridLines,
   renderAxes,
   createLineGenerator,
-  filterVisibleRuns,
-  getRunColor,
-  formatNumber,
   findClosestDataPoint,
-} from "@/components/plots/utils";
-import { createTooltipManager } from "@/components/plots/utils/tooltip-manager";
-import { createHoverElements } from "@/components/plots/utils/create-hover-elements";
-import { ExtendedRun } from "@/hooks/runs/pipeline/types";
+} from "@/utils/plots/render-functions";
+import { createTooltipManager } from "@/utils/plots/tooltip-manager";
+import { createHoverElements } from "@/utils/plots/create-hover-elements";
+import { ExtendedRun } from "@/types/data/run";
+import { getRunColor } from "@/utils/plots/colors-functions";
+import { formatNumber } from "@/utils/plots/format-functions";
+import { filterVisibleRuns } from "@/utils/plots/filtering-functions";
 
 interface Props {
   svg: SVGSelection;

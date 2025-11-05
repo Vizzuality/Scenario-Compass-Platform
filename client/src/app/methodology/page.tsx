@@ -1,5 +1,5 @@
 import { Navbar } from "@/components/layout/navbar/navbar";
-import ComingSoon from "@/containers/coming-soon";
+import ComingSoon from "@/containers/coming-soon-container";
 
 export default function MethodologyPage() {
   return (
