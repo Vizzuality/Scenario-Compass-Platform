@@ -1,4 +1,4 @@
-import { GuidedExplorationCrossLink } from "@/containers/cross-links/guided-exploration-cross-link";
+import { GuidedExplorationCrossLink } from "@/components/cross-links/guided-exploration-cross-link";
 
 export default function ScenarioDashboardLayout({ children }: { children: React.ReactNode }) {
   return (

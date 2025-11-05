@@ -1,16 +1,16 @@
 import { PlotContainer, PlotWidgetHeader } from "@/components/plots/components";
-import { useGetSingleRunForVariablePipeline } from "@/hooks/runs/pipeline/getters/use-get-single-run-for-variable-pipeline";
+import { useGetSingleRunForVariablePipeline } from "@/hooks/runs/data-pipeline/use-get-single-run-for-variable-pipeline";
 import LoadingDots from "@/components/animations/loading-dots";
 import React, { useEffect } from "react";
 import { DataFetchError } from "@/components/error-state/data-fetch-error";
 import { ShortRun, ShortRunReturn } from "@/components/plots/plot-variations/custom/kyoto/types";
 import { getFinalCH4Points } from "@/components/plots/plot-variations/custom/kyoto/utils";
 import CustomPlotLegend from "@/components/plots/plot-variations/custom/kyoto/custom-plot-legend";
-import { usePlotContainer } from "@/hooks/plots/use-plot-container";
+import { usePlotContainer } from "@/hooks/plots/plot-container/use-plot-container";
 import { renderKyotoPlot } from "@/components/plots/plot-variations/custom/kyoto/render";
 import * as d3 from "d3";
-import { ExtendedRun, ShortDataPoint } from "@/hooks/runs/pipeline/types";
-import { OTHER_GASES } from "@/components/plots/utils/constants";
+import { ExtendedRun, ShortDataPoint } from "@/types/data/run";
+import { OTHER_GASES } from "@/lib/config/plots/plots-constants";
 
 const GWP_CH4 = 25;
 const GWP_N2O_WITH_UNIT_CONVERSION = 0.298;

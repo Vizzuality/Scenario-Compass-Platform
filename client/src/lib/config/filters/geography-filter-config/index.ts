@@ -146,5 +146,3 @@ export const geographyConfig: GeographyOption[] = [
     id: "29",
   },
 ];
-
-export const GEOGRAPHY_VALUES = geographyConfig.map((option) => option.name);

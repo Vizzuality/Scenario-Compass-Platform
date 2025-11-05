@@ -2,20 +2,20 @@ import {
   clearSVG,
   createInteractionOverlay,
   createMainGroup,
-  formatNumber,
   renderAxes,
   renderGridLines,
   SVGSelection,
-} from "@/components/plots/utils";
-import { PlotDimensions } from "@/components/plots/utils/dimensions";
+} from "@/utils/plots/render-functions";
+import { PlotDimensions } from "@/lib/config/plots/plots-dimensions";
 import * as d3 from "d3";
-import { createTooltipManager } from "@/components/plots/utils/tooltip-manager";
-import { createHoverElements } from "@/components/plots/utils/create-hover-elements";
+import { createTooltipManager } from "@/utils/plots/tooltip-manager";
+import { createHoverElements } from "@/utils/plots/create-hover-elements";
 import { ShortRun, ShortRunReturn } from "@/components/plots/plot-variations/custom/kyoto/types";
-import { ShortDataPoint } from "@/hooks/runs/pipeline/types";
+import { ShortDataPoint } from "@/types/data/run";
 import { CATEGORY_CONFIG } from "@/lib/config/reasons-of-concern/category-config";
-import { getColorsForVariables } from "@/components/plots/utils/utils";
-import { LIGHT_GREY, OTHER_GASES } from "@/components/plots/utils/constants";
+import { getColorsForVariables } from "@/utils/plots/colors-functions";
+import { LIGHT_GREY, OTHER_GASES } from "@/lib/config/plots/plots-constants";
+import { formatNumber } from "@/utils/plots/format-functions";
 
 interface Props {
   svg: SVGSelection;

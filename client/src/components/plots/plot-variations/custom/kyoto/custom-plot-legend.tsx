@@ -1,6 +1,6 @@
 import { CategoryKey } from "@/lib/config/reasons-of-concern/category-config";
-import { getColorsForVariables } from "@/components/plots/utils/utils";
-import { LIGHT_GREY, OTHER_GASES } from "@/components/plots/utils/constants";
+import { getColorsForVariables } from "@/utils/plots/colors-functions";
+import { LIGHT_GREY, OTHER_GASES } from "@/lib/config/plots/plots-constants";
 
 interface PlotWidgetProps {
   variables: string[];

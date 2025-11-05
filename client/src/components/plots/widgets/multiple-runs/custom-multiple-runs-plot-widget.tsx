@@ -4,17 +4,17 @@ import { useEffect, useState } from "react";
 import { PlotWidgetHeader } from "@/components/plots/components";
 import { useRouter } from "next/navigation";
 import { ChartType, PLOT_TYPE_OPTIONS } from "@/components/plots/components";
-import { useGetMultipleRunsForVariablePipeline } from "@/hooks/runs/pipeline/getters/use-get-multiple-runs-for-variable-pipeline";
+import { useGetMultipleRunsForVariablePipeline } from "@/hooks/runs/data-pipeline/use-get-multiple-runs-for-variable-pipeline";
 import { INTERNAL_PATHS } from "@/lib/paths";
-import { ExtendedRun } from "@/hooks/runs/pipeline/types";
+import { ExtendedRun } from "@/types/data/run";
 import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/lib/query-keys";
 import { ComboboxVariableSelect } from "@/components/plots/components";
 import { Variable } from "@iiasa/ixmp4-ts";
-import { useTabAndVariablesParams } from "@/hooks/nuqs/use-tabs-and-variables-params";
+import { useTabAndVariablesParams } from "@/hooks/nuqs/tabs/use-tabs-and-variables-params";
 import { VariableSelectWrapper } from "@/components/plots/components";
 import { AreaPlot, MultiLinePlot } from "@/components/plots/plot-variations";
-import { usePlotDownload } from "@/hooks/plots/download/use-plot-download";
+import { useDownloadPlotAssets } from "@/hooks/plots/download/use-download-plot-assets";
 
 interface Props {
   prefix?: string;
@@ -52,7 +52,7 @@ export function CustomMultipleRunsPlotWidget({
     prefix,
   });
 
-  const { chartRef, handleDownload } = usePlotDownload({
+  const { chartRef, handleDownload } = useDownloadPlotAssets({
     runs: data.runs,
     title: currentVariable?.name || "plot",
     imageOptions: {

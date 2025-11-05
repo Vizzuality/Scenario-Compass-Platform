@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { getPlotDimensions } from "@/components/plots/utils/dimensions";
+import { getPlotDimensions } from "@/lib/config/plots/plots-dimensions";
 
 export const PlotContainer = ({ children }: { children: ReactNode }) => {
   const dimensions = getPlotDimensions();

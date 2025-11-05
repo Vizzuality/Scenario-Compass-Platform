@@ -1,4 +1,4 @@
-import { ShortDataPoint } from "@/hooks/runs/pipeline/types";
+import { ShortDataPoint } from "@/types/data/run";
 
 export const getFinalCH4Points = (
   array1: ShortDataPoint[],

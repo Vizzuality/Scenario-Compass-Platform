@@ -1,4 +1,4 @@
-import { ShortDataPoint } from "@/hooks/runs/pipeline/types";
+import { ShortDataPoint } from "@/types/data/run";
 import { CategoryKey } from "@/lib/config/reasons-of-concern/category-config";
 
 export interface ShortRun {

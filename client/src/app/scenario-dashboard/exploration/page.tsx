@@ -1,4 +1,4 @@
-import ScenarioDashboardExploreContainer from "@/containers/scenario-dashboard/exploration";
+import ScenarioDashboardExploreContainer from "@/containers/scenario-dashboard-container/exploration-view";
 
 export default function ExploreScenarioDashboardPage() {
   return <ScenarioDashboardExploreContainer />;

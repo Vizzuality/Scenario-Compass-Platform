@@ -1,7 +1,7 @@
 import * as d3 from "d3";
-import { AggregatedDataPoint } from "@/components/plots/types";
-import { PlotDimensions } from "@/components/plots/utils/dimensions";
-import { AREA_BACKGROUND_COLOR, GREY, STROKE_WIDTH } from "@/components/plots/utils/constants";
+import { AggregatedDataPoint } from "@/types/data/data-point";
+import { PlotDimensions } from "@/lib/config/plots/plots-dimensions";
+import { AREA_BACKGROUND_COLOR, GREY, STROKE_WIDTH } from "@/lib/config/plots/plots-constants";
 import {
   SVGSelection,
   PlotDomain,
@@ -12,17 +12,16 @@ import {
   renderAxes,
   createInteractionOverlay,
   findClosestDataPoint,
-  formatNumber,
   processAreaChartData,
-  filterVisibleRuns,
-  filterDecadePoints,
-  getRunColor,
-} from "@/components/plots/utils";
-import { createTooltipManager } from "@/components/plots/utils/tooltip-manager";
-import { createHoverElements } from "@/components/plots/utils/create-hover-elements";
-import { ExtendedRun } from "@/hooks/runs/pipeline/types";
+} from "@/utils/plots/render-functions";
+import { createTooltipManager } from "@/utils/plots/tooltip-manager";
+import { createHoverElements } from "@/utils/plots/create-hover-elements";
+import { ExtendedRun } from "@/types/data/run";
 import { renderHighlightedFlags } from "@/components/plots/plot-variations/area-plot/render-highlighted";
 import { getCategoryAbbrev } from "@/lib/config/reasons-of-concern/category-config";
+import { filterDecadePoints, filterVisibleRuns } from "@/utils/plots/filtering-functions";
+import { getRunColor } from "@/utils/plots/colors-functions";
+import { formatNumber } from "@/utils/plots/format-functions";
 
 interface Props {
   svg: SVGSelection;

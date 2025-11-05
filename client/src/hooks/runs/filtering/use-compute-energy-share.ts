@@ -12,8 +12,8 @@ import {
   PRIMARY_ENERGY_VARIABLES,
   RENEWABLES_SHARE_2050,
 } from "@/lib/config/filters/energy-filter-config";
-import { useBaseUrlParams } from "@/hooks/nuqs/url-params/base/use-base-url-params";
-import { extractDataPoints } from "@/hooks/runs/utils/extract-data-points";
+import { useBaseUrlParams } from "@/hooks/nuqs/url-params/use-base-url-params";
+import { extractDataPoints } from "@/utils/data-manipulation/extract-data-points";
 
 export interface EnergyShare {
   [FOSSIL_SHARE_2050]: number;
