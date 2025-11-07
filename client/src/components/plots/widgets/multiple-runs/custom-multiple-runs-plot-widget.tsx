@@ -101,7 +101,12 @@ export function CustomMultipleRunsPlotWidget({
 
   return (
     <div className="h-fit w-full rounded-md bg-white p-4 select-none">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col justify-between">
+        <PlotWidgetHeader
+          chartType={chartType}
+          onChange={showChartTypeToggle ? setChartType : undefined}
+          onDownload={handleDownload}
+        />
         <div className="mb-5 flex items-center gap-2.5">
           <p className="text-xs">Variable</p>
           <ComboboxVariableSelect
@@ -112,11 +117,6 @@ export function CustomMultipleRunsPlotWidget({
             onSelectAction={handleVariableChange}
           />
         </div>
-        <PlotWidgetHeader
-          chartType={chartType}
-          onChange={showChartTypeToggle ? setChartType : undefined}
-          onDownload={handleDownload}
-        />
       </div>
       <div ref={chartRef}>
         {chartType === PLOT_TYPE_OPTIONS.AREA && <AreaPlot data={data} prefix={prefix} />}

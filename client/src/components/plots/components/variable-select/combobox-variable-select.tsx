@@ -65,10 +65,11 @@ export function ComboboxVariableSelect({
         <Button
           variant="outline"
           role="combobox"
+          size="sm"
           aria-expanded={open}
           className="w-64 justify-between border-1 border-stone-300 font-normal"
         >
-          <p className="truncate">
+          <p className="truncate text-sm">
             {value
               ? options?.find((variable) => variable.id === value)?.name
               : "Select variable..."}
