@@ -1,4 +1,4 @@
-import { PlotConfig } from "@/lib/config/tabs/variables-config";
+import { PlotConfig, YEAR_OF_PEAK_WARMING } from "@/lib/config/tabs/variables-config";
 import { PlotWidgetHeader, VariableSelect } from "@/components/plots/components";
 import { HistogramPlot } from "@/components/plots/plot-variations/histogram";
 import { useState } from "react";
@@ -32,6 +32,12 @@ export default function HistogramWidget({ plotConfig }: Props) {
     },
   });
 
+  const getHistogramSplit = () => {
+    if (currentVariable === YEAR_OF_PEAK_WARMING) {
+      return "decade";
+    } else return "default";
+  };
+
   return (
     <div className="h-fit w-full rounded-md bg-white p-4 select-none">
       <PlotWidgetHeader onDownload={handleDownload} title={plotConfig.title} />
@@ -42,6 +48,7 @@ export default function HistogramWidget({ plotConfig }: Props) {
       />
       <div ref={chartRef}>
         <HistogramPlot
+          split={getHistogramSplit()}
           data={{
             isLoading,
             isError,

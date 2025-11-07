@@ -11,20 +11,34 @@ import {
 } from "@/utils/plots/render-functions";
 import { createTooltipManager } from "@/utils/plots/tooltip-manager";
 import { MetaIndicator } from "@/types/data/meta-indicator";
+import {
+  BinningResult,
+  createDecadeBins,
+  createDefaultBins,
+} from "@/components/plots/plot-variations/histogram/histogram-bining-functions";
+
+export type HistogramDataSplit = "decade" | "default";
 
 interface Props {
   svg: SVGSelection;
   metaIndicators: MetaIndicator[];
   dimensions: PlotDimensions;
+  split: HistogramDataSplit;
 }
 
+/**
+ * Returns the values of the meta-indicators:
+ * e.g. [1.851322625141053, 1.899893027998228, 1.937624684262318, 1.986659982700594]
+ *
+ * @param metaIndicators
+ */
 const getMetaIndicatorValues = (metaIndicators: MetaIndicator[]): number[] => {
   return metaIndicators
     .map((mi) => parseFloat(mi.value))
     .filter((value) => !isNaN(value) && isFinite(value));
 };
 
-export const renderHistogramPlot = ({ svg, metaIndicators, dimensions }: Props): void => {
+export const renderHistogramPlot = ({ svg, metaIndicators, dimensions, split }: Props): void => {
   clearSVG(svg);
   const BIN_COUNT = 7;
 
@@ -32,6 +46,7 @@ export const renderHistogramPlot = ({ svg, metaIndicators, dimensions }: Props):
   if (!tooltipManager || metaIndicators.length === 0) return;
 
   const values = getMetaIndicatorValues(metaIndicators);
+
   if (values.length === 0) {
     const g = createMainGroup(svg, dimensions);
     g.append("text")
@@ -45,20 +60,18 @@ export const renderHistogramPlot = ({ svg, metaIndicators, dimensions }: Props):
 
   const xDomain = d3.extent(values) as [number, number];
 
-  const binWidth = (xDomain[1] - xDomain[0]) / BIN_COUNT;
-  const thresholds = d3.range(BIN_COUNT + 1).map((i) => xDomain[0] + i * binWidth);
+  let binningResult: BinningResult;
 
-  let bins = d3.bin<number, number>().domain(xDomain).thresholds(thresholds)(values);
-
-  if (bins.length > BIN_COUNT) {
-    const lastBin = bins[BIN_COUNT - 1];
-    for (let i = BIN_COUNT; i < bins.length; i++) {
-      lastBin.push(...bins[i]);
-    }
-    lastBin.x1 = bins[bins.length - 1].x1;
-
-    bins = bins.slice(0, BIN_COUNT);
+  if (split === "decade") {
+    binningResult = createDecadeBins(values, xDomain);
+  } else if (split === "default") {
+    binningResult = createDefaultBins(values, xDomain, BIN_COUNT);
+  } else {
+    console.error(`Unknown histogram split type: ${split}`);
+    return;
   }
+
+  const { bins, thresholds } = binningResult;
 
   const range = xDomain[1] - xDomain[0];
   const visualPadding = range * 0.05;
