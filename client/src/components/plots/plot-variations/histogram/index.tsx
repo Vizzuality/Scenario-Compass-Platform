@@ -4,14 +4,18 @@ import React, { useEffect } from "react";
 import * as d3 from "d3";
 import { usePlotContainer } from "@/hooks/plots/plot-container/use-plot-container";
 import { PlotStateHandler } from "@/components/plots/components";
-import { renderHistogramPlot } from "@/components/plots/plot-variations/histogram/render";
+import {
+  HistogramDataSplit,
+  renderHistogramPlot,
+} from "@/components/plots/plot-variations/histogram/render";
 import { MetaIndicator } from "@/types/data/meta-indicator";
 
 interface HistogramChartProps {
   metaIndicators: MetaIndicator[];
+  split: HistogramDataSplit;
 }
 
-const BasePlot: React.FC<HistogramChartProps> = ({ metaIndicators }) => {
+const BasePlot: React.FC<HistogramChartProps> = ({ metaIndicators, split }) => {
   const { svgRef, dimensions, plotContainer } = usePlotContainer();
 
   useEffect(() => {
@@ -22,8 +26,9 @@ const BasePlot: React.FC<HistogramChartProps> = ({ metaIndicators }) => {
       svg,
       dimensions,
       metaIndicators,
+      split,
     });
-  }, [dimensions, metaIndicators, svgRef]);
+  }, [dimensions, metaIndicators, split, svgRef]);
 
   return plotContainer;
 };
@@ -34,12 +39,13 @@ interface HistogramPlotProps {
     isLoading: boolean;
     isError: boolean;
   };
+  split: HistogramDataSplit;
 }
 
-export const HistogramPlot: React.FC<HistogramPlotProps> = ({ data }) => {
+export const HistogramPlot: React.FC<HistogramPlotProps> = ({ data, split }) => {
   return (
     <PlotStateHandler data={data} fieldName="metaIndicators">
-      {(metaIndicators) => <BasePlot metaIndicators={metaIndicators} />}
+      {(metaIndicators) => <BasePlot split={split} metaIndicators={metaIndicators} />}
     </PlotStateHandler>
   );
 };

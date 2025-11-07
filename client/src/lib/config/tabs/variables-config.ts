@@ -1,5 +1,7 @@
 import { ChartType, PLOT_TYPE_OPTIONS } from "@/components/plots/components";
 
+export const YEAR_OF_PEAK_WARMING = "Climate Assessment|Year of Peak Warming|Median [MAGICCv7.5.3]";
+
 export type PlotConfig = {
   title: string;
   variables: ReadonlyArray<string>;
@@ -94,10 +96,7 @@ export const EXPLORATION_CLIMATE_TAB_PLOT_CONFIG: ReadonlyArray<PlotConfig> = [
   },
   {
     title: "Peak emissions and warming",
-    variables: [
-      "Climate Assessment|Peak Warming|Median [MAGICCv7.5.3]",
-      "Climate Assessment|Year of Peak Warming|Median [MAGICCv7.5.3]",
-    ],
+    variables: ["Climate Assessment|Peak Warming|Median [MAGICCv7.5.3]", YEAR_OF_PEAK_WARMING],
     plotType: PLOT_TYPE_OPTIONS.HISTOGRAM,
   },
   {
