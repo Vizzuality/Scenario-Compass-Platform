@@ -1,4 +1,10 @@
-import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Props {
   currentVariable: string;
@@ -10,8 +16,10 @@ export function VariableSelect({ options, currentVariable, onChange }: Props) {
   return (
     <div className="mb-5 flex items-center gap-2.5">
       <p className="text-xs">Variable</p>
-      <Select onValueChange={onChange}>
-        <SelectTrigger size="sm">{currentVariable}</SelectTrigger>
+      <Select onValueChange={onChange} value={currentVariable}>
+        <SelectTrigger size="sm" className="w-fit max-w-4/5">
+          <SelectValue className="truncate" placeholder="Select variable..." />
+        </SelectTrigger>
         <SelectContent>
           {options.map((option) => (
             <SelectItem key={option} value={option}>
