@@ -15,6 +15,46 @@ import { OTHER_GASES } from "@/lib/config/plots/plots-constants";
 const GWP_CH4 = 25;
 const GWP_N2O_WITH_UNIT_CONVERSION = 0.298;
 
+const convertGasToMtCO2eq = (runs: ExtendedRun[], multiplier: number) => {
+  const converted = structuredClone(runs);
+  converted.forEach((run) => {
+    run.orderedPoints.forEach((point) => {
+      point.value *= multiplier;
+    });
+  });
+  return converted;
+};
+
+const renderStateComponent = (content: React.ReactNode) => (
+  <div className="flex w-full flex-col justify-between rounded-md bg-white p-4 select-none">
+    <PlotWidgetHeader title="GHG Emissions" />
+    <PlotContainer>{content}</PlotContainer>
+  </div>
+);
+
+const createShortRun = (
+  variableName: string,
+  isLine: boolean,
+  orderedPoints: ShortDataPoint[],
+): ShortRun => ({
+  variableName,
+  isLine,
+  orderedPoints,
+});
+
+const KyotoBasePlot = ({ data }: { data: ShortRunReturn }) => {
+  const { svgRef, dimensions, plotContainer } = usePlotContainer();
+
+  useEffect(() => {
+    if (!data?.shortRuns?.length || !svgRef.current) return;
+
+    const svg = d3.select(svgRef.current);
+    renderKyotoPlot({ svg, dimensions, data });
+  }, [data, dimensions, svgRef]);
+
+  return plotContainer;
+};
+
 /**
  * Converts greenhouse gases to common unit: Mt CO2 equivalent per year
  *
@@ -42,26 +82,23 @@ export function KyotoGasesPlot() {
   const isLoading = [kyotoGases, CO2, CH4_AFOLU, CH4_ENERGY, N2O].some(
     (pipeline) => pipeline.isLoading,
   );
-
-  const renderStateComponent = (content: React.ReactNode) => (
-    <div className="flex w-full flex-col justify-between rounded-md bg-white p-4 select-none">
-      <PlotWidgetHeader title="GHG Emissions" />
-      <PlotContainer>{content}</PlotContainer>
-    </div>
+  const isAnyMissingArray = [kyotoGases, CO2, CH4_AFOLU, N2O, CH4_ENERGY].some(
+    (pipeline) => pipeline.runs.length === 0,
   );
 
   if (isLoading) return renderStateComponent(<LoadingDots />);
-  if (isError) return renderStateComponent(<DataFetchError />);
-
-  const convertGasToMtCO2eq = (runs: ExtendedRun[], multiplier: number) => {
-    const converted = structuredClone(runs);
-    converted.forEach((run) => {
-      run.orderedPoints.forEach((point) => {
-        point.value *= multiplier;
-      });
-    });
-    return converted;
-  };
+  if (isError || isAnyMissingArray)
+    return renderStateComponent(
+      <DataFetchError>
+        <>
+          <strong>Unable to load data</strong>
+          <p className="text-center">
+            There is not enough information to compute the <b>GHG Emissions</b> plot for the
+            selected parameters.
+          </p>
+        </>
+      </DataFetchError>,
+    );
 
   // Convert gases to Mt CO2eq/year
   const CH4_AFOLU_CO2eq = convertGasToMtCO2eq(CH4_AFOLU.runs, GWP_CH4);
@@ -93,16 +130,6 @@ export function KyotoGasesPlot() {
     };
   });
 
-  const createShortRun = (
-    variableName: string,
-    isLine: boolean,
-    orderedPoints: ShortDataPoint[],
-  ): ShortRun => ({
-    variableName,
-    isLine,
-    orderedPoints,
-  });
-
   const result: ShortRunReturn = {
     flagCategory: kyotoGases.runs[0].flagCategory,
     shortRuns: [
@@ -126,16 +153,3 @@ export function KyotoGasesPlot() {
     </div>
   );
 }
-
-const KyotoBasePlot = ({ data }: { data: ShortRunReturn }) => {
-  const { svgRef, dimensions, plotContainer } = usePlotContainer();
-
-  useEffect(() => {
-    if (!data?.shortRuns?.length || !svgRef.current) return;
-
-    const svg = d3.select(svgRef.current);
-    renderKyotoPlot({ svg, dimensions, data });
-  }, [data, dimensions, svgRef]);
-
-  return plotContainer;
-};
