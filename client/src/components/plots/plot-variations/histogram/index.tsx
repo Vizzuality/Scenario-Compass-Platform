@@ -13,9 +13,10 @@ import { MetaIndicator } from "@/types/data/meta-indicator";
 interface HistogramChartProps {
   metaIndicators: MetaIndicator[];
   split: HistogramDataSplit;
+  xUnitText: string;
 }
 
-const BasePlot: React.FC<HistogramChartProps> = ({ metaIndicators, split }) => {
+const BasePlot: React.FC<HistogramChartProps> = ({ metaIndicators, split, xUnitText }) => {
   const { svgRef, dimensions, plotContainer } = usePlotContainer();
 
   useEffect(() => {
@@ -27,8 +28,9 @@ const BasePlot: React.FC<HistogramChartProps> = ({ metaIndicators, split }) => {
       dimensions,
       metaIndicators,
       split,
+      xUnitText,
     });
-  }, [dimensions, metaIndicators, split, svgRef]);
+  }, [dimensions, metaIndicators, split, svgRef, xUnitText]);
 
   return plotContainer;
 };
@@ -40,12 +42,15 @@ interface HistogramPlotProps {
     isError: boolean;
   };
   split: HistogramDataSplit;
+  xUnitText: string;
 }
 
-export const HistogramPlot: React.FC<HistogramPlotProps> = ({ data, split }) => {
+export const HistogramPlot: React.FC<HistogramPlotProps> = ({ data, split, xUnitText }) => {
   return (
     <PlotStateHandler data={data} fieldName="metaIndicators">
-      {(metaIndicators) => <BasePlot split={split} metaIndicators={metaIndicators} />}
+      {(metaIndicators) => (
+        <BasePlot split={split} metaIndicators={metaIndicators} xUnitText={xUnitText} />
+      )}
     </PlotStateHandler>
   );
 };

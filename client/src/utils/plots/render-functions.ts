@@ -84,7 +84,8 @@ export const renderAxes = ({
   width,
   yTickCount = 5,
   xTickValues,
-  unit,
+  yUnitText,
+  xUnitText,
 }: {
   groupSelection: GroupSelection;
   scales: PlotScales;
@@ -92,7 +93,8 @@ export const renderAxes = ({
   width?: number;
   xTickValues?: number[];
   yTickCount?: number;
-  unit?: string;
+  yUnitText?: string;
+  xUnitText?: string;
 }): void => {
   const optimizedXTickValues =
     xTickValues && width ? calculateOptimalTicksWithNiceYears(xTickValues, width) : undefined;
@@ -131,7 +133,19 @@ export const renderAxes = ({
     .attr("text-anchor", "middle")
     .style("font-size", FONT_SIZE)
     .style("fill", GRID_TEXT_COLOR)
-    .html(unit ? unit : "Value");
+    .html(yUnitText ? yUnitText : "Value");
+
+  if (width) {
+    groupSelection
+      .append("text")
+      .attr("class", "x-axis-label")
+      .attr("x", width / 2)
+      .attr("y", height + 40)
+      .attr("text-anchor", "middle")
+      .style("font-size", FONT_SIZE)
+      .style("fill", GRID_TEXT_COLOR)
+      .text(xUnitText ? xUnitText : "Year");
+  }
 };
 
 export const createInteractionOverlay = (

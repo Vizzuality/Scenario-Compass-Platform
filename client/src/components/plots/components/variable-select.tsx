@@ -23,7 +23,7 @@ export function VariableSelect({ options, currentVariable, onChange }: Props) {
         <SelectContent>
           {options.map((option) => (
             <SelectItem key={option} value={option}>
-              {option}
+              {option.replaceAll("|", " - ")}
             </SelectItem>
           ))}
         </SelectContent>

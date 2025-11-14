@@ -64,7 +64,7 @@ export const renderMultiLinePlot = ({
     height: dimensions.INNER_HEIGHT,
     width: dimensions.INNER_WIDTH,
     xTickValues: uniqueYears,
-    unit: runs[0].unit,
+    yUnitText: runs[0].unit,
   });
 
   const linesGroup = g.append("g").attr("class", "lines-group");

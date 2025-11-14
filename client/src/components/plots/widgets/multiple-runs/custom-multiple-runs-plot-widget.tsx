@@ -54,7 +54,7 @@ export function CustomMultipleRunsPlotWidget({
 
   const { chartRef, handleDownload } = useDownloadPlotAssets({
     runs: data.runs,
-    title: currentVariable?.name || "plot",
+    title: currentVariable?.name.replaceAll("|", " - ") || "plot",
     imageOptions: {
       padding: { all: 30 },
       includeInFilename: true,

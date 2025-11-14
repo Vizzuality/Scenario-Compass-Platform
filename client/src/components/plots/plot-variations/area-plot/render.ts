@@ -67,7 +67,7 @@ export const renderAreaPlot = ({
     height: INNER_HEIGHT,
     width: INNER_WIDTH,
     xTickValues: uniqueYears,
-    unit: visibleRuns[0].unit,
+    yUnitText: visibleRuns[0].unit,
   });
 
   const areaSurface = d3

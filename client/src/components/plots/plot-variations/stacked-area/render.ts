@@ -86,7 +86,7 @@ export const renderStackedAreaPlot = ({ svg, runs, dimensions, variablesMap }: P
     height: dimensions.INNER_HEIGHT,
     width: dimensions.INNER_WIDTH,
     xTickValues: allYears,
-    unit: runs[0].unit,
+    yUnitText: runs[0].unit,
   });
 
   g.selectAll(".stacked-area")

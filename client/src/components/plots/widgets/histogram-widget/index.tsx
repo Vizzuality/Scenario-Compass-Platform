@@ -25,7 +25,8 @@ export default function HistogramWidget({ plotConfig }: Props) {
   });
   const { chartRef, handleDownload } = useDownloadPlotAssets({
     metaIndicators: metaIndicators,
-    title: currentVariable,
+    title: currentVariable.replaceAll("|", " - "),
+    subtitle: "",
     imageOptions: {
       padding: { all: 30 },
       includeInFilename: true,
@@ -49,6 +50,7 @@ export default function HistogramWidget({ plotConfig }: Props) {
       <div ref={chartRef}>
         <HistogramPlot
           split={getHistogramSplit()}
+          xUnitText={currentVariable === YEAR_OF_PEAK_WARMING ? "Year" : "°C"}
           data={{
             isLoading,
             isError,

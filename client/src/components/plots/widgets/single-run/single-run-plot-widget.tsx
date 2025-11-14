@@ -18,7 +18,7 @@ export function SingleRunPlotWidget({ plotConfig }: Props) {
 
   const { chartRef, legendRef, handleDownload } = useDownloadPlotAssets({
     runs: data.runs,
-    title: plotConfig.title || "plot",
+    title: plotConfig.title.replaceAll("|", " - ") || "plot",
     imageOptions: {
       padding: { all: 30 },
       includeInFilename: true,
