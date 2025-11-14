@@ -107,7 +107,7 @@ export const renderKyotoPlot = ({ svg, data, dimensions }: Props): void => {
     height: dimensions.INNER_HEIGHT,
     width: dimensions.INNER_WIDTH,
     xTickValues: allYears,
-    unit: "Mt CO2eq/yr",
+    yUnitText: "Mt CO2eq/yr",
   });
 
   if (stackedAreaData.length > 0 && areaVariableNames.length > 0) {

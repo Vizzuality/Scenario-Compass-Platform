@@ -29,7 +29,7 @@ export function MultipleRunsPlotWidget({ plotConfig, prefix, initialChartType = 
   const router = useRouter();
   const { chartRef, handleDownload } = useDownloadPlotAssets({
     runs: data.runs,
-    title: currentVariable,
+    title: currentVariable.replaceAll("|", " - "),
     imageOptions: {
       padding: { all: 30 },
       includeInFilename: true,
