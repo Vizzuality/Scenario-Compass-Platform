@@ -12,8 +12,8 @@ export const INTERNAL_PATHS = {
   LEARN_BY_TOPIC: "/learn-by-topic",
   SCENARIO_DASHBOARD: "/scenario-dashboard",
   RUN_DASHBOARD_EXPLORATION: "/scenario-dashboard/details",
-  SCENARIO_DASHBOARD_EXPLORATION: "/scenario-dashboard/exploration",
-  SCENARIO_DASHBOARD_COMPARISON: "/scenario-dashboard/exploration/comparison",
+  SCENARIO_DASHBOARD_EXPLORATION: "/scenario-dashboard/",
+  SCENARIO_DASHBOARD_COMPARISON: "/scenario-dashboard/comparison",
   METHODOLOGY: "/methodology",
   CONTACT: "/contact",
 } as const;

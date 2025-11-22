@@ -1,12 +1,12 @@
 import ScenarioDashboardHero from "@/containers/scenario-dashboard-container/components/module-hero";
-import IntroExplanations from "@/containers/scenario-dashboard-container/components/intro-explanations";
-import { Heading } from "@/components/custom/heading";
+import MetaIndicatorsFilters from "@/containers/scenario-dashboard-container/components/meta-scenario-filters";
+import ScenarioExplorationPlotsSection from "@/containers/scenario-dashboard-container/components/plots-section";
 import { Suspense } from "react";
 import ScenarioDashboardTopFilter from "@/containers/scenario-dashboard-container/components/filter-top";
-import ExploreScenariosButton from "@/containers/scenario-dashboard-container/components/buttons/explore-scenarios-button";
-import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { Heading } from "@/components/custom/heading";
 import { INTERNAL_PATHS } from "@/lib/paths";
+import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 export default function ScenarioDashboardContainer() {
   return (
@@ -24,13 +24,12 @@ export default function ScenarioDashboardContainer() {
             <ChevronRight size={16} />
           </Link>
         </div>
-        <Suspense>
-          <ScenarioDashboardTopFilter>
-            <ExploreScenariosButton />
-          </ScenarioDashboardTopFilter>
-        </Suspense>
+        <ScenarioDashboardTopFilter />
       </ScenarioDashboardHero>
-      <IntroExplanations />
+      <Suspense>
+        <MetaIndicatorsFilters />
+        <ScenarioExplorationPlotsSection />
+      </Suspense>
     </>
   );
 }
