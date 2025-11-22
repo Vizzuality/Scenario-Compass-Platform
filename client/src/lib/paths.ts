@@ -16,46 +16,38 @@ export const INTERNAL_PATHS = {
   SCENARIO_DASHBOARD_COMPARISON: "/scenario-dashboard/comparison",
   METHODOLOGY: "/methodology",
   CONTACT: "/contact",
+  ABOUT: "/about",
 } as const;
 
 export const EXTERNAL_PATHS = {
   OTHER_PRODUCTS: "https://shape.apps.ece.iiasa.ac.at/explorer",
   IIASA_LINKEDIN: "https://www.linkedin.com/company/iiasa/",
   IIASA_BLUESKY: "https://bsky.app/profile/iiasa.org",
-  IIASA_ABOUT: "https://scenariocompass.org/",
 };
 
-export const EXTERNAL_LINKS: Record<"BLUESKY" | "LINKEDIN" | "OTHER_PRODUCTS" | "ABOUT", LinkItem> =
-  {
-    BLUESKY: {
-      href: EXTERNAL_PATHS.IIASA_BLUESKY,
-      label: "Bluesky",
-      target: "_blank",
-      rel: "noopener noreferrer",
-      "aria-label": "IIASA Bluesky profile",
-    },
-    LINKEDIN: {
-      href: EXTERNAL_PATHS.IIASA_LINKEDIN,
-      label: "LinkedIn",
-      target: "_blank",
-      rel: "noopener noreferrer",
-      "aria-label": "IIASA LinkedIn profile",
-    },
-    OTHER_PRODUCTS: {
-      href: EXTERNAL_PATHS.OTHER_PRODUCTS,
-      label: "Other Products",
-      target: "_blank",
-      rel: "noopener noreferrer",
-      "aria-label": "IIASA Data Explorer",
-    },
-    ABOUT: {
-      href: EXTERNAL_PATHS.IIASA_ABOUT,
-      label: "About",
-      target: "_blank",
-      rel: "noopener noreferrer",
-      "aria-label": "IIASA About page",
-    },
-  } as const;
+export const EXTERNAL_LINKS: Record<"BLUESKY" | "LINKEDIN" | "OTHER_PRODUCTS", LinkItem> = {
+  BLUESKY: {
+    href: EXTERNAL_PATHS.IIASA_BLUESKY,
+    label: "Bluesky",
+    target: "_blank",
+    rel: "noopener noreferrer",
+    "aria-label": "IIASA Bluesky profile",
+  },
+  LINKEDIN: {
+    href: EXTERNAL_PATHS.IIASA_LINKEDIN,
+    label: "LinkedIn",
+    target: "_blank",
+    rel: "noopener noreferrer",
+    "aria-label": "IIASA LinkedIn profile",
+  },
+  OTHER_PRODUCTS: {
+    href: EXTERNAL_PATHS.OTHER_PRODUCTS,
+    label: "Other Products",
+    target: "_blank",
+    rel: "noopener noreferrer",
+    "aria-label": "IIASA Data Explorer",
+  },
+} as const;
 
 export const desktopPaths: LinkItem[] = [
   { href: INTERNAL_PATHS.GUIDED_EXPLORATION, label: "Guided Exploration" },
@@ -70,13 +62,7 @@ export const desktopPaths: LinkItem[] = [
   { href: INTERNAL_PATHS.SCENARIO_DASHBOARD, label: "Scenario Dashboard" },
   { href: INTERNAL_PATHS.METHODOLOGY, label: "Methodology" },
   { ...EXTERNAL_LINKS.OTHER_PRODUCTS },
-  { ...EXTERNAL_LINKS.ABOUT },
+  { href: INTERNAL_PATHS.ABOUT, label: "About" },
 ] as const;
 
-export const mobilePaths: LinkItem[] = [
-  ...desktopPaths,
-  {
-    href: INTERNAL_PATHS.CONTACT,
-    label: "Contact",
-  },
-] as const;
+export const mobilePaths: LinkItem[] = [...desktopPaths] as const;

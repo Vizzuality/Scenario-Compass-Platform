@@ -1,4 +1,4 @@
-import { mobilePaths, EXTERNAL_LINKS } from "@/lib/paths";
+import { mobilePaths, EXTERNAL_LINKS, INTERNAL_PATHS } from "@/lib/paths";
 import Link from "next/link";
 import { Dot, Linkedin } from "lucide-react";
 import { BlueskyLogoIcon } from "@/assets/icons/bluesky-logo-icon";
@@ -38,17 +38,18 @@ export function Footer() {
             }
           >
             <div className="order-3 flex flex-col items-center justify-center gap-6 md:order-1 md:flex-row md:gap-4">
-              <div className="order-3 text-sm leading-5 font-normal text-stone-500 md:order-1">
+              <div className="order-3 text-sm leading-6 font-normal text-stone-500 md:order-1">
                 Copyright 2025 SCP
               </div>
               <Dot className="order-2 text-stone-500" />
               <div className="order-1 flex gap-9 md:order-3 md:gap-4">
-                <Link href="" className="text-right text-sm leading-5 font-normal text-stone-500">
+                <Link href="" className="text-right text-sm leading-6 font-normal text-stone-500">
                   Privacy Policy
                 </Link>
+                <Dot className="hidden text-stone-500 md:inline" />
                 <Link
                   href=""
-                  className="order-1 text-right text-sm leading-5 font-normal text-stone-500"
+                  className="order-1 text-right text-sm leading-6 font-normal text-stone-500"
                 >
                   Cookie Policy
                 </Link>
@@ -61,6 +62,13 @@ export function Footer() {
               }
             >
               <div className="flex gap-9 md:gap-5">
+                <Link
+                  href={INTERNAL_PATHS.CONTACT}
+                  className="text-sm leading-6 font-normal text-stone-700 hover:opacity-60"
+                >
+                  Contact
+                </Link>
+                <Dot className="hidden text-stone-500 md:inline" />
                 <Link {...EXTERNAL_LINKS.BLUESKY}>
                   <BlueskyLogoIcon />
                 </Link>
