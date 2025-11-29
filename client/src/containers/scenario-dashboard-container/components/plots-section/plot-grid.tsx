@@ -6,6 +6,7 @@ import { useTabAndVariablesParams } from "@/hooks/nuqs/tabs/use-tabs-and-variabl
 import CustomTabPlotGrid from "@/containers/scenario-dashboard-container/components/plots-section/custom-tab-plot-grid";
 import HistogramWidget from "@/components/plots/widgets/histogram-widget";
 import { useBaseUrlParams } from "@/hooks/nuqs/url-params/use-base-url-params";
+import LoadingDots from "@/components/animations/loading-dots";
 
 export function PlotGrid() {
   const { startYear, endYear } = useBaseUrlParams();
@@ -41,11 +42,19 @@ export function PlotGrid() {
 
 export function PlotGridSkeleton() {
   return (
-    <div className="my-8 grid h-fit min-h-[600px] w-full grid-cols-1 grid-rows-2 gap-4 xl:grid-cols-2">
-      <div className="animate-pulse rounded-[4px] bg-stone-200" />
-      <div className="animate-pulse rounded-[4px] bg-stone-200" />
-      <div className="animate-pulse rounded-[4px] bg-stone-200" />
-      <div className="animate-pulse rounded-[4px] bg-stone-200" />
+    <div className="my-8 grid h-fit min-h-[700px] w-full grid-cols-1 grid-rows-2 gap-4 xl:grid-cols-2">
+      <div className="flex items-center justify-center rounded-md bg-white">
+        <LoadingDots />
+      </div>
+      <div className="flex items-center justify-center rounded-md bg-white">
+        <LoadingDots />
+      </div>
+      <div className="flex items-center justify-center rounded-md bg-white">
+        <LoadingDots />
+      </div>
+      <div className="flex items-center justify-center rounded-md bg-white">
+        <LoadingDots />
+      </div>
     </div>
   );
 }
