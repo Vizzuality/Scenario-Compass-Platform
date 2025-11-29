@@ -48,7 +48,7 @@ export default function ComparisonStickyFlags({
       <div
         className={cn(
           "sticky top-0 z-10 transition-all duration-150",
-          isStuck && "border-b bg-white shadow-sm",
+          isStuck && "border-b bg-white shadow-[0_15px_15px_rgba(0,0,0,0.1)]",
         )}
       >
         <div className="grid grid-cols-2 gap-0">
