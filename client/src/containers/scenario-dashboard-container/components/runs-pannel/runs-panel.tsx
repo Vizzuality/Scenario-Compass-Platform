@@ -30,3 +30,15 @@ export default function RunsPanel({ prefix }: Props) {
     </div>
   );
 }
+
+export function RunsPanelSkeleton() {
+  return (
+    <div className="mt-8 w-120 animate-pulse space-y-6">
+      <div className="h-10 w-full rounded-[4px] bg-stone-200" />
+      <div className="h-10 w-full rounded-[4px] bg-stone-200" />
+      <div className="h-10 w-full rounded-[4px] bg-stone-200" />
+      <div className="h-10 w-full rounded-[4px] bg-stone-200" />
+      <div className="h-10 w-full rounded-[4px] bg-stone-200" />
+    </div>
+  );
+}

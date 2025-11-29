@@ -38,3 +38,14 @@ export function PlotGrid() {
     </div>
   );
 }
+
+export function PlotGridSkeleton() {
+  return (
+    <div className="my-8 grid h-fit min-h-[600px] w-full grid-cols-1 grid-rows-2 gap-4 xl:grid-cols-2">
+      <div className="animate-pulse rounded-[4px] bg-stone-200" />
+      <div className="animate-pulse rounded-[4px] bg-stone-200" />
+      <div className="animate-pulse rounded-[4px] bg-stone-200" />
+      <div className="animate-pulse rounded-[4px] bg-stone-200" />
+    </div>
+  );
+}
