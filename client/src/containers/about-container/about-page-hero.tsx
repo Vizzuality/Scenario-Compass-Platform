@@ -10,7 +10,7 @@ export default function AboutPageHero({ children }: Props) {
   return (
     <div
       className={cn(
-        "bg-lilac relative flex h-full w-full flex-col items-center justify-center overflow-hidden",
+        "bg-lilac relative flex h-full w-full flex-col items-center justify-center overflow-hidden px-6",
       )}
     >
       <Navbar theme="light" sheetTheme="burgundy" />

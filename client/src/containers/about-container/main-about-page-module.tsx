@@ -3,7 +3,6 @@ import Link from "next/link";
 import Image from "next/image";
 
 const Links = {
-  BEZOS: "https://www.bezosearthfund.org/",
   IPCC_AR6: "",
   ANNEXIII: "",
   SENSES_TOOLKIT: "",
@@ -19,7 +18,7 @@ const Links = {
 export default function MainAboutPageModule() {
   return (
     <section className="flex w-full flex-col items-center bg-white px-6 lg:px-0">
-      <div className="container flex flex-col gap-10 py-24 lg:px-36 xl:px-66">
+      <div className="container flex flex-col gap-10 py-24 pb-16 lg:px-36 xl:px-66">
         <Heading as="h2" size="4xl" variant="light" className="mb-4 text-center">
           Further information & Resources
         </Heading>
@@ -227,42 +226,6 @@ export default function MainAboutPageModule() {
               development
             </li>
           </ul>
-        </div>
-
-        <div className="flex flex-col gap-4">
-          <h3 className="text-2xl leading-8 font-bold text-stone-900">Meet the SCI-team</h3>
-          <div className="grid w-full grid-cols-2 flex-col gap-6 lg:flex lg:flex-row">
-            {Array.from(Array(4).keys()).map((_, i) => (
-              <div className="flex w-full flex-col gap-2" key={i}>
-                <Image
-                  src={`/images/about-page/Pic0${i + 1}.webp`}
-                  alt=""
-                  width={300}
-                  height={400}
-                  className="h-auto w-full object-cover"
-                />
-                <div>
-                  <p className="text-foreground leading-6 font-bold">Full name</p>
-                  <p>Affiliation</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-4">
-          <h3 className="text-2xl leading-8 font-bold text-stone-900">Acknowledgements</h3>
-          <p>
-            The Scenario Compass Initiative is grateful for the generous support from the{" "}
-            <Link
-              className="underline decoration-1 underline-offset-[1.5px]"
-              href={Links.BEZOS}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Bezos Earth Fund.
-            </Link>
-          </p>
         </div>
       </div>
     </section>

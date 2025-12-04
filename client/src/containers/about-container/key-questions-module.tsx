@@ -25,7 +25,7 @@ const sections = [
 
 export default function KeyQuestions() {
   return (
-    <div className="container flex flex-col gap-18 px-6 py-24 lg:px-0">
+    <div className="container flex flex-col gap-18 px-6 py-24">
       <div className="flex flex-col lg:px-32">
         <span className="mb-6 text-center text-base leading-6 tracking-[0.64px] uppercase">
           Understanding the Scenario Compass
