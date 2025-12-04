@@ -2,6 +2,7 @@ import AboutPageHero from "@/containers/about-container/about-page-hero";
 import { Heading } from "@/components/custom/heading";
 import KeyQuestions from "@/containers/about-container/key-questions-module";
 import MainAboutPageModule from "@/containers/about-container/main-about-page-module";
+import { MembersSection } from "@/containers/about-container/members-section";
 
 export default function AboutPageContainer() {
   return (
@@ -19,6 +20,7 @@ export default function AboutPageContainer() {
       </AboutPageHero>
       <KeyQuestions />
       <MainAboutPageModule />
+      <MembersSection />
     </>
   );
 }
