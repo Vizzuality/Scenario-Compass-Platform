@@ -230,9 +230,9 @@ export const renderAreaPlot = ({
         tooltipHTML = `
       <ul class="list-disc m-0 pl-5 flex flex-col gap-1 text-black">
         <li><strong>Year:</strong> ${nearestData.year}</li>
-        <li><strong>Min:</strong> <span>${formatNumber(nearestData.min)}</span></li>
-        <li><strong>Median:</strong> <span>${formatNumber(nearestData.median)}</span></li>
         <li><strong>Max:</strong> <span>${formatNumber(nearestData.max)}</span></li>
+        <li><strong>Median:</strong> <span>${formatNumber(nearestData.median)}</span></li>
+        <li><strong>Min:</strong> <span>${formatNumber(nearestData.min)}</span></li>
       </ul>
     `;
       }
