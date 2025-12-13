@@ -4,8 +4,10 @@ export default function AboutPageLayout({ children }: { children: React.ReactNod
   return (
     <main className="flex w-full flex-col items-center">
       {children}
-      <div className="flex w-full justify-center bg-white p-16 sm:p-20">
-        <GuidedExplorationCrossLink />
+      <div className="flex w-full justify-center bg-white">
+        <div className="content-container py-20">
+          <GuidedExplorationCrossLink />
+        </div>
       </div>
     </main>
   );

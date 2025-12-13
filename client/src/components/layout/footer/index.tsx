@@ -6,9 +6,9 @@ import { BlueskyLogoIcon } from "@/assets/icons/bluesky-logo-icon";
 export function Footer() {
   return (
     <footer className="flex w-full flex-col items-center justify-center bg-white">
-      <div className={"container flex flex-col items-center justify-center px-4 pt-14 pb-2"}>
-        <div className={"container flex flex-col"}>
-          <div className={"flex flex-col gap-2"}>
+      <div className="container flex flex-col items-center justify-center px-4 pt-14 pb-2">
+        <div className="container flex flex-col">
+          <div className="flex flex-col gap-2">
             <p
               className={
                 "font-display text-center text-2xl leading-10 font-bold text-stone-700 not-italic"
@@ -16,10 +16,10 @@ export function Footer() {
             >
               Scenario Compass Platform
             </p>
-            <p className={"text-center text-xl leading-6 font-normal text-stone-700"}>by IIASA</p>
+            <p className="text-center text-xl leading-6 font-normal text-stone-700">by IIASA</p>
           </div>
 
-          <div className="flex flex-col items-center justify-center gap-7 pt-16 pb-12 text-center md:flex-row md:gap-14 md:pb-16">
+          <div className="flex flex-col items-center justify-center gap-7 pt-16 pb-12 text-center lg:flex-row lg:gap-14 lg:pb-16">
             {mobilePaths.map((path, index) => {
               return (
                 <Link

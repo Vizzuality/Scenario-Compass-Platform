@@ -1,32 +1,10 @@
 import { Heading } from "@/components/custom/heading";
-
-const sections = [
-  {
-    title: "What information does the Scenario Compass Explorer provide?",
-    text:
-      "The Scenario Compass gives an easy entry point to science-based global, regional, and\n" +
-      "            national climate change mitigation scenarios. Every scenario goes through a transparent\n" +
-      "            quality-control process. For more see How are scenarios quality-controlled?",
-  },
-  {
-    title: "What is a scenario? ",
-    text:
-      "A scenario describes one possible future, modeled through consistent assumptions about\n" +
-      "            energy, land use, and other socio-economic factors. Each scenario in the Scenario\n" +
-      "            Compass represents a set of interlinked quantitative simulations.",
-  },
-  {
-    title: "            Which sources does the Scenario Compass rely on?\n",
-    text:
-      "Most scenarios come from peer-reviewed research; others come from working papers of\n" +
-      "            report. Each scenario clearly lists its source within the Scenario Compass.",
-  },
-];
+import Link from "next/link";
 
 export default function KeyQuestions() {
   return (
-    <div className="container flex flex-col gap-18 px-6 py-24">
-      <div className="flex flex-col lg:px-32">
+    <div className="content-container flex flex-col gap-18 py-24">
+      <div className="flex flex-col">
         <span className="mb-6 text-center text-base leading-6 tracking-[0.64px] uppercase">
           Understanding the Scenario Compass
         </span>
@@ -39,13 +17,38 @@ export default function KeyQuestions() {
           information comes from.
         </p>
       </div>
-      <div className="grid grid-rows-3 gap-6 lg:grid-cols-3 lg:grid-rows-1">
-        {sections.map((section, index) => (
-          <div key={index} className="flex flex-col gap-3 rounded-lg bg-white p-8">
-            <p className="text-foreground text-2xl leading-8 font-semibold">{section.title}</p>
-            <p className="leading-6 text-stone-700">{section.text}</p>
-          </div>
-        ))}
+      <div className="grid grid-rows-3 gap-6 xl:grid-cols-3 xl:grid-rows-1">
+        <div className="flex flex-col gap-3 rounded-lg bg-white p-8">
+          <p className="text-foreground text-2xl leading-8 font-semibold">
+            What information does the Scenario Compass Explorer provide?
+          </p>
+          <p className="leading-6 text-stone-700">
+            The Scenario Compass gives an easy entry point to science-based global, regional, and
+            national climate change mitigation scenarios. <br /> Every scenario goes through a
+            transparent quality-control process. <br />
+            For more see:{" "}
+            <Link href="" className="underline">
+              How are scenarios quality-controlled?
+            </Link>
+          </p>
+        </div>
+        <div className="flex flex-col gap-3 rounded-lg bg-white p-8">
+          <p className="text-foreground text-2xl leading-8 font-semibold">What is a scenario?</p>
+          <p className="leading-6 text-stone-700">
+            A scenario describes one possible future, modeled through consistent assumptions about
+            energy, land use, and other socio-economic factors. <br /> Each scenario in the Scenario
+            Compass represents a set of interlinked quantitative simulations.
+          </p>
+        </div>
+        <div className="flex flex-col gap-3 rounded-lg bg-white p-8">
+          <p className="text-foreground text-2xl leading-8 font-semibold">
+            Which sources does the Scenario Compass rely on?
+          </p>
+          <p className="leading-6 text-stone-700">
+            Most scenarios come from peer-reviewed research; others come from working papers of
+            report. <br /> Each scenario clearly lists its source within the Scenario Compass.
+          </p>
+        </div>
       </div>
     </div>
   );

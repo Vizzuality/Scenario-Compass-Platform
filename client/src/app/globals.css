@@ -138,3 +138,13 @@
     @apply bg-background font-sans text-stone-700 antialiased;
   }
 }
+
+@layer components {
+  .content-padding {
+    @apply px-5 sm:px-5 md:px-10 lg:px-20 xl:px-20 2xl:px-20;
+  }
+
+  .content-container {
+    @apply relative container w-full px-5 sm:px-5 md:px-10 lg:px-20 xl:px-20 2xl:px-20;
+  }
+}
