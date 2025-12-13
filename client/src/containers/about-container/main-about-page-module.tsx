@@ -3,11 +3,11 @@ import Link from "next/link";
 import Image from "next/image";
 
 const Links = {
-  IPCC_AR6: "",
-  ANNEXIII: "",
-  SENSES_TOOLKIT: "",
-  QUALITY_CONTROLLER: "",
-  FEATURED_REGISTRATION: "https://sandbox.scenariocompass.org/",
+  IPCC_AR6: "https://www.ipcc.ch/report/ar6/wg3/downloads/report/IPCC_AR6_WGIII_Annex-III.pdf",
+  ANNEXIII: "https://www.ipcc.ch/report/ar6/wg3/downloads/report/IPCC_AR6_WGIII_Annex-III.pdf",
+  SENSES_TOOLKIT: "https://climatescenarios.org/primer/",
+  QUALITY_CONTROLLER: "https://philippverpoort.github.io/scenario-vetting-criteria/criteria_types/",
+  FEATURED_REGISTRATION: "https://sandbox.scenariocompass.org/tor",
   Heerden: "https://doi.org/10.1038/s41560-025-01703-1",
   Soergel: "https://doi.org/10.1088/1748-9326/ad80af",
   Richters: "https://doi.org/10.5281/zenodo.5782903",
@@ -31,6 +31,7 @@ export default function MainAboutPageModule() {
               This resource combines scenarios from the latest IPCC assessment (
               <Link
                 href={Links.Byers}
+                target="_blank"
                 rel="noopener noreferrer"
                 className="underline decoration-1 underline-offset-[1.5px]"
               >
@@ -43,6 +44,7 @@ export default function MainAboutPageModule() {
                 NAVIGATE - see for example{" "}
                 <Link
                   href={Links.Heerden}
+                  target="_blank"
                   className="underline decoration-1 underline-offset-[1.5px]"
                   rel="noopener noreferrer"
                 >
@@ -53,6 +55,7 @@ export default function MainAboutPageModule() {
                 SHAPE - see for example{" "}
                 <Link
                   href={Links.Soergel}
+                  target="_blank"
                   className="underline decoration-1 underline-offset-[1.5px]"
                   rel="noopener noreferrer"
                 >
@@ -63,6 +66,7 @@ export default function MainAboutPageModule() {
                 NGFS Phase V – see for example{" "}
                 <Link
                   href={Links.Richters}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="underline decoration-1 underline-offset-[1.5px]"
                 >
@@ -73,6 +77,7 @@ export default function MainAboutPageModule() {
                 GENIE – see for example{" "}
                 <Link
                   href={Links.Gidden}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="underline decoration-1 underline-offset-[1.5px]"
                 >
@@ -90,6 +95,8 @@ export default function MainAboutPageModule() {
               Learn how to submit your scenario{" "}
               <Link
                 href={Links.FEATURED_REGISTRATION}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="underline decoration-1 underline-offset-[1.5px]"
               >
                 here
@@ -118,6 +125,8 @@ export default function MainAboutPageModule() {
               More information on vetting criteria can be found{" "}
               <Link
                 href={Links.QUALITY_CONTROLLER}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="underline decoration-1 underline-offset-[1.5px]"
               >
                 here
@@ -158,6 +167,8 @@ export default function MainAboutPageModule() {
                 <strong>
                   <Link
                     href={Links.IPCC_AR6}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="underline decoration-1 underline-offset-[1.5px]"
                   >
                     IPCC AR6 Working Group III Annex III
@@ -169,6 +180,8 @@ export default function MainAboutPageModule() {
                 <strong>
                   <Link
                     href={Links.ANNEXIII}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="underline decoration-1 underline-offset-[1.5px]"
                   >
                     Annex III: Scenarios and Modelling Methods

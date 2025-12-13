@@ -10,9 +10,9 @@ import { ScenarioClearOperations } from "@/types/url-params/common";
 import { getParamName } from "@/utils/url-params-utils";
 
 const createTypedParams = (prefix: string): BaseURLParams => ({
-  year: getParamName(SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS.YEAR, prefix),
-  startYear: getParamName(SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS.START_YEAR, prefix),
-  endYear: getParamName(SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS.END_YEAR, prefix),
+  year: getParamName(SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS.YEAR),
+  startYear: getParamName(SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS.START_YEAR),
+  endYear: getParamName(SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS.END_YEAR),
   geography: getParamName(SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS.GEOGRAPHY, prefix),
   model: getParamName(SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS.MODEL, prefix),
   scenario: getParamName(SCENARIO_DASHBOARD_MAIN_FILTER_SEARCH_PARAMS.SCENARIO, prefix),

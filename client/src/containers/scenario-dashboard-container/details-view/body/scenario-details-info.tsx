@@ -1,3 +1,5 @@
+"use client";
+
 import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/lib/query-keys";
 import { getMetaPoints } from "@/utils/data-manipulation/get-meta-points";
@@ -36,13 +38,14 @@ export default function ScenarioDetailsInfo() {
     ...queryKeys.metaIndicators.tabulate({
       run: {
         scenario: {
-          id: Number(scenario),
+          name: String(scenario),
         },
         model: {
-          id: Number(model),
+          name: String(model),
         },
       },
     }),
+    enabled: !!scenario && !!model,
     select: (data) => getMetaPoints(data),
   });
 

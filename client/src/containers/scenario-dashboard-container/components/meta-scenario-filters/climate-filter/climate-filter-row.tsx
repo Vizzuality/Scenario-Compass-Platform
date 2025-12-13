@@ -15,15 +15,16 @@ import { ClimateFilterFooter } from "@/containers/scenario-dashboard-container/c
 export const ClimateFilterRow = ({ prefix }: RowFilterProps) => {
   const {
     id,
-    allSelected,
-    pendingCategory,
-    pendingNetZero,
+    selectedOptions,
+    pendingCategorySelectedOptions,
+    pendingNetZeroSelectedOptions,
     toggleValue,
     applyChanges,
     clearAll,
     getDisplayLabel,
     open,
     setOpen,
+    hasChanges,
   } = useClimateFilter(prefix);
 
   return (
@@ -39,11 +40,11 @@ export const ClimateFilterRow = ({ prefix }: RowFilterProps) => {
               aria-expanded={open}
               className={cn(selectTriggerVariants({ theme: "light", size: "lg" }), "h-10")}
             >
-              {allSelected.length === 0
+              {selectedOptions.length === 0
                 ? "Select options"
-                : allSelected.length === 1
-                  ? getDisplayLabel(allSelected[0])
-                  : `${allSelected.length} Selected`}
+                : selectedOptions.length === 1
+                  ? getDisplayLabel(selectedOptions[0])
+                  : `${selectedOptions.length} Selected`}
               <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </button>
           </PopoverTrigger>
@@ -59,7 +60,7 @@ export const ClimateFilterRow = ({ prefix }: RowFilterProps) => {
                       <div key={item.value} className="flex items-center space-x-2">
                         <Checkbox
                           id={`climate-row-${item.value}`}
-                          checked={pendingCategory.includes(item.value)}
+                          checked={pendingCategorySelectedOptions.includes(item.value)}
                           onCheckedChange={() => toggleValue(item.value, true)}
                         />
                         <label
@@ -81,7 +82,7 @@ export const ClimateFilterRow = ({ prefix }: RowFilterProps) => {
                     <div key={item.value} className="flex items-center space-x-2">
                       <Checkbox
                         id={`netzero-row-${item.value}`}
-                        checked={pendingNetZero.includes(item.value)}
+                        checked={pendingNetZeroSelectedOptions.includes(item.value)}
                         onCheckedChange={() => toggleValue(item.value, false)}
                       />
                       <label
@@ -95,7 +96,11 @@ export const ClimateFilterRow = ({ prefix }: RowFilterProps) => {
                 </div>
               </div>
             </div>
-            <ClimateFilterFooter applyChanges={applyChanges} clearAll={clearAll} />
+            <ClimateFilterFooter
+              hasChanges={hasChanges}
+              applyChanges={applyChanges}
+              clearAll={clearAll}
+            />
           </PopoverContent>
         </Popover>
       </div>

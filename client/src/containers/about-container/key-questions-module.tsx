@@ -27,7 +27,12 @@ export default function KeyQuestions() {
             national climate change mitigation scenarios. <br /> Every scenario goes through a
             transparent quality-control process. <br />
             For more see:{" "}
-            <Link href="" className="underline">
+            <Link
+              href="https://philippverpoort.github.io/scenario-vetting-criteria/criteria_types/"
+              rel="noopener noreferrer"
+              target="_blank"
+              className="underline"
+            >
               How are scenarios quality-controlled?
             </Link>
           </p>

@@ -13,58 +13,10 @@ import {
 import { useFilterUrlParams } from "@/hooks/nuqs/url-params/use-filter-url-params";
 import { URL_VALUES_FILTER_SEPARATOR } from "@/containers/scenario-dashboard-container/url-store";
 import { parseRange } from "@/components/slider-select/utils";
+import { useEnergyFilter } from "@/hooks/runs/filtering/use-energy-filter";
 
 const tooltipInfo =
   "Energy refers to the sources and types of energy used in scenarios, such as renewable energy, fossil fuels, or nuclear power. This filter allows you to categorize scenarios based on their energy profiles.";
-
-const useEnergyFilter = (prefix?: string) => {
-  const id = useId();
-  const {
-    renewablesShare,
-    fossilShare,
-    biomassShare,
-    setFossilShare,
-    setBiomassShare,
-    setRenewablesShare,
-  } = useFilterUrlParams(prefix);
-
-  const energyItems: Array<SliderSelectItem> = [
-    {
-      id: FOSSIL_SHARE_2050,
-      label: "Share of fossil fuel in primary energy in 2050",
-      value: parseRange(fossilShare as string | null),
-      defaultRange: [0, 100],
-    },
-    {
-      id: RENEWABLES_SHARE_2050,
-      label: "Share of renewables in primary energy in 2050",
-      value: parseRange(renewablesShare as string | null),
-      defaultRange: [0, 100],
-    },
-    {
-      id: BIOMASS_SHARE_2050,
-      label: "Share of biomass in 2050",
-      value: parseRange(biomassShare as string | null),
-      defaultRange: [0, 100],
-    },
-  ];
-
-  const setters: Record<string, (value: string | null) => Promise<URLSearchParams>> = {
-    renewablesShare: setRenewablesShare,
-    fossilShare: setFossilShare,
-    biomassShare: setBiomassShare,
-  };
-
-  const handleApply = (selections: ChangeStateAction) => {
-    Object.entries(selections).forEach(([key, value]) => {
-      const setter = setters[key];
-      const stringifierValue = value ? value.join(URL_VALUES_FILTER_SEPARATOR) : null;
-      setter?.(stringifierValue);
-    });
-  };
-
-  return { id, energyItems, handleApply };
-};
 
 export const EnergyFilter = () => {
   const { id, energyItems, handleApply } = useEnergyFilter();

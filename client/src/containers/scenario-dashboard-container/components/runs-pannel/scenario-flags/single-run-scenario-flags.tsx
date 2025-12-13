@@ -22,7 +22,7 @@ export default function SingleRunScenarioFlags({ result }: Props) {
   const categoriesWithRuns = (Object.keys(categories) as CategoryKey[])
     .map((key) => [key, categories[key]] as const)
     .filter(([, category]) => category.count > 0);
-
+  console.log(result);
   if (result.isLoading) {
     return (
       <div className="flex w-full flex-col gap-3">

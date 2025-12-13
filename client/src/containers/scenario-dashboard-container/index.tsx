@@ -7,7 +7,7 @@ import { Heading } from "@/components/custom/heading";
 import { INTERNAL_PATHS } from "@/lib/paths";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import MetaIndicatorsFilterSkeleton from "@/containers/scenario-dashboard-container/components/meta-scenario-filters/meta-indicators-filter-skeleton";
+import MetaIndicatorsFilterSkeleton from "@/containers/scenario-dashboard-container/components/meta-scenario-filters/skeletons/meta-indicators-filter-skeleton";
 
 export default function ScenarioDashboardContainer() {
   return (
