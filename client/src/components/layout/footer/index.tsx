@@ -14,9 +14,8 @@ export function Footer() {
                 "font-display text-center text-2xl leading-10 font-bold text-stone-700 not-italic"
               }
             >
-              Scenario Compass Platform
+              The Scenario Compass
             </p>
-            <p className="text-center text-xl leading-6 font-normal text-stone-700">by IIASA</p>
           </div>
 
           <div className="flex flex-col items-center justify-center gap-7 pt-16 pb-12 text-center lg:flex-row lg:gap-14 lg:pb-16">
@@ -38,8 +37,12 @@ export function Footer() {
             }
           >
             <div className="order-3 flex flex-col items-center justify-center gap-6 md:order-1 md:flex-row md:gap-4">
-              <div className="order-3 text-sm leading-6 font-normal text-stone-500 md:order-1">
-                Copyright 2025 SCP
+              <div
+                className="order-3 text-sm leading-6 font-normal text-stone-500 md:order-1"
+                role="contentinfo"
+                aria-label="Copyright information"
+              >
+                © 2025 Scenario Compass Initiative
               </div>
               <Dot className="order-2 text-stone-500" />
               <div className="order-1 flex gap-9 md:order-3 md:gap-4">

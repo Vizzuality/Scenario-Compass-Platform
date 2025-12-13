@@ -20,7 +20,7 @@ export function VariableSelect({ options, currentVariable, onChange }: Props) {
         <SelectTrigger size="sm" className="w-fit max-w-4/5">
           <SelectValue className="truncate" placeholder="Select variable..." />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="max-h-100">
           {options.map((option) => (
             <SelectItem key={option} value={option}>
               {option.replaceAll("|", " - ")}

@@ -4,6 +4,7 @@ import { DownloadIcon } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface Props {
   onClick?: (selectedTypes: DOWNLOAD_TYPE[]) => void;
@@ -37,17 +38,25 @@ export default function DownloadPlotButton({ onClick }: Props) {
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="ghost"
-          aria-label="Download plot options"
-          aria-describedby="download-description"
-          aria-expanded={open}
-          aria-haspopup="dialog"
-        >
-          <DownloadIcon className="h-4 w-4" />
-        </Button>
-      </PopoverTrigger>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <PopoverTrigger asChild>
+              <Button
+                variant="ghost"
+                aria-label="Download this data"
+                aria-expanded={open}
+                aria-haspopup="dialog"
+              >
+                <DownloadIcon className="h-4 w-4" />
+              </Button>
+            </PopoverTrigger>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Download this data</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
       <PopoverContent
         className="w-46"
         role="dialog"
