@@ -65,7 +65,7 @@ const SliderSelect: React.FC<SliderSelectProps> = ({
 
     setChanges((prevState) => ({
       ...prevState,
-      [id]: [values[0], values[1]] as [number, number],
+      [id]: [values[0], values[1]],
     }));
   };
 
@@ -74,6 +74,7 @@ const SliderSelect: React.FC<SliderSelectProps> = ({
   };
 
   const handleItemCheck = (id: string) => {
+    // If item already checked, remove the selection
     if (isItemChecked(id)) {
       setCheckedIds((prevState) => prevState.filter((checkedId) => checkedId !== id));
       setChanges((prevState) => ({
@@ -81,7 +82,14 @@ const SliderSelect: React.FC<SliderSelectProps> = ({
         [id]: null,
       }));
     } else {
+      // If item not already checked, add by default the default values
+      const newItem = items.find((item) => item.id === id);
+      if (!newItem) return null;
       setCheckedIds((prevState) => [...prevState, id]);
+      setChanges((prevState) => ({
+        ...prevState,
+        [id]: [newItem.defaultRange[0], newItem.defaultRange[1]],
+      }));
     }
   };
 

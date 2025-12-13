@@ -1,4 +1,4 @@
-import { useId, useState } from "react";
+import { useId, useState, useEffect } from "react";
 import { useFilterUrlParams } from "@/hooks/nuqs/url-params/use-filter-url-params";
 import {
   CLIMATE_CATEGORY_FILTER_CONFIG,
@@ -10,27 +10,41 @@ export const useClimateFilter = (prefix?: string) => {
   const { climateCategory, yearNetZero, setClimateCategory, setYearNetZero } =
     useFilterUrlParams(prefix);
 
-  const [pendingCategory, setPendingCategory] = useState<string[]>(climateCategory || []);
-  const [pendingNetZero, setPendingNetZero] = useState<string[]>(yearNetZero || []);
+  const [pendingCategorySelectedOptions, setPendingCategorySelectedOptions] = useState<string[]>(
+    climateCategory || [],
+  );
+  const [pendingNetZeroSelectedOptions, setPendingNetZeroSelectedOptions] = useState<string[]>(
+    yearNetZero || [],
+  );
+
   const [open, setOpen] = useState(false);
 
-  const allSelected = [...(climateCategory || []), ...(yearNetZero || [])];
+  useEffect(() => {
+    if (open) {
+      setPendingCategorySelectedOptions(climateCategory || []);
+      setPendingNetZeroSelectedOptions(yearNetZero || []);
+    }
+  }, [open, climateCategory, yearNetZero]);
+
+  const selectedOptions = [...(climateCategory || []), ...(yearNetZero || [])];
 
   const toggleValue = (value: string, isClimateCategory: boolean) => {
     if (isClimateCategory) {
-      setPendingCategory((prev) =>
+      setPendingCategorySelectedOptions((prev) =>
         prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value],
       );
     } else {
-      setPendingNetZero((prev) =>
+      setPendingNetZeroSelectedOptions((prev) =>
         prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value],
       );
     }
   };
 
   const applyChanges = () => {
-    setClimateCategory(pendingCategory.length > 0 ? pendingCategory : null);
-    setYearNetZero(pendingNetZero.length > 0 ? pendingNetZero : null);
+    setClimateCategory(
+      pendingCategorySelectedOptions.length > 0 ? pendingCategorySelectedOptions : null,
+    );
+    setYearNetZero(pendingNetZeroSelectedOptions.length > 0 ? pendingNetZeroSelectedOptions : null);
     setOpen(false);
   };
 
@@ -51,8 +65,6 @@ export const useClimateFilter = (prefix?: string) => {
   const clearAll = () => {
     setClimateCategory(null);
     setYearNetZero(null);
-    setPendingCategory([]);
-    setPendingNetZero([]);
     setOpen(false);
   };
 
@@ -92,11 +104,26 @@ export const useClimateFilter = (prefix?: string) => {
     return value;
   };
 
+  const hasChanges = () => {
+    const currentCategory = climateCategory || [];
+    const currentNetZero = yearNetZero || [];
+
+    const categoryChanged =
+      pendingCategorySelectedOptions.length !== currentCategory.length ||
+      !pendingCategorySelectedOptions.every((val) => currentCategory.includes(val));
+
+    const netZeroChanged =
+      pendingNetZeroSelectedOptions.length !== currentNetZero.length ||
+      !pendingNetZeroSelectedOptions.every((val) => currentNetZero.includes(val));
+
+    return categoryChanged || netZeroChanged;
+  };
+
   return {
     id,
-    allSelected,
-    pendingCategory,
-    pendingNetZero,
+    selectedOptions,
+    pendingCategorySelectedOptions,
+    pendingNetZeroSelectedOptions,
     toggleValue,
     applyChanges,
     removeValue,
@@ -105,5 +132,6 @@ export const useClimateFilter = (prefix?: string) => {
     getDisplayLabel,
     open,
     setOpen,
+    hasChanges,
   };
 };

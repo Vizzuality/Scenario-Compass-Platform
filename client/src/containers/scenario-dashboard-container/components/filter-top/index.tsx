@@ -1,7 +1,7 @@
 import YearIntervalSelectionFilter from "@/containers/scenario-dashboard-container/components/filter-top/year-interval-selection-filter";
 import GeographyFilter from "@/containers/scenario-dashboard-container/components/filter-top/geography-filter";
 import { Suspense } from "react";
-import { AdvancedFilterSkeleton } from "@/containers/scenario-dashboard-container/components/meta-scenario-filters/filter-skeleton";
+import { AdvancedFilterSkeleton } from "@/containers/scenario-dashboard-container/components/meta-scenario-filters/skeletons/filter-skeleton";
 
 export default function ScenarioDashboardTopFilter({ children }: { children?: React.ReactNode }) {
   return (

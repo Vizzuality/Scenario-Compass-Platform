@@ -57,18 +57,15 @@ export default function YearIntervalSelectionFilter() {
   };
 
   return (
-    <div className="flex flex-1 flex-col gap-2" data-testid="year-filter">
-      <div className="flex gap-6">
+    <div className="flex flex-1 gap-6" data-testid="year-filter">
+      <div className="flex w-full flex-col gap-2">
         <Label
           className="text-beige-light text-base leading-6 font-bold"
           id="year-selection-label"
           data-testid="year-selection-label"
         >
-          Year selection
+          Start year
         </Label>
-      </div>
-
-      <div className="flex gap-6" data-testid="year-range-container">
         <SingleYearSelect
           value={startYear}
           onChange={setStartYear}
@@ -76,6 +73,16 @@ export default function YearIntervalSelectionFilter() {
           options={getFilteredYears("start")}
           testId="start-year-select"
         />
+      </div>
+
+      <div className="flex w-full flex-col gap-2">
+        <Label
+          className="text-beige-light text-base leading-6 font-bold"
+          id="year-selection-label"
+          data-testid="year-selection-label"
+        >
+          End year
+        </Label>
         <SingleYearSelect
           value={endYear}
           onChange={setEndYear}

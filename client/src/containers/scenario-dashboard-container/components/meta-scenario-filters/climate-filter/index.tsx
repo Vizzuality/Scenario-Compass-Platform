@@ -19,15 +19,16 @@ const tooltipInfo =
 export const ClimateFilter = () => {
   const {
     id,
-    allSelected,
-    pendingCategory,
-    pendingNetZero,
+    selectedOptions,
+    pendingNetZeroSelectedOptions,
+    pendingCategorySelectedOptions,
     toggleValue,
     applyChanges,
     clearAll,
     getDisplayLabel,
     open,
     setOpen,
+    hasChanges,
   } = useClimateFilter();
 
   return (
@@ -49,11 +50,11 @@ export const ClimateFilter = () => {
             className="h-13 w-full justify-between rounded-[4px] border-1 border-stone-300 font-normal"
           >
             <p className="truncate text-sm">
-              {allSelected.length === 0
+              {selectedOptions.length === 0
                 ? "Select climate options"
-                : allSelected.length === 1
-                  ? getDisplayLabel(allSelected[0])
-                  : `${allSelected.length} Selected`}
+                : selectedOptions.length === 1
+                  ? getDisplayLabel(selectedOptions[0])
+                  : `${selectedOptions.length} Selected`}
             </p>
             <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
@@ -70,7 +71,7 @@ export const ClimateFilter = () => {
                     <div key={item.value} className="flex items-center space-x-2">
                       <Checkbox
                         id={`climate-${item.value}`}
-                        checked={pendingCategory.includes(item.value)}
+                        checked={pendingCategorySelectedOptions.includes(item.value)}
                         onCheckedChange={() => toggleValue(item.value, true)}
                       />
                       <Label
@@ -90,7 +91,7 @@ export const ClimateFilter = () => {
                   <div key={item.value} className="flex items-center space-x-2">
                     <Checkbox
                       id={`netzero-${item.value}`}
-                      checked={pendingNetZero.includes(item.value)}
+                      checked={pendingNetZeroSelectedOptions.includes(item.value)}
                       onCheckedChange={() => toggleValue(item.value, false)}
                     />
                     <Label
@@ -104,7 +105,11 @@ export const ClimateFilter = () => {
               </div>
             </div>
           </div>
-          <ClimateFilterFooter applyChanges={applyChanges} clearAll={clearAll} />
+          <ClimateFilterFooter
+            hasChanges={hasChanges}
+            applyChanges={applyChanges}
+            clearAll={clearAll}
+          />
         </PopoverContent>
       </Popover>
     </div>

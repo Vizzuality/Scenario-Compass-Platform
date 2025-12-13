@@ -1,4 +1,4 @@
-import { AdvancedFilterSkeleton } from "@/containers/scenario-dashboard-container/components/meta-scenario-filters/filter-skeleton";
+import { AdvancedFilterSkeleton } from "@/containers/scenario-dashboard-container/components/meta-scenario-filters/skeletons/filter-skeleton";
 
 export default function MetaIndicatorsFilterSkeleton(): React.ReactElement {
   return (
