@@ -63,14 +63,11 @@ export function Navbar({ className, theme, sheetTheme }: Props) {
   return (
     <nav className={cn("h-14 w-full bg-transparent lg:h-21", className)}>
       <div
-        className={cn(
-          "container mx-auto flex h-full items-center justify-between px-4 lg:px-0",
-          navStyles,
-        )}
+        className={cn("container mx-auto flex h-full items-center justify-between px-4", navStyles)}
       >
         <Logo theme={theme} />
 
-        <div className="hidden items-center gap-10 lg:flex">
+        <div className="hidden items-center gap-10 xl:flex">
           {desktopPaths.map((link, index) => (
             <ActiveLink key={index} {...link} className="text-lg">
               {link.label}
@@ -78,7 +75,7 @@ export function Navbar({ className, theme, sheetTheme }: Props) {
           ))}
         </div>
 
-        <div className="flex lg:hidden">
+        <div className="flex xl:hidden">
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">

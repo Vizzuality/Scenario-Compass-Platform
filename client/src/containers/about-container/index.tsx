@@ -8,7 +8,7 @@ export default function AboutPageContainer() {
   return (
     <>
       <AboutPageHero>
-        <div className="z-10 container mt-14 flex w-full flex-col gap-8 px-6 pb-20 lg:px-0">
+        <div className="content-container z-10 mt-14 flex flex-col gap-8 pb-20">
           <Heading variant="light" size="5xl" as="h1" id="hero-title" className="text-left">
             About
           </Heading>
