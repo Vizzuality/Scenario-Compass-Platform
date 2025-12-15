@@ -8,7 +8,7 @@ import { INTERNAL_PATHS } from "@/lib/paths";
 
 const excludedFeedbackPaths: string[] = [INTERNAL_PATHS.HOME];
 const FEEDBACK_FORM_LINK =
-  "https://forms.office.com/Pages/DesignPageV2.aspx?subpage=design&FormId=C7F5mwcAik6wcq0MjNwapfxls98PHVlNq939qjRHTW5UQzRSWlhMUTg1VFhYMUY2UjRIWTlHUzcxVC4u&Token=93d0556ab588425d813c7b16a3deaf50";
+  "https://forms.office.com/Pages/ResponsePage.aspx?id=C7F5mwcAik6wcq0MjNwapfxls98PHVlNq939qjRHTW5UQzRSWlhMUTg1VFhYMUY2UjRIWTlHUzcxVC4u";
 
 export default function FeedbackButton() {
   const pathname = usePathname();
