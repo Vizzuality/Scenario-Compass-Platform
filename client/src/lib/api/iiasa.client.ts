@@ -161,6 +161,11 @@ export class IIASA_API_CLIENT {
     return this.platform.iamc.variables.tabulate(filters);
   }
 
+  public getVariableDetails(name: string): Promise<Variable> {
+    this.validatePlatform();
+    return this.platform.iamc.variables.get(name);
+  }
+
   public getMetaIndicators(filters?: MetaIndicatorFilter) {
     this.validatePlatform();
     return this.platform.meta.tabulate({ joinRunIndex: false, ...filters });

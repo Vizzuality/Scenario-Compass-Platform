@@ -12,6 +12,7 @@ import { useScenarioFlagsData } from "@/hooks/nuqs/flags/use-scenario-flags-data
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useScenarioFlagsSelection } from "@/hooks/nuqs/flags/use-scenario-flags-selection";
+import { filterVisibleRuns } from "@/utils/plots/filtering-functions";
 
 export const SCENARIO_FLAGS_ACCORDION_VALUE = "scenario-flags";
 
@@ -21,9 +22,13 @@ interface SharedContentProps {
 }
 
 export function SharedScenarioFlagsContent({ result, prefix }: SharedContentProps) {
-  const { totalCountOfUniqueRuns, categories, highCategories, mediumCategories, okCategories } =
-    useScenarioFlagsData(result.runs);
   const { showVetting, setShowVetting } = useScenarioFlagsSelection(prefix);
+
+  const runs = filterVisibleRuns(result.runs, [], showVetting);
+
+  const { totalCountOfUniqueRuns, categories, highCategories, mediumCategories, okCategories } =
+    useScenarioFlagsData(runs);
+
   return (
     <>
       <AccordionTrigger className="pt-0 pb-1.5 text-base font-bold text-stone-800">

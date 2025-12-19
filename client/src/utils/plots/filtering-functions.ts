@@ -5,7 +5,7 @@ import {
   VETTING2025,
 } from "@/lib/config/reasons-of-concern/category-config";
 
-const hasVettingFlag = (run: ExtendedRun): boolean =>
+export const hasVettingFlag = (run: ExtendedRun): boolean =>
   run.metaIndicators.some((mi) => mi.key === VETTING2025 && mi.value === VALUE_OK);
 
 const isHiddenByFlag = (run: ExtendedRun, hiddenFlags: string[]): boolean => {
