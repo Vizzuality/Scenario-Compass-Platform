@@ -28,11 +28,11 @@ type RunFlagAnalysis = {
 
 /**
  * Filters meta indicators to only include flag-related ones.
- * e.g. "Plausibility Vetting" and "Reason For Concern" are the keys we are interested in.
+ * e.g. "Feasibility Concern" and "Sustainability Concern" are the keys we are interested in.
  *
  * In the dataset we can find meta indicators with keys like:
- * - "Plausibility Vetting|Solar PV"
- * - "Reason For Concern|Wind Turbine"
+ * - "Feasibility Concern|Solar PV"
+ * - "Sustainability Concern|Wind Turbine"
  */
 export const _filterFlagMetaIndicators = (metaIndicators: Array<ShortMetaIndicator>) => {
   return metaIndicators.filter((meta) => {

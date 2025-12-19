@@ -245,7 +245,7 @@ export const VALUE_OK = "ok";
  * @constant
  * @readonly
  */
-export const VETTING2025 = "Vetting|2025";
+export const VETTING2025 = "Vetting|SCI 2025";
 
 /**
  * Retrieves the abbreviated form of a category key.

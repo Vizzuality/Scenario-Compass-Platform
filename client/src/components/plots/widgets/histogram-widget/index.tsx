@@ -23,6 +23,7 @@ export default function HistogramWidget({ plotConfig }: Props) {
     }),
     select: (data) => getMetaPoints(data),
   });
+
   const { chartRef, handleDownload } = useDownloadPlotAssets({
     metaIndicators: metaIndicators,
     title: currentVariable.replaceAll("|", " - "),

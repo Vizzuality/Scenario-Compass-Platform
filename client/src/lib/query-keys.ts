@@ -49,6 +49,17 @@ export const queryKeys = createQueryKeyStore({
       queryKey: [{ filters }],
       queryFn: async () => API.getVariablesTabulate(filters),
     }),
+    get: (name: string) => ({
+      queryKey: [{ name }],
+      queryFn: async (): Promise<Variable> => API.getVariableDetails(name),
+    }),
+    getDocs: (name: string) => ({
+      queryKey: ["variables", name, "docs"],
+      queryFn: async () => {
+        const variable = await API.getVariableDetails(name);
+        return await variable.getDocs();
+      },
+    }),
   },
   dataPoints: {
     tabulate: (filters?: IamcDataFilter) => ({
