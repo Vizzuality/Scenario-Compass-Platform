@@ -4,9 +4,18 @@ export interface ReasonForConcernSummary {
   link: string;
 }
 
-export type ReasonsForConcernMap = Record<string, ReasonForConcernSummary>;
+export type ReasonsForConcernMap = Record<string, Partial<ReasonForConcernSummary>>;
 
 export const reasonsForConcernMap: ReasonsForConcernMap = {
+  "Feasibility Concern|Carbon Capture|World|2030": {
+    flagName: "Infeasible growth CCS deployment 2030",
+  },
+  "Feasibility Concern|Carbon Capture|World|2035": {
+    flagName: "Infeasible growth CCS deployment 2035",
+  },
+  "Feasibility Concern|Carbon Capture|World|2040": {
+    flagName: "Infeasible growth CCS deployment 2040",
+  },
   "Feasibility Concern|Hydropower Capacity|World|2030": {
     flagName: "Infeasible near-term hydropower expansion",
     description:

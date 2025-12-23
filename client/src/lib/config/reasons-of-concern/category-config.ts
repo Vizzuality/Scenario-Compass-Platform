@@ -126,7 +126,7 @@ type ConfigType = {
  */
 export const CATEGORY_CONFIG: ConfigType = {
   [CATEGORY_KEYS.BOTH_HIGH]: {
-    label: "Sustainability and feasibility concerns, and at least one of them is high",
+    label: "High sustainability and feasibility concerns",
     abbrev: "BH",
     color: DATA_COLORS.PURPLE,
     palette: PURPLE_COLOR_PALETTE,
