@@ -5,6 +5,7 @@ import {
   SUSTAINABILITY_META_KEY,
   VALUE_HIGH,
   VALUE_MEDIUM,
+  VALUE_OK,
 } from "@/lib/config/reasons-of-concern/category-config";
 import {
   initializeMetaIndicatorRunCategorySummaryPair,
@@ -14,16 +15,16 @@ import { ExtendedRun, ShortMetaIndicator } from "@/types/data/run";
 
 /**
  * Represents the flag analysis results for a single run.
- * @property {boolean} highPlausibility True if run has any "high" severity Plausibility Vetting flags.
- * @property {boolean} mediumPlausibility True if run has any "medium" severity Plausibility Vetting flags.
- * @property {boolean} highConcern True if run has any "high" severity Reason For Concern flags.
- * @property {boolean} mediumConcern True if run has any "medium" severity Reason For Concern flags.
+ * @property {boolean} highFeasibility True if run has any "high" severity Plausibility Vetting flags.
+ * @property {boolean} mediumFeasibility True if run has any "medium" severity Plausibility Vetting flags.
+ * @property {boolean} highSustainability True if run has any "high" severity Reason For Concern flags.
+ * @property {boolean} mediumSustainability True if run has any "medium" severity Reason For Concern flags.
  */
-type RunFlagAnalysis = {
-  highPlausibility: boolean;
-  mediumPlausibility: boolean;
-  highConcern: boolean;
-  mediumConcern: boolean;
+type SingleRunFlagAnalysis = {
+  highFeasibility: boolean;
+  mediumFeasibility: boolean;
+  highSustainability: boolean;
+  mediumSustainability: boolean;
 };
 
 /**
@@ -34,12 +35,12 @@ type RunFlagAnalysis = {
  * - "Feasibility Concern|Solar PV"
  * - "Sustainability Concern|Wind Turbine"
  */
-export const _filterFlagMetaIndicators = (metaIndicators: Array<ShortMetaIndicator>) => {
+const _filterFlagMetaIndicators = (metaIndicators: Array<ShortMetaIndicator>) => {
   return metaIndicators.filter((meta) => {
-    const isPlausibilityFlag = meta.key.startsWith(FEASIBILITY_META_KEY);
-    const isConcernFlag = meta.key.startsWith(SUSTAINABILITY_META_KEY);
+    const isFeasibilityFlag = meta.key.startsWith(FEASIBILITY_META_KEY);
+    const isSustainabilityFlag = meta.key.startsWith(SUSTAINABILITY_META_KEY);
 
-    return isPlausibilityFlag || isConcernFlag;
+    return isFeasibilityFlag || isSustainabilityFlag;
   });
 };
 
@@ -65,7 +66,6 @@ export const getMetaIndicatorsOccurrenceCounts = (
       keyCounts.set(meta.key, (keyCounts.get(meta.key) || 0) + 1);
     });
   });
-
   return Array.from(keyCounts.entries())
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([key, count]) => ({
@@ -89,34 +89,34 @@ export const getMetaIndicatorsOccurrenceCounts = (
  *
  * const result = analyzeRunFlags(flagMetas);
  * Returns: {
- *  highPlausibility: true,
- *  mediumPlausibility: false,
- *  highConcern: false,
- *  mediumConcern: true
+ *  highFeasibility: true,
+ *  mediumFeasibility: false,
+ *  highSustainability: false,
+ *  mediumSustainability: true
  * }
  * ```
  */
-const _analyzeRunFlags = (flagMetas: Array<ShortMetaIndicator>): RunFlagAnalysis => {
-  const flags: RunFlagAnalysis = {
-    highPlausibility: false,
-    mediumPlausibility: false,
-    highConcern: false,
-    mediumConcern: false,
+const _analyzeRunFlags = (flagMetas: Array<ShortMetaIndicator>): SingleRunFlagAnalysis => {
+  const flags: SingleRunFlagAnalysis = {
+    highFeasibility: false,
+    mediumFeasibility: false,
+    highSustainability: false,
+    mediumSustainability: false,
   };
 
-  flagMetas.forEach((meta) => {
+  for (const meta of flagMetas) {
     const value = meta.value.toLowerCase();
+    const isFeasibility = meta.key.startsWith(FEASIBILITY_META_KEY);
+    const isSustainability = meta.key.startsWith(SUSTAINABILITY_META_KEY);
 
-    if (meta.key.startsWith(FEASIBILITY_META_KEY)) {
-      if (value === VALUE_HIGH) flags.highPlausibility = true;
-      else if (value === VALUE_MEDIUM) flags.mediumPlausibility = true;
+    if (value === VALUE_HIGH) {
+      if (isFeasibility) flags.highFeasibility = true;
+      if (isSustainability) flags.highSustainability = true;
+    } else if (value === VALUE_MEDIUM) {
+      if (isFeasibility) flags.mediumFeasibility = true;
+      if (isSustainability) flags.mediumSustainability = true;
     }
-
-    if (meta.key.startsWith(SUSTAINABILITY_META_KEY)) {
-      if (value === VALUE_HIGH) flags.highConcern = true;
-      else if (value === VALUE_MEDIUM) flags.mediumConcern = true;
-    }
-  });
+  }
 
   return flags;
 };
@@ -124,35 +124,81 @@ const _analyzeRunFlags = (flagMetas: Array<ShortMetaIndicator>): RunFlagAnalysis
 /**
  * Determines the appropriate category key based on flag analysis.
  */
-const _categorizeSingleRun = (flags: RunFlagAnalysis) => {
-  const hasAnyPlausibilityFlag = flags.highPlausibility || flags.mediumPlausibility;
-  const hasAnyConcernFlag = flags.highConcern || flags.mediumConcern;
-
-  // Case 1: Run has BOTH plausibility AND concern flags
-  if (hasAnyPlausibilityFlag && hasAnyConcernFlag) {
-    const hasAnyHighFlag = flags.highPlausibility || flags.highConcern;
-    return hasAnyHighFlag ? CATEGORY_KEYS.BOTH_HIGH : CATEGORY_KEYS.BOTH_MEDIUM;
+const _categorizeSingleRun = (flags: SingleRunFlagAnalysis): CategoryKey => {
+  if (flags.highFeasibility && flags.highSustainability) {
+    return CATEGORY_KEYS.BOTH_HIGH;
   }
-
-  // Case 2: Run has ONLY concern flags
-  if (hasAnyConcernFlag && !hasAnyPlausibilityFlag) {
-    return flags.highConcern
-      ? CATEGORY_KEYS.HIGH_SUSTAINABILITY
-      : CATEGORY_KEYS.MEDIUM_SUSTAINABILITY;
+  if (flags.highSustainability) {
+    return CATEGORY_KEYS.HIGH_SUSTAINABILITY;
   }
-
-  // Case 3: Run has ONLY plausibility flags
-  if (hasAnyPlausibilityFlag && !hasAnyConcernFlag) {
-    return flags.highPlausibility
-      ? CATEGORY_KEYS.HIGH_FEASIBILITY
-      : CATEGORY_KEYS.MEDIUM_FEASIBILITY;
+  if (flags.highFeasibility) {
+    return CATEGORY_KEYS.HIGH_FEASIBILITY;
   }
-
-  // Case 4: Run has NO relevant flags or all flags are OK
+  if (flags.mediumSustainability && flags.mediumFeasibility) {
+    return CATEGORY_KEYS.BOTH_MEDIUM;
+  }
+  if (flags.mediumSustainability) {
+    return CATEGORY_KEYS.MEDIUM_SUSTAINABILITY;
+  }
+  if (flags.mediumFeasibility) {
+    return CATEGORY_KEYS.MEDIUM_FEASIBILITY;
+  }
   return CATEGORY_KEYS.NO_FLAGS;
 };
 
-export const getRunCategory = (metaIndicators: Array<ShortMetaIndicator>): CategoryKey => {
+/**
+ * Filters and extracts category-specific meta indicators from runs based on feasibility and sustainability criteria.
+ * This function categorizes runs and then extracts unique meta indicators that match each category's
+ * specific criteria (e.g., high feasibility, medium sustainability). It uses Map-based deduplication to ensure only unique meta indicators per category are returned.
+ *
+ * We need this in order to avoid presenting Sustainability meta-indicators for HIGH_FEASIBILITY for instance.
+ *
+ * @param runs
+ */
+export const getMetaIndicatorsForSpecificCategory = (runs: ExtendedRun[]) => {
+  const categorisedRuns = categorizeRuns(runs);
+
+  const categoryFilters: Record<CategoryKey, (meta: ShortMetaIndicator) => boolean> = {
+    [CATEGORY_KEYS.HIGH_FEASIBILITY]: (meta) =>
+      meta.key.startsWith(FEASIBILITY_META_KEY) && meta.value.toLowerCase() === VALUE_HIGH,
+
+    [CATEGORY_KEYS.MEDIUM_FEASIBILITY]: (meta) =>
+      meta.key.startsWith(FEASIBILITY_META_KEY) && meta.value.toLowerCase() === VALUE_MEDIUM,
+
+    [CATEGORY_KEYS.HIGH_SUSTAINABILITY]: (meta) =>
+      meta.key.startsWith(SUSTAINABILITY_META_KEY) && meta.value.toLowerCase() === VALUE_HIGH,
+
+    [CATEGORY_KEYS.MEDIUM_SUSTAINABILITY]: (meta) =>
+      meta.key.startsWith(SUSTAINABILITY_META_KEY) && meta.value.toLowerCase() === VALUE_MEDIUM,
+
+    [CATEGORY_KEYS.BOTH_HIGH]: (meta) =>
+      (meta.key.startsWith(FEASIBILITY_META_KEY) || meta.key.startsWith(SUSTAINABILITY_META_KEY)) &&
+      meta.value.toLowerCase() === VALUE_HIGH,
+
+    [CATEGORY_KEYS.BOTH_MEDIUM]: (meta) =>
+      (meta.key.startsWith(FEASIBILITY_META_KEY) || meta.key.startsWith(SUSTAINABILITY_META_KEY)) &&
+      meta.value.toLowerCase() === VALUE_MEDIUM,
+
+    [CATEGORY_KEYS.NO_FLAGS]: (meta) =>
+      (meta.key.startsWith(FEASIBILITY_META_KEY) || meta.key.startsWith(SUSTAINABILITY_META_KEY)) &&
+      meta.value.toLowerCase() === VALUE_OK,
+  };
+
+  for (const [cat, categorySummary] of Object.entries(categorisedRuns)) {
+    const filterFn = categoryFilters[cat as CategoryKey];
+    if (!filterFn) continue;
+
+    const metaIndicators = categorySummary.runs.flatMap((run) => run.metaIndicators);
+
+    categorisedRuns[cat as CategoryKey].categorySpecificMetaIndicators = Array.from(
+      new Map(metaIndicators.filter(filterFn).map((item) => [item.key, item])).values(),
+    );
+  }
+
+  return categorisedRuns;
+};
+
+export const getFlagCategory = (metaIndicators: Array<ShortMetaIndicator>): CategoryKey => {
   const flagMetas = _filterFlagMetaIndicators(metaIndicators);
   const flags = _analyzeRunFlags(flagMetas);
   return _categorizeSingleRun(flags);
@@ -175,6 +221,7 @@ export const getRunCategory = (metaIndicators: Array<ShortMetaIndicator>): Categ
  */
 export const categorizeRuns = (runs: ExtendedRun[]): MetaIndicatorRunCategorySummaryPair => {
   const activeCategories = initializeMetaIndicatorRunCategorySummaryPair();
+
   runs.forEach((run) => {
     activeCategories[run.flagCategory].runs.push(run);
   });

@@ -2,7 +2,7 @@ import { ExtendedRun } from "@/types/data/run";
 import { DataPoint } from "@/types/data/data-point";
 import { MetaIndicator } from "@/types/data/meta-indicator";
 import computeCumulativeEmissionsRemoved from "@/utils/filtering/compute-cumulative-emissions-removed";
-import { getRunCategory } from "@/utils/flags-utils/flags-utils";
+import { getFlagCategory } from "@/utils/flags-utils/flags-utils";
 import {
   createEnergyShareMetaIndicators,
   createForestAreaMetaIndicator,
@@ -81,7 +81,7 @@ export const generateExtendedRuns = ({
       modelName: firstDataPoint.modelName,
       unit: firstDataPoint.unit,
       orderedPoints: createShortDataPoints(runDataPoints),
-      flagCategory: getRunCategory(runMetaIndicators),
+      flagCategory: getFlagCategory(runMetaIndicators),
       metaIndicators,
     };
 

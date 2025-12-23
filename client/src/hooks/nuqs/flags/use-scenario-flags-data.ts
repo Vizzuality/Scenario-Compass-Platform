@@ -1,5 +1,5 @@
 import { RunPipelineReturn } from "@/types/data/run";
-import { categorizeRuns } from "@/utils/flags-utils/flags-utils";
+import { getMetaIndicatorsForSpecificCategory } from "@/utils/flags-utils/flags-utils";
 import { useMemo } from "react";
 import { CategoryKey } from "@/lib/config/reasons-of-concern/category-config";
 import { RunCategorySummary } from "@/containers/scenario-dashboard-container/components/runs-pannel/utils";
@@ -28,15 +28,19 @@ import { RunCategorySummary } from "@/containers/scenario-dashboard-container/co
  * - All other categories are considered medium severity
  */
 export function useScenarioFlagsData(runs: RunPipelineReturn["runs"]) {
-  const categories = useMemo(() => categorizeRuns(runs), [runs]);
+  const categories = getMetaIndicatorsForSpecificCategory(runs);
 
   /**
    * Filters out empty categories (those with no runs).
    * Returns only categories that contain at least one run.
    */
-  const categoriesWithRuns = (
-    Object.entries(categories) as [CategoryKey, RunCategorySummary][]
-  ).filter(([, category]) => category.count > 0);
+  const categoriesWithRuns = useMemo(
+    () =>
+      (Object.entries(categories) as [CategoryKey, RunCategorySummary][]).filter(
+        ([, category]) => category.count > 0,
+      ),
+    [categories],
+  );
 
   const { highCategories, mediumCategories, okCategories } = useMemo(
     () =>

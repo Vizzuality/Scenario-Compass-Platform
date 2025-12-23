@@ -24,10 +24,10 @@ interface SharedContentProps {
 export function SharedScenarioFlagsContent({ result, prefix }: SharedContentProps) {
   const { showVetting, setShowVetting } = useScenarioFlagsSelection(prefix);
 
-  const runs = filterVisibleRuns(result.runs, [], showVetting);
+  const visibleRuns = filterVisibleRuns(result.runs, [], showVetting);
 
   const { totalCountOfUniqueRuns, categories, highCategories, mediumCategories, okCategories } =
-    useScenarioFlagsData(runs);
+    useScenarioFlagsData(visibleRuns);
 
   return (
     <>
@@ -77,7 +77,7 @@ export function SharedScenarioFlagsContent({ result, prefix }: SharedContentProp
                     <AccordionTrigger className="[&_svg]:text-foreground flex w-full items-start px-0 py-2">
                       <BaseFlagTrigger categoryKey={key} category={category} prefix={prefix} />
                     </AccordionTrigger>
-                    <AccordionItemContent category={category} />
+                    <AccordionItemContent categorySummary={category} />
                   </AccordionItem>
                 ))}
               </Accordion>
@@ -92,7 +92,7 @@ export function SharedScenarioFlagsContent({ result, prefix }: SharedContentProp
                     <AccordionTrigger className="[&_svg]:text-foreground flex w-full items-start px-0 py-2">
                       <BaseFlagTrigger categoryKey={key} category={category} prefix={prefix} />
                     </AccordionTrigger>
-                    <AccordionItemContent category={category} />
+                    <AccordionItemContent categorySummary={category} />
                   </AccordionItem>
                 ))}
               </Accordion>
