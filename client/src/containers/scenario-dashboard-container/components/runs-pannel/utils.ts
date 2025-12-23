@@ -1,4 +1,4 @@
-import { ExtendedRun } from "@/types/data/run";
+import { ExtendedRun, ShortMetaIndicator } from "@/types/data/run";
 import { CATEGORY_CONFIG, CategoryKey } from "@/lib/config/reasons-of-concern/category-config";
 
 /**
@@ -22,6 +22,8 @@ export interface RunCategorySummary {
 
   /** An array containing the actual run objects that belong to this category. */
   runs: ExtendedRun[];
+
+  categorySpecificMetaIndicators: Array<ShortMetaIndicator>;
 }
 
 export type MetaIndicatorRunCategorySummaryPair = Record<CategoryKey, RunCategorySummary>;
@@ -30,7 +32,13 @@ export const initializeMetaIndicatorRunCategorySummaryPair = () => {
   return Object.fromEntries(
     Object.entries(CATEGORY_CONFIG).map(([key, config]) => [
       key,
-      { color: config.color, label: config.label, count: 0, runs: [] },
+      {
+        color: config.color,
+        label: config.label,
+        count: 0,
+        runs: [],
+        categorySpecificMetaIndicators: [],
+      },
     ]),
   ) as unknown as MetaIndicatorRunCategorySummaryPair;
 };
