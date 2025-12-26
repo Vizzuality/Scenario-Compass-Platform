@@ -24,7 +24,12 @@ export const VerticalComparisonPlotGrid = ({
     <>
       {selectedTab.explorationPlotConfigArray.map((plotConfig) => {
         return plotConfig.plotType && plotConfig.plotType === PLOT_TYPE_OPTIONS.HISTOGRAM ? (
-          <HistogramWidget plotConfig={plotConfig} key={plotConfig.title} />
+          <HistogramWidget
+            prefix={prefix}
+            plotConfig={plotConfig}
+            key={plotConfig.title}
+            plotConfigArray={selectedTab.explorationPlotConfigArray}
+          />
         ) : (
           <MultipleRunsPlotWidget
             plotConfig={plotConfig}

@@ -13,7 +13,6 @@ export function PlotGrid() {
   const chartType =
     parseInt(startYear!) === parseInt(endYear!) ? PLOT_TYPE_OPTIONS.DOTS : PLOT_TYPE_OPTIONS.AREA;
   const { selectedTab } = useTabAndVariablesParams();
-
   if (selectedTab.isCustom) {
     return (
       <CustomTabPlotGrid
@@ -27,7 +26,11 @@ export function PlotGrid() {
     <div className="my-8 grid h-fit min-h-[600px] w-full grid-cols-1 grid-rows-2 gap-4 xl:grid-cols-2">
       {selectedTab.explorationPlotConfigArray.map((plotConfig) => {
         return plotConfig.plotType && plotConfig.plotType === PLOT_TYPE_OPTIONS.HISTOGRAM ? (
-          <HistogramWidget plotConfig={plotConfig} key={plotConfig.title} />
+          <HistogramWidget
+            plotConfig={plotConfig}
+            key={plotConfig.title}
+            plotConfigArray={selectedTab.explorationPlotConfigArray}
+          />
         ) : (
           <MultipleRunsPlotWidget
             plotConfig={plotConfig}
