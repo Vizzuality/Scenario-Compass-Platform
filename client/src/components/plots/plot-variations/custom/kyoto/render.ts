@@ -48,7 +48,7 @@ export const renderKyotoPlot = ({ svg, data, dimensions }: Props): void => {
 
   const areaVariableNames = getOrderedVariableNames(areaRuns);
 
-  const nonOtherGasVariables = areaVariableNames.filter((name) => name !== "Other Gases");
+  const nonOtherGasVariables = areaVariableNames.filter((name) => name !== "Other Gases").reverse();
   const colors = getColorsForVariables(flagCategory, nonOtherGasVariables.length);
 
   const variableColorMap = new Map<string, string>();

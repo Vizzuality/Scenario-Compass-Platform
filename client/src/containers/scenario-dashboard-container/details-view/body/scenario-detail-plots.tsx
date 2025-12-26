@@ -16,7 +16,7 @@ export default function ScenarioTabs() {
   return (
     <div className="bg-background w-full">
       <div className="container mx-auto flex gap-16">
-        <div className="container mx-auto my-8 grid h-fit w-full grid-cols-2 grid-rows-2 gap-4">
+        <div className="my-8 grid h-fit min-h-[600px] w-full grid-cols-1 grid-rows-2 gap-4 xl:grid-cols-2">
           <KyotoGasesPlot />
           {SINGLE_SCENARIO_VIEW_PLOTS_CONFIG_ARRAY.map((plotConfig, index) => {
             return <SingleRunPlotWidget key={index} plotConfig={plotConfig} />;

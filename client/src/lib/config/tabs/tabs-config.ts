@@ -62,16 +62,15 @@ export const SINGLE_SCENARIO_VIEW_PLOTS_CONFIG_ARRAY: ReadonlyArray<SingleScenar
       "Primary Energy|Wind",
       "Primary Energy|Hydro",
     ],
-    legendVariables: ["Biomass", "Coal", "Oil", "Gas", "Nuclear", "Solar", "Wind", "Hydro"],
     variablesMap: {
-      "Primary Energy|Biomass": "Biomass",
-      "Primary Energy|Coal": "Coal",
-      "Primary Energy|Oil": "Oil",
-      "Primary Energy|Gas": "Gas",
-      "Primary Energy|Nuclear": "Nuclear",
       "Primary Energy|Solar": "Solar",
       "Primary Energy|Wind": "Wind",
       "Primary Energy|Hydro": "Hydro",
+      "Primary Energy|Nuclear": "Nuclear",
+      "Primary Energy|Gas": "Gas",
+      "Primary Energy|Oil": "Oil",
+      "Primary Energy|Coal": "Coal",
+      "Primary Energy|Biomass": "Biomass",
     },
   },
   {
@@ -82,13 +81,6 @@ export const SINGLE_SCENARIO_VIEW_PLOTS_CONFIG_ARRAY: ReadonlyArray<SingleScenar
       "Emissions|CO2|Energy|Demand|Residential and Commercial",
       "Emissions|CO2|Energy|Demand|Transportation",
       "Emissions|CO2|Energy|Supply",
-    ],
-    legendVariables: [
-      "AFOLU",
-      "Industry",
-      "Residential and Commercial",
-      "Transportation",
-      "Energy Supply",
     ],
     variablesMap: {
       "Emissions|CO2|AFOLU": "AFOLU",
@@ -105,12 +97,6 @@ export const SINGLE_SCENARIO_VIEW_PLOTS_CONFIG_ARRAY: ReadonlyArray<SingleScenar
       "Final Energy|Residential and Commercial",
       "Final Energy|Transportation",
       "Final Energy|Carbon Management",
-    ],
-    legendVariables: [
-      "Industry",
-      "Residential and Commercial",
-      "Transportation",
-      "Carbon Management",
     ],
     variablesMap: {
       "Final Energy|Industry": "Industry",

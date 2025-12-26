@@ -20,10 +20,9 @@ export function ActiveLink({
     <Link
       href={href}
       className={cn(
-        "text-center text-lg leading-7 font-normal not-italic",
+        "mt-1 text-center text-lg leading-7 font-normal not-italic",
         "hover:opacity-60",
-        "pb-3",
-        isActive ? "border-b-2 border-current" : "",
+        isActive ? "border-b-2 border-current" : "border-b-2 border-transparent",
         className,
       )}
       {...props}
