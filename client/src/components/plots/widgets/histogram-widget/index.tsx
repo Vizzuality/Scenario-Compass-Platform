@@ -2,26 +2,44 @@ import { PlotConfig, YEAR_OF_PEAK_WARMING } from "@/lib/config/tabs/variables-co
 import { PlotWidgetHeader, VariableSelect } from "@/components/plots/components";
 import { HistogramPlot } from "@/components/plots/plot-variations/histogram";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import queryKeys from "@/lib/query-keys";
-import { getMetaPoints } from "@/utils/data-manipulation/get-meta-points";
 import { useDownloadPlotAssets } from "@/hooks/plots/download/use-download-plot-assets";
+import useCombineRunsForVariablesPipeline from "@/hooks/runs/data-pipeline/use-combine-runs-for-variables-pipeline";
+import { useTabAndVariablesParams } from "@/hooks/nuqs/tabs/use-tabs-and-variables-params";
+import { MetaIndicator } from "@/types/data/meta-indicator";
+import { useScenarioFlagsSelection } from "@/hooks/nuqs/flags/use-scenario-flags-selection";
+import { filterVisibleRuns } from "@/utils/plots/filtering-functions";
 
 interface Props {
   plotConfig: PlotConfig;
+  plotConfigArray: readonly PlotConfig[];
+  prefix?: string;
 }
 
-export default function HistogramWidget({ plotConfig }: Props) {
+export default function HistogramWidget({ plotConfig, prefix, plotConfigArray }: Props) {
   const [currentVariable, setCurrentVariable] = useState(plotConfig.variables[0]);
-  const {
-    data: metaIndicators,
-    isLoading,
-    isError,
-  } = useQuery({
-    ...queryKeys.metaIndicators.tabulate({
-      key: currentVariable,
-    }),
-    select: (data) => getMetaPoints(data),
+  const { getVariable } = useTabAndVariablesParams(prefix);
+  const allVars = plotConfigArray.map((pc) => getVariable(pc));
+  const { hiddenFlags, showVetting } = useScenarioFlagsSelection(prefix);
+
+  const variablesNames = allVars.filter((variable) => variable !== currentVariable);
+
+  const { runs, isError, isLoading } = useCombineRunsForVariablesPipeline({
+    variablesNames,
+    prefix,
+  });
+
+  const visibleRuns = filterVisibleRuns(runs, hiddenFlags, showVetting);
+  const uniqueRuns = [...new Map(visibleRuns.map((run) => [run.runId, run])).values()];
+
+  const metaIndicators: MetaIndicator[] = uniqueRuns.flatMap((run) => {
+    const metaIndicator = run.metaIndicators.find(
+      (metaIndicator) => metaIndicator.key == currentVariable,
+    );
+
+    if (metaIndicator?.key && metaIndicator?.value) {
+      return [{ runId: run.runId, value: metaIndicator.value, key: metaIndicator.key }];
+    }
+    return [];
   });
 
   const { chartRef, handleDownload } = useDownloadPlotAssets({
