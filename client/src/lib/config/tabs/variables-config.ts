@@ -9,7 +9,6 @@ export type PlotConfig = {
 };
 
 export type SingleScenarioPlotConfig = PlotConfig & {
-  legendVariables: string[];
   variablesMap: Record<string, string>;
 };
 

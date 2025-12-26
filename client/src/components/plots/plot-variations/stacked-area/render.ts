@@ -13,8 +13,8 @@ import { createTooltipManager } from "@/utils/plots/tooltip-manager";
 import { createHoverElements } from "@/utils/plots/create-hover-elements";
 import {
   createVariableColorMap,
+  getActiveVariables,
   getColorsForVariables,
-  getOrderedVariableNames,
 } from "@/utils/plots/colors-functions";
 import { formatNumber } from "@/utils/plots/format-functions";
 
@@ -40,15 +40,20 @@ export const renderStackedAreaPlot = ({ svg, runs, dimensions, variablesMap }: P
   const g = createMainGroup(svg, dimensions);
   const tooltipManager = createTooltipManager({ svg, dimensions });
 
-  const variableNames = getOrderedVariableNames(runs);
-  const colors = getColorsForVariables(runs[0].flagCategory, variableNames.length);
-  const variableColorMap = createVariableColorMap(variableNames, colors);
+  const activeVariables = getActiveVariables(runs);
+  const variableNames = Object.keys(variablesMap);
+  const presentVariables = variableNames.filter((variable) => activeVariables.has(variable));
+  const colors = getColorsForVariables(runs[0].flagCategory, presentVariables.length);
+  const variableColorMap = createVariableColorMap(presentVariables, colors);
+
+  console.log(presentVariables);
+  console.log(variableColorMap);
 
   const allYears = [...new Set(runs.flatMap((run) => run.orderedPoints.map((p) => p.year)))].sort(
     (a, b) => a - b,
   );
 
-  const data: StackedDataPoint[] = allYears.map((year) => {
+  const dataPoints: StackedDataPoint[] = allYears.map((year) => {
     const dataPoint: StackedDataPoint = { year };
 
     runs.forEach((run) => {
@@ -59,8 +64,10 @@ export const renderStackedAreaPlot = ({ svg, runs, dimensions, variablesMap }: P
     return dataPoint;
   });
 
-  const stackedData = d3.stack<StackedDataPoint>().keys(variableNames)(data);
-  const allValues = stackedData.flatMap((series) => series.flatMap((d) => [d[0], d[1]]));
+  const stackedDataPoints = d3.stack<StackedDataPoint>().keys(presentVariables.reverse())(
+    dataPoints,
+  );
+  const allValues = stackedDataPoints.flatMap((series) => series.flatMap((d) => [d[0], d[1]]));
 
   const xScale = d3
     .scaleLinear()
@@ -90,7 +97,7 @@ export const renderStackedAreaPlot = ({ svg, runs, dimensions, variablesMap }: P
   });
 
   g.selectAll(".stacked-area")
-    .data(stackedData)
+    .data(stackedDataPoints)
     .enter()
     .append("path")
     .attr("class", "stacked-area")
@@ -99,7 +106,7 @@ export const renderStackedAreaPlot = ({ svg, runs, dimensions, variablesMap }: P
     .attr("opacity", 0.8);
 
   const { verticalHoverLine } = createHoverElements(g, dimensions.INNER_HEIGHT);
-  const dataByYear = new Map(data.map((d) => [d.year, d]));
+  const dataByYear = new Map(dataPoints.map((d) => [d.year, d]));
 
   createInteractionOverlay(g, dimensions.INNER_WIDTH, dimensions.INNER_HEIGHT)
     .on("mouseenter", () => {
@@ -116,7 +123,7 @@ export const renderStackedAreaPlot = ({ svg, runs, dimensions, variablesMap }: P
 
       let dataPoint = dataByYear.get(year);
       if (!dataPoint) {
-        dataPoint = data.reduce((prev, curr) =>
+        dataPoint = dataPoints.reduce((prev, curr) =>
           Math.abs(curr.year - year) < Math.abs(prev.year - year) ? curr : prev,
         );
       }
@@ -128,7 +135,7 @@ export const renderStackedAreaPlot = ({ svg, runs, dimensions, variablesMap }: P
 
       let cumulative = 0;
 
-      const tooltipData = variableNames
+      const tooltipData = presentVariables
         .map((variableName) => {
           const value = dataPoint[variableName] || 0;
           const start = cumulative;

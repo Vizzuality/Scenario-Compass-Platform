@@ -20,7 +20,7 @@ export const getColorsForVariables = (
     colors.push(palette[startIndex + i]);
   }
 
-  return colors.reverse();
+  return colors;
 };
 
 export const createVariableColorMap = (
@@ -34,9 +34,22 @@ export const createVariableColorMap = (
   return colorMap;
 };
 
-export const getOrderedVariableNames = (runs: ExtendedRun[]): string[] => {
-  const variableNames = [...new Set(runs.map((run) => run.variableName))];
-  return variableNames.sort((a, b) => a.localeCompare(b));
+export const getActiveVariables = (runs: ExtendedRun[]) => {
+  return new Set([...runs.map((run) => run.variableName)]);
+};
+
+export const getVariableColorMap = (runs: ExtendedRun[], variablesMap: Record<string, string>) => {
+  const activeVariables = getActiveVariables(runs);
+  const variableNames = Object.keys(variablesMap);
+  const presentVariables = variableNames.filter((variable) => activeVariables.has(variable));
+  const colors = getColorsForVariables(runs[0].flagCategory, presentVariables.length);
+  const variableColorMap = new Map<string, string>();
+  presentVariables.forEach((variable, index) => {
+    const displayName = variablesMap[variable] || variable;
+    variableColorMap.set(displayName, colors[index]);
+  });
+
+  return variableColorMap;
 };
 
 export const getRunColor = (
