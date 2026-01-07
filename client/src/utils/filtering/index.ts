@@ -1,5 +1,5 @@
 import { ExtendedRun } from "@/types/data/run";
-import { YEAR_NET_ZERO_META_INDICATOR_KEY } from "@/lib/config/filters/climate-filter-config";
+import { YEAR_NET_ZERO_CO2_META_INDICATOR_KEY } from "@/lib/config/filters/climate-filter-config";
 import { URL_VALUES_FILTER_SEPARATOR } from "@/containers/scenario-dashboard-container/url-store";
 import { INCREASE_IN_GLOBAL_FOREST_AREA_KEY } from "@/lib/config/filters/land-filter-config";
 import { CARBON_REMOVAL_KEY } from "@/lib/config/filters/advanced-filters-config";
@@ -37,7 +37,7 @@ export function matchesYearNetZeroFilter(run: ExtendedRun, yearNetZero: string[]
 
   return yearNetZero.some((year) =>
     run.metaIndicators.some(
-      (mp) => mp.key === YEAR_NET_ZERO_META_INDICATOR_KEY && mp.value === year,
+      (mp) => mp.key === YEAR_NET_ZERO_CO2_META_INDICATOR_KEY && mp.value === year,
     ),
   );
 }

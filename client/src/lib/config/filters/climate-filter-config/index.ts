@@ -53,12 +53,15 @@ export const YEAR_NET_ZERO_FILTER_CONFIG = {
 
 export const CLIMATE_CATEGORY_META_INDICATOR_KEY = "Climate Category|SCI 2025";
 
-export const YEAR_NET_ZERO_META_INDICATOR_KEY = "Emissions Diagnostics|Year of Net Zero|CO2";
+export const YEAR_NET_ZERO_CO2_META_INDICATOR_KEY = "Emissions Diagnostics|Year of Net Zero|CO2";
 
 export const YEAR_NET_ZERO_GHG_META_INDICATOR_KEY =
   "Emissions Diagnostics|Year of Net Zero|Kyoto Gases";
 
-export const CUMULATIVE_EMISSIONS_META_INDICATOR_KEY =
+export const CUMULATIVE_CO2_EMISSIONS_META_INDICATOR_KEY =
+  "Emissions Diagnostics|Cumulative CO2 [2020-2100, Gt CO2]";
+
+export const CUMULATIVE_CCS_META_INDICATOR_KEY =
   "Emissions Diagnostics|Cumulative CCS [2020-2100, Gt CO2]";
 
 export const YEAR_PEAK_TEMPERATURE_META_INDICATOR_KEY =
