@@ -2,6 +2,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/custom/heading";
+import { FEEDBACK_FORM_LINK } from "@/utils/feedback-link";
 
 const imgBackgroundStyles = [
   "bg-[length:100%] bg-[position:center_top_10vh]",
@@ -33,7 +34,13 @@ export function ModuleShareFeedback() {
           improve Scenario Compass. Together, we can build a platform that truly meets your needs.
         </p>
         <Button variant="outline" size="lg" asChild>
-          <Link href={""} className="w-full text-base leading-5 font-bold md:w-fit">
+          <Link
+            rel="noopener noreferrer"
+            href={FEEDBACK_FORM_LINK}
+            target="_blank"
+            aria-label="Provide feedback about this page"
+            className="w-full text-base leading-5 font-bold md:w-fit"
+          >
             Share feedback
           </Link>
         </Button>

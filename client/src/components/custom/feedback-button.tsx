@@ -5,10 +5,9 @@ import { usePathname } from "next/navigation";
 import { MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { INTERNAL_PATHS } from "@/lib/paths";
+import { FEEDBACK_FORM_LINK } from "@/utils/feedback-link";
 
 const excludedFeedbackPaths: string[] = [INTERNAL_PATHS.HOME];
-const FEEDBACK_FORM_LINK =
-  "https://forms.office.com/Pages/ResponsePage.aspx?id=C7F5mwcAik6wcq0MjNwapfxls98PHVlNq939qjRHTW5UQzRSWlhMUTg1VFhYMUY2UjRIWTlHUzcxVC4u";
 
 export default function FeedbackButton() {
   const pathname = usePathname();
