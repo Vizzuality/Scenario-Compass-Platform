@@ -23,7 +23,7 @@ const CLIMATE_CATEGORY_LONG_NAMES = [
 ];
 
 export const CLIMATE_CATEGORY_FILTER_CONFIG = {
-  name: "Climate Category",
+  name: "Climate category",
   mappings: CLIMATE_CATEGORY_SHORT_NAMES.map((shortName, index) => ({
     value: shortName,
     label: CLIMATE_CATEGORY_LONG_NAMES[index],
@@ -44,7 +44,7 @@ const YEAR_NET_ZERO_VALUES = [
 ];
 
 export const YEAR_NET_ZERO_FILTER_CONFIG = {
-  name: "Year of global net-zero",
+  name: "Year of global net-zero CO2",
   mappings: YEAR_NET_ZERO_VALUES.map((year) => ({
     value: year,
     label: year,
