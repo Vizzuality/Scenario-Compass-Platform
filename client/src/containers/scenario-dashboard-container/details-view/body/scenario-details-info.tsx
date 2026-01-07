@@ -5,9 +5,10 @@ import queryKeys from "@/lib/query-keys";
 import { getMetaPoints } from "@/utils/data-manipulation/get-meta-points";
 import {
   CLIMATE_CATEGORY_META_INDICATOR_KEY,
-  CUMULATIVE_EMISSIONS_META_INDICATOR_KEY,
+  CUMULATIVE_CO2_EMISSIONS_META_INDICATOR_KEY,
+  CUMULATIVE_CCS_META_INDICATOR_KEY,
   YEAR_NET_ZERO_GHG_META_INDICATOR_KEY,
-  YEAR_NET_ZERO_META_INDICATOR_KEY,
+  YEAR_NET_ZERO_CO2_META_INDICATOR_KEY,
   YEAR_PEAK_TEMPERATURE_META_INDICATOR_KEY,
 } from "@/lib/config/filters/climate-filter-config";
 import { ADDITIONAL_INFORMATION_META_INDICATORS } from "@/containers/scenario-dashboard-container/components/runs-pannel/utils";
@@ -62,15 +63,21 @@ export default function ScenarioDetailsInfo() {
   ) || { value: "Loading Study" };
 
   const yearNetZeroCO2 = metaData?.find((item) =>
-    item.key.includes(YEAR_NET_ZERO_META_INDICATOR_KEY),
+    item.key.includes(YEAR_NET_ZERO_CO2_META_INDICATOR_KEY),
   ) || { value: "Not available" };
 
   const yearNetZeroGHG = metaData?.find((item) =>
     item.key.includes(YEAR_NET_ZERO_GHG_META_INDICATOR_KEY),
   ) || { value: "Not available" };
 
-  const cumulativeEmissions = metaData?.find((item) =>
-    item.key.includes(CUMULATIVE_EMISSIONS_META_INDICATOR_KEY),
+  const cumulativeCO2Emissions = metaData?.find((item) =>
+    item.key.includes(CUMULATIVE_CO2_EMISSIONS_META_INDICATOR_KEY),
+  ) || {
+    value: "Loading Emissions",
+  };
+
+  const cumulativeCCS = metaData?.find((item) =>
+    item.key.includes(CUMULATIVE_CCS_META_INDICATOR_KEY),
   ) || {
     value: "Loading Emissions",
   };
@@ -80,7 +87,11 @@ export default function ScenarioDetailsInfo() {
   ) || { value: "Loading Temperature" };
 
   const cumulativeEmissionsWithUnit =
-    Number(cumulativeEmissions.value).toFixed(3).toString() + " Gt CO2";
+    Number(cumulativeCO2Emissions.value).toFixed(3).toString() + " Gt CO2";
+
+const cumulativeCCSWithUnit =
+    Number(cumulativeCCS.value).toFixed(3).toString() + " Gt CO2";
+
 
   return (
     <div className="space-y-2">
@@ -94,6 +105,7 @@ export default function ScenarioDetailsInfo() {
         <>
           <InfoItem title="Climate category" value={climateCategory.value} />
           <InfoItem title="Cumulative emissions" value={cumulativeEmissionsWithUnit} />
+          <InfoItem title="Cumulative CCS" value={cumulativeCCSWithUnit} />
           <InfoItem title="Peak temperature" value={peakTemperature.value} />
           <InfoItem title="Year of net-zero CO2" value={yearNetZeroCO2.value} />
           <InfoItem title="Year of net-zero GHG" value={yearNetZeroGHG.value} />
