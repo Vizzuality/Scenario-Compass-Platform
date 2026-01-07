@@ -89,9 +89,7 @@ export default function ScenarioDetailsInfo() {
   const cumulativeEmissionsWithUnit =
     Number(cumulativeCO2Emissions.value).toFixed(3).toString() + " Gt CO2";
 
-const cumulativeCCSWithUnit =
-    Number(cumulativeCCS.value).toFixed(3).toString() + " Gt CO2";
-
+  const cumulativeCCSWithUnit = Number(cumulativeCCS.value).toFixed(3).toString() + " Gt CO2";
 
   return (
     <div className="space-y-2">
