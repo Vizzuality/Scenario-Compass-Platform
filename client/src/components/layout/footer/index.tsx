@@ -2,6 +2,7 @@ import { mobilePaths, EXTERNAL_LINKS, INTERNAL_PATHS } from "@/lib/paths";
 import Link from "next/link";
 import { Dot, Linkedin } from "lucide-react";
 import { BlueskyLogoIcon } from "@/assets/icons/bluesky-logo-icon";
+import Image from "next/image";
 
 export function Footer() {
   return (
@@ -16,6 +17,24 @@ export function Footer() {
             >
               The Scenario Compass
             </p>
+          </div>
+
+          <div className="flex flex-col items-center justify-between gap-10 pt-16 lg:flex-row">
+            <img
+              src="/images/logos/logo_iamc.png"
+              className="pointer-events-none h-14 w-auto select-none lg:h-18 lg:w-auto"
+              alt="Integrated Assessment Modeling Consortium Logo"
+            />
+            <img
+              src="/images/logos/logo_bef.svg"
+              className="pointer-events-none h-14 w-auto select-none lg:h-18 lg:w-auto"
+              alt="Bezos Earth Found Logo"
+            />
+            <img
+              src="/images/logos/logo_iiasa.png"
+              className="pointer-events-none h-14 w-auto select-none lg:h-18 lg:w-auto"
+              alt="International Institute for Applied Systems Analysis Logo"
+            />
           </div>
 
           <div className="flex flex-col items-center justify-center gap-7 pt-16 pb-12 text-center lg:flex-row lg:gap-14 lg:pb-16">
