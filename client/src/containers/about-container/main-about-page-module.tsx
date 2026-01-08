@@ -4,14 +4,13 @@ import Image from "next/image";
 
 const Links = {
   IPCC_AR6: "https://www.ipcc.ch/report/ar6/wg3/downloads/report/IPCC_AR6_WGIII_Annex-III.pdf",
-  ANNEXIII: "https://www.ipcc.ch/report/ar6/wg3/downloads/report/IPCC_AR6_WGIII_Annex-III.pdf",
   SENSES_TOOLKIT: "https://climatescenarios.org/primer/",
   QUALITY_CONTROLLER: "https://philippverpoort.github.io/scenario-vetting-criteria/criteria_types/",
   FEATURED_REGISTRATION: "https://sandbox.scenariocompass.org/tor",
   Heerden: "https://doi.org/10.1038/s41560-025-01703-1",
   Soergel: "https://doi.org/10.1088/1748-9326/ad80af",
   Richters: "https://doi.org/10.5281/zenodo.5782903",
-  Gidden: "https://10.0.4.64/1748-9326/acd8d5",
+  Gidden: "https://doi.org/10.1038/s41586-023-06724-y",
   Byers: "https://doi.org/10.5281/zenodo.5886911",
 };
 
@@ -171,22 +170,11 @@ export default function MainAboutPageModule() {
                     rel="noopener noreferrer"
                     className="underline decoration-1 underline-offset-[1.5px]"
                   >
-                    IPCC AR6 Working Group III Annex III
-                  </Link>
-                </strong>{" "}
-                - provides a comprehensive overview of scenarios and modelling methods in.
-              </li>
-              <li>
-                <strong>
-                  <Link
-                    href={Links.ANNEXIII}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline decoration-1 underline-offset-[1.5px]"
-                  >
-                    Annex III: Scenarios and Modelling Methods
+                    IPCC AR6 WG3: Scenarios and Modelling Methods
                   </Link>
                 </strong>
+                - provides a comprehensive overview of scenarios and modelling methods used by
+                Working Group 3 of the IPCC's Sixth Assessment Report (AR6).
               </li>
               <li>
                 <strong>
