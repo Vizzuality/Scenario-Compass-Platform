@@ -18,11 +18,13 @@ import { filterVisibleRuns } from "@/utils/plots/filtering-functions";
 
 interface Props {
   result: RunPipelineReturn;
+  mode?: "details" | "multiple";
 }
 
-export default function AdditionalInformation({ result }: Props) {
+export default function AdditionalInformation({ result, mode = "multiple" }: Props) {
   const { hiddenFlags, showVetting } = useScenarioFlagsSelection();
-  const visibleRuns = filterVisibleRuns(result.runs, hiddenFlags, showVetting);
+  const visibleRuns =
+    mode === "multiple" ? filterVisibleRuns(result.runs, hiddenFlags, showVetting) : result.runs;
   const uniqueRuns = [...new Map(visibleRuns.map((run) => [run.runId, run])).values()];
   const allCounts = getAdditionalInformationMetaIndicatorCounts(uniqueRuns);
 
