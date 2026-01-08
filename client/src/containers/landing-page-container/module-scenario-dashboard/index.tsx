@@ -10,7 +10,7 @@ export function ModuleScenarioDashboard() {
     <section
       aria-label="Module Dashboard"
       className={cn(
-        "bg-burgundy w-full bg-no-repeat",
+        "bg-lilac w-full bg-no-repeat",
         `bg-[url("/images/illustrations/illustration_05_cropped.webp")]`,
         "bg-[length:140%]",
         "bg-[position:right_30%_bottom_-4%]",
@@ -32,13 +32,13 @@ export function ModuleScenarioDashboard() {
         )}
       >
         <div className="flex flex-col lg:px-32">
-          <span className="text-background mb-6 text-center text-base leading-6 tracking-[0.64px] uppercase">
+          <span className="mb-6 text-center text-base leading-6 tracking-[0.64px] uppercase">
             Scenario Dashboard
           </span>
-          <Heading as="h2" size="4xl" variant="dark" className="mb-4 text-center">
+          <Heading as="h2" size="4xl" variant="light" className="mb-4 text-center">
             Discover the powerful features that drive our platform
           </Heading>
-          <p className="text-background text-center text-lg leading-7">
+          <p className="text-center text-lg leading-7">
             Browse and filter scenarios based on your interests.
           </p>
         </div>
@@ -51,7 +51,7 @@ export function ModuleScenarioDashboard() {
             )}
           />
         </div>
-        <Button asChild size="lg" variant="secondary">
+        <Button asChild size="lg" variant="outline">
           <Link
             href={INTERNAL_PATHS.SCENARIO_DASHBOARD}
             className="w-full text-base leading-5 font-bold md:w-fit"

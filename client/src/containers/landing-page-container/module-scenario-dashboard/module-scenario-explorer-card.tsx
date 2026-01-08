@@ -13,8 +13,8 @@ export function ModuleScenarioExplorerCard({
         <CircleCheckBig className="h-8 w-8 text-green-400" aria-hidden={true} />
       </div>
       <div className="flex flex-col">
-        <p className="text-background text-xl leading-7 font-bold">{title}</p>
-        <p className="text-burgundy-light text-lg leading-7">{description}</p>
+        <p className="text-xl leading-7 font-bold">{title}</p>
+        <p className="text-lg leading-7">{description}</p>
       </div>
     </div>
   );

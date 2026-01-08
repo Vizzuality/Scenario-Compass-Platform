@@ -10,10 +10,10 @@ export function LandingPage() {
   return (
     <main className="flex w-full flex-col items-center">
       <ModuleHero />
-      <ModuleGuidedIntro />
       <ModuleScenarioDashboard />
       {!env.NEXT_PUBLIC_FEATURE_FLAG_HIDE_LEARN_BY_TOPIC_PAGE && <ModuleLearnByTopic />}
       <ModuleGuidedExploration />
+      <ModuleGuidedIntro />
       <ModuleShareFeedback />
     </main>
   );
