@@ -33,7 +33,7 @@ export function SharedScenarioFlagsContent({ result, prefix }: SharedContentProp
     <>
       <AccordionTrigger className="pt-0 pb-1.5 text-base font-bold text-stone-800">
         <div className="flex items-center gap-4">
-          <p className="text-base">Reasons for concern</p>
+          <p className="text-base">Feasibility and Sustainability Criteria</p>
         </div>
       </AccordionTrigger>
       <AccordionContent className="flex flex-col gap-3 border-t pt-4">

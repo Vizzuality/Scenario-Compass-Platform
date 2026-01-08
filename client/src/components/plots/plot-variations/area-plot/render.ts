@@ -44,7 +44,9 @@ export const renderAreaPlot = ({
   clearSVG(svg);
   const tooltipManager = createTooltipManager({ svg, dimensions });
   if (!tooltipManager) return;
-  const COMPUTED_OPACITY = selectedFlags?.length > 0 ? 0.5 : 1;
+
+  // Change this in the future if the Opacity should differ from no selection to selected
+  const COMPUTED_OPACITY = selectedFlags?.length > 0 ? 1 : 1;
   const decadeFilteredRuns = filterDecadePoints(runs);
   const visibleRuns = filterVisibleRuns(decadeFilteredRuns, hiddenFlags, showVetting);
 
