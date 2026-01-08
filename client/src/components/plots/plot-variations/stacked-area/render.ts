@@ -46,9 +46,6 @@ export const renderStackedAreaPlot = ({ svg, runs, dimensions, variablesMap }: P
   const colors = getColorsForVariables(runs[0].flagCategory, presentVariables.length);
   const variableColorMap = createVariableColorMap(presentVariables, colors);
 
-  console.log(presentVariables);
-  console.log(variableColorMap);
-
   const allYears = [...new Set(runs.flatMap((run) => run.orderedPoints.map((p) => p.year)))].sort(
     (a, b) => a - b,
   );

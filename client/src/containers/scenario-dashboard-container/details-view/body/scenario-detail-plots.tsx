@@ -25,7 +25,7 @@ export default function ScenarioTabs() {
         <div className="my-8 flex w-120 flex-col gap-6">
           <ScenarioDetailsInfo />
           <SingleRunScenarioFlags result={result} />
-          <AdditionalInformation result={result} />
+          <AdditionalInformation result={result} mode="details" />
         </div>
       </div>
     </div>
