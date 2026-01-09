@@ -117,58 +117,62 @@ export default function AdditionalInformation({ result, mode = "multiple" }: Pro
           </AccordionContent>
         </AccordionItem>
         {ADDITIONAL_INFORMATION_META_INDICATORS.map(({ key, label }) => (
-          <AccordionItem key={key} value={key}>
-            <AccordionTrigger className="[&_svg]:text-foreground w-full gap-1.5 rounded-none pb-2">
-              <div className="-mt-0.5 flex w-full justify-between gap-2">
-                <span>{label}</span>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <b>{allCounts[key]?.length || 0}</b>
-                  </TooltipTrigger>
-                  <TooltipContent>{getTooltipText(key)}</TooltipContent>
-                </Tooltip>
-              </div>
-            </AccordionTrigger>
-            <AccordionContent className="mt-2 flex flex-col gap-2">
-              {allCounts[key]?.map(({ value, count }) => {
-                if (key === "Scientific Manuscript (DOI)") {
-                  const href = "https://doi.org/" + value;
-                  return (
-                    <div key={value} className="mr-5.5 flex justify-between">
-                      <Link
-                        key={value}
-                        href={href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        title={href}
-                        className="hover:underline"
-                      >
-                        {value}
-                      </Link>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <b>{count}</b>
-                        </TooltipTrigger>
-                        <TooltipContent>Number of scenarios</TooltipContent>
-                      </Tooltip>
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div key={value} className="mr-5.5 flex justify-between">
-                      <span>{value}</span>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <b>{count}</b>
-                        </TooltipTrigger>
-                        <TooltipContent>Number of scenarios</TooltipContent>
-                      </Tooltip>
-                    </div>
-                  );
-                }
-              })}
-            </AccordionContent>
-          </AccordionItem>
+          <>
+            {allCounts[key]?.length !== 0 && (
+              <AccordionItem key={key} value={key}>
+                <AccordionTrigger className="[&_svg]:text-foreground w-full gap-1.5 rounded-none pb-2">
+                  <div className="-mt-0.5 flex w-full justify-between gap-2">
+                    <span>{label}</span>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <b>{allCounts[key]?.length || 0}</b>
+                      </TooltipTrigger>
+                      <TooltipContent>{getTooltipText(key)}</TooltipContent>
+                    </Tooltip>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="mt-2 flex flex-col gap-2">
+                  {allCounts[key]?.map(({ value, count }) => {
+                    if (key === "Scientific Manuscript (DOI)") {
+                      const href = "https://doi.org/" + value;
+                      return (
+                        <div key={value} className="mr-5.5 flex justify-between">
+                          <Link
+                            key={value}
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title={href}
+                            className="hover:underline"
+                          >
+                            {value}
+                          </Link>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <b>{count}</b>
+                            </TooltipTrigger>
+                            <TooltipContent>Number of scenarios</TooltipContent>
+                          </Tooltip>
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <div key={value} className="mr-5.5 flex justify-between">
+                          <span>{value}</span>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <b>{count}</b>
+                            </TooltipTrigger>
+                            <TooltipContent>Number of scenarios</TooltipContent>
+                          </Tooltip>
+                        </div>
+                      );
+                    }
+                  })}
+                </AccordionContent>
+              </AccordionItem>
+            )}
+          </>
         ))}
       </Accordion>
     </div>
