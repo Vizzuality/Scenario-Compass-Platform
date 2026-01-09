@@ -1,4 +1,3 @@
-import { generateExtendedRuns } from "@/utils/data-manipulation/generate-extended-runs";
 import { getMetaPoints } from "@/utils/data-manipulation/get-meta-points";
 import { DataFrame } from "@iiasa/ixmp4-ts";
 import { useQueries } from "@tanstack/react-query";
@@ -15,6 +14,10 @@ import { filterRunsByMetaIndicators } from "@/utils/filtering";
 import useComputeLandUse from "@/hooks/runs/filtering/use-compute-land-use";
 import { useBaseUrlParams } from "@/hooks/nuqs/url-params/use-base-url-params";
 import { useFilterUrlParams } from "@/hooks/nuqs/url-params/use-filter-url-params";
+import { generateExtendedRuns } from "@/utils/data-manipulation/generate-extended-runs";
+import { useUpdateGlobalCarbonRemovalValues } from "@/hooks/jotai/use-update-global-carbon-removal-values";
+import { useUpdateGlobalEndOfCenturyWarmingValues } from "@/hooks/jotai/use-update-global-end-of-century-warming-values";
+import { useUpdateGlobalPeakWarmingValues } from "@/hooks/jotai/use-update-global-peak-warming-values";
 
 /**
  * A React hook that fetches and processes run data for multiple variables with optional filtering.
@@ -65,6 +68,8 @@ export default function useCombineRunsForVariablesPipeline({
     biomassShare,
     gfaIncrease,
     fossilShare,
+    eocWarming,
+    peakWarming,
   } = useFilterUrlParams(prefix);
 
   const dataPointQueries: DataPointsQueriesReturn = useQueries({
@@ -114,6 +119,28 @@ export default function useCombineRunsForVariablesPipeline({
       }),
   });
 
+  useUpdateGlobalCarbonRemovalValues({
+    isLoading: metaQueries.some((metaQuery) => metaQuery.isLoading),
+    isError: metaQueries.some((metaQuery) => metaQuery.isError),
+    metaIndicators: [...metaQueries.flatMap((metaQuery) => metaQuery.data?.metaPoints)].filter(
+      (item) => item !== undefined,
+    ),
+  });
+  useUpdateGlobalEndOfCenturyWarmingValues({
+    isLoading: metaQueries.some((metaQuery) => metaQuery.isLoading),
+    isError: metaQueries.some((metaQuery) => metaQuery.isError),
+    metaIndicators: [...metaQueries.flatMap((metaQuery) => metaQuery.data?.metaPoints)].filter(
+      (item) => item !== undefined,
+    ),
+  });
+  useUpdateGlobalPeakWarmingValues({
+    isLoading: metaQueries.some((metaQuery) => metaQuery.isLoading),
+    isError: metaQueries.some((metaQuery) => metaQuery.isError),
+    metaIndicators: [...metaQueries.flatMap((metaQuery) => metaQuery.data?.metaPoints)].filter(
+      (item) => item !== undefined,
+    ),
+  });
+
   const {
     energyShares,
     isLoading: isLoadingEnergyShares,
@@ -158,6 +185,8 @@ export default function useCombineRunsForVariablesPipeline({
         biomassShare,
         gfaIncrease,
         fossilShare,
+        eocWarming,
+        peakWarming,
       });
     });
 

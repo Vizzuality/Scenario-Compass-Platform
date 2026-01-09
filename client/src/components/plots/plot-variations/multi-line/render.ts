@@ -21,15 +21,12 @@ import { createHoverElements } from "@/utils/plots/create-hover-elements";
 import { ExtendedRun } from "@/types/data/run";
 import { getRunColor } from "@/utils/plots/colors-functions";
 import { formatNumber } from "@/utils/plots/format-functions";
-import { filterVisibleRuns } from "@/utils/plots/filtering-functions";
 
 interface Props {
   svg: SVGSelection;
   runs: ExtendedRun[];
   dimensions: PlotDimensions;
   selectedFlags: string[];
-  hiddenFlags: string[];
-  showVetting: boolean;
   onRunClick?: (run: ExtendedRun) => void;
 }
 
@@ -38,18 +35,15 @@ export const renderMultiLinePlot = ({
   runs,
   dimensions,
   selectedFlags = [],
-  hiddenFlags = [],
   onRunClick,
-  showVetting,
 }: Props): void => {
   clearSVG(svg);
   const tooltipManager = createTooltipManager({ svg, dimensions });
   if (!tooltipManager) return;
-  const visibleRuns = filterVisibleRuns(runs, hiddenFlags, showVetting);
-  if (visibleRuns.length === 0) return;
+  if (runs.length === 0) return;
 
   const g = createMainGroup(svg, dimensions);
-  const allPoints = visibleRuns.flatMap((run) => run.orderedPoints);
+  const allPoints = runs.flatMap((run) => run.orderedPoints);
   const allYears = allPoints.map((d) => d.year);
   const uniqueYears = [...new Set(allYears)].sort((a, b) => a - b);
   const hasSelection = selectedFlags.length > 0;
@@ -70,7 +64,7 @@ export const renderMultiLinePlot = ({
   const linesGroup = g.append("g").attr("class", "lines-group");
   const lines = linesGroup
     .selectAll<SVGPathElement, ExtendedRun>("path")
-    .data(visibleRuns, (d) => d.runId)
+    .data(runs, (d) => d.runId)
     .join("path")
     .attr("d", (run) => lineGenerator(run.orderedPoints))
     .attr("fill", "none")

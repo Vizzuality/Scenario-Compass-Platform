@@ -47,10 +47,12 @@ interface HistogramPlotProps {
 
 export const HistogramPlot: React.FC<HistogramPlotProps> = ({ data, split, xUnitText }) => {
   return (
-    <PlotStateHandler data={data} fieldName="metaIndicators">
-      {(metaIndicators) => (
-        <BasePlot split={split} metaIndicators={metaIndicators} xUnitText={xUnitText} />
-      )}
+    <PlotStateHandler
+      items={data.metaIndicators || []}
+      isLoading={data.isLoading}
+      isError={data.isError}
+    >
+      {(items) => <BasePlot split={split} metaIndicators={items} xUnitText={xUnitText} />}
     </PlotStateHandler>
   );
 };

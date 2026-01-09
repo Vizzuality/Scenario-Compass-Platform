@@ -5,25 +5,15 @@ import Image from "next/image";
 import notFoundImage from "@/assets/images/not-found.webp";
 import React from "react";
 
-type EnumerableDataType<T = unknown, K extends string = string> = {
+interface Props<T> {
+  items: T[];
   isLoading: boolean;
   isError: boolean;
-} & {
-  [P in K]: T[] | undefined;
-};
-
-interface Props<T, K extends string> {
-  data: EnumerableDataType<T, K>;
-  fieldName: K;
   children: (items: T[]) => React.ReactNode;
 }
 
-export const PlotStateHandler = <T, K extends string>({
-  data,
-  fieldName,
-  children,
-}: Props<T, K>) => {
-  if (data.isLoading) {
+export const PlotStateHandler = <T,>({ items, isLoading, isError, children }: Props<T>) => {
+  if (isLoading) {
     return (
       <PlotContainer>
         <LoadingDots />
@@ -31,15 +21,13 @@ export const PlotStateHandler = <T, K extends string>({
     );
   }
 
-  if (data.isError) {
+  if (isError) {
     return (
       <PlotContainer>
         <DataFetchError />
       </PlotContainer>
     );
   }
-
-  const items = data[fieldName] || [];
 
   if (items.length === 0) {
     return (

@@ -38,7 +38,7 @@ export const ClimateFilterRow = ({ prefix }: RowFilterProps) => {
             <button
               id={id}
               aria-expanded={open}
-              className={cn(selectTriggerVariants({ theme: "light", size: "lg" }), "h-10")}
+              className={cn(selectTriggerVariants({ theme: "light", size: "lg" }), "h-10 w-48")}
             >
               {selectedOptions.length === 0
                 ? "Select options"

@@ -50,7 +50,7 @@ export const EnergyFilterRow = ({ prefix }: RowFilterProps) => {
         </Label>
         <SliderSelect
           id={id}
-          className="h-10 w-fit"
+          className="h-10 w-48"
           items={energyItems}
           placeholder="Select energy type"
           onApply={handleApply}
