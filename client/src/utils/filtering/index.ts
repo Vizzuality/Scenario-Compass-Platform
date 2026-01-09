@@ -2,7 +2,11 @@ import { ExtendedRun } from "@/types/data/run";
 import { YEAR_NET_ZERO_CO2_META_INDICATOR_KEY } from "@/lib/config/filters/climate-filter-config";
 import { URL_VALUES_FILTER_SEPARATOR } from "@/containers/scenario-dashboard-container/url-store";
 import { INCREASE_IN_GLOBAL_FOREST_AREA_KEY } from "@/lib/config/filters/land-filter-config";
-import { CARBON_REMOVAL_KEY } from "@/lib/config/filters/advanced-filters-config";
+import {
+  CARBON_REMOVAL_KEY,
+  END_OF_CENTURY_WARMING_KEY,
+  PEAK_WARMING_KEY,
+} from "@/lib/config/filters/advanced-filters-config";
 import {
   BIOMASS_SHARE_2050,
   FOSSIL_SHARE_2050,
@@ -18,6 +22,8 @@ interface FilterRunsByMetaIndicatorsParams {
   [RENEWABLES_SHARE_2050]: string | null;
   [INCREASE_IN_GLOBAL_FOREST_AREA_KEY]: string | null;
   [CARBON_REMOVAL_KEY]: string | null;
+  [PEAK_WARMING_KEY]: string | null;
+  [END_OF_CENTURY_WARMING_KEY]: string | null;
 }
 
 export function matchesClimateCategoryFilter(
@@ -74,6 +80,8 @@ export function filterRunsByMetaIndicators({
   carbonRemoval,
   biomassShare,
   fossilShare,
+  peakWarming,
+  eocWarming,
 }: FilterRunsByMetaIndicatorsParams): ExtendedRun[] {
   if (!runs?.length) return [];
 
@@ -85,7 +93,9 @@ export function filterRunsByMetaIndicators({
       matchesSliderFilter(run, INCREASE_IN_GLOBAL_FOREST_AREA_KEY, gfaIncrease) &&
       matchesSliderFilter(run, BIOMASS_SHARE_2050, biomassShare) &&
       matchesSliderFilter(run, FOSSIL_SHARE_2050, fossilShare) &&
-      matchesSliderFilter(run, CARBON_REMOVAL_KEY, carbonRemoval)
+      matchesSliderFilter(run, CARBON_REMOVAL_KEY, carbonRemoval) &&
+      matchesSliderFilter(run, PEAK_WARMING_KEY, peakWarming) &&
+      matchesSliderFilter(run, END_OF_CENTURY_WARMING_KEY, eocWarming)
     );
   });
 }

@@ -29,8 +29,6 @@ interface Props {
   runs: ExtendedRun[];
   dimensions: PlotDimensions;
   selectedFlags: string[];
-  hiddenFlags: string[];
-  showVetting: boolean;
   onRunClick?: (run: ExtendedRun) => void;
 }
 
@@ -39,19 +37,16 @@ export const renderDotPlot = ({
   runs,
   selectedFlags,
   dimensions,
-  hiddenFlags,
   onRunClick,
-  showVetting,
 }: Props): void => {
   clearSVG(svg);
   const tooltipManager = createTooltipManager({ svg, dimensions });
   if (!tooltipManager) return;
-  const visibleRuns = filterVisibleRuns(runs, hiddenFlags, showVetting);
-  if (visibleRuns.length === 0) return;
+  if (runs.length === 0) return;
 
   const g = createMainGroup(svg, dimensions);
 
-  const allPoints = visibleRuns.flatMap((run) =>
+  const allPoints = runs.flatMap((run) =>
     run.orderedPoints.map((point) => ({
       ...point,
       run,

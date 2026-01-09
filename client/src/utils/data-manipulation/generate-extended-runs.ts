@@ -10,6 +10,8 @@ import {
   createShortMetaIndicators,
 } from "@/utils/data-manipulation/create-helpers";
 import { EnergyShareMap } from "@/hooks/runs/filtering/use-compute-energy-share";
+import computeEndOfCenturyWarming from "@/utils/filtering/compute-end-of-century-warming";
+import computePeakWarming from "@/utils/filtering/compute-peak-warming";
 
 interface Params {
   metaIndicators: MetaIndicator[];
@@ -67,6 +69,8 @@ export const generateExtendedRuns = ({
       ...createEnergyShareMetaIndicators(energyShares, runId),
       ...createForestAreaMetaIndicator(gfaIncreaseArray, runId),
       computeCumulativeEmissionsRemoved(runMetaIndicators),
+      computeEndOfCenturyWarming(runMetaIndicators),
+      computePeakWarming(runMetaIndicators),
     ];
 
     const firstDataPoint = runDataPoints[0];

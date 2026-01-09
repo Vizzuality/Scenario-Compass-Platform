@@ -7,6 +7,7 @@ import { renderMultiLinePlot } from "@/components/plots/plot-variations/multi-li
 import { usePlotContainer } from "@/hooks/plots/plot-container/use-plot-container";
 import { ExtendedRun, RunPipelineReturn } from "@/types/data/run";
 import { PlotStateHandler } from "@/components/plots/components";
+import { filterVisibleRuns } from "@/utils/plots/filtering-functions";
 
 interface Props {
   runs: ExtendedRun[];
@@ -16,7 +17,7 @@ interface Props {
 
 const BasePlot: React.FC<Props> = ({ runs, prefix, onRunClick }) => {
   const { svgRef, dimensions, plotContainer } = usePlotContainer();
-  const { selectedFlags, hiddenFlags, showVetting } = useScenarioFlagsSelection(prefix);
+  const { selectedFlags } = useScenarioFlagsSelection(prefix);
 
   useEffect(() => {
     if (!runs.length || !svgRef.current || dimensions.WIDTH === 0) return;
@@ -26,11 +27,9 @@ const BasePlot: React.FC<Props> = ({ runs, prefix, onRunClick }) => {
       runs,
       dimensions,
       selectedFlags,
-      hiddenFlags,
       onRunClick,
-      showVetting,
     });
-  }, [runs, dimensions, selectedFlags, hiddenFlags, onRunClick, svgRef, showVetting]);
+  }, [runs, dimensions, selectedFlags, onRunClick, svgRef]);
 
   return plotContainer;
 };
@@ -42,9 +41,11 @@ interface MultiLinePlotProps {
 }
 
 export const MultiLinePlot: React.FC<MultiLinePlotProps> = ({ data, prefix, onRunClick }) => {
+  const { hiddenFlags, showVetting } = useScenarioFlagsSelection(prefix);
+  const visibleRuns = filterVisibleRuns(data.runs, hiddenFlags, showVetting);
   return (
-    <PlotStateHandler data={data} fieldName="runs">
-      {(runs) => <BasePlot runs={runs} prefix={prefix} onRunClick={onRunClick} />}
+    <PlotStateHandler isError={data.isError} isLoading={data.isLoading} items={visibleRuns}>
+      {(items) => <BasePlot runs={items} prefix={prefix} onRunClick={onRunClick} />}
     </PlotStateHandler>
   );
 };

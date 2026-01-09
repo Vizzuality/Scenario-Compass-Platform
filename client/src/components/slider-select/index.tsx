@@ -14,6 +14,9 @@ export interface SliderSelectItem {
   label: string;
   value: [number, number] | null;
   defaultRange: [number, number];
+  min?: number;
+  max?: number;
+  step?: number;
 }
 
 export interface SliderSelectProps {
@@ -25,6 +28,7 @@ export interface SliderSelectProps {
   onApply: (selections: ChangeStateAction) => void;
   className?: string;
   id: string;
+  type?: "percentual" | "range";
 }
 
 export type ChangeStateAction = Record<string, [number, number] | null>;
@@ -38,6 +42,7 @@ const SliderSelect: React.FC<SliderSelectProps> = ({
   className,
   onApply,
   id,
+  type = "percentual",
 }) => {
   const [checkedIds, setCheckedIds] = useState<Array<string>>([]);
   const [changes, setChanges] = useState<ChangeStateAction>({});
@@ -104,6 +109,28 @@ const SliderSelect: React.FC<SliderSelectProps> = ({
     return item.defaultRange;
   };
 
+  const getItemConfig = (item: SliderSelectItem) => ({
+    min: item.min ?? min,
+    max: item.max ?? max,
+    step: item.step ?? step,
+  });
+
+  const checkIfCheckboxDisabled = (config: ReturnType<typeof getItemConfig>) => {
+    const isMinValid =
+      config.min !== Number.MAX_SAFE_INTEGER &&
+      config.min !== Infinity &&
+      !Number.isNaN(config.min);
+
+    const isMaxValid =
+      config.max !== Number.MIN_SAFE_INTEGER &&
+      config.max !== -Infinity &&
+      !Number.isNaN(config.max);
+
+    const hasValidRange = isMinValid && isMaxValid && config.min < config.max;
+
+    return !hasValidRange;
+  };
+
   return (
     <div className="relative w-full">
       <Popover>
@@ -125,31 +152,36 @@ const SliderSelect: React.FC<SliderSelectProps> = ({
           align="start"
         >
           <div className="divide-y divide-gray-200 py-2">
-            {items.map((item) => (
-              <div key={item.id} className="px-4 py-3">
-                <div className="flex items-start space-x-3">
-                  <Checkbox
-                    id={item.id}
-                    checked={isItemChecked(item.id)}
-                    onCheckedChange={() => handleItemCheck(item.id)}
-                    className="mt-0.5"
-                  />
-                  <Label htmlFor={item.id} className="flex-1 cursor-pointer text-sm leading-5">
-                    {item.label}
-                  </Label>
-                </div>
+            {items.map((item) => {
+              const config = getItemConfig(item);
+              return (
+                <div key={item.id} className="px-4 py-3">
+                  <div className="flex items-start space-x-3">
+                    <Checkbox
+                      id={item.id}
+                      disabled={checkIfCheckboxDisabled(config)}
+                      checked={isItemChecked(item.id)}
+                      onCheckedChange={() => handleItemCheck(item.id)}
+                      className="mt-0.5"
+                    />
+                    <Label htmlFor={item.id} className="flex-1 cursor-pointer text-sm leading-5">
+                      {item.label}
+                    </Label>
+                  </div>
 
-                {isItemChecked(item.id) && (
-                  <RangeSlider
-                    handleRangeChange={(values) => handleRangeChange(values, item.id)}
-                    max={max}
-                    min={min}
-                    step={step}
-                    range={getRangeValue(item)}
-                  />
-                )}
-              </div>
-            ))}
+                  {isItemChecked(item.id) && (
+                    <RangeSlider
+                      handleRangeChange={(values) => handleRangeChange(values, item.id)}
+                      max={config.max}
+                      min={config.min}
+                      step={config.step}
+                      range={getRangeValue(item)}
+                      type={type}
+                    />
+                  )}
+                </div>
+              );
+            })}
           </div>
           <div className="border-t px-4 pt-2 pb-3">
             <PopoverClose asChild>

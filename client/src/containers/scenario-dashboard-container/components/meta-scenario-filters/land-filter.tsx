@@ -52,7 +52,7 @@ export const LandFilterRow = ({ prefix }: RowFilterProps) => {
         <SliderSelect
           id={id}
           items={landItems}
-          className="h-10 w-fit"
+          className="h-10 w-48"
           placeholder="Select land filter"
           onApply={handleApply}
         />

@@ -19,7 +19,6 @@ import { createHoverElements } from "@/utils/plots/create-hover-elements";
 import { ExtendedRun } from "@/types/data/run";
 import { renderHighlightedFlags } from "@/components/plots/plot-variations/area-plot/render-highlighted";
 import { getCategoryAbbrev } from "@/lib/config/reasons-of-concern/category-config";
-import { filterDecadePoints, filterVisibleRuns } from "@/utils/plots/filtering-functions";
 import { getRunColor } from "@/utils/plots/colors-functions";
 import { formatNumber } from "@/utils/plots/format-functions";
 
@@ -28,31 +27,20 @@ interface Props {
   runs: ExtendedRun[];
   dimensions: PlotDimensions;
   selectedFlags: string[];
-  hiddenFlags: string[];
-  showVetting: boolean;
   onRunClick?: (run: ExtendedRun) => void;
 }
 
-export const renderAreaPlot = ({
-  svg,
-  runs,
-  dimensions,
-  selectedFlags = [],
-  hiddenFlags = [],
-  showVetting,
-}: Props): void => {
+export const renderAreaPlot = ({ svg, runs, dimensions, selectedFlags = [] }: Props): void => {
   clearSVG(svg);
   const tooltipManager = createTooltipManager({ svg, dimensions });
   if (!tooltipManager) return;
 
   // Change this in the future if the Opacity should differ from no selection to selected
   const COMPUTED_OPACITY = selectedFlags?.length > 0 ? 1 : 1;
-  const decadeFilteredRuns = filterDecadePoints(runs);
-  const visibleRuns = filterVisibleRuns(decadeFilteredRuns, hiddenFlags, showVetting);
 
-  if (visibleRuns.length === 0) return;
+  if (runs.length === 0) return;
 
-  const allPoints = visibleRuns.flatMap((run) => run.orderedPoints);
+  const allPoints = runs.flatMap((run) => run.orderedPoints);
   const { aggregatedData, xDomain, yDomain } = processAreaChartData(allPoints);
   const { INNER_WIDTH, INNER_HEIGHT } = dimensions;
   const groupSelection = createMainGroup(svg, dimensions);
@@ -69,7 +57,7 @@ export const renderAreaPlot = ({
     height: INNER_HEIGHT,
     width: INNER_WIDTH,
     xTickValues: uniqueYears,
-    yUnitText: visibleRuns[0].unit,
+    yUnitText: runs[0].unit,
   });
 
   const areaSurface = d3
@@ -107,14 +95,14 @@ export const renderAreaPlot = ({
   if (hasSelection) {
     renderHighlightedFlags({
       groupSelection: groupSelection,
-      visibleRuns,
+      visibleRuns: runs,
       scales,
       selectedFlags,
     });
 
     const selectedRunsByFlag = new Map<string, ExtendedRun[]>();
 
-    visibleRuns.forEach((run) => {
+    runs.forEach((run) => {
       const abbrev = getCategoryAbbrev(run.flagCategory);
       if (abbrev && selectedFlags.includes(abbrev)) {
         if (!selectedRunsByFlag.has(abbrev)) {
@@ -188,9 +176,7 @@ export const renderAreaPlot = ({
 
           let color = GREY;
           if (flagName !== "Base") {
-            const flagRun = visibleRuns.find(
-              (run) => getCategoryAbbrev(run.flagCategory) === flagName,
-            );
+            const flagRun = runs.find((run) => getCategoryAbbrev(run.flagCategory) === flagName);
             if (flagRun) {
               color = getRunColor(flagRun, selectedFlags, hasSelection);
             }

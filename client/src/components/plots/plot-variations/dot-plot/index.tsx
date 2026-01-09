@@ -7,6 +7,7 @@ import { useScenarioFlagsSelection } from "@/hooks/nuqs/flags/use-scenario-flags
 import { usePlotContainer } from "@/hooks/plots/plot-container/use-plot-container";
 import { ExtendedRun, RunPipelineReturn } from "@/types/data/run";
 import { PlotStateHandler } from "@/components/plots/components";
+import { filterVisibleRuns } from "@/utils/plots/filtering-functions";
 
 interface DotPlotProps {
   runs: ExtendedRun[];
@@ -15,7 +16,7 @@ interface DotPlotProps {
 
 export const BasePlot: React.FC<DotPlotProps> = ({ runs, prefix }) => {
   const { svgRef, dimensions, plotContainer } = usePlotContainer();
-  const { selectedFlags, hiddenFlags, showVetting } = useScenarioFlagsSelection(prefix);
+  const { selectedFlags } = useScenarioFlagsSelection(prefix);
 
   useEffect(() => {
     if (!runs.length || !svgRef.current || dimensions.WIDTH === 0) return;
@@ -25,10 +26,8 @@ export const BasePlot: React.FC<DotPlotProps> = ({ runs, prefix }) => {
       runs,
       dimensions,
       selectedFlags,
-      hiddenFlags,
-      showVetting,
     });
-  }, [dimensions, hiddenFlags, runs, selectedFlags, showVetting, svgRef]);
+  }, [dimensions, runs, selectedFlags, svgRef]);
 
   return plotContainer;
 };
@@ -39,9 +38,11 @@ interface Props {
 }
 
 export const DotPlot: React.FC<Props> = ({ data, prefix }) => {
+  const { hiddenFlags, showVetting } = useScenarioFlagsSelection(prefix);
+  const visibleRuns = filterVisibleRuns(data.runs, hiddenFlags, showVetting);
   return (
-    <PlotStateHandler data={data} fieldName="runs">
-      {(runs) => <BasePlot runs={runs} prefix={prefix} />}
+    <PlotStateHandler items={visibleRuns} isLoading={data.isLoading} isError={data.isError}>
+      {(items) => <BasePlot runs={items} prefix={prefix} />}
     </PlotStateHandler>
   );
 };

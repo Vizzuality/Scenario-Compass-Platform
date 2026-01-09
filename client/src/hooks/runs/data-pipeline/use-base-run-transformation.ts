@@ -9,6 +9,9 @@ import { DataPoint } from "@/types/data/data-point";
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/lib/query-keys";
+import { useUpdateGlobalCarbonRemovalValues } from "@/hooks/jotai/use-update-global-carbon-removal-values";
+import { useUpdateGlobalEndOfCenturyWarmingValues } from "@/hooks/jotai/use-update-global-end-of-century-warming-values";
+import { useUpdateGlobalPeakWarmingValues } from "@/hooks/jotai/use-update-global-peak-warming-values";
 
 export default function useBaseRunTransformation({
   dataPoints,
@@ -25,6 +28,8 @@ export default function useBaseRunTransformation({
     biomassShare,
     gfaIncrease,
     fossilShare,
+    eocWarming,
+    peakWarming,
   } = useFilterUrlParams(prefix);
 
   const {
@@ -55,6 +60,22 @@ export default function useBaseRunTransformation({
     select: (data) => getMetaPoints(data),
   });
 
+  useUpdateGlobalCarbonRemovalValues({
+    isLoading: isLoadingMeta,
+    isError: isErrorMeta,
+    metaIndicators: metaData,
+  });
+  useUpdateGlobalEndOfCenturyWarmingValues({
+    isLoading: isLoadingMeta,
+    isError: isErrorMeta,
+    metaIndicators: metaData,
+  });
+  useUpdateGlobalPeakWarmingValues({
+    isLoading: isLoadingMeta,
+    isError: isErrorMeta,
+    metaIndicators: metaData,
+  });
+
   const extendedRuns = generateExtendedRuns({
     dataPoints: dataPoints || [],
     metaIndicators: metaData || [],
@@ -71,6 +92,8 @@ export default function useBaseRunTransformation({
     biomassShare,
     gfaIncrease,
     fossilShare,
+    eocWarming,
+    peakWarming,
   });
 
   const isLoading = isLoadingMeta || isEnergyShareLoading || isGfaLoading;

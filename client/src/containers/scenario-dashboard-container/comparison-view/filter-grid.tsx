@@ -3,8 +3,9 @@ import { LandFilterRow } from "@/containers/scenario-dashboard-container/compone
 import { cn } from "@/lib/utils";
 import React from "react";
 import { ClimateFilterRow } from "@/containers/scenario-dashboard-container/components/meta-scenario-filters/climate-filter/climate-filter-row";
+import { AdvancedFilterRow } from "@/containers/scenario-dashboard-container/components/meta-scenario-filters/advanced-filter";
 
-const filterComponents = [ClimateFilterRow, EnergyFilterRow, LandFilterRow];
+const filterComponents = [ClimateFilterRow, EnergyFilterRow, LandFilterRow, AdvancedFilterRow];
 
 export const FilterGrid = ({ prefix }: { prefix?: string }) => {
   return (
