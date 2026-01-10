@@ -1,4 +1,4 @@
-import { ExtendedRun } from "@/types/data/run";
+import { ExtendedRun, ShortMetaIndicator } from "@/types/data/run";
 import { CATEGORY_CONFIG, CategoryKey } from "@/lib/config/reasons-of-concern/category-config";
 
 /**
@@ -22,18 +22,76 @@ export interface RunCategorySummary {
 
   /** An array containing the actual run objects that belong to this category. */
   runs: ExtendedRun[];
+
+  categorySpecificMetaIndicators: Array<ShortMetaIndicator>;
 }
 
 export type MetaIndicatorRunCategorySummaryPair = Record<CategoryKey, RunCategorySummary>;
 
-export const initializeMetaIndicatorRunCategorySummaryPair = () => {
-  return Object.fromEntries(
-    Object.entries(CATEGORY_CONFIG).map(([key, config]) => [
-      key,
-      { color: config.color, label: config.label, count: 0, runs: [] },
-    ]),
-  ) as unknown as MetaIndicatorRunCategorySummaryPair;
-};
+/**
+ *  ```typescript
+ * {
+ *   "BOTH_HIGH": {
+ *     "color": "#832DA4",
+ *     "label": "Sustainability and feasibility concerns, and at least one of them is high",
+ *     "count": 0,
+ *     "runs": []
+ *   },
+ *   "HIGH_SUSTAINABILITY": {
+ *     "color": "#9C4600",
+ *     "label": "High sustainability concerns",
+ *     "count": 0,
+ *     "runs": []
+ *   },
+ *   "HIGH_FEASIBILITY": {
+ *     "color": "#E33021",
+ *     "label": "High feasibility concerns",
+ *     "count": 0,
+ *     "runs": []
+ *   },
+ *   "BOTH_MEDIUM": {
+ *     "color": "#4599DF",
+ *     "label": "Medium sustainability and feasibility concerns",
+ *     "count": 0,
+ *     "runs": []
+ *   },
+ *   "MEDIUM_SUSTAINABILITY": {
+ *     "color": "#EC8D82",
+ *     "label": "Medium sustainability concerns",
+ *     "count": 0,
+ *     "runs": []
+ *   },
+ *   "MEDIUM_FEASIBILITY": {
+ *     "color": "#EDC14B",
+ *     "label": "Medium feasibility concerns",
+ *     "count": 0,
+ *     "runs": []
+ *   },
+ *   "NO_FLAGS": {
+ *     "color": "#4EAD60",
+ *     "label": "No reasons for concern",
+ *     "count": 0,
+ *     "runs": []
+ *   }
+ * }
+ * ```
+ */
+export const initializeMetaIndicatorRunCategorySummaryPair =
+  (): MetaIndicatorRunCategorySummaryPair => {
+    const result: Partial<MetaIndicatorRunCategorySummaryPair> = {};
+
+    for (const [key, config] of Object.entries(CATEGORY_CONFIG)) {
+      result[key as CategoryKey] = {
+        color: config.color,
+        label: config.label,
+        count: 0,
+        runs: [],
+        categorySpecificMetaIndicators: [],
+      };
+    }
+
+    return result as MetaIndicatorRunCategorySummaryPair;
+  };
 
 export const ADDITIONAL_INFORMATION_META_INDICATORS = [
   { key: "Project", label: "Projects" },
