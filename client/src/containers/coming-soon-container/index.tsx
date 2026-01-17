@@ -4,8 +4,11 @@ import { Button } from "@/components/ui/button";
 
 import ComingSoonIllustration from "../../../public/images/coming-soon.svg";
 import { Heading } from "@/components/custom/heading";
+import { env } from "@/env";
 
 export default function ComingSoon() {
+  const isPrelaunch = env.NEXT_PUBLIC_PRE_LAUNCH_MODE;
+
   return (
     <div className="container mx-auto flex flex-1 items-center">
       <div className="mx-auto grid max-w-[950px] grid-cols-2">
@@ -17,9 +20,11 @@ export default function ComingSoon() {
             We&apos;re working behind the scenes to bring you an experience worth the wait. Stay
             tuned — it&apos;s coming soon.
           </p>
-          <Button asChild className="h-auto px-8 py-4">
-            <Link href="/">Go to Homepage</Link>
-          </Button>
+          {!isPrelaunch && (
+            <Button asChild className="h-auto px-8 py-4">
+              <Link href="/">Go to Homepage</Link>
+            </Button>
+          )}
         </div>
         <div>
           <Image src={ComingSoonIllustration} alt="cup of coffee - coming soon" priority />

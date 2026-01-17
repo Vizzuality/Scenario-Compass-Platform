@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/layout/navbar/navbar";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/custom/heading";
+import { env } from "@/env";
 
 const heroBackgroundStyles = [
   "bg-no-repeat",
@@ -15,6 +16,8 @@ const heroBackgroundStyles = [
 ];
 
 export function ModuleHero() {
+  const isPrelaunch = env.NEXT_PUBLIC_PRE_LAUNCH_MODE;
+
   return (
     <header className="bg-burgundy w-full">
       <Navbar theme="dark" sheetTheme="burgundy" />
@@ -35,15 +38,17 @@ export function ModuleHero() {
                 Explore, compare, and understand pathways to a sustainable future.
               </h2>
             </hgroup>
-            <Button asChild variant="secondary" size="lg">
-              <Link
-                href=""
-                className="w-full text-base leading-5 font-bold md:w-fit"
-                aria-label="Learn more about the platform"
-              >
-                Learn more
-              </Link>
-            </Button>
+            {!isPrelaunch && (
+              <Button asChild variant="secondary" size="lg">
+                <Link
+                  href=""
+                  className="w-full text-base leading-5 font-bold md:w-fit"
+                  aria-label="Learn more about the platform"
+                >
+                  Learn more
+                </Link>
+              </Button>
+            )}
           </div>
           <div className="h-20 md:h-full" aria-hidden="true" />
         </div>
