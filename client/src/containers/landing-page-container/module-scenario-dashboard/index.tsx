@@ -4,8 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/custom/heading";
 import { AnimatedCardContainer } from "@/containers/landing-page-container/module-scenario-dashboard/animated-card-container";
 import { INTERNAL_PATHS } from "@/lib/paths";
+import { env } from "@/env";
 
 export function ModuleScenarioDashboard() {
+  const isPrelaunch = env.NEXT_PUBLIC_PRE_LAUNCH_MODE;
+
   return (
     <section
       aria-label="Module Dashboard"
@@ -51,14 +54,16 @@ export function ModuleScenarioDashboard() {
             )}
           />
         </div>
-        <Button asChild size="lg" variant="secondary">
-          <Link
-            href={INTERNAL_PATHS.SCENARIO_DASHBOARD}
-            className="w-full text-base leading-5 font-bold md:w-fit"
-          >
-            Scenario Dashboard
-          </Link>
-        </Button>
+        {!isPrelaunch && (
+          <Button asChild size="lg" variant="secondary">
+            <Link
+              href={INTERNAL_PATHS.SCENARIO_DASHBOARD}
+              className="w-full text-base leading-5 font-bold md:w-fit"
+            >
+              Scenario Dashboard
+            </Link>
+          </Button>
+        )}
       </div>
     </section>
   );

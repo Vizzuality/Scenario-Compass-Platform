@@ -5,16 +5,21 @@ import { ModuleScenarioDashboard } from "@/containers/landing-page-container/mod
 import { ModuleShareFeedback } from "@/containers/landing-page-container/module-share-feedback";
 import { ModuleGuidedExploration } from "@/containers/landing-page-container/module-guided-exploration";
 import { env } from "@/env";
+import ComingSoon from "@/containers/coming-soon-container";
 
 export function LandingPage() {
+  const isPrelaunch = env.NEXT_PUBLIC_PRE_LAUNCH_MODE;
+
   return (
     <main className="flex w-full flex-col items-center">
       <ModuleHero />
-      <ModuleGuidedIntro />
+      {!isPrelaunch && <ModuleGuidedIntro />}
       <ModuleScenarioDashboard />
-      {!env.NEXT_PUBLIC_FEATURE_FLAG_HIDE_LEARN_BY_TOPIC_PAGE && <ModuleLearnByTopic />}
-      <ModuleGuidedExploration />
-      <ModuleShareFeedback />
+      <ComingSoon />
+      {!env.NEXT_PUBLIC_FEATURE_FLAG_HIDE_LEARN_BY_TOPIC_PAGE ||
+        (!isPrelaunch && <ModuleLearnByTopic />)}
+      {!isPrelaunch && <ModuleGuidedExploration />}
+      {!isPrelaunch && <ModuleShareFeedback />}
     </main>
   );
 }

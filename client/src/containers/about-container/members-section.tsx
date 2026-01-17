@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export function MembersSection() {
   return (
-    <section className="mx-auto flex w-full items-center justify-center bg-white">
+    <section className="mx-auto flex w-full items-center justify-center bg-white pt-10">
       <div className="flex flex-col gap-6">
         <div className="content-container">
           <h3 className="mx-auto max-w-[846px] text-2xl leading-8 font-bold text-stone-900">

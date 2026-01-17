@@ -17,6 +17,7 @@ export const INTERNAL_PATHS = {
   METHODOLOGY: "/methodology",
   CONTACT: "/contact",
   ABOUT: "/about",
+  NOT_FOUND: "/not-found",
 } as const;
 
 export const EXTERNAL_PATHS = {
@@ -49,7 +50,7 @@ export const EXTERNAL_LINKS: Record<"BLUESKY" | "LINKEDIN" | "OTHER_PRODUCTS", L
   },
 } as const;
 
-export const desktopPaths: LinkItem[] = [
+const allDesktopPaths = [
   { href: INTERNAL_PATHS.GUIDED_EXPLORATION, label: "Guided Exploration" },
   ...(env.NEXT_PUBLIC_FEATURE_FLAG_HIDE_LEARN_BY_TOPIC_PAGE
     ? []
@@ -63,6 +64,10 @@ export const desktopPaths: LinkItem[] = [
   { href: INTERNAL_PATHS.METHODOLOGY, label: "Methodology" },
   { ...EXTERNAL_LINKS.OTHER_PRODUCTS },
   { href: INTERNAL_PATHS.ABOUT, label: "About" },
-] as const;
+];
+
+export const desktopPaths: LinkItem[] = env.NEXT_PUBLIC_PRE_LAUNCH_MODE
+  ? [{ href: INTERNAL_PATHS.ABOUT, label: "About" }]
+  : allDesktopPaths;
 
 export const mobilePaths: LinkItem[] = [...desktopPaths] as const;

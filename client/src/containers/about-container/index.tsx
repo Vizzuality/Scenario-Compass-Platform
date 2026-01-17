@@ -3,8 +3,11 @@ import { Heading } from "@/components/custom/heading";
 import KeyQuestions from "@/containers/about-container/key-questions-module";
 import MainAboutPageModule from "@/containers/about-container/main-about-page-module";
 import { MembersSection } from "@/containers/about-container/members-section";
+import { env } from "@/env";
 
 export default function AboutPageContainer() {
+  const isPrelaunch = env.NEXT_PUBLIC_PRE_LAUNCH_MODE;
+
   return (
     <>
       <AboutPageHero>
@@ -18,8 +21,8 @@ export default function AboutPageContainer() {
           </h2>
         </div>
       </AboutPageHero>
-      <KeyQuestions />
-      <MainAboutPageModule />
+      {!isPrelaunch && <KeyQuestions />}
+      {!isPrelaunch && <MainAboutPageModule />}
       <MembersSection />
     </>
   );
