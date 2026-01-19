@@ -9,12 +9,39 @@ export type ReasonsForConcernMap = Record<string, Partial<ReasonForConcernSummar
 export const reasonsForConcernMap: ReasonsForConcernMap = {
   "Feasibility Concern|Carbon Capture|World|2030": {
     flagName: "Infeasible growth CCS deployment 2030",
+    link: "https://philippverpoort.github.io/scenario-vetting-criteria/criteria_meta/",
+    description:
+      "Near-term upper and lower capacity projections can be derived from existing capacities and from current project announcements and known project lead times. \n" +
+      "\n" +
+      "Robust upper projections can be made because projects take at least 5 years to plan and construct and therefore will not be operational by 2030 if not yet announced by today. \n" +
+      "\n" +
+      "Robust lower projections can be made based on existing capacities and because retirement rates can reasonably be assumed to be low. \n" +
+      "\n" +
+      "CCU/S projects are tracked by the IEA and published annually in its CCUS Database. \n",
   },
   "Feasibility Concern|Carbon Capture|World|2035": {
     flagName: "Infeasible growth CCS deployment 2035",
+    link: "https://philippverpoort.github.io/scenario-vetting-criteria/criteria_meta/",
+    description:
+      "Near-term upper and lower capacity projections can be derived from existing capacities and from current project announcements and known project lead times. \n" +
+      "\n" +
+      "Robust upper projections can be made because projects take at least 5 years to plan and construct and therefore will not be operational by 2035 if not yet announced by today. \n" +
+      "\n" +
+      "Robust lower projections can be made based on existing capacities and because retirement rates can reasonably be assumed to be low. \n" +
+      "\n" +
+      "CCU/S projects are tracked by the IEA and published annually in its CCUS Database. \n",
   },
   "Feasibility Concern|Carbon Capture|World|2040": {
     flagName: "Infeasible growth CCS deployment 2040",
+    link: "https://philippverpoort.github.io/scenario-vetting-criteria/criteria_meta/",
+    description:
+      "Near-term upper and lower capacity projections can be derived from existing capacities and from current project announcements and known project lead times. \n" +
+      "\n" +
+      "Robust upper projections can be made because projects take at least 5 years to plan and construct and therefore will not be operational by 2040 if not yet announced by today. \n" +
+      "\n" +
+      "Robust lower projections can be made based on existing capacities and because retirement rates can reasonably be assumed to be low. \n" +
+      "\n" +
+      "CCU/S projects are tracked by the IEA and published annually in its CCUS Database. \n",
   },
   "Feasibility Concern|Hydropower Capacity|World|2030": {
     flagName: "Infeasible near-term hydropower expansion",
