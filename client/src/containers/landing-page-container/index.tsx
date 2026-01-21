@@ -9,7 +9,8 @@ import ComingSoon from "@/containers/coming-soon-container";
 
 export function LandingPage() {
   const isPrelaunch = env.NEXT_PUBLIC_PRE_LAUNCH_MODE;
-  const hideForLaunch = true;
+  const hideForLaunch = false;
+  const showLearnByTopic = !env.NEXT_PUBLIC_FEATURE_FLAG_HIDE_LEARN_BY_TOPIC_PAGE;
 
   return (
     <main className="flex w-full flex-col items-center">
@@ -17,8 +18,7 @@ export function LandingPage() {
       {!isPrelaunch || (hideForLaunch && <ModuleGuidedIntro />)}
       <ModuleScenarioDashboard />
       {isPrelaunch && <ComingSoon />}
-      {!env.NEXT_PUBLIC_FEATURE_FLAG_HIDE_LEARN_BY_TOPIC_PAGE ||
-        (!isPrelaunch && <ModuleLearnByTopic />)}
+      {showLearnByTopic && <ModuleLearnByTopic />}
       {!isPrelaunch || (hideForLaunch && <ModuleGuidedExploration />)}
       {!isPrelaunch && <ModuleShareFeedback />}
     </main>
