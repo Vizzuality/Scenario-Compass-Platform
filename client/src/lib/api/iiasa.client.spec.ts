@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { Scenario } from "@iiasa/ixmp4-ts";
+import { Scenario, Platform } from "@iiasa/ixmp4-ts";
 import { IIASA_API_CLIENT } from "./iiasa.client";
 
 describe("IIASA API Client", () => {
@@ -18,14 +18,17 @@ describe("IIASA API Client", () => {
       refresh: "mockRefreshToken",
     };
 
+    const mockPlatform = {} as Platform;
+
     vi.spyOn(apiClient as never, "getAPICredentials").mockResolvedValue(mockCredentials);
-    vi.spyOn(apiClient as never, "setPlatform").mockResolvedValue(undefined);
+    vi.spyOn(Platform, "create").mockResolvedValue(mockPlatform);
 
     await apiClient.init({ username: "username", password: "password" });
 
-    expect(apiClient.accessToken).toBe("mockAccessToken");
-    expect(apiClient.refreshToken).toBe("mockRefreshToken");
+    expect(apiClient["auth"]?.accessToken).toBe("mockAccessToken");
+    expect(apiClient["refreshToken"]).toBe("mockRefreshToken");
     expect(apiClient.isAuthenticated()).toBe(true);
+    expect(apiClient.platform).toBe(mockPlatform);
   });
 
   it("should throw an error if username or password is not set", async () => {
@@ -34,29 +37,40 @@ describe("IIASA API Client", () => {
     );
   });
 
-  it("should refresh tokens and set platform", async () => {
+  it("should refresh tokens and update auth object", async () => {
     const mockTokens = {
       access: "newAccessToken",
       refresh: "newRefreshToken",
     };
 
-    apiClient.refreshToken = "mockRefreshToken";
+    apiClient["auth"] = {
+      accessToken: "oldAccessToken",
+      refreshOrObtainAccessToken: vi.fn(),
+    };
+    apiClient["refreshToken"] = "mockRefreshToken";
 
     vi.spyOn(apiClient as never, "refreshAccessToken").mockResolvedValue(mockTokens);
-    vi.spyOn(apiClient as never, "setPlatform").mockResolvedValue(undefined);
 
     await apiClient.refreshOrObtainAccessToken();
 
-    expect(apiClient.accessToken).toBe("newAccessToken");
-    expect(apiClient.refreshToken).toBe("newRefreshToken");
-    expect(apiClient.setPlatform).toHaveBeenCalledWith("newAccessToken");
+    expect(apiClient["auth"]?.accessToken).toBe("newAccessToken");
+    expect(apiClient["refreshToken"]).toBe("newRefreshToken");
   });
 
   it("should throw an error if refresh token is not set", async () => {
-    apiClient.refreshToken = undefined;
+    apiClient["refreshToken"] = null;
 
     await expect(apiClient.refreshOrObtainAccessToken()).rejects.toThrow(
-      "Refresh token is not set.",
+      "Auth or refresh token is not set.",
+    );
+  });
+
+  it("should throw an error if auth is not initialized", async () => {
+    apiClient["auth"] = undefined;
+    apiClient["refreshToken"] = "mockRefreshToken";
+
+    await expect(apiClient.refreshOrObtainAccessToken()).rejects.toThrow(
+      "Auth or refresh token is not set.",
     );
   });
 
@@ -84,5 +98,21 @@ describe("IIASA API Client", () => {
     const scenarios = await apiClient.getScenariosList();
 
     expect(scenarios).toEqual(mockScenarios);
+  });
+
+  it("should handle undefined refresh token with ?? null", async () => {
+    const mockCredentials = {
+      access: "mockAccessToken",
+      refresh: undefined,
+    };
+
+    const mockPlatform = {} as Platform;
+
+    vi.spyOn(apiClient as never, "getAPICredentials").mockResolvedValue(mockCredentials);
+    vi.spyOn(Platform, "create").mockResolvedValue(mockPlatform);
+
+    await apiClient.init({ username: "username", password: "password" });
+
+    expect(apiClient["refreshToken"]).toBe(null);
   });
 });
