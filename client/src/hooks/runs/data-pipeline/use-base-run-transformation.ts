@@ -3,15 +3,9 @@ import useComputeEnergyShare from "@/hooks/runs/filtering/use-compute-energy-sha
 import useComputeLandUse from "@/hooks/runs/filtering/use-compute-land-use";
 import { generateExtendedRuns } from "@/utils/data-manipulation/generate-extended-runs";
 import { filterRunsByMetaIndicators } from "@/utils/filtering";
-import { getMetaPoints } from "@/utils/data-manipulation/get-meta-points";
 import { RunPipelineReturn } from "@/types/data/run";
 import { DataPoint } from "@/types/data/data-point";
-import { useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
-import queryKeys from "@/lib/query-keys";
-import { useUpdateGlobalCarbonRemovalValues } from "@/hooks/jotai/use-update-global-carbon-removal-values";
-import { useUpdateGlobalEndOfCenturyWarmingValues } from "@/hooks/jotai/use-update-global-end-of-century-warming-values";
-import { useUpdateGlobalPeakWarmingValues } from "@/hooks/jotai/use-update-global-peak-warming-values";
+import useRequiredMetaIndicators from "@/hooks/runs/data-pipeline/use-required-meta-indicators";
 
 export default function useBaseRunTransformation({
   dataPoints,
@@ -40,45 +34,15 @@ export default function useBaseRunTransformation({
 
   const { gfaIncreaseArray, isLoading: isGfaLoading, isError: isGfaError } = useComputeLandUse();
 
-  const uniqueRunIds = useMemo(() => {
-    if (!dataPoints?.length) return [];
-    return [...new Set(dataPoints.map((dp) => dp.runId))];
-  }, [dataPoints]);
-
   const {
-    data: metaData,
+    metaIndicators,
     isLoading: isLoadingMeta,
     isError: isErrorMeta,
-  } = useQuery({
-    ...queryKeys.metaIndicators.tabulate({
-      run: {
-        // @ts-expect-error limited TypeScript support for this query
-        id_in: uniqueRunIds,
-      },
-    }),
-    enabled: uniqueRunIds.length > 0,
-    select: (data) => getMetaPoints(data),
-  });
-
-  useUpdateGlobalCarbonRemovalValues({
-    isLoading: isLoadingMeta,
-    isError: isErrorMeta,
-    metaIndicators: metaData,
-  });
-  useUpdateGlobalEndOfCenturyWarmingValues({
-    isLoading: isLoadingMeta,
-    isError: isErrorMeta,
-    metaIndicators: metaData,
-  });
-  useUpdateGlobalPeakWarmingValues({
-    isLoading: isLoadingMeta,
-    isError: isErrorMeta,
-    metaIndicators: metaData,
-  });
+  } = useRequiredMetaIndicators();
 
   const extendedRuns = generateExtendedRuns({
     dataPoints: dataPoints || [],
-    metaIndicators: metaData || [],
+    metaIndicators: metaIndicators || [],
     energyShares,
     gfaIncreaseArray,
   });

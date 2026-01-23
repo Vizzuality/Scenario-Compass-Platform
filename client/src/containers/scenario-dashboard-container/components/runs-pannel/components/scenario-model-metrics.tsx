@@ -39,7 +39,6 @@ export default function ScenarioModelMetrics({ result }: { result: RunPipelineRe
 
   const totalRuns = data.length;
   const currentRuns = new Set(result.runs.map((run) => run.runId));
-
   const visibleRuns = filterVisibleRuns(result.runs, hiddenFlags, showVetting);
   const uniqueRunsCount = [...new Set(visibleRuns.map((item) => item.runId))].length;
   return (
