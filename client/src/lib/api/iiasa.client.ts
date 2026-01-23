@@ -38,8 +38,8 @@ export class IIASA_API_CLIENT {
   appName: IIASAConfig["appName"];
   baseUrl: IIASAConfig["baseUrl"];
   platform: Platform | undefined;
-  accessToken: IAuth["accessToken"];
-  refreshToken: IAuth["accessToken"];
+  private auth: IAuth | undefined;
+  private refreshToken: string | null = null;
 
   constructor({
     appName,
@@ -58,14 +58,22 @@ export class IIASA_API_CLIENT {
       password,
     });
 
-    this.accessToken = credentials.access;
-    this.refreshToken = credentials.refresh;
+    this.refreshToken = credentials.refresh ?? null;
 
-    await this.setPlatform(credentials.access);
+    this.auth = {
+      accessToken: credentials.access,
+      refreshOrObtainAccessToken: this.refreshOrObtainAccessToken.bind(this),
+    };
+
+    this.platform = await Platform.create({
+      name: this.appName,
+      baseUrl: this.baseUrl,
+      auth: this.auth,
+    });
   }
 
   public isAuthenticated() {
-    return !!this.accessToken;
+    return !!this.auth?.accessToken;
   }
 
   private async getAPICredentials({ username, password }: Credentials) {
@@ -95,30 +103,18 @@ export class IIASA_API_CLIENT {
     }
   }
 
-  public async setPlatform(accessToken: IAuth["accessToken"]) {
-    this.platform = await Platform.create({
-      name: this.appName,
-      baseUrl: this.baseUrl,
-      auth: {
-        accessToken: accessToken,
-        refreshOrObtainAccessToken: this.refreshOrObtainAccessToken,
-      },
-    });
-  }
-
   public async refreshOrObtainAccessToken() {
-    if (!this.refreshToken) {
-      throw new Error("Refresh token is not set.");
+    if (!this.auth || !this.refreshToken) {
+      throw new Error("Auth or refresh token is not set.");
     }
 
     const credentials = await this.refreshAccessToken(this.refreshToken);
-    this.accessToken = credentials.access;
-    this.refreshToken = credentials.refresh;
 
-    await this.setPlatform(this.accessToken);
+    this.auth.accessToken = credentials.access;
+    this.refreshToken = credentials.refresh ?? null;
   }
 
-  private async refreshAccessToken(refreshToken: IAuth["accessToken"]) {
+  private async refreshAccessToken(refreshToken: string) {
     if (!refreshToken) {
       throw new Error("Refresh token is not set.");
     }
@@ -136,8 +132,8 @@ export class IIASA_API_CLIENT {
     }
 
     return (await request.json()) as {
-      access: IAuth["accessToken"];
-      refresh: IAuth["accessToken"];
+      access: string;
+      refresh: string;
     };
   }
 
