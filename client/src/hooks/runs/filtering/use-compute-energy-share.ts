@@ -42,6 +42,7 @@ export default function useComputeEnergyShare() {
       stepYear: 2050,
       region: { name: geographyConfig.find((g) => g.id === geography)?.name },
     }),
+    staleTime: 5 * 60 * 1000,
     select: (data) => extractDataPoints(data),
   });
 
