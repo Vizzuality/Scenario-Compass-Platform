@@ -22,8 +22,32 @@ const sourceSans = Source_Sans_3({
 });
 
 export const metadata: Metadata = {
-  title: "Scenario Compass Platform | IIASA",
-  description: "Explore, compare and understand pathways to a sustainable future",
+  title: {
+    default: "Scenario Compass Initiative | IIASA",
+    template: "%s | IIASA",
+  },
+  description: "Navigate Climate Futures with Data-Driven Scenarios",
+  openGraph: {
+    title: "Scenario Compass Initiative",
+    description: "Navigate Climate Futures with Data-Driven Scenarios",
+    siteName: "Scenario Compass Initiative",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Scenario Compass Initiative",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Scenario Compass Initiative",
+    description: "Navigate Climate Futures with Data-Driven Scenarios",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function RootLayout({
