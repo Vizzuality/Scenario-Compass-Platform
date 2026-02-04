@@ -85,12 +85,16 @@ export function EmbargoPopUp() {
       >
         <b className="text-2xl">Embargo Notification</b>
         <p>
-          This website contains scenario data related to unpublished research and a manuscript under
-          review.
+          This website contains scenario data associated with unpublished research and a manuscript
+          currently under peer review.
         </p>
         <p>
-          It is ok to use the data for scientific research, but please do not share or distribute
-          the data without permission from the Scenario Compass Initiative.
+          The data may be used for scientific research purposes. However, users must strictly adhere
+          to the applicable <a href="https://www.nature.com/nature-portfolio/editorial-policies/preprints-and-conference-proceedings">
+          Nature editorial policies and embargo rules</a> until the manuscript has been formally published.
+        </p>
+        <p>
+          Please use the following citation when using the data: Riahi et al. (submitted).
         </p>
         <Button onClick={handleSkip} variant="outline" className="px-10" size="lg">
           Got it, continue to the dashboard
