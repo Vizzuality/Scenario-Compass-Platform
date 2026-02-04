@@ -44,7 +44,7 @@ export const EXTERNAL_LINKS: Record<"BLUESKY" | "LINKEDIN", LinkItem> = {
 } as const;
 
 const allDesktopPaths = [
-  { href: INTERNAL_PATHS.GUIDED_EXPLORATION, label: "Guided Exploration" },
+  // { href: INTERNAL_PATHS.GUIDED_EXPLORATION, label: "Guided Exploration" },
   ...(env.NEXT_PUBLIC_FEATURE_FLAG_HIDE_LEARN_BY_TOPIC_PAGE
     ? []
     : [

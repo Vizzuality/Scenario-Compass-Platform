@@ -90,12 +90,13 @@ export function EmbargoPopUp() {
         </p>
         <p>
           The data may be used for scientific research purposes. However, users must strictly adhere
-          to the applicable <a href="https://www.nature.com/nature-portfolio/editorial-policies/preprints-and-conference-proceedings">
-          Nature editorial policies and embargo rules</a> until the manuscript has been formally published.
+          to the applicable{" "}
+          <a href="https://www.nature.com/nature-portfolio/editorial-policies/preprints-and-conference-proceedings">
+            Nature editorial policies and embargo rules
+          </a>{" "}
+          until the manuscript has been formally published.
         </p>
-        <p>
-          Please use the following citation when using the data: Riahi et al. (submitted).
-        </p>
+        <p>Please use the following citation when using the data: Riahi et al. (submitted).</p>
         <Button onClick={handleSkip} variant="outline" className="px-10" size="lg">
           Got it, continue to the dashboard
         </Button>
