@@ -69,9 +69,13 @@ export default function MethodologyContainer() {
               assessments?
             </h3>
             <p>
-              {
-                "Based on expert assessments conducted by the [SCI’s scientific working groups] {The Scenario Compass Initiative} scenarios are marked with “flags” to indicate reasons for concern if they exceed feasibility or sustainability thresholds. These flags are marked as “medium” or “high” to indicate the severity of the concern. "
-              }
+              Based on expert assessments conducted by the{" "}
+              <Link className="underline" href="/about#scenario-compass-initiative">
+                SCI's scientific working groups
+              </Link>{" "}
+              scenarios are marked with “flags” to indicate reasons for concern if they exceed
+              feasibility or sustainability thresholds. These flags are marked as “medium” or “high”
+              to indicate the severity of the concern.
             </p>
           </div>
 

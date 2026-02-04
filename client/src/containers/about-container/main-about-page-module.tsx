@@ -134,7 +134,10 @@ export default function MainAboutPageModule() {
           </div>
 
           <div className="flex flex-col gap-4">
-            <h3 className="text-2xl leading-8 font-bold text-stone-900">
+            <h3
+              id="scenario-compass-initiative"
+              className="text-2xl leading-8 font-bold text-stone-900"
+            >
               The Scenario Compass Initiative
             </h3>
             <p>

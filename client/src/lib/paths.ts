@@ -26,7 +26,7 @@ export const EXTERNAL_PATHS = {
   IIASA_BLUESKY: "https://bsky.app/profile/iiasa.org",
 };
 
-export const EXTERNAL_LINKS: Record<"BLUESKY" | "LINKEDIN" | "OTHER_PRODUCTS", LinkItem> = {
+export const EXTERNAL_LINKS: Record<"BLUESKY" | "LINKEDIN", LinkItem> = {
   BLUESKY: {
     href: EXTERNAL_PATHS.IIASA_BLUESKY,
     label: "Bluesky",
@@ -40,13 +40,6 @@ export const EXTERNAL_LINKS: Record<"BLUESKY" | "LINKEDIN" | "OTHER_PRODUCTS", L
     target: "_blank",
     rel: "noopener noreferrer",
     "aria-label": "IIASA LinkedIn profile",
-  },
-  OTHER_PRODUCTS: {
-    href: EXTERNAL_PATHS.OTHER_PRODUCTS,
-    label: "Other Products",
-    target: "_blank",
-    rel: "noopener noreferrer",
-    "aria-label": "IIASA Data Explorer",
   },
 } as const;
 
@@ -62,7 +55,6 @@ const allDesktopPaths = [
       ]),
   { href: INTERNAL_PATHS.SCENARIO_DASHBOARD, label: "Scenario Dashboard" },
   { href: INTERNAL_PATHS.METHODOLOGY, label: "Methodology" },
-  { ...EXTERNAL_LINKS.OTHER_PRODUCTS },
   { href: INTERNAL_PATHS.ABOUT, label: "About" },
 ];
 
