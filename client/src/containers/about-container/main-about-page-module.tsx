@@ -86,17 +86,18 @@ export default function MainAboutPageModule() {
 
           <div className="flex flex-col gap-4">
             <h3 className="text-2xl leading-8 font-bold text-stone-900">
-              Want your scenario to be featured?
+              Submit your scenarios and emissions pathways to the Scenario Compass!
             </h3>
             <p>
-              Learn how to submit your scenario{" "}
+              The Scenario Compass will be continuously updated with the latest scientific
+              publications on emissions pathways. You can submit your scenarios via the
               <Link
                 href={Links.FEATURED_REGISTRATION}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline decoration-1 underline-offset-[1.5px]"
               >
-                here
+                Scenario Compass Sandbox
               </Link>
               .
             </p>
