@@ -21,12 +21,12 @@ export const INTERNAL_PATHS = {
 } as const;
 
 export const EXTERNAL_PATHS = {
-  OTHER_PRODUCTS: "https://shape.apps.ece.iiasa.ac.at/explorer",
   IIASA_LINKEDIN: "https://www.linkedin.com/company/iiasa/",
   IIASA_BLUESKY: "https://bsky.app/profile/iiasa.org",
+  IIASA_DOWNLOAD: "https://download.scenariocompass.org",
 };
 
-export const EXTERNAL_LINKS: Record<"BLUESKY" | "LINKEDIN", LinkItem> = {
+export const EXTERNAL_LINKS: Record<"BLUESKY" | "LINKEDIN" | "DOWNLOAD", LinkItem> = {
   BLUESKY: {
     href: EXTERNAL_PATHS.IIASA_BLUESKY,
     label: "Bluesky",
@@ -40,6 +40,13 @@ export const EXTERNAL_LINKS: Record<"BLUESKY" | "LINKEDIN", LinkItem> = {
     target: "_blank",
     rel: "noopener noreferrer",
     "aria-label": "IIASA LinkedIn profile",
+  },
+  DOWNLOAD: {
+    href: EXTERNAL_PATHS.IIASA_DOWNLOAD,
+    label: "Download",
+    target: "_blank",
+    rel: "noopener noreferrer",
+    "aria-label": "IIASA Download XLSX",
   },
 } as const;
 
@@ -55,6 +62,7 @@ const allDesktopPaths = [
       ]),
   { href: INTERNAL_PATHS.SCENARIO_DASHBOARD, label: "Scenario Dashboard" },
   { href: INTERNAL_PATHS.METHODOLOGY, label: "Methodology" },
+  { href: EXTERNAL_LINKS.DOWNLOAD.href, label: EXTERNAL_LINKS.DOWNLOAD.label },
   { href: INTERNAL_PATHS.ABOUT, label: "About" },
 ];
 
