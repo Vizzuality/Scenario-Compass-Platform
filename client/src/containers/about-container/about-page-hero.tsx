@@ -14,7 +14,6 @@ export default function AboutPageHero({ children }: Props) {
       )}
     >
       <Navbar theme="light" sheetTheme="burgundy" />
-      {/* Graphic container */}
       <div className="pointer-events-none absolute inset-0 z-0 hidden h-full w-full items-center justify-center lg:flex">
         <div className="container mx-auto flex h-full w-full items-end justify-end">
           <Image
