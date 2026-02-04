@@ -64,5 +64,8 @@ export const CUMULATIVE_CO2_EMISSIONS_META_INDICATOR_KEY =
 export const CUMULATIVE_CCS_META_INDICATOR_KEY =
   "Emissions Diagnostics|Cumulative CCS [2020-2100, Gt CO2]";
 
+export const PEAK_TEMPERATURE_META_INDICATOR_KEY =
+  "Climate Assessment|Peak Warming|Median [MAGICCv7.5.3]";
+
 export const YEAR_PEAK_TEMPERATURE_META_INDICATOR_KEY =
   "Climate Assessment|Year of Peak Warming|Median [MAGICCv7.5.3]";
