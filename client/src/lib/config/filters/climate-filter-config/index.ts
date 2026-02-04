@@ -11,9 +11,9 @@ const CLIMATE_CATEGORY_SHORT_NAMES = [
 ];
 
 const CLIMATE_CATEGORY_LONG_NAMES = [
-  "Below 1.5°C with no OS",
-  "Below 1.5°C with low OS",
-  "Below 1.5°C with high OS",
+  "Below 1.5°C without overshoot",
+  "Below 1.5°C with limited overshoot",
+  "Below 1.5°C with high overshoot",
   "Likely below 2°C",
   "Below 2°C",
   "Below 2.5°C",
@@ -51,7 +51,7 @@ export const YEAR_NET_ZERO_FILTER_CONFIG = {
   })),
 };
 
-export const CLIMATE_CATEGORY_META_INDICATOR_KEY = "Climate Category|SCI 2025";
+export const CLIMATE_CATEGORY_META_INDICATOR_KEY = "Climate Category|SCI 2025 [Tier I]";
 
 export const YEAR_NET_ZERO_CO2_META_INDICATOR_KEY = "Emissions Diagnostics|Year of Net Zero|CO2";
 
