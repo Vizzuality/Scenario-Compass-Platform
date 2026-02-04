@@ -9,6 +9,7 @@ import {
   CUMULATIVE_CCS_META_INDICATOR_KEY,
   YEAR_NET_ZERO_GHG_META_INDICATOR_KEY,
   YEAR_NET_ZERO_CO2_META_INDICATOR_KEY,
+  PEAK_TEMPERATURE_META_INDICATOR_KEY,
   YEAR_PEAK_TEMPERATURE_META_INDICATOR_KEY,
 } from "@/lib/config/filters/climate-filter-config";
 import { ADDITIONAL_INFORMATION_META_INDICATORS } from "@/containers/scenario-dashboard-container/components/runs-pannel/utils";
@@ -83,6 +84,10 @@ export default function ScenarioDetailsInfo() {
   };
 
   const peakTemperature = metaData?.find((item) =>
+    item.key.includes(PEAK_TEMPERATURE_META_INDICATOR_KEY),
+  ) || { value: "Loading Temperature" };
+
+  const yearPeakTemperature = metaData?.find((item) =>
     item.key.includes(YEAR_PEAK_TEMPERATURE_META_INDICATOR_KEY),
   ) || { value: "Loading Temperature" };
 
@@ -102,9 +107,10 @@ export default function ScenarioDetailsInfo() {
       ) : (
         <>
           <InfoItem title="Climate category" value={climateCategory.value} />
+          <InfoItem title="Peak temperature" value={peakTemperature.value} />
+          <InfoItem title="Year of peak temperature" value={yearPeakTemperature.value} />
           <InfoItem title="Cumulative emissions" value={cumulativeEmissionsWithUnit} />
           <InfoItem title="Cumulative CCS" value={cumulativeCCSWithUnit} />
-          <InfoItem title="Peak temperature" value={peakTemperature.value} />
           <InfoItem title="Year of net-zero CO2" value={yearNetZeroCO2.value} />
           <InfoItem title="Year of net-zero GHG" value={yearNetZeroGHG.value} />
           <InfoItem title="Project" value={projectName.value} />
