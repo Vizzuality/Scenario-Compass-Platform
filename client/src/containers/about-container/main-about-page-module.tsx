@@ -34,12 +34,11 @@ export default function MainAboutPageModule() {
               >
                 Byers et al., 2023
               </Link>
-              ) with several model comparison projects and recently published studies,
-              including
+              ) with several model comparison projects and recently published studies, including
             </p>
             <ul className="list-inside list-disc space-y-0.5">
               <li>
-                NAVIGATE: {" "}
+                NAVIGATE:{" "}
                 <Link
                   href={Links.Heerden}
                   target="_blank"
@@ -50,7 +49,7 @@ export default function MainAboutPageModule() {
                 </Link>
               </li>
               <li>
-                SHAPE: {" "}
+                SHAPE:{" "}
                 <Link
                   href={Links.Soergel}
                   target="_blank"
@@ -61,7 +60,7 @@ export default function MainAboutPageModule() {
                 </Link>
               </li>
               <li>
-                NGFS Phase V: {" "}
+                NGFS Phase V:{" "}
                 <Link
                   href={Links.Richters}
                   target="_blank"
@@ -72,7 +71,7 @@ export default function MainAboutPageModule() {
                 </Link>
               </li>
               <li>
-                GENIE: {" "}
+                GENIE:{" "}
                 <Link
                   href={Links.Gidden}
                   target="_blank"

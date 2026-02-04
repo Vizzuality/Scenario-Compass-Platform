@@ -1,5 +1,5 @@
-import { GuidedExplorationCrossLink } from "@/components/cross-links/guided-exploration-cross-link";
 import { env } from "@/env";
+import { ScenarioDashboardCrossLink } from "@/components/cross-links/scenario-dashboard-cross-link";
 
 export default function AboutPageLayout({ children }: { children: React.ReactNode }) {
   const isPrelaunch = env.NEXT_PUBLIC_PRE_LAUNCH_MODE;
@@ -10,7 +10,7 @@ export default function AboutPageLayout({ children }: { children: React.ReactNod
       {!isPrelaunch && (
         <div className="flex w-full justify-center bg-white">
           <div className="content-container py-20">
-            <GuidedExplorationCrossLink />
+            <ScenarioDashboardCrossLink />
           </div>
         </div>
       )}
