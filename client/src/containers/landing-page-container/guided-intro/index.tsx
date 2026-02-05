@@ -12,9 +12,7 @@ export function ModuleGuidedIntro() {
   const [open, setOpen] = React.useState(false);
 
   return (
-    <section
-      className={"container flex flex-col gap-16 px-4 py-16 md:px-10 lg:gap-18 lg:px-20 lg:py-28"}
-    >
+    <section className="container flex flex-col gap-16 px-4 py-16 md:px-10 lg:gap-18 lg:px-20 lg:py-28">
       <div className="flex flex-col items-center gap-10 lg:flex-row lg:gap-10">
         <div className={"order-2 flex flex-col gap-14 lg:order-1 lg:w-1/2"}>
           <div className="flex flex-col">
