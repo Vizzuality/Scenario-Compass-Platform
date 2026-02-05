@@ -77,7 +77,9 @@ export function SharedScenarioFlagsContent({ result, prefix }: SharedContentProp
                     <AccordionTrigger className="[&_svg]:text-foreground flex w-full items-start px-0 py-2">
                       <BaseFlagTrigger categoryKey={key} category={category} prefix={prefix} />
                     </AccordionTrigger>
-                    <AccordionItemContent categorySummary={category} />
+                    <AccordionContent>
+                      <AccordionItemContent categorySummary={category} />
+                    </AccordionContent>
                   </AccordionItem>
                 ))}
               </Accordion>
@@ -92,7 +94,9 @@ export function SharedScenarioFlagsContent({ result, prefix }: SharedContentProp
                     <AccordionTrigger className="[&_svg]:text-foreground flex w-full items-start px-0 py-2">
                       <BaseFlagTrigger categoryKey={key} category={category} prefix={prefix} />
                     </AccordionTrigger>
-                    <AccordionItemContent categorySummary={category} />
+                    <AccordionContent>
+                      <AccordionItemContent categorySummary={category} />
+                    </AccordionContent>
                   </AccordionItem>
                 ))}
               </Accordion>
