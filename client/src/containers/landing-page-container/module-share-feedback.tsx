@@ -30,8 +30,9 @@ export function ModuleShareFeedback() {
           Help shape the future of Scenario Compass.
         </Heading>
         <p className="mb-10 text-center text-lg leading-7 lg:text-left">
-          Your feedback is invaluable to us! By sharing your thoughts and suggestions, you help us
-          improve Scenario Compass. Together, we can build a platform that truly meets your needs.
+          Your feedback is invaluable to us! <br />
+          By sharing your thoughts and suggestions, you help us improve Scenario Compass. Together,
+          we can build a platform that truly meets your needs.
         </p>
         <Button variant="outline" size="lg" asChild>
           <Link
