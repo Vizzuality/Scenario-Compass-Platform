@@ -17,6 +17,7 @@ export const INTERNAL_PATHS = {
   METHODOLOGY: "/methodology",
   ABOUT: "/about",
   NOT_FOUND: "/not-found",
+  LICENSE: "/license",
 } as const;
 
 export const EXTERNAL_PATHS = {
@@ -81,6 +82,7 @@ const allDesktopPaths = [
   { href: INTERNAL_PATHS.SCENARIO_DASHBOARD, label: "Scenario Dashboard" },
   { href: INTERNAL_PATHS.METHODOLOGY, label: "Methodology" },
   { href: EXTERNAL_LINKS.DOWNLOAD.href, label: EXTERNAL_LINKS.DOWNLOAD.label },
+  { href: INTERNAL_PATHS.LICENSE, label: "License" },
   { href: INTERNAL_PATHS.ABOUT, label: "About" },
 ];
 
