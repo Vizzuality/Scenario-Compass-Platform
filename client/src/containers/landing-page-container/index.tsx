@@ -6,6 +6,7 @@ import { ModuleShareFeedback } from "@/containers/landing-page-container/module-
 import { ModuleGuidedExploration } from "@/containers/landing-page-container/module-guided-exploration";
 import { env } from "@/env";
 import ComingSoon from "@/containers/coming-soon-container";
+import { NewsletterSubscriptionContainer } from "@/containers/landing-page-container/newsletter-subscription-container";
 
 export function LandingPage() {
   const isPrelaunch = env.NEXT_PUBLIC_PRE_LAUNCH_MODE;
@@ -16,6 +17,7 @@ export function LandingPage() {
     <main className="flex w-full flex-col items-center">
       <ModuleHero />
       {!isPrelaunch || (hideForLaunch && <ModuleGuidedIntro />)}
+      <NewsletterSubscriptionContainer />
       <ModuleScenarioDashboard />
       {isPrelaunch && <ComingSoon />}
       {showLearnByTopic && <ModuleLearnByTopic />}

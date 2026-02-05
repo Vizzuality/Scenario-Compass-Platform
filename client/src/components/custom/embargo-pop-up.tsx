@@ -4,13 +4,15 @@ import { useEffect, useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  BOT_FILTER_FIELD,
+  EMAIL_FIELD_NAME,
+  GROUP_SELECTION,
+  IIASA_MAILCHIMP_URL,
+} from "@/lib/config/newsletter-constants";
 
 const CONSENT_KEY = "user-consent-timestamp";
 const DELAY = 24 * 60 * 60 * 1000;
-const BOT_FILTER_FIELD = "b_4a7b399fd5c39ff77e8f1e7dc_392b395289";
-const GROUP_SELECTION = "group[11693][65536]";
-const IIASA_MAILCHIMP_URL =
-  "https://iiasa.us5.list-manage.com/subscribe/post?u=4a7b399fd5c39ff77e8f1e7dc&id=392b395289&f_id=006ed2e4f0";
 
 const isValidEmail = (email: string): boolean => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -55,7 +57,7 @@ export function EmbargoPopUp() {
 
     try {
       const formData = new FormData();
-      formData.append("EMAIL", email);
+      formData.append(EMAIL_FIELD_NAME, email);
       formData.append(GROUP_SELECTION, "1");
       formData.append(BOT_FILTER_FIELD, "");
 
