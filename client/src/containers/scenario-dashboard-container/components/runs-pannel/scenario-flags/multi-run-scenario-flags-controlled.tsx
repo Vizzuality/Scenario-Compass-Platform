@@ -3,7 +3,7 @@ import { RunPipelineReturn } from "@/types/data/run";
 import {
   SCENARIO_FLAGS_ACCORDION_VALUE,
   SharedScenarioFlagsContent,
-} from "@/containers/scenario-dashboard-container/components/runs-pannel/scenario-flags/common-content";
+} from "@/containers/scenario-dashboard-container/components/runs-pannel/scenario-flags/shared-scenario-flags-content";
 import {
   ScenarioFlagsErrorState,
   ScenarioFlagsLoadingState,
