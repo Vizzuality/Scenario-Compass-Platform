@@ -15,7 +15,6 @@ export const INTERNAL_PATHS = {
   SCENARIO_DASHBOARD_EXPLORATION: "/scenario-dashboard/",
   SCENARIO_DASHBOARD_COMPARISON: "/scenario-dashboard/comparison",
   METHODOLOGY: "/methodology",
-  CONTACT: "/contact",
   ABOUT: "/about",
   NOT_FOUND: "/not-found",
 } as const;
@@ -24,9 +23,14 @@ export const EXTERNAL_PATHS = {
   IIASA_LINKEDIN: "https://www.linkedin.com/company/iiasa/",
   IIASA_BLUESKY: "https://bsky.app/profile/iiasa.org",
   IIASA_DOWNLOAD: "https://download.scenariocompass.org",
+  IIASA_CONTACT: "https://sci-info@iiasa.ac.at",
+  IIASA_TERMS_OF_USE: "https://iiasa.ac.at/terms-of-use",
 };
 
-export const EXTERNAL_LINKS: Record<"BLUESKY" | "LINKEDIN" | "DOWNLOAD", LinkItem> = {
+export const EXTERNAL_LINKS: Record<
+  "BLUESKY" | "LINKEDIN" | "DOWNLOAD" | "CONTACT" | "TERMS_OF_USE",
+  LinkItem
+> = {
   BLUESKY: {
     href: EXTERNAL_PATHS.IIASA_BLUESKY,
     label: "Bluesky",
@@ -47,6 +51,20 @@ export const EXTERNAL_LINKS: Record<"BLUESKY" | "LINKEDIN" | "DOWNLOAD", LinkIte
     target: "_blank",
     rel: "noopener noreferrer",
     "aria-label": "IIASA Download XLSX",
+  },
+  CONTACT: {
+    href: EXTERNAL_PATHS.IIASA_CONTACT,
+    label: "Contact",
+    target: "_blank",
+    rel: "noopener noreferrer",
+    "aria-label": "IIASA Contact page",
+  },
+  TERMS_OF_USE: {
+    href: EXTERNAL_PATHS.IIASA_TERMS_OF_USE,
+    label: "Terms of Use",
+    target: "_blank",
+    rel: "noopener noreferrer",
+    "aria-label": "IIASA Terms of use page",
   },
 } as const;
 

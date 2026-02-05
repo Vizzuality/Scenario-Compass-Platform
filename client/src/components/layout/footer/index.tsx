@@ -61,19 +61,15 @@ export function Footer() {
                 role="contentinfo"
                 aria-label="Copyright information"
               >
-                © 2025 Scenario Compass Initiative
+                © 2026 Scenario Compass Initiative
               </div>
               <Dot className="order-2 text-stone-500" />
               <div className="order-1 flex gap-9 md:order-3 md:gap-4">
-                <Link href="" className="text-right text-sm leading-6 font-normal text-stone-500">
-                  Privacy Policy
-                </Link>
-                <Dot className="hidden text-stone-500 md:inline" />
                 <Link
-                  href=""
-                  className="order-1 text-right text-sm leading-6 font-normal text-stone-500"
+                  {...EXTERNAL_LINKS.TERMS_OF_USE}
+                  className="text-right text-sm leading-6 font-normal text-stone-500"
                 >
-                  Cookie Policy
+                  Terms of Use
                 </Link>
               </div>
             </div>
@@ -85,7 +81,7 @@ export function Footer() {
             >
               <div className="flex gap-9 md:gap-5">
                 <Link
-                  href={INTERNAL_PATHS.CONTACT}
+                  {...EXTERNAL_LINKS.CONTACT}
                   className="text-sm leading-6 font-normal text-stone-700 hover:opacity-60"
                 >
                   Contact
