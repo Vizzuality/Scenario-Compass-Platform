@@ -44,6 +44,7 @@ export function NewsletterSubscriptionContainer() {
       console.error("Subscription error:", error);
     } finally {
       setIsSubmitting(false);
+      setEmail("");
     }
   };
 

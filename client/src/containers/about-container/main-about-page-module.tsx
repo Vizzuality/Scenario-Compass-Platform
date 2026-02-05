@@ -1,16 +1,6 @@
 import { Heading } from "@/components/custom/heading";
 import Link from "next/link";
-
-const Links = {
-  IPCC_AR6: "https://www.ipcc.ch/report/ar6/wg3/downloads/report/IPCC_AR6_WGIII_Annex-III.pdf",
-  SENSES_TOOLKIT: "https://climatescenarios.org/primer/",
-  FEATURED_REGISTRATION: "https://sandbox.scenariocompass.org/tor",
-  Heerden: "https://doi.org/10.1038/s41560-025-01703-1",
-  Soergel: "https://doi.org/10.1088/1748-9326/ad80af",
-  Richters: "https://doi.org/10.5281/zenodo.5782903",
-  Gidden: "https://doi.org/10.1038/s41586-023-06724-y",
-  Byers: "https://doi.org/10.5281/zenodo.5886911",
-};
+import { ABOUT_PAGE_LINKS } from "@/lib/paths";
 
 export default function MainAboutPageModule() {
   return (
@@ -27,7 +17,7 @@ export default function MainAboutPageModule() {
             <p>
               This resource combines scenarios from the latest IPCC assessment (
               <Link
-                href={Links.Byers}
+                href={ABOUT_PAGE_LINKS.Byers}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline decoration-1 underline-offset-[1.5px]"
@@ -40,7 +30,7 @@ export default function MainAboutPageModule() {
               <li>
                 NAVIGATE:{" "}
                 <Link
-                  href={Links.Heerden}
+                  href={ABOUT_PAGE_LINKS.Heerden}
                   target="_blank"
                   className="underline decoration-1 underline-offset-[1.5px]"
                   rel="noopener noreferrer"
@@ -51,7 +41,7 @@ export default function MainAboutPageModule() {
               <li>
                 SHAPE:{" "}
                 <Link
-                  href={Links.Soergel}
+                  href={ABOUT_PAGE_LINKS.Soergel}
                   target="_blank"
                   className="underline decoration-1 underline-offset-[1.5px]"
                   rel="noopener noreferrer"
@@ -62,7 +52,7 @@ export default function MainAboutPageModule() {
               <li>
                 NGFS Phase V:{" "}
                 <Link
-                  href={Links.Richters}
+                  href={ABOUT_PAGE_LINKS.Richters}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="underline decoration-1 underline-offset-[1.5px]"
@@ -73,7 +63,7 @@ export default function MainAboutPageModule() {
               <li>
                 GENIE:{" "}
                 <Link
-                  href={Links.Gidden}
+                  href={ABOUT_PAGE_LINKS.Gidden}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="underline decoration-1 underline-offset-[1.5px]"
@@ -90,9 +80,9 @@ export default function MainAboutPageModule() {
             </h3>
             <p>
               The Scenario Compass will be continuously updated with the latest scientific
-              publications on emissions pathways. You can submit your scenarios via the
+              publications on emissions pathways. <br /> You can submit your scenarios via the{" "}
               <Link
-                href={Links.FEATURED_REGISTRATION}
+                href={ABOUT_PAGE_LINKS.FEATURED_REGISTRATION}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline decoration-1 underline-offset-[1.5px]"
@@ -109,7 +99,7 @@ export default function MainAboutPageModule() {
               <li>
                 <strong>
                   <Link
-                    href={Links.IPCC_AR6}
+                    href={ABOUT_PAGE_LINKS.IPCC_AR6}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="underline decoration-1 underline-offset-[1.5px]"
@@ -123,7 +113,7 @@ export default function MainAboutPageModule() {
               <li>
                 <strong>
                   <Link
-                    href={Links.SENSES_TOOLKIT}
+                    href={ABOUT_PAGE_LINKS.SENSES_TOOLKIT}
                     className="underline decoration-1 underline-offset-[1.5px]"
                   >
                     Senses Toolkit
