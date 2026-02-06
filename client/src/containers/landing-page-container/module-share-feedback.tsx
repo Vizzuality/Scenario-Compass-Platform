@@ -34,17 +34,35 @@ export function ModuleShareFeedback() {
           By sharing your thoughts and suggestions, you help us improve Scenario Compass. Together,
           we can build a platform that truly meets your needs.
         </p>
-        <Button variant="outline" size="lg" asChild>
-          <Link
-            rel="noopener noreferrer"
-            href={FEEDBACK_FORM_LINK}
-            target="_blank"
-            aria-label="Provide feedback about this page"
-            className="w-full text-base leading-5 font-bold md:w-fit"
-          >
-            Share feedback
-          </Link>
-        </Button>
+        <p className="mb-10 text-center text-lg leading-7 lg:text-left">
+          The Scenario Compass will be continuously updated with the latest scientific publications
+          on emissions pathways. <br />
+          You can submit your scenarios via the Scenario Compass Sandbox.
+        </p>
+        <div className="grid w-fit grid-cols-2 gap-2">
+          <Button size="lg" asChild>
+            <Link
+              rel="noopener noreferrer"
+              href={FEEDBACK_FORM_LINK}
+              target="_blank"
+              aria-label="Provide feedback about this page"
+              className="w-full text-base leading-5 font-bold md:w-fit"
+            >
+              Share feedback
+            </Link>
+          </Button>
+          <Button variant="outline" size="lg" asChild>
+            <Link
+              rel="noopener noreferrer"
+              href="https://sandbox.scenariocompass.org"
+              target="_blank"
+              aria-label="Navigate to Scenario Compass Sandbox"
+              className="w-full text-base leading-5 font-bold md:w-fit"
+            >
+              Go to the Sandbox
+            </Link>
+          </Button>
+        </div>
       </div>
     </section>
   );
