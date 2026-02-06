@@ -81,7 +81,7 @@ export function EmbargoPopUp() {
     <Dialog open={open} onOpenChange={() => {}}>
       <DialogContent
         showCloseButton={false}
-        className="sm:max-w-lg"
+        className="bg-white sm:max-w-lg"
         onInteractOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
