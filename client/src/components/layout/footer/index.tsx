@@ -80,12 +80,12 @@ export function Footer() {
               }
             >
               <div className="flex gap-9 md:gap-5">
-                <Link
-                  {...EXTERNAL_LINKS.CONTACT}
+                <a
+                  href="mailto:sci-info@iiasa.ac.at"
                   className="text-sm leading-6 font-normal text-stone-700 hover:opacity-60"
                 >
                   Contact
-                </Link>
+                </a>
                 <Dot className="hidden text-stone-500 md:inline" />
                 <Link {...EXTERNAL_LINKS.BLUESKY}>
                   <BlueskyLogoIcon />

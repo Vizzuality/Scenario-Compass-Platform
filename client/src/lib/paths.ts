@@ -24,12 +24,11 @@ export const EXTERNAL_PATHS = {
   IIASA_LINKEDIN: "https://www.linkedin.com/company/iiasa/",
   IIASA_BLUESKY: "https://bsky.app/profile/iiasa.org",
   IIASA_DOWNLOAD: "https://download.scenariocompass.org",
-  IIASA_CONTACT: "https://sci-info@iiasa.ac.at",
   IIASA_TERMS_OF_USE: "https://iiasa.ac.at/terms-of-use",
 };
 
 export const EXTERNAL_LINKS: Record<
-  "BLUESKY" | "LINKEDIN" | "DOWNLOAD" | "CONTACT" | "TERMS_OF_USE",
+  "BLUESKY" | "LINKEDIN" | "DOWNLOAD" | "TERMS_OF_USE",
   LinkItem
 > = {
   BLUESKY: {
@@ -52,13 +51,6 @@ export const EXTERNAL_LINKS: Record<
     target: "_blank",
     rel: "noopener noreferrer",
     "aria-label": "IIASA Download XLSX",
-  },
-  CONTACT: {
-    href: EXTERNAL_PATHS.IIASA_CONTACT,
-    label: "Contact",
-    target: "_blank",
-    rel: "noopener noreferrer",
-    "aria-label": "IIASA Contact page",
   },
   TERMS_OF_USE: {
     href: EXTERNAL_PATHS.IIASA_TERMS_OF_USE,
