@@ -4,9 +4,7 @@ import queryKeys from "@/lib/query-keys";
 import { useBaseUrlParams } from "@/hooks/nuqs/url-params/use-base-url-params";
 
 export default function RegionCombobox() {
-  const { model, geography, setGeography, scenario } = useBaseUrlParams({
-    useDefaults: false,
-  });
+  const { model, geography, setGeography, scenario } = useBaseUrlParams();
 
   const { data, isLoading } = useQuery({
     ...queryKeys.regions.list({
