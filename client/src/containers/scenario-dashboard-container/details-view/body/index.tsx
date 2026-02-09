@@ -3,9 +3,7 @@ import NoRunDetailsSelection from "@/containers/scenario-dashboard-container/det
 import ScenarioDetailPlots from "@/containers/scenario-dashboard-container/details-view/body/scenario-detail-plots";
 
 export default function RunDetailsBody() {
-  const { model, geography, scenario, startYear, endYear } = useBaseUrlParams({
-    useDefaults: false,
-  });
+  const { model, geography, scenario, startYear, endYear } = useBaseUrlParams();
 
   const showPlots = !!model && !!geography && !!scenario && !!startYear && !!endYear;
 

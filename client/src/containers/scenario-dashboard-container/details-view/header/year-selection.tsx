@@ -31,68 +31,49 @@ const SingleYearSelect = ({
   disabled = false,
   options = YEAR_OPTIONS,
   testId,
-}: YearSelectionFilterProps & { testId?: string }) => (
-  <Select value={value || ""} onValueChange={onChange} disabled={disabled}>
-    <SelectTrigger theme="light" size="lg" className="w-full" data-testid={testId}>
-      <SelectValue placeholder={placeholder} />
-    </SelectTrigger>
-    <SelectContent>
-      {options.map((year) => (
-        <SelectItem key={year} value={year.toString()}>
-          {year}
-        </SelectItem>
-      ))}
-    </SelectContent>
-  </Select>
-);
+}: YearSelectionFilterProps & { testId?: string }) => {
+  return (
+    <Select value={value || undefined} onValueChange={onChange} disabled={disabled}>
+      <SelectTrigger theme="light" size="lg" className="w-full" data-testid={testId}>
+        <SelectValue placeholder={placeholder}></SelectValue>
+      </SelectTrigger>
+      <SelectContent>
+        {options.map((year) => (
+          <SelectItem key={year} value={year.toString()}>
+            {year}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+};
 
 export default function YearSelection() {
   const { model, geography, scenario, startYear, endYear, setEndYear, setStartYear } =
-    useBaseUrlParams({ useDefaults: false });
+    useBaseUrlParams();
 
   const isStartDisabled = !model || !scenario || !geography;
 
-  const { data } = useQuery({
-    ...queryKeys.dataPoints.tabulate({
-      model: {
-        name: String(model),
-      },
-      scenario: {
-        name: String(scenario),
-      },
-      region: {
-        id: Number(geography),
-      },
-    }),
-    enabled: !!model && !!scenario && !!geography,
-    select: (data) => extractDataPoints(data),
-  });
-
-  const years = [...new Set(data?.map((dp) => dp.year).sort())];
-
   const getFilteredYears = (filterType: FilterType) => {
     if (filterType === "end" && startYear) {
-      return years.filter((year) => year >= parseInt(startYear));
+      return YEAR_OPTIONS.filter((year) => year >= parseInt(startYear));
     }
     if (filterType === "start" && endYear && startYear) {
-      return years.filter((year) => year <= parseInt(endYear));
+      return YEAR_OPTIONS.filter((year) => year <= parseInt(endYear));
     }
-    return years;
+    return YEAR_OPTIONS;
   };
 
   return (
-    <div className="flex flex-1 flex-col gap-2" data-testid="year-filter">
-      <div className="flex gap-6">
+    <div className="flex flex-1 gap-6" data-testid="year-filter">
+      <div className="flex w-full flex-col gap-2">
         <Label
-          className="text-foreground text-base leading-6 font-bold"
+          className="text-base leading-6 font-bold"
           id="year-selection-label"
           data-testid="year-selection-label"
         >
-          Year selection
+          Start year
         </Label>
-      </div>
-
-      <div className="flex gap-6" data-testid="year-range-container">
         <SingleYearSelect
           value={startYear ?? null}
           onChange={setStartYear}
@@ -101,11 +82,20 @@ export default function YearSelection() {
           testId="start-year-select"
           disabled={isStartDisabled}
         />
+      </div>
+      <div className="flex w-full flex-col gap-2">
+        <Label
+          className="text-base leading-6 font-bold"
+          id="year-selection-label"
+          data-testid="year-selection-label"
+        >
+          End year
+        </Label>
         <SingleYearSelect
           value={endYear ?? null}
           onChange={setEndYear}
           placeholder="End year"
-          disabled={!startYear}
+          disabled={!startYear || isStartDisabled}
           options={getFilteredYears("end")}
           testId="end-year-select"
         />
