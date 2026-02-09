@@ -21,8 +21,8 @@ export const INTERNAL_PATHS = {
 } as const;
 
 export const EXTERNAL_PATHS = {
-  IIASA_LINKEDIN: "https://www.linkedin.com/company/iiasa/",
-  IIASA_BLUESKY: "https://bsky.app/profile/iiasa.org",
+  IIASA_LINKEDIN: "https://www.linkedin.com/company/iiasa-vienna",
+  IIASA_BLUESKY: "https://bsky.app/profile/iiasa.ac.at",
   IIASA_DOWNLOAD: "https://download.scenariocompass.org",
   IIASA_TERMS_OF_USE: "https://iiasa.ac.at/terms-of-use",
 };
