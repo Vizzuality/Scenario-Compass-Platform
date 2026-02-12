@@ -22,7 +22,7 @@ export default function MainAboutPageModule() {
                 rel="noopener noreferrer"
                 className="underline decoration-1 underline-offset-[1.5px]"
               >
-                Byers et al., 2023
+                Byers et al., 2022
               </Link>
               ) with several model comparison projects and recently published studies, including
             </p>
