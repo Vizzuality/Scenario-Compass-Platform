@@ -68,6 +68,6 @@ export default [
   ...compat.extends("plugin:@tanstack/eslint-plugin-query/recommended"),
 
   {
-    ignores: [".next/*", "node_modules/*"],
+    ignores: [".next/*", "node_modules/*", "public/sw.js"],
   },
 ];

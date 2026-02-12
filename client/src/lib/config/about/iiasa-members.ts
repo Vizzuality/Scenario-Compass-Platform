@@ -19,7 +19,7 @@ export const coChairs: IIASAMembers[] = [
   {
     name: "Keywan Riahi",
     initials: "KR",
-    organization: "International Institute of Applied Systems Analysis",
+    organization: "International Institute for Applied Systems Analysis",
     role: "Co-Chair",
     group: "Steering Committee",
     image: "/images/members/keywan_riahi.webp",
@@ -91,7 +91,7 @@ export const otherPeople: IIASAMembers[] = [
   {
     name: "Bas van Ruijven",
     initials: "BvR",
-    organization: "International Institute of Applied Systems Analysis",
+    organization: "International Institute for Applied Systems Analysis",
     role: "Lead",
     group: "Downscaling Working Group",
     image: "/images/members/bas_van_ruijven.webp",
@@ -113,7 +113,7 @@ export const otherPeople: IIASAMembers[] = [
   {
     name: "Daniel Huppmann",
     initials: "DH",
-    organization: "International Institute of Applied Systems Analysis",
+    organization: "International Institute for Applied Systems Analysis",
     role: "Lead",
     group: "Database Working Group",
     image: "/images/members/daniel_huppmann.webp",
@@ -153,7 +153,7 @@ export const otherPeople: IIASAMembers[] = [
   {
     name: "Zebedee Nicholls",
     initials: "ZN",
-    organization: "International Institute of Applied Systems Analysis",
+    organization: "International Institute for Applied Systems Analysis",
     role: "Lead",
     group: "Emissions & Climate Working Group",
     image: "/images/members/zebedee_nicholls.webp",
