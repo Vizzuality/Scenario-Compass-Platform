@@ -53,17 +53,17 @@ export class IIASA_API_CLIENT {
   }
 
   public async init({ username, password }: Credentials) {
-    const credentials = await this.getAPICredentials({
-      username,
-      password,
-    });
+    // const credentials = await this.getAPICredentials({
+    //   username,
+    //   password,
+    // });
 
-    this.refreshToken = credentials.refresh ?? null;
-
-    this.auth = {
-      accessToken: credentials.access,
-      refreshOrObtainAccessToken: this.refreshOrObtainAccessToken.bind(this),
-    };
+    // this.refreshToken = credentials.refresh ?? null;
+    //
+    // this.auth = {
+    //   accessToken: credentials.access,
+    //   refreshOrObtainAccessToken: this.refreshOrObtainAccessToken.bind(this),
+    // };
 
     this.platform = await Platform.create({
       name: this.appName,

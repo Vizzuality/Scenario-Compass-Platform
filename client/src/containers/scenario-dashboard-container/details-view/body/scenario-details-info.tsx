@@ -96,6 +96,7 @@ export default function ScenarioDetailsInfo() {
 
   const cumulativeCCSWithUnit = Number(cumulativeCCS.value).toFixed(3).toString() + " Gt CO2";
 
+  console.log(peakTemperature.value);
   return (
     <div className="space-y-2">
       <h1 className="w-full border-b text-base font-bold text-stone-800">Scenario Details</h1>
@@ -107,7 +108,10 @@ export default function ScenarioDetailsInfo() {
       ) : (
         <>
           <InfoItem title="Climate category" value={climateCategory.value} />
-          <InfoItem title="Peak temperature" value={peakTemperature.value} />
+          <InfoItem
+            title="Peak temperature"
+            value={`${parseFloat(peakTemperature.value).toFixed(2)} °C`}
+          />
           <InfoItem title="Year of peak temperature" value={yearPeakTemperature.value} />
           <InfoItem title="Cumulative emissions" value={cumulativeEmissionsWithUnit} />
           <InfoItem title="Cumulative CCS" value={cumulativeCCSWithUnit} />
