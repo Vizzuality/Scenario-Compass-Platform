@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import ComingSoonIllustration from "../../../public/images/coming-soon.svg";
+import emailImg from "../../../public/images/email.svg";
 import { Heading } from "@/components/custom/heading";
 import {
   BOT_FILTER_FIELD,
@@ -50,7 +50,7 @@ export function NewsletterSubscriptionContainer() {
 
   return (
     <section className="flex max-w-6xl items-center px-4 py-16 md:px-10 lg:gap-10 lg:px-20 lg:py-14">
-      <Image src={ComingSoonIllustration} height={350} alt="cup of coffee - coming soon" priority />
+      <Image src={emailImg} height={250} alt="cup of coffee - coming soon" priority />
 
       <div className="container flex flex-col items-center gap-6 px-4 py-16">
         <Heading as="h2" size="4xl" variant="light" className="mb-4 text-center">

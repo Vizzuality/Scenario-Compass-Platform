@@ -10,6 +10,7 @@ import {
   GROUP_SELECTION,
   IIASA_MAILCHIMP_URL,
 } from "@/lib/config/newsletter-constants";
+import Link from "next/link";
 
 const CONSENT_KEY = "user-consent-timestamp";
 const DELAY = 24 * 60 * 60 * 1000;
@@ -93,9 +94,14 @@ export function EmbargoPopUp() {
         <p>
           The data may be used for scientific research purposes. However, users must strictly adhere
           to the applicable{" "}
-          <a href="https://www.nature.com/nature-portfolio/editorial-policies/preprints-and-conference-proceedings">
+          <Link
+            href="https://www.nature.com/nature-portfolio/editorial-policies/preprints-and-conference-proceedings"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
             Nature editorial policies and embargo rules
-          </a>{" "}
+          </Link>{" "}
           until the manuscript has been formally published.
         </p>
         <p>Please use the following citation when using the data: Riahi et al. (submitted).</p>

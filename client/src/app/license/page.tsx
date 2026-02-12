@@ -2,6 +2,7 @@ import { Heading } from "@/components/custom/heading";
 import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/layout/navbar/navbar";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function LicensePage() {
   return (
@@ -29,24 +30,33 @@ export default function LicensePage() {
           <Heading variant="dark" size="5xl" as="h1" id="hero-title" className="text-left">
             License
           </Heading>
-          <h2 className="text-background text-xl leading-7 lg:w-2/5">
-            Copyright 2026 IIASA and contributing modeling teams
-          </h2>
+          <h2 className="text-background h-20 text-xl leading-7 lg:w-2/5"></h2>
         </div>
       </div>
       <section className="flex w-full flex-col items-center bg-white">
         <div className="content-container flex max-w-[846px] flex-col gap-8 py-24 pb-10">
+          <h2 className="text-xl leading-7 text-black">
+            Copyright 2026 IIASA and contributing modeling teams
+          </h2>
           <p className="text-black">
-            This website contains scenario data related to unpublished research and a manuscript
-            under review.
+            This website contains scenario data associated with unpublished research and a
+            manuscript currently under peer review.
           </p>
           <p className="text-black">
-            It is ok to use the data for scientific research, but please do not share or distribute
-            the data without permission from the Scenario Compass Initiative.
+            The data may be used for scientific research purposes. However, users must strictly
+            adhere to the applicable{" "}
+            <Link
+              href="https://www.nature.com/nature-portfolio/editorial-policies/preprints-and-conference-proceedings"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+            >
+              Nature editorial policies and embargo rules
+            </Link>{" "}
+            until the manuscript has been formally published.
           </p>
           <p className="text-black">
-            Upon acceptance of the related manuscript, the scenario data will be released under a
-            license that permits reuse and redistribution of parts of the data.
+            Please use the following citation when using the data: Riahi et al. (submitted).
           </p>
         </div>
       </section>
