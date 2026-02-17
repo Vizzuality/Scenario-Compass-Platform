@@ -50,13 +50,12 @@ export function NewsletterSubscriptionContainer() {
 
   return (
     <section className="flex max-w-6xl items-center px-4 py-16 md:px-10 lg:gap-10 lg:px-20 lg:py-14">
-      <Image src={emailImg} height={250} alt="cup of coffee - coming soon" priority />
-
-      <div className="container flex flex-col items-center gap-6 px-4 py-16">
-        <Heading as="h2" size="4xl" variant="light" className="mb-4 text-center">
+      <Image src={emailImg} height={240} alt="cup of coffee - coming soon" priority />
+      <div className="container flex flex-col items-center px-4 py-16">
+        <Heading as="h2" size="4xl" variant="light" className="mb-2 text-left">
           Stay up to date on the Scenario Compass
         </Heading>
-        <div className="max-w-xl space-y-3">
+        <div className="max-w-xl space-y-6">
           <p>
             Please sign up to the Scenario Compass newsletter so that we can inform you of updates
             and new releases of the scenario ensemble!
