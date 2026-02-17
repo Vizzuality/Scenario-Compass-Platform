@@ -96,7 +96,6 @@ export default function ScenarioDetailsInfo() {
 
   const cumulativeCCSWithUnit = Number(cumulativeCCS.value).toFixed(3).toString() + " Gt CO2";
 
-  console.log(peakTemperature.value);
   return (
     <div className="space-y-2">
       <h1 className="w-full border-b text-base font-bold text-stone-800">Scenario Details</h1>
