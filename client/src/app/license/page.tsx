@@ -56,7 +56,10 @@ export default function LicensePage() {
             until the manuscript has been formally published.
           </p>
           <p className="text-black">
-            Please use the following citation when using the data: Riahi et al. (submitted).
+            Please use the following citation when using the data:<br />
+            <em>"Mitigation benchmarks from the 2025 community update of global emissions
+            pathways"</em> (Riahi et al., submitted).<br />
+            A preprint of the submitted manuscript will be provided shortly.
           </p>
         </div>
       </section>
