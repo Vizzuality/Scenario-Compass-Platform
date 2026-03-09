@@ -53,6 +53,7 @@ export const otherPeople: IIASAMembers[] = [
     initials: "SSV",
     organization: "Kyoto University",
     group: "Steering Committee",
+    image: "/images/members/saritha_sudharmma.webp",
   },
   {
     name: "Marcus Thomson",
