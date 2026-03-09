@@ -13,6 +13,13 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useScenarioFlagsSelection } from "@/hooks/nuqs/flags/use-scenario-flags-selection";
 import { filterVisibleRuns } from "@/utils/plots/filtering-functions";
+import {
+  CATEGORY_CONFIG,
+  HIGH_KEYS,
+  MEDIUM_KEYS,
+} from "@/lib/config/reasons-of-concern/category-config";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Eye, EyeOff } from "lucide-react";
 
 export const SCENARIO_FLAGS_ACCORDION_VALUE = "scenario-flags";
 
@@ -22,12 +29,29 @@ interface SharedContentProps {
 }
 
 export function SharedScenarioFlagsContent({ result, prefix }: SharedContentProps) {
-  const { showVetting, setShowVetting } = useScenarioFlagsSelection(prefix);
+  const { showVetting, setShowVetting, toggleMultipleHidden, hiddenFlags } =
+    useScenarioFlagsSelection(prefix);
 
   const visibleRuns = filterVisibleRuns(result.runs, [], showVetting);
 
   const { totalCountOfUniqueRuns, categories, highCategories, mediumCategories, okCategories } =
     useScenarioFlagsData(visibleRuns);
+
+  const isMediumCategoriesHidden = MEDIUM_KEYS.every((key) =>
+    hiddenFlags.includes(CATEGORY_CONFIG[key].abbrev),
+  );
+
+  const isHighCategoriesHidden = HIGH_KEYS.every((key) =>
+    hiddenFlags.includes(CATEGORY_CONFIG[key].abbrev),
+  );
+
+  const handleMediumClick = () => {
+    toggleMultipleHidden(MEDIUM_KEYS);
+  };
+
+  const handleHighClick = () => {
+    toggleMultipleHidden(HIGH_KEYS);
+  };
 
   return (
     <>
@@ -70,7 +94,25 @@ export function SharedScenarioFlagsContent({ result, prefix }: SharedContentProp
           )}
           {mediumCategories.length > 0 && (
             <div className="flex flex-col gap-2">
-              <strong className="text-foreground text-xs">MEDIUM</strong>
+              <div className="flex gap-3">
+                <strong className="text-foreground text-xs">MEDIUM</strong>
+                <Tooltip>
+                  <TooltipTrigger onClick={handleMediumClick}>
+                    {isMediumCategoriesHidden ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {!isMediumCategoriesHidden ? (
+                      <p>Hide all MEDIUM scenarios</p>
+                    ) : (
+                      <p>Show all MEDIUM scenarios</p>
+                    )}
+                  </TooltipContent>
+                </Tooltip>
+              </div>
               <Accordion type="single" collapsible className="w-full">
                 {mediumCategories.map(([key, category]) => (
                   <AccordionItem key={key} value={key}>
@@ -87,7 +129,25 @@ export function SharedScenarioFlagsContent({ result, prefix }: SharedContentProp
           )}
           {highCategories.length > 0 && (
             <div className="flex flex-col gap-2">
-              <strong className="text-foreground text-xs">HIGH</strong>
+              <div className="flex gap-3">
+                <strong className="text-foreground text-xs">HIGH</strong>
+                <Tooltip>
+                  <TooltipTrigger onClick={handleHighClick}>
+                    {isHighCategoriesHidden ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {!isHighCategoriesHidden ? (
+                      <p>Hide all HIGH scenarios</p>
+                    ) : (
+                      <p>Show all HIGH scenarios</p>
+                    )}
+                  </TooltipContent>
+                </Tooltip>
+              </div>{" "}
               <Accordion type="single" collapsible className="w-full">
                 {highCategories.map(([key, category]) => (
                   <AccordionItem key={key} value={key}>
