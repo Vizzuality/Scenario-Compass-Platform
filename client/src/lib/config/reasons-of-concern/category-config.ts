@@ -89,7 +89,7 @@ interface CategoryKeyConfig {
  * Type definition for the complete category configuration object.
  * Maps each category key to its configuration settings.
  */
-type ConfigType = {
+export type CategoryKeysType = {
   [key in keyof typeof CATEGORY_KEYS]: CategoryKeyConfig;
 };
 
@@ -124,7 +124,7 @@ type ConfigType = {
  * The ordering of properties in this object is significant as it determines display
  * order in UI components. To change the visual ordering, reorder the properties.
  */
-export const CATEGORY_CONFIG: ConfigType = {
+export const CATEGORY_CONFIG: CategoryKeysType = {
   [CATEGORY_KEYS.BOTH_HIGH]: {
     label: "High sustainability and feasibility concerns",
     abbrev: "BH",
@@ -168,6 +168,18 @@ export const CATEGORY_CONFIG: ConfigType = {
     palette: GREEN_COLOR_PALETTE,
   },
 } as const;
+
+export const MEDIUM_KEYS: CategoryKey[] = [
+  CATEGORY_KEYS.BOTH_MEDIUM,
+  CATEGORY_KEYS.MEDIUM_FEASIBILITY,
+  CATEGORY_KEYS.MEDIUM_SUSTAINABILITY,
+];
+
+export const HIGH_KEYS: CategoryKey[] = [
+  CATEGORY_KEYS.BOTH_HIGH,
+  CATEGORY_KEYS.HIGH_FEASIBILITY,
+  CATEGORY_KEYS.HIGH_SUSTAINABILITY,
+];
 
 /**
  * Type representing valid category key strings.

@@ -104,10 +104,14 @@ export function EmbargoPopUp() {
           </Link>{" "}
           until the manuscript has been formally published.
         </p>
-        <p>Please use the following citation when using the data:<br />
-          <em>"Mitigation benchmarks from the 2025 community update of global emissions
-          pathways"</em> (Riahi et al., submitted).<br />
-          A preprint of the submitted manuscript will be provided shortly.
+        <p>
+          Please use the following citation when using the data:
+          <br />
+          <em>
+            "Mitigation benchmarks from the 2025 community update of global emissions pathways"
+          </em>{" "}
+          (Riahi et al., submitted).
+          <br />A preprint of the submitted manuscript will be provided shortly.
         </p>
         <Button onClick={handleSkip} variant="outline" className="px-10" size="lg">
           Got it, continue to the dashboard

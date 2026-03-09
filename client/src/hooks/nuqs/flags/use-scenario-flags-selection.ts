@@ -1,5 +1,5 @@
 import { parseAsBoolean, useQueryState } from "nuqs";
-import { CATEGORY_CONFIG } from "@/lib/config/reasons-of-concern/category-config";
+import { CATEGORY_CONFIG, CategoryKey } from "@/lib/config/reasons-of-concern/category-config";
 
 type FlagState = "selected" | "hidden" | "default";
 type FlagsState = Record<string, FlagState>;
@@ -61,14 +61,14 @@ export const useScenarioFlagsSelection = (prefix: string = "") => {
     parseAsBoolean.withDefault(false),
   );
 
-  const getFlagState = (categoryKey: string): FlagState => {
-    const abbrev = CATEGORY_CONFIG[categoryKey as keyof typeof CATEGORY_CONFIG]?.abbrev;
+  const getFlagState = (categoryKey: CategoryKey): FlagState => {
+    const abbrev = CATEGORY_CONFIG[categoryKey]?.abbrev;
     if (!abbrev) return "default";
     return flagsState[abbrev] || "default";
   };
 
-  const setFlagState = (categoryKey: string, state: FlagState) => {
-    const abbrev = CATEGORY_CONFIG[categoryKey as keyof typeof CATEGORY_CONFIG]?.abbrev;
+  const setFlagState = (categoryKey: CategoryKey, state: FlagState) => {
+    const abbrev = CATEGORY_CONFIG[categoryKey]?.abbrev;
     if (!abbrev) return;
 
     if (state === "default") {
@@ -84,7 +84,7 @@ export const useScenarioFlagsSelection = (prefix: string = "") => {
     }
   };
 
-  const handleCheckboxChange = (categoryKey: string, checked: boolean) => {
+  const handleCheckboxChange = (categoryKey: CategoryKey, checked: boolean) => {
     if (checked) {
       setFlagState(categoryKey, "selected");
     } else {
@@ -92,19 +92,19 @@ export const useScenarioFlagsSelection = (prefix: string = "") => {
     }
   };
 
-  const handleHideToggle = (categoryKey: string, hide: boolean) => {
+  const handleHideToggle = (categoryKey: CategoryKey, hide: boolean) => {
     setFlagState(categoryKey, hide ? "hidden" : "default");
   };
 
-  const isCategorySelected = (categoryKey: string) => {
+  const isCategorySelected = (categoryKey: CategoryKey) => {
     return getFlagState(categoryKey) === "selected";
   };
 
-  const isCategoryHidden = (categoryKey: string) => {
+  const isCategoryHidden = (categoryKey: CategoryKey) => {
     return getFlagState(categoryKey) === "hidden";
   };
 
-  const toggleCategory = (categoryKey: string) => {
+  const toggleCategory = (categoryKey: CategoryKey) => {
     const currentState = getFlagState(categoryKey);
     if (currentState === "selected") {
       setFlagState(categoryKey, "default");
@@ -113,12 +113,36 @@ export const useScenarioFlagsSelection = (prefix: string = "") => {
     }
   };
 
-  const toggleHidden = (categoryKey: string) => {
+  const toggleHidden = (categoryKey: CategoryKey) => {
     const currentState = getFlagState(categoryKey);
 
     if (currentState === "selected") return;
 
     setFlagState(categoryKey, currentState === "hidden" ? "default" : "hidden");
+  };
+
+  const toggleMultipleHidden = (categoryKeys: CategoryKey[]) => {
+    const newState = { ...flagsState };
+
+    const allHidden = categoryKeys.every((key) => {
+      const abbrev = CATEGORY_CONFIG[key]?.abbrev;
+      return abbrev && newState[abbrev] === "hidden";
+    });
+
+    categoryKeys.forEach((categoryKey) => {
+      const abbrev = CATEGORY_CONFIG[categoryKey]?.abbrev;
+      if (!abbrev) return;
+      if (newState[abbrev] === "selected") return;
+
+      if (allHidden) {
+        delete newState[abbrev];
+      } else {
+        newState[abbrev] = "hidden";
+      }
+    });
+
+    const hasEntries = Object.keys(newState).length > 0;
+    setFlagsState(hasEntries ? newState : null);
   };
 
   const selectedFlags = Object.entries(flagsState)
@@ -140,5 +164,6 @@ export const useScenarioFlagsSelection = (prefix: string = "") => {
     isCategoryHidden,
     toggleCategory,
     toggleHidden,
+    toggleMultipleHidden,
   };
 };
