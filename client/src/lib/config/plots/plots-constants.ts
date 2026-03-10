@@ -13,7 +13,7 @@ export const STROKE_WIDTH = 1.37;
 export const OTHER_GASES = "Other Gases";
 
 export const PLOT_CONFIG = {
-  NORMAL_STROKE_WIDTH: 2.5,
+  NORMAL_STROKE_WIDTH: 1.5,
   HOVER_HIGHLIGHT_WIDTH: 3,
   NORMAL_OPACITY: 0.7,
   DIMMED_OPACITY: 0.2,

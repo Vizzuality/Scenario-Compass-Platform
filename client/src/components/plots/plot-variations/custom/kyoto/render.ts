@@ -95,9 +95,12 @@ export const renderKyotoPlot = ({ svg, data, dimensions }: Props): void => {
     .domain(d3.extent(allYears) as [number, number])
     .range([0, dimensions.INNER_WIDTH]);
 
+  const [yMin, yMax] = d3.extent(allValues) as [number, number];
+  const yPadding = (yMax - yMin) * 0.125;
+
   const yScale = d3
     .scaleLinear()
-    .domain(d3.extent(allValues) as [number, number])
+    .domain([yMin, yMax + yPadding])
     .range([dimensions.INNER_HEIGHT, 0]);
 
   renderGridLines(g, yScale, dimensions.INNER_WIDTH);

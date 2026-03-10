@@ -48,8 +48,9 @@ export const createMainGroup = (svg: SVGSelection, dimensions: PlotDimensions): 
 
 export const calculateDomain = (points: ShortDataPoint[]): PlotDomain => {
   const xDomain = d3.extent(points, (d) => d.year) as [number, number];
-  const yDomain = d3.extent(points, (d) => d.value) as [number, number];
-  return { xDomain, yDomain };
+  const [yMin, yMax] = d3.extent(points, (d) => d.value) as [number, number];
+  const padding = (yMax - yMin) * 0.1;
+  return { xDomain, yDomain: [yMin - padding, yMax + padding] };
 };
 
 export const createScales = (domain: PlotDomain, width: number, height: number): PlotScales => {
@@ -82,7 +83,7 @@ export const renderAxes = ({
   scales,
   height,
   width,
-  yTickCount = 5,
+  yTickCount = 6,
   xTickValues,
   yUnitText,
   xUnitText,
@@ -128,7 +129,7 @@ export const renderAxes = ({
     .append("text")
     .attr("class", "y-axis-label")
     .attr("transform", "rotate(-90)")
-    .attr("y", -45)
+    .attr("y", -40)
     .attr("x", -height / 2)
     .attr("text-anchor", "middle")
     .style("font-size", FONT_SIZE)
@@ -239,14 +240,14 @@ export function interpolatePoints(run: ExtendedRun, allYears: number[]): Extende
 
 export const processAreaChartData = (dataPoints: ShortDataPoint[]): ProcessedAreaData => {
   const aggregatedData = aggregateDataByYear(dataPoints);
-
   const xDomain = d3.extent(aggregatedData, (d) => d.year) as [number, number];
   const yMin = d3.min(aggregatedData, (d) => d.min)!;
   const yMax = d3.max(aggregatedData, (d) => d.max)!;
+  const padding = (yMax - yMin) * 0.1;
 
   return {
     aggregatedData,
     xDomain,
-    yDomain: [yMin, yMax],
+    yDomain: [yMin - padding, yMax + padding],
   };
 };

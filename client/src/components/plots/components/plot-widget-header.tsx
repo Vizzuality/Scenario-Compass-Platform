@@ -2,15 +2,17 @@ import { ChartTypeToggle, ChartType } from "@/components/plots/components/chart-
 import DownloadPlotButton, {
   DOWNLOAD_TYPE,
 } from "@/components/plots/components/download-plot-button";
+import { ExpandChartButton } from "@/components/custom/expand-chart-button";
 
 interface Props {
   chartType?: ChartType;
   onChange?: (chartType: ChartType) => void;
   title?: string;
   onDownload?: (selectedTypes: DOWNLOAD_TYPE[]) => void;
+  onExpand?: () => void;
 }
 
-export function PlotWidgetHeader({ chartType, onChange, title, onDownload }: Props) {
+export function PlotWidgetHeader({ chartType, onChange, title, onDownload, onExpand }: Props) {
   if (title) {
     return (
       <div className="mb-4 flex items-center justify-between">
@@ -18,6 +20,7 @@ export function PlotWidgetHeader({ chartType, onChange, title, onDownload }: Pro
           <p className="leading-5 font-bold text-stone-800">{title}</p>
         </div>
         <div className="flex items-center gap-4">
+          {onExpand && <ExpandChartButton onClick={onExpand} />}
           <DownloadPlotButton onClick={onDownload} />
           {onChange && <ChartTypeToggle currentType={chartType} onChange={onChange} />}
         </div>
@@ -29,6 +32,7 @@ export function PlotWidgetHeader({ chartType, onChange, title, onDownload }: Pro
     <div className="mb-4 flex items-center justify-between">
       <div />
       <div className="flex items-center gap-4">
+        {onExpand && <ExpandChartButton onClick={onExpand} />}
         <DownloadPlotButton onClick={onDownload} />
         {onChange && <ChartTypeToggle currentType={chartType} onChange={onChange} />}
       </div>
