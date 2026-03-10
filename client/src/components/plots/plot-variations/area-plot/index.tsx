@@ -15,7 +15,7 @@ interface AreaChartProps {
   prefix?: string;
 }
 
-const BasePlot: React.FC<AreaChartProps> = ({ runs, prefix }) => {
+const AreaBasePlot: React.FC<AreaChartProps> = ({ runs, prefix }) => {
   const { svgRef, dimensions, plotContainer } = usePlotContainer();
   const { selectedFlags } = useScenarioFlagsSelection(prefix);
 
@@ -45,7 +45,7 @@ export const AreaPlot = ({ data, prefix }: { data: RunPipelineReturn; prefix?: s
 
   return (
     <PlotStateHandler isError={data.isError} isLoading={data.isLoading} items={interpolatedRuns}>
-      {(items) => <BasePlot runs={items} prefix={prefix} />}
+      {(items) => <AreaBasePlot runs={items} prefix={prefix} />}
     </PlotStateHandler>
   );
 };

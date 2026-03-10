@@ -23,7 +23,7 @@ export function PlotGrid() {
   }
 
   return (
-    <div className="my-8 grid h-fit min-h-[600px] w-full grid-cols-1 grid-rows-2 gap-4 xl:grid-cols-2">
+    <div className="my-8 grid h-fit w-full grid-cols-1 grid-rows-2 gap-4 xl:grid-cols-2">
       {selectedTab.explorationPlotConfigArray.map((plotConfig) => {
         return plotConfig.plotType && plotConfig.plotType === PLOT_TYPE_OPTIONS.HISTOGRAM ? (
           <HistogramWidget
@@ -33,8 +33,8 @@ export function PlotGrid() {
           />
         ) : (
           <MultipleRunsPlotWidget
+            key={`${plotConfig.title}-${chartType}`}
             plotConfig={plotConfig}
-            key={plotConfig.title}
             initialChartType={chartType}
           />
         );

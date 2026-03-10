@@ -14,7 +14,7 @@ interface DotPlotProps {
   prefix?: string;
 }
 
-export const BasePlot: React.FC<DotPlotProps> = ({ runs, prefix }) => {
+export const DotBasePlot: React.FC<DotPlotProps> = ({ runs, prefix }) => {
   const { svgRef, dimensions, plotContainer } = usePlotContainer();
   const { selectedFlags } = useScenarioFlagsSelection(prefix);
 
@@ -42,7 +42,7 @@ export const DotPlot: React.FC<Props> = ({ data, prefix }) => {
   const visibleRuns = filterVisibleRuns(data.runs, hiddenFlags, showVetting);
   return (
     <PlotStateHandler items={visibleRuns} isLoading={data.isLoading} isError={data.isError}>
-      {(items) => <BasePlot runs={items} prefix={prefix} />}
+      {(items) => <DotBasePlot runs={items} prefix={prefix} />}
     </PlotStateHandler>
   );
 };
