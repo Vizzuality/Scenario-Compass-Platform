@@ -37,43 +37,30 @@ const API_MANAGER_URLS = {
 export class IIASA_API_CLIENT {
   appName: IIASAConfig["appName"];
   baseUrl: IIASAConfig["baseUrl"];
-  platform: Platform | undefined;
+  platform: Platform;
   private auth: IAuth | undefined;
   private refreshToken: string | null = null;
 
-  constructor({
+  private constructor({
     appName,
     baseUrl,
+    platform,
   }: {
     appName: IIASAConfig["appName"];
     baseUrl: IIASAConfig["baseUrl"];
+    platform: Platform;
   }) {
     this.appName = appName;
     this.baseUrl = baseUrl;
+    this.platform = platform;
   }
 
-  public async init({ username, password }: Credentials) {
-    // const credentials = await this.getAPICredentials({
-    //   username,
-    //   password,
-    // });
-
-    // this.refreshToken = credentials.refresh ?? null;
-    //
-    // this.auth = {
-    //   accessToken: credentials.access,
-    //   refreshOrObtainAccessToken: this.refreshOrObtainAccessToken.bind(this),
-    // };
-
-    this.platform = await Platform.create({
-      name: this.appName,
-      baseUrl: this.baseUrl,
-      auth: this.auth,
+  static async create(config: IIASAConfig): Promise<IIASA_API_CLIENT> {
+    const platform = await Platform.create({
+      name: config.appName,
+      baseUrl: config.baseUrl,
     });
-  }
-
-  public isAuthenticated() {
-    return !!this.auth?.accessToken;
+    return new IIASA_API_CLIENT({ ...config, platform });
   }
 
   private async getAPICredentials({ username, password }: Credentials) {
