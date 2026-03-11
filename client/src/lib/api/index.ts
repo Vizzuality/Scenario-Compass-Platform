@@ -5,4 +5,9 @@ const API = new IIASA_API_CLIENT({
   baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || "",
 });
 
+await API.init({
+  username: "",
+  password: "",
+});
+
 export default API;
