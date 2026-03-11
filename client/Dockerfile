@@ -28,10 +28,7 @@ ENV NEXT_PUBLIC_MATOMO_SITE_ID=$NEXT_PUBLIC_MATOMO_SITE_ID
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN --mount=type=secret,id=NEXT_PUBLIC_API_CREDENTIALS \
-    export NEXT_PUBLIC_API_CREDENTIALS="$(cat /run/secrets/NEXT_PUBLIC_API_CREDENTIALS)" && \
-    corepack enable pnpm && \
-    pnpm run build
+RUN corepack enable pnpm && pnpm run build
 
 FROM base AS runner
 WORKDIR /app
