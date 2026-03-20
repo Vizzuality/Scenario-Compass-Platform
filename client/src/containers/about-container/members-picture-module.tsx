@@ -2,7 +2,16 @@ import Image from "next/image";
 import { coChairs, otherPeople } from "@/lib/config/about/iiasa-members";
 
 export const MembersPictureModule = () => {
-  const members = [...coChairs, ...otherPeople.sort((a, b) => a.name.localeCompare(b.name))];
+  const getLastName = (name: string) => name.split(" ").at(-1) ?? name;
+
+  const sortedOthers = [...otherPeople].sort((a, b) => {
+    const aIsLead = !!a.role;
+    const bIsLead = !!b.role;
+    if (aIsLead !== bIsLead) return aIsLead ? -1 : 1;
+    return getLastName(a.name).localeCompare(getLastName(b.name));
+  });
+
+  const members = [...coChairs, ...sortedOthers];
 
   return (
     <div className="content-container grid w-full grid-cols-2 flex-col gap-x-6 gap-y-10 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
