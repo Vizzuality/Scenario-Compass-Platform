@@ -8,6 +8,7 @@ import { ExtendedRun, RunPipelineReturn } from "@/types/data/run";
 import { PlotStateHandler } from "@/components/plots/components";
 import { useScenarioFlagsSelection } from "@/hooks/nuqs/flags/use-scenario-flags-selection";
 import { filterDecadePoints, filterVisibleRuns } from "@/utils/plots/filtering-functions";
+import { interpolatePoints } from "@/utils/plots/render-functions";
 
 interface AreaChartProps {
   runs: ExtendedRun[];
@@ -36,8 +37,14 @@ export const AreaPlot = ({ data, prefix }: { data: RunPipelineReturn; prefix?: s
   const { hiddenFlags, showVetting } = useScenarioFlagsSelection(prefix);
   const decadeFilteredRuns = filterDecadePoints(data.runs);
   const visibleRuns = filterVisibleRuns(decadeFilteredRuns, hiddenFlags, showVetting);
+
+  const allYears = [
+    ...new Set(visibleRuns.flatMap((r) => r.orderedPoints.map((p) => p.year))),
+  ].sort((a, b) => a - b);
+  const interpolatedRuns = visibleRuns.map((run) => interpolatePoints(run, allYears));
+
   return (
-    <PlotStateHandler isError={data.isError} isLoading={data.isLoading} items={visibleRuns}>
+    <PlotStateHandler isError={data.isError} isLoading={data.isLoading} items={interpolatedRuns}>
       {(items) => <BasePlot runs={items} prefix={prefix} />}
     </PlotStateHandler>
   );

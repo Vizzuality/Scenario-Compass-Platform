@@ -2,7 +2,7 @@ import { AggregatedDataPoint, ProcessedAreaData } from "@/types/data/data-point"
 import * as d3 from "d3";
 import { FONT_SIZE, GRID_STROKE_COLOR, GRID_TEXT_COLOR } from "@/lib/config/plots/plots-constants";
 import { PlotDimensions } from "@/lib/config/plots/plots-dimensions";
-import { ShortDataPoint } from "@/types/data/run";
+import { ExtendedRun, ShortDataPoint } from "@/types/data/run";
 import { calculateOptimalTicksWithNiceYears } from "@/utils/plots/ticks-computation";
 import { formatShortenedNumber } from "@/utils/plots/format-functions";
 
@@ -183,6 +183,59 @@ export const createLineGenerator = (scales: PlotScales): d3.Line<ShortDataPoint>
     .x((d) => scales.xScale(d.year))
     .y((d) => scales.yScale(d.value));
 };
+
+/**
+ * Linear interpolation across a unified year axis.
+ *
+ * Given a run that only contains data for certain years, this function
+ * produces a new run whose points cover *every* year in `allYears`.
+ *
+ * - Years already present in the run are passed through unchanged.
+ * - Years that fall between two known years are linearly interpolated.
+ * - Years that fall entirely outside the run's range (no known year on
+ *   one or both sides) are dropped — extrapolation is not performed.
+ */
+export function interpolatePoints(run: ExtendedRun, allYears: number[]): ExtendedRun {
+  const knownValueByYear: Map<number, number> = new Map(
+    run.orderedPoints.map((point) => [point.year, point.value]),
+  );
+
+  // Extract and sort the years we have actual data for, so we can find neighbors efficiently
+  const knownYearsAscending: number[] = run.orderedPoints
+    .map((point) => point.year)
+    .sort((a, b) => a - b);
+
+  const interpolatedPoints = allYears
+    .map((targetYear) => {
+      // 1. If the run already has a value for this year, use it directly.
+      if (knownValueByYear.has(targetYear)) {
+        return { year: targetYear, value: knownValueByYear.get(targetYear)! };
+      }
+
+      // 2. Find the closest known year on each side of the target year.
+      const nearestYearBefore = knownYearsAscending.filter((year) => year < targetYear).at(-1);
+      const nearestYearAfter = knownYearsAscending.find((year) => year > targetYear);
+
+      // 3. If the target year is outside the run's range skip it
+      if (nearestYearBefore === undefined || nearestYearAfter === undefined) {
+        return null;
+      }
+
+      // 4. Compute the interpolation weight `t` — how far targetYear sits between its two neighbours, expressed as a 0‒1 fraction.
+      const t = (targetYear - nearestYearBefore) / (nearestYearAfter - nearestYearBefore);
+
+      const valueAtYearBefore = knownValueByYear.get(nearestYearBefore)!;
+      const valueAtYearAfter = knownValueByYear.get(nearestYearAfter)!;
+
+      // 5. Standard lerp formula:  result = start + (end - start) * t
+      const interpolatedValue = valueAtYearBefore + (valueAtYearAfter - valueAtYearBefore) * t;
+
+      return { year: targetYear, value: interpolatedValue };
+    })
+    .filter((point) => point !== null);
+
+  return { ...run, orderedPoints: interpolatedPoints };
+}
 
 export const processAreaChartData = (dataPoints: ShortDataPoint[]): ProcessedAreaData => {
   const aggregatedData = aggregateDataByYear(dataPoints);
