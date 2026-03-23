@@ -8,7 +8,7 @@ import { AdvancedFilter } from "@/containers/scenario-dashboard-container/compon
 export default function MetaIndicatorsFilters() {
   return (
     <div className="w-full bg-white">
-      <div className="container mx-auto flex h-fit w-full gap-6 pt-6 pb-2">
+      <div className="container mx-auto grid h-fit w-full grid-cols-2 gap-6 px-4 pt-6 pb-2 sm:px-0 md:flex">
         <ClimateFilter />
         <EnergyFilter />
         <LandFilter />

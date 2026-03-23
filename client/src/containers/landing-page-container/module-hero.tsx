@@ -24,8 +24,8 @@ export function ModuleHero() {
         )}
       >
         <div className="container pb-16 lg:grid lg:h-fit lg:grid-cols-2 lg:pb-0">
-          <div className={"flex flex-col gap-16 px-4 py-12 md:gap-14 md:py-20 md:pl-16"}>
-            <hgroup className={"flex flex-col gap-6"}>
+          <div className="flex flex-col gap-16 px-4 py-12 md:gap-14 md:py-20 md:pl-16">
+            <hgroup className="flex flex-col gap-6">
               <Heading variant="dark" size="5xl" as="h1" id="hero-title">
                 Navigate Climate Futures with Data-Driven Scenarios
               </Heading>

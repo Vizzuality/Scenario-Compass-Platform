@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -7,7 +8,24 @@ import RangeSlider from "@/components/slider-select/range-slider";
 import { cn } from "@/lib/utils";
 import { selectTriggerVariants } from "@/components/ui/select";
 import { ChevronDown } from "lucide-react";
-import { PopoverClose } from "@radix-ui/react-popover";
+
+export function useMediaQuery(query: string) {
+  const [value, setValue] = React.useState(false);
+
+  React.useEffect(() => {
+    function onChange(event: MediaQueryListEvent) {
+      setValue(event.matches);
+    }
+
+    const result = matchMedia(query);
+    result.addEventListener("change", onChange);
+    setValue(result.matches);
+
+    return () => result.removeEventListener("change", onChange);
+  }, [query]);
+
+  return value;
+}
 
 export interface SliderSelectItem {
   id: string;
@@ -46,6 +64,8 @@ const SliderSelect: React.FC<SliderSelectProps> = ({
 }) => {
   const [checkedIds, setCheckedIds] = useState<Array<string>>([]);
   const [changes, setChanges] = useState<ChangeStateAction>({});
+  const [open, setOpen] = useState(false);
+  const isDesktop = useMediaQuery("(min-width: 768px)");
 
   useEffect(() => {
     const getCheckedIds = () => {
@@ -79,7 +99,6 @@ const SliderSelect: React.FC<SliderSelectProps> = ({
   };
 
   const handleItemCheck = (id: string) => {
-    // If item already checked, remove the selection
     if (isItemChecked(id)) {
       setCheckedIds((prevState) => prevState.filter((checkedId) => checkedId !== id));
       setChanges((prevState) => ({
@@ -87,7 +106,6 @@ const SliderSelect: React.FC<SliderSelectProps> = ({
         [id]: null,
       }));
     } else {
-      // If item not already checked, add by default the default values
       const newItem = items.find((item) => item.id === id);
       if (!newItem) return null;
       setCheckedIds((prevState) => [...prevState, id]);
@@ -100,6 +118,7 @@ const SliderSelect: React.FC<SliderSelectProps> = ({
 
   const handleApply = () => {
     onApply(changes);
+    setOpen(false); // Closes either the Popover or Drawer programmatically
   };
 
   const getRangeValue = (item: SliderSelectItem): [number, number] => {
@@ -131,67 +150,102 @@ const SliderSelect: React.FC<SliderSelectProps> = ({
     return !hasValidRange;
   };
 
+  // Reusable trigger button to keep code clean
+  const TriggerButton = React.forwardRef<
+    HTMLButtonElement,
+    React.ButtonHTMLAttributes<HTMLButtonElement>
+  >(({ className: buttonClassName, ...props }, ref) => (
+    <button
+      ref={ref}
+      id={id}
+      className={cn(
+        selectTriggerVariants({ theme: "light", size: "lg" }),
+        "hover:bg-hover-secondary w-full",
+        buttonClassName,
+        className,
+      )}
+      {...props}
+    >
+      <span className="text-gray-700">{getText()}</span>
+      <ChevronDown
+        className={cn(
+          "h-5 w-5 text-gray-400 transition-transform duration-200",
+          open && "rotate-180",
+        )}
+      />
+    </button>
+  ));
+  TriggerButton.displayName = "TriggerButton";
+
+  // Reusable content logic so we don't map over items twice
+  const FilterContent = ({ listClassName }: { listClassName?: string }) => (
+    <>
+      <div className={cn("divide-y divide-gray-200 py-2", listClassName)}>
+        {items.map((item) => {
+          const config = getItemConfig(item);
+          return (
+            <div key={item.id} className="px-4 py-3">
+              <div className="flex items-start space-x-3">
+                <Checkbox
+                  id={item.id}
+                  disabled={checkIfCheckboxDisabled(config)}
+                  checked={isItemChecked(item.id)}
+                  onCheckedChange={() => handleItemCheck(item.id)}
+                  className="mt-0.5"
+                />
+                <Label htmlFor={item.id} className="flex-1 cursor-pointer text-sm leading-5">
+                  {item.label}
+                </Label>
+              </div>
+
+              {isItemChecked(item.id) && (
+                <RangeSlider
+                  handleRangeChange={(values) => handleRangeChange(values, item.id)}
+                  max={config.max}
+                  min={config.min}
+                  step={config.step}
+                  range={getRangeValue(item)}
+                  type={type}
+                />
+              )}
+            </div>
+          );
+        })}
+      </div>
+      <div className="border-t px-4 pt-2 pb-3">
+        <Button className="w-full" onClick={handleApply}>
+          Apply
+        </Button>
+      </div>
+    </>
+  );
+
   return (
     <div className="relative w-full">
-      <Popover>
-        <PopoverTrigger asChild>
-          <button
-            id={id}
-            className={cn(
-              selectTriggerVariants({ theme: "light", size: "lg" }),
-              "hover:bg-hover-secondary w-full",
-              className,
-            )}
+      {isDesktop ? (
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <TriggerButton />
+          </PopoverTrigger>
+          <PopoverContent
+            className="w-[var(--radix-popover-trigger-width)] min-w-100 p-0"
+            align="start"
           >
-            <span className="text-gray-700">{getText()}</span>
-            <ChevronDown className="h-5 w-5 text-gray-400 transition-transform" />
-          </button>
-        </PopoverTrigger>
-        <PopoverContent
-          className="w-[var(--radix-popover-trigger-width)] min-w-100 p-0"
-          align="start"
-        >
-          <div className="divide-y divide-gray-200 py-2">
-            {items.map((item) => {
-              const config = getItemConfig(item);
-              return (
-                <div key={item.id} className="px-4 py-3">
-                  <div className="flex items-start space-x-3">
-                    <Checkbox
-                      id={item.id}
-                      disabled={checkIfCheckboxDisabled(config)}
-                      checked={isItemChecked(item.id)}
-                      onCheckedChange={() => handleItemCheck(item.id)}
-                      className="mt-0.5"
-                    />
-                    <Label htmlFor={item.id} className="flex-1 cursor-pointer text-sm leading-5">
-                      {item.label}
-                    </Label>
-                  </div>
-
-                  {isItemChecked(item.id) && (
-                    <RangeSlider
-                      handleRangeChange={(values) => handleRangeChange(values, item.id)}
-                      max={config.max}
-                      min={config.min}
-                      step={config.step}
-                      range={getRangeValue(item)}
-                      type={type}
-                    />
-                  )}
-                </div>
-              );
-            })}
-          </div>
-          <div className="border-t px-4 pt-2 pb-3">
-            <PopoverClose asChild>
-              <Button className="w-full" onClick={handleApply}>
-                Apply
-              </Button>
-            </PopoverClose>
-          </div>
-        </PopoverContent>
-      </Popover>
+            <FilterContent />
+          </PopoverContent>
+        </Popover>
+      ) : (
+        <Drawer open={open} onOpenChange={setOpen}>
+          <DrawerTrigger asChild>
+            <TriggerButton />
+          </DrawerTrigger>
+          <DrawerContent>
+            <div className="mt-4 p-0 pb-8">
+              <FilterContent listClassName="max-h-[60vh] overflow-y-auto" />
+            </div>
+          </DrawerContent>
+        </Drawer>
+      )}
     </div>
   );
 };

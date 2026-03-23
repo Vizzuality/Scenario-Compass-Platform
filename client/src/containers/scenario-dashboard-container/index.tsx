@@ -13,7 +13,7 @@ export default function ScenarioDashboardContainer() {
   return (
     <>
       <ScenarioDashboardHero>
-        <div className="container mt-14 mb-16 flex w-full items-end gap-8">
+        <div className="container mt-14 mb-16 flex w-full flex-col items-start gap-8 px-4 sm:px-0 md:flex-row md:items-end">
           <Heading variant="dark" size="5xl" as="h1" id="hero-title" className="text-left">
             Scenario Dashboard
           </Heading>

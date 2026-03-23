@@ -49,7 +49,7 @@ export function NewsletterSubscriptionContainer() {
   };
 
   return (
-    <section className="flex max-w-6xl items-center px-4 py-16 md:px-10 lg:gap-10 lg:px-20 lg:py-14">
+    <section className="flex max-w-6xl flex-col items-center px-4 py-16 md:flex-row md:px-10 lg:gap-10 lg:px-20 lg:py-14">
       <Image src={emailImg} height={240} alt="cup of coffee - coming soon" priority />
       <div className="container flex flex-col items-center px-4 py-16">
         <Heading as="h2" size="4xl" variant="light" className="mb-2 text-left">
@@ -60,7 +60,7 @@ export function NewsletterSubscriptionContainer() {
             Please sign up to the Scenario Compass newsletter so that we can inform you of updates
             and new releases of the scenario ensemble!
           </p>
-          <div className="flex gap-5">
+          <div className="flex flex-col gap-5 md:flex-row">
             <Input
               type="email"
               placeholder="name@example.com"
@@ -68,7 +68,7 @@ export function NewsletterSubscriptionContainer() {
               onChange={(e) => setEmail(e.target.value)}
             />
 
-            <Button onClick={handleSignup} className="px-10">
+            <Button onClick={handleSignup} className="h-13 px-10 md:h-10">
               {isSubmitting ? "Signing up..." : "Sign up"}
             </Button>
           </div>

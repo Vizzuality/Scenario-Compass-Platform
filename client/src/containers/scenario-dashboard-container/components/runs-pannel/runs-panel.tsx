@@ -18,7 +18,7 @@ export default function RunsPanel({ prefix }: Props) {
   const showMetric = useShowReasonsForConcern({});
 
   return (
-    <div className="mx-auto flex w-120 flex-col gap-6">
+    <div className="mx-auto flex max-w-120 flex-col gap-6">
       <NavigateToCompareScenarios />
       {showMetric && (
         <>
@@ -33,7 +33,7 @@ export default function RunsPanel({ prefix }: Props) {
 
 export function RunsPanelSkeleton() {
   return (
-    <div className="mt-8 w-120 animate-pulse space-y-6">
+    <div className="mt-8 max-w-120 animate-pulse space-y-6">
       <div className="h-10 w-full rounded-[4px] bg-stone-200" />
       <div className="h-10 w-full rounded-[4px] bg-stone-200" />
       <div className="h-10 w-full rounded-[4px] bg-stone-200" />

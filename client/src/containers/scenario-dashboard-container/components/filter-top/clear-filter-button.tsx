@@ -25,6 +25,7 @@ export default function ClearFilterButton() {
       className={cn(
         "text-primary text-sm leading-5 font-normal text-nowrap underline underline-offset-2",
         "hover:text-primary hover:bg-transparent",
+        "order-1",
       )}
     >
       Clear all filters
