@@ -185,7 +185,6 @@ export const otherPeople: IIASAMembers[] = [
     name: "Philipp Verpoort",
     initials: "PV",
     organization: "Potsdam Institute for Climate Impact Research",
-    role: "Lead",
     group: "Energy Working Group",
     image: "/images/members/philipp_verpoort.webp",
   },

@@ -2,16 +2,26 @@ import Image from "next/image";
 import { coChairs, otherPeople } from "@/lib/config/about/iiasa-members";
 
 export const MembersPictureModule = () => {
-  const getLastName = (name: string) => name.split(" ").at(-1) ?? name;
+  const getLastName = (name: string) => {
+    const parts = name.split(" ");
+    // Handle prefixed surnames like "van Vuuren", "van Ruijven"
+    const prefixes = ["van", "de", "von", "den", "der"];
+    const prefixIndex = parts.findIndex((p) => prefixes.includes(p.toLowerCase()));
+    if (prefixIndex > 0) {
+      return parts.slice(prefixIndex).join(" ");
+    }
+    return parts.at(-1) ?? name;
+  };
 
-  const sortedOthers = [...otherPeople].sort((a, b) => {
-    const aIsLead = !!a.role;
-    const bIsLead = !!b.role;
-    if (aIsLead !== bIsLead) return aIsLead ? -1 : 1;
-    return getLastName(a.name).localeCompare(getLastName(b.name));
-  });
+  const leads = [...otherPeople]
+    .filter((m) => !!m.role)
+    .sort((a, b) => getLastName(a.name).localeCompare(getLastName(b.name)));
 
-  const members = [...coChairs, ...sortedOthers];
+  const nonLeads = [...otherPeople]
+    .filter((m) => !m.role)
+    .sort((a, b) => getLastName(a.name).localeCompare(getLastName(b.name)));
+
+  const members = [...coChairs, ...leads, ...nonLeads];
 
   return (
     <div className="content-container grid w-full grid-cols-2 flex-col gap-x-6 gap-y-10 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
