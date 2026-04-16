@@ -8,6 +8,7 @@ export default function MetaIndicatorsFilterSkeleton(): React.ReactElement {
         <AdvancedFilterSkeleton />
         <AdvancedFilterSkeleton />
         <AdvancedFilterSkeleton />
+        <AdvancedFilterSkeleton />
       </div>
     </div>
   );

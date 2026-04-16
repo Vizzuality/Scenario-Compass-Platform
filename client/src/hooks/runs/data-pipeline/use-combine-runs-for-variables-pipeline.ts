@@ -22,6 +22,8 @@ export default function useCombineRunsForVariablesPipeline({
 }): RunPipelineReturn {
   const { year, endYear, startYear, geography, model, scenario } = useBaseUrlParams({ prefix });
   const {
+    fossilFuelPhaseDown,
+    mitigationStrategy,
     climateCategory,
     yearNetZero,
     carbonRemoval,
@@ -98,6 +100,8 @@ export default function useCombineRunsForVariablesPipeline({
         fossilShare,
         eocWarming,
         peakWarming,
+        fossilFuelPhaseDown: fossilFuelPhaseDown,
+        mitigationStrategy: mitigationStrategy,
       });
     });
   }, [

@@ -4,6 +4,7 @@ import { ClimateFilter } from "@/containers/scenario-dashboard-container/compone
 import { EnergyFilter } from "@/containers/scenario-dashboard-container/components/meta-scenario-filters/energy-filter";
 import { LandFilter } from "@/containers/scenario-dashboard-container/components/meta-scenario-filters/land-filter";
 import { AdvancedFilter } from "@/containers/scenario-dashboard-container/components/meta-scenario-filters/advanced-filter";
+import { TypologiesFilter } from "@/containers/scenario-dashboard-container/components/meta-scenario-filters/typologies-filter";
 
 export default function MetaIndicatorsFilters() {
   return (
@@ -12,6 +13,7 @@ export default function MetaIndicatorsFilters() {
         <p>Filter scenarios by key dimensions</p>
         <div className="flex h-fit w-full gap-6 pt-6 pb-2">
           <ClimateFilter />
+          <TypologiesFilter />
           <EnergyFilter />
           <LandFilter />
           <AdvancedFilter />
