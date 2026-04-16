@@ -4,8 +4,15 @@ import { cn } from "@/lib/utils";
 import React from "react";
 import { ClimateFilterRow } from "@/containers/scenario-dashboard-container/components/meta-scenario-filters/climate-filter/climate-filter-row";
 import { AdvancedFilterRow } from "@/containers/scenario-dashboard-container/components/meta-scenario-filters/advanced-filter";
+import { TypologiesFilterRow } from "@/containers/scenario-dashboard-container/components/meta-scenario-filters/typologies-filter/typologies-filter-row";
 
-const filterComponents = [ClimateFilterRow, EnergyFilterRow, LandFilterRow, AdvancedFilterRow];
+const filterComponents = [
+  ClimateFilterRow,
+  TypologiesFilterRow,
+  EnergyFilterRow,
+  LandFilterRow,
+  AdvancedFilterRow,
+];
 
 export const FilterGrid = ({ prefix }: { prefix?: string }) => {
   return (
