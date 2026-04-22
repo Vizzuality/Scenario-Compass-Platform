@@ -1,5 +1,9 @@
 import { getCategoryAbbrev } from "@/lib/config/reasons-of-concern/category-config";
-import { GroupSelection, PlotScales, processAreaChartData } from "@/utils/plots/render-functions";
+import {
+  GroupSelection,
+  PlotScales,
+  computeAreaChartDomains,
+} from "@/utils/plots/render-functions";
 import * as d3 from "d3";
 import { AggregatedDataPoint } from "@/types/data/data-point";
 import { ExtendedRun } from "@/types/data/run";
@@ -37,7 +41,7 @@ export const renderHighlightedFlags = ({
     if (runs.length === 0) return;
 
     const flagPoints = runs.flatMap((run) => run.orderedPoints);
-    const { aggregatedData: flagAggregatedData } = processAreaChartData(flagPoints);
+    const { aggregatedData: flagAggregatedData } = computeAreaChartDomains(flagPoints);
 
     const firstRunInFlag = runs[0];
     const flagColor = getRunColor(firstRunInFlag, selectedFlags, hasSelection);

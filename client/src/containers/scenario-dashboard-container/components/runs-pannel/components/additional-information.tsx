@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Accordion,
   AccordionContent,
@@ -95,8 +96,10 @@ export default function AdditionalInformation({ result, mode = "multiple" }: Pro
             <div className="-mt-0.5 flex w-full justify-between gap-1.5">
               <div>Modeling frameworks</div>
               <Tooltip>
-                <TooltipTrigger>
-                  <b>{Object.keys(modelsMap).length}</b>
+                <TooltipTrigger asChild>
+                  <span>
+                    <b>{Object.keys(modelsMap).length}</b>
+                  </span>
                 </TooltipTrigger>
                 <TooltipContent>Number of modeling frameworks</TooltipContent>
               </Tooltip>
@@ -107,8 +110,10 @@ export default function AdditionalInformation({ result, mode = "multiple" }: Pro
               <div key={modelName} className="mr-5.5 flex justify-between">
                 <span>{modelName}</span>
                 <Tooltip>
-                  <TooltipTrigger>
-                    <b>{count}</b>
+                  <TooltipTrigger asChild>
+                    <span>
+                      <b>{count}</b>
+                    </span>
                   </TooltipTrigger>
                   <TooltipContent>Number of scenarios</TooltipContent>
                 </Tooltip>
@@ -117,15 +122,17 @@ export default function AdditionalInformation({ result, mode = "multiple" }: Pro
           </AccordionContent>
         </AccordionItem>
         {ADDITIONAL_INFORMATION_META_INDICATORS.map(({ key, label }) => (
-          <>
+          <React.Fragment key={key}>
             {allCounts[key]?.length !== 0 && (
-              <AccordionItem key={key} value={key}>
+              <AccordionItem value={key}>
                 <AccordionTrigger className="[&_svg]:text-foreground w-full gap-1.5 rounded-none pb-2">
                   <div className="-mt-0.5 flex w-full justify-between gap-2">
                     <span>{label}</span>
                     <Tooltip>
-                      <TooltipTrigger>
-                        <b>{allCounts[key]?.length || 0}</b>
+                      <TooltipTrigger asChild>
+                        <span>
+                          <b>{allCounts[key]?.length || 0}</b>
+                        </span>
                       </TooltipTrigger>
                       <TooltipContent>{getTooltipText(key)}</TooltipContent>
                     </Tooltip>
@@ -138,7 +145,6 @@ export default function AdditionalInformation({ result, mode = "multiple" }: Pro
                       return (
                         <div key={value} className="mr-5.5 flex justify-between">
                           <Link
-                            key={value}
                             href={href}
                             target="_blank"
                             rel="noopener noreferrer"
@@ -148,8 +154,10 @@ export default function AdditionalInformation({ result, mode = "multiple" }: Pro
                             {value}
                           </Link>
                           <Tooltip>
-                            <TooltipTrigger>
-                              <b>{count}</b>
+                            <TooltipTrigger asChild>
+                              <span>
+                                <b>{count}</b>
+                              </span>
                             </TooltipTrigger>
                             <TooltipContent>Number of scenarios</TooltipContent>
                           </Tooltip>
@@ -160,8 +168,10 @@ export default function AdditionalInformation({ result, mode = "multiple" }: Pro
                         <div key={value} className="mr-5.5 flex justify-between">
                           <span>{value}</span>
                           <Tooltip>
-                            <TooltipTrigger>
-                              <b>{count}</b>
+                            <TooltipTrigger asChild>
+                              <span>
+                                <b>{count}</b>
+                              </span>
                             </TooltipTrigger>
                             <TooltipContent>Number of scenarios</TooltipContent>
                           </Tooltip>
@@ -172,7 +182,7 @@ export default function AdditionalInformation({ result, mode = "multiple" }: Pro
                 </AccordionContent>
               </AccordionItem>
             )}
-          </>
+          </React.Fragment>
         ))}
       </Accordion>
     </div>

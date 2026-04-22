@@ -12,7 +12,7 @@ import {
   renderAxes,
   createInteractionOverlay,
   findClosestDataPoint,
-  processAreaChartData,
+  computeAreaChartDomains,
 } from "@/utils/plots/render-functions";
 import { createTooltipManager } from "@/utils/plots/tooltip-manager";
 import { createHoverElements } from "@/utils/plots/create-hover-elements";
@@ -21,6 +21,7 @@ import { renderHighlightedFlags } from "@/components/plots/plot-variations/area-
 import { getCategoryAbbrev } from "@/lib/config/reasons-of-concern/category-config";
 import { getRunColor } from "@/utils/plots/colors-functions";
 import { formatNumber } from "@/utils/plots/format-functions";
+import { YExtentPair } from "@/components/plots/plot-variations/canvas/scales";
 
 interface Props {
   svg: SVGSelection;
@@ -28,9 +29,16 @@ interface Props {
   dimensions: PlotDimensions;
   selectedFlags: string[];
   onRunClick?: (run: ExtendedRun) => void;
+  yExtent?: YExtentPair;
 }
 
-export const renderAreaPlot = ({ svg, runs, dimensions, selectedFlags = [] }: Props): void => {
+export const renderAreaPlot = ({
+  svg,
+  runs,
+  dimensions,
+  selectedFlags = [],
+  yExtent,
+}: Props): void => {
   clearSVG(svg);
   const tooltipManager = createTooltipManager({ svg, dimensions });
   if (!tooltipManager) return;
@@ -41,7 +49,7 @@ export const renderAreaPlot = ({ svg, runs, dimensions, selectedFlags = [] }: Pr
   if (runs.length === 0) return;
 
   const allPoints = runs.flatMap((run) => run.orderedPoints);
-  const { aggregatedData, xDomain, yDomain } = processAreaChartData(allPoints);
+  const { aggregatedData, xDomain, yDomain } = computeAreaChartDomains(allPoints, yExtent);
   const { INNER_WIDTH, INNER_HEIGHT } = dimensions;
   const groupSelection = createMainGroup(svg, dimensions);
   const allYears = allPoints.map((d) => d.year);
@@ -115,7 +123,7 @@ export const renderAreaPlot = ({ svg, runs, dimensions, selectedFlags = [] }: Pr
     selectedRunsByFlag.forEach((runs, flagAbbrev) => {
       if (runs.length === 0) return;
       const flagPoints = runs.flatMap((run) => run.orderedPoints);
-      const { aggregatedData: flagAggregatedData } = processAreaChartData(flagPoints);
+      const { aggregatedData: flagAggregatedData } = computeAreaChartDomains(flagPoints);
       aggregatedDataByFlag.set(flagAbbrev, flagAggregatedData);
     });
   }

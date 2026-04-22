@@ -1,44 +1,33 @@
 import { TabConfig } from "@/lib/config/tabs/tabs-config";
-import CustomTabPlotGrid from "@/containers/scenario-dashboard-container/components/plots-section/custom-tab-plot-grid";
-import { PLOT_TYPE_OPTIONS } from "@/components/plots/components";
-import HistogramWidget from "@/components/plots/widgets/histogram-widget";
-import { MultipleRunsPlotWidget } from "@/components/plots/widgets/multiple-runs/multiple-runs-plot-widget";
+import { ComparisonPlotPair } from "@/containers/scenario-dashboard-container/components/comparison-plot-pair";
+import { ComparisonPlotSide } from "@/containers/scenario-dashboard-container/components/comparison-plot-side";
 
 export const VerticalComparisonPlotGrid = ({
   selectedTab,
   prefix,
 }: {
   selectedTab: TabConfig;
-  prefix?: string;
+  prefix: string;
 }) => {
-  if (selectedTab.isCustom)
+  if (selectedTab.isCustom) {
     return (
-      <CustomTabPlotGrid
-        prefix={prefix}
-        className="flex h-fit w-full flex-col gap-4 pt-6 pr-4"
-        initialChartType={PLOT_TYPE_OPTIONS.MULTIPLE_LINE}
-      />
+      <div className="-my-6 grid grid-cols-2 gap-0">
+        <ComparisonPlotSide isCustom className="border-r py-6 pr-4" />
+        <ComparisonPlotSide isCustom prefix={prefix} className="py-6 pl-4" />
+      </div>
     );
+  }
 
   return (
-    <>
-      {selectedTab.explorationPlotConfigArray.map((plotConfig) => {
-        return plotConfig.plotType && plotConfig.plotType === PLOT_TYPE_OPTIONS.HISTOGRAM ? (
-          <HistogramWidget
-            prefix={prefix}
-            plotConfig={plotConfig}
-            key={plotConfig.title}
-            plotConfigArray={selectedTab.explorationPlotConfigArray}
-          />
-        ) : (
-          <MultipleRunsPlotWidget
-            plotConfig={plotConfig}
-            key={plotConfig.title}
-            prefix={prefix}
-            initialChartType={PLOT_TYPE_OPTIONS.MULTIPLE_LINE}
-          />
-        );
-      })}
-    </>
+    <div className="flex flex-col gap-4 pt-6">
+      {selectedTab.explorationPlotConfigArray.map((plotConfig) => (
+        <ComparisonPlotPair
+          key={plotConfig.title}
+          plotConfig={plotConfig}
+          prefix={prefix}
+          plotConfigArray={selectedTab.explorationPlotConfigArray}
+        />
+      ))}
+    </div>
   );
 };

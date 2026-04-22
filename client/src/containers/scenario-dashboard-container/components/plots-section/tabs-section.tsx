@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import { TABS_CONFIG_ARRAY } from "@/lib/config/tabs/tabs-config";
 import { useTabAndVariablesParams } from "@/hooks/nuqs/tabs/use-tabs-and-variables-params";
+import { COMPARISON_TAG } from "@/containers/scenario-dashboard-container/constants";
 
 export function TabsSectionSkeleton() {
   return (
@@ -30,6 +31,7 @@ export function TabsSectionSkeleton() {
 
 export function TabsSection() {
   const { selectedTab, setSelectedTab } = useTabAndVariablesParams();
+  const { setSelectedTab: setSelectedTabPrefixed } = useTabAndVariablesParams(COMPARISON_TAG);
 
   return (
     <div className="flex w-full bg-white pt-9">
@@ -46,6 +48,7 @@ export function TabsSection() {
             )}
             onClick={() => {
               setSelectedTab(tab);
+              setSelectedTabPrefixed(tab);
             }}
           >
             {tab.tabTitle}

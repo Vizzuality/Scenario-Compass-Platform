@@ -9,13 +9,15 @@ import { PlotStateHandler } from "@/components/plots/components";
 import { useScenarioFlagsSelection } from "@/hooks/nuqs/flags/use-scenario-flags-selection";
 import { filterDecadePoints, filterVisibleRuns } from "@/utils/plots/filtering-functions";
 import { interpolatePoints } from "@/utils/plots/render-functions";
+import { YExtentPair } from "@/components/plots/plot-variations/canvas/scales";
 
 interface AreaChartProps {
   runs: ExtendedRun[];
   prefix?: string;
+  yExtent?: YExtentPair;
 }
 
-const AreaBasePlot: React.FC<AreaChartProps> = ({ runs, prefix }) => {
+const AreaBasePlot: React.FC<AreaChartProps> = ({ runs, prefix, yExtent }) => {
   const { svgRef, dimensions, plotContainer } = usePlotContainer();
   const { selectedFlags } = useScenarioFlagsSelection(prefix);
 
@@ -27,13 +29,22 @@ const AreaBasePlot: React.FC<AreaChartProps> = ({ runs, prefix }) => {
       runs,
       dimensions,
       selectedFlags,
+      yExtent,
     });
   }, [dimensions, runs, selectedFlags, svgRef]);
 
   return plotContainer;
 };
 
-export const AreaPlot = ({ data, prefix }: { data: RunPipelineReturn; prefix?: string }) => {
+export const AreaPlot = ({
+  data,
+  prefix,
+  yExtent,
+}: {
+  data: RunPipelineReturn;
+  prefix?: string;
+  yExtent?: YExtentPair;
+}) => {
   const { hiddenFlags, showVetting } = useScenarioFlagsSelection(prefix);
   const decadeFilteredRuns = filterDecadePoints(data.runs);
   const visibleRuns = filterVisibleRuns(decadeFilteredRuns, hiddenFlags, showVetting);
@@ -45,7 +56,7 @@ export const AreaPlot = ({ data, prefix }: { data: RunPipelineReturn; prefix?: s
 
   return (
     <PlotStateHandler isError={data.isError} isLoading={data.isLoading} items={interpolatedRuns}>
-      {(items) => <AreaBasePlot runs={items} prefix={prefix} />}
+      {(items) => <AreaBasePlot runs={items} prefix={prefix} yExtent={yExtent} />}
     </PlotStateHandler>
   );
 };

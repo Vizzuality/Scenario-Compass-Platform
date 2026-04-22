@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import { ExtendedRun } from "@/types/data/run";
 import { Scales, QuadtreePoint } from "./types";
+import { getCategoryAbbrev } from "@/lib/config/reasons-of-concern/category-config";
 
 const HIT_RADIUS = 20;
 
@@ -46,6 +47,8 @@ export const findClosestRun = (
   runs: ExtendedRun[],
   scales: Scales,
   spatialIndex: SpatialIndex,
+  selectedFlags: string[],
+  hasSelection: boolean,
 ): ExtendedRun | null => {
   const { quadtree, searchRadius } = spatialIndex;
   const r2 = searchRadius * searchRadius;
@@ -79,6 +82,12 @@ export const findClosestRun = (
 
   for (const idx of candidates) {
     const run = runs[idx];
+
+    if (hasSelection) {
+      const abbrev = getCategoryAbbrev(run.flagCategory);
+      if (!abbrev || !selectedFlags.includes(abbrev)) continue;
+    }
+
     const pts = run.orderedPoints;
 
     for (let j = 0; j < pts.length - 1; j++) {

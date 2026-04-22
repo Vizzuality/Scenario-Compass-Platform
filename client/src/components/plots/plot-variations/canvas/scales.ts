@@ -10,14 +10,33 @@ export interface Extent {
   yMax: number;
 }
 
+export interface YExtentPair {
+  yMin: number;
+  yMax: number;
+}
+
 /** Computes the bounding box of all data points across all runs. */
-export const computeExtent = (runs: ExtendedRun[]): Extent => {
+export const computeExtentWithPadding = (runs: ExtendedRun[], yExtent?: YExtentPair): Extent => {
+  let yMin: number;
+  let yMax: number;
+
   const allPoints = runs.flatMap((r) => r.orderedPoints);
   const [xMin, xMax] = d3.extent(allPoints, (d) => d.year) as [number, number];
-  const [yMin, yMax] = d3.extent(allPoints, (d) => d.value) as [number, number];
-  const padding = (yMax - yMin) * 0.1;
 
-  return { xMin, xMax, yMin: yMin - padding, yMax: yMax + padding };
+  if (yExtent) {
+    const paddingY = (yExtent.yMax - yExtent.yMin) * 0.1;
+
+    yMin = yExtent.yMin - paddingY;
+    yMax = yExtent.yMax + paddingY;
+  } else {
+    let [internalYMin, internalYMax] = d3.extent(allPoints, (d) => d.value) as [number, number];
+    const padding = (internalYMax - internalYMin) * 0.1;
+
+    yMin = internalYMin - padding;
+    yMax = internalYMax + padding;
+  }
+
+  return { xMin, xMax, yMin, yMax };
 };
 
 /** Clamps zoom pan offsets so the viewport never exceeds the data extent. */

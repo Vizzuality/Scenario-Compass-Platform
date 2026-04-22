@@ -1,0 +1,9 @@
+import LoadingDots from "@/components/animations/loading-dots";
+
+export default function Loading() {
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      <LoadingDots />
+    </div>
+  );
+}
