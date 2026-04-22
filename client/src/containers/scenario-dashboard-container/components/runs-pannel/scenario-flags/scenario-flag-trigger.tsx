@@ -36,25 +36,27 @@ export function BaseFlagTrigger({
     <div className={cn("-mr-2 flex w-full items-start justify-between gap-4", className)}>
       <div className="flex items-start gap-2" onClick={onTextClick}>
         <Tooltip>
-          <TooltipTrigger>
-            <input
-              disabled={isHidden}
-              type="checkbox"
-              className="accent-primary mt-0.5 h-4 w-4 cursor-pointer rounded border-gray-300"
-              checked={isChecked}
-              onChange={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                handleCheckboxChange(categoryKey, e.target.checked);
-              }}
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-              }}
-              onMouseDown={(e) => {
-                e.stopPropagation();
-              }}
-            />
+          <TooltipTrigger asChild>
+            <span>
+              <input
+                disabled={isHidden}
+                type="checkbox"
+                className="accent-primary mt-0.5 h-4 w-4 cursor-pointer rounded border-gray-300"
+                checked={isChecked}
+                onChange={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  handleCheckboxChange(categoryKey, e.target.checked);
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                }}
+                onMouseDown={(e) => {
+                  e.stopPropagation();
+                }}
+              />
+            </span>
           </TooltipTrigger>
           <TooltipContent>
             {isChecked ? <p>Unmask scenarios</p> : <p>Highlight scenarios</p>}
@@ -78,14 +80,16 @@ export function BaseFlagTrigger({
           }}
         >
           <Tooltip>
-            <TooltipTrigger>
-              <strong className="-mt-[2px] pt-0.5">{category.count}</strong>
+            <TooltipTrigger asChild>
+              <span>
+                <strong className="-mt-[2px] pt-0.5">{category.count}</strong>
+              </span>
             </TooltipTrigger>
             <TooltipContent>Number of scenarios</TooltipContent>
           </Tooltip>
           <Tooltip>
-            <TooltipTrigger>
-              {isHidden ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            <TooltipTrigger asChild>
+              <span>{isHidden ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</span>
             </TooltipTrigger>
             <TooltipContent>
               {!isHidden ? <p>Hide scenarios</p> : <p>Show scenarios</p>}

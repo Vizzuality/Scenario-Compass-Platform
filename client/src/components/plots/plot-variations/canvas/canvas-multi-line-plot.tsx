@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { useScenarioFlagsSelection } from "@/hooks/nuqs/flags/use-scenario-flags-selection";
 import { ExtendedRun, RunPipelineReturn } from "@/types/data/run";
 import { filterDecadePoints, filterVisibleRuns } from "@/utils/plots/filtering-functions";
@@ -9,200 +9,191 @@ import { DataFetchError } from "@/components/error-state/data-fetch-error";
 import Image from "next/image";
 import notFoundImage from "@/assets/images/not-found.webp";
 
-import { DEFAULT_ZOOM, ZoomState } from "./types";
-import { CanvasStateRef } from "./event-handlers";
-import { computeExtent } from "./scales";
-import { createTooltipHelpers } from "./tooltip";
+import { CanvasStateRef, createInitialState } from "./event-handlers";
+import { computeExtentWithPadding, YExtentPair } from "./scales";
+import { createTooltipHelpers, TooltipHelpers } from "./tooltip";
 import { createEventHandlers } from "./event-handlers";
 import { ZoomControls } from "./zoom-controls";
-import { MAX_ZOOM, MIN_ZOOM, ZOOM_STEP } from "./constants";
+import { MIN_ZOOM } from "./constants";
 import { renderChart } from "./renderers";
 import { useRouter } from "next/navigation";
 import { useGetRunDetailsUrl } from "@/hooks/nuqs/url-params/use-get-run-details-url";
+import { useCanvasPlotZoom } from "@/hooks/plots/use-canvas-plot-zoom";
 
 interface Props {
   data: RunPipelineReturn;
   prefix?: string;
   onRunClick?: (run: ExtendedRun) => void;
   zoomEnabled?: boolean;
+  selectedRun?: ExtendedRun | null;
+  onSelectedRunChange?: (run: ExtendedRun | null) => void;
+  yExtent?: YExtentPair;
 }
-
-const createInitialState = (): CanvasStateRef => ({
-  scales: null,
-  spatialIndex: null,
-  extent: null,
-  runs: [],
-  zoom: DEFAULT_ZOOM,
-  hoveredRunId: null,
-  selectedRun: null,
-  isDragging: false,
-  didDrag: false,
-  dragStartX: 0,
-  dragStartY: 0,
-  dragStartZoom: DEFAULT_ZOOM,
-});
 
 export const CanvasMultiLinePlot: React.FC<Props> = ({
   data,
   prefix,
   onRunClick,
   zoomEnabled = false,
+  selectedRun: externalSelectedRun,
+  onSelectedRunChange,
+  yExtent,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
-  const { selectedFlags, hiddenFlags, showVetting } = useScenarioFlagsSelection(prefix);
-  const decadeFilteredRuns = filterDecadePoints(data.runs);
 
+  const stateRef = useRef<CanvasStateRef>(createInitialState());
+  const tooltipInstanceRef = useRef<TooltipHelpers | null>(null);
+
+  const onSelectedRunChangeRef = useRef(onSelectedRunChange);
+  onSelectedRunChangeRef.current = onSelectedRunChange;
+  const onRunClickRef = useRef(onRunClick);
+  onRunClickRef.current = onRunClick;
+
+  const { selectedFlags, hiddenFlags, showVetting } = useScenarioFlagsSelection(prefix);
   const router = useRouter();
   const buildRunDetailsUrl = useGetRunDetailsUrl();
 
-  const [zoom, setZoom] = useState<ZoomState>(DEFAULT_ZOOM);
-  const stateRef = useRef<CanvasStateRef>(createInitialState());
+  /**
+   * CORE RENDER FUNCTION
+   * Memoized to be called by various effects
+   */
+  const doRender = useCallback(() => {
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    const { runs, extent, zoom: currentZoom } = stateRef.current;
 
-  const applyZoom = useCallback(
-    (newZoom: ZoomState) => {
-      stateRef.current.zoom = newZoom;
-      const { runs, extent } = stateRef.current;
-      const canvas = canvasRef.current;
-      const container = containerRef.current;
-      if (canvas && container && extent && runs.length > 0) {
-        const result = renderChart(
-          canvas,
-          container,
-          runs,
-          extent,
-          selectedFlags,
-          selectedFlags.length > 0,
-          newZoom,
-        );
-        if (result) {
-          stateRef.current.scales = result.scales;
-          stateRef.current.spatialIndex = result.spatialIndex;
-        }
-      }
-      setZoom(newZoom);
-    },
-    [selectedFlags],
+    if (!canvas || !container || !runs || runs.length === 0 || !extent) return;
+
+    const result = renderChart(
+      canvas,
+      container,
+      runs,
+      extent,
+      selectedFlags,
+      selectedFlags.length > 0,
+      currentZoom,
+    );
+
+    if (result) {
+      stateRef.current.scales = result.scales;
+      stateRef.current.spatialIndex = result.spatialIndex;
+    }
+  }, [selectedFlags]);
+
+  /**
+   * ZOOM HOOK
+   */
+  const { zoom, setZoom, zoomIn, zoomOut, zoomReset } = useCanvasPlotZoom(
+    stateRef,
+    doRender,
+    zoomEnabled,
   );
 
-  const zoomIn = useCallback(() => {
-    if (!zoomEnabled) return;
-    const prev = stateRef.current.zoom;
-    applyZoom({ ...prev, k: Math.min(prev.k * ZOOM_STEP, MAX_ZOOM) });
-  }, [applyZoom, zoomEnabled]);
+  /**
+   * GRANULAR EFFECT: DATA & FILTER SYNC
+   */
+  useEffect(() => {
+    if (!data.runs) return;
 
-  const zoomOut = useCallback(() => {
-    if (!zoomEnabled) return;
-    const prev = stateRef.current.zoom;
-    const newK = prev.k / ZOOM_STEP;
-    applyZoom(newK <= MIN_ZOOM ? DEFAULT_ZOOM : { ...prev, k: newK });
-  }, [applyZoom, zoomEnabled]);
+    const decadeFilteredRuns = filterDecadePoints(data.runs);
+    const visibleRuns = filterVisibleRuns(decadeFilteredRuns, hiddenFlags, showVetting);
+    const extent = computeExtentWithPadding(visibleRuns, yExtent);
 
-  const zoomReset = useCallback(() => {
-    if (!zoomEnabled) return;
-    applyZoom(DEFAULT_ZOOM);
-  }, [applyZoom, zoomEnabled]);
+    Object.assign(stateRef.current, {
+      runs: visibleRuns,
+      extent: extent,
+    });
 
+    doRender();
+  }, [data.runs, hiddenFlags, showVetting, yExtent, doRender]);
+
+  /**
+   * GRANULAR EFFECT: SELECTION SYNC
+   * Handles synchronization between Widget and Dialog
+   */
+  useEffect(() => {
+    const isSelected = !!externalSelectedRun;
+    stateRef.current.selectedRun = externalSelectedRun ?? null;
+    tooltipInstanceRef.current?.setInteractive(isSelected);
+
+    doRender();
+  }, [externalSelectedRun, doRender]);
+
+  /**
+   * GRANULAR EFFECT: INFRASTRUCTURE SETUP
+   * Handles DOM listeners and observers
+   */
   useEffect(() => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
     const tooltipEl = tooltipRef.current;
-    if (!canvas || !container || !tooltipEl || !data.runs) return;
+    if (!canvas || !container || !tooltipEl) return;
 
-    const runs = filterVisibleRuns(decadeFilteredRuns, hiddenFlags, showVetting);
-    const hasSelection = selectedFlags.length > 0;
-    const extent = computeExtent(runs);
+    const tooltip = createTooltipHelpers(
+      tooltipEl,
+      (run) => onRunClickRef.current?.(run),
+      (run) => {
+        const url = buildRunDetailsUrl(run);
+        router.prefetch(url);
+      },
+      () => {
+        // Clear selection logic
+        stateRef.current.selectedRun = null;
+        onSelectedRunChangeRef.current?.(null);
+        tooltipInstanceRef.current?.setInteractive(false);
+        doRender();
+      },
+    );
 
-    Object.assign(stateRef.current, { runs, extent, hoveredRunId: null, selectedRun: null });
+    tooltipInstanceRef.current = tooltip;
 
-    if (runs.length === 0) return;
-
-    const tooltip = createTooltipHelpers(tooltipEl, onRunClick, (run) => {
-      const url = buildRunDetailsUrl(run);
-      router.prefetch(url);
-    });
+    if (stateRef.current.selectedRun) {
+      tooltip.setInteractive(true);
+    }
 
     const { bind, cleanup } = createEventHandlers({
       canvas,
       container,
       stateRef,
       selectedFlags,
-      hasSelection,
+      hasSelection: selectedFlags.length > 0,
       tooltip,
       setZoom,
-      onRunClick,
       zoomEnabled,
+      onSelectedRunChange: (run) => onSelectedRunChangeRef.current?.(run),
     });
 
-    const doRender = () => {
-      const result = renderChart(
-        canvas,
-        container,
-        runs,
-        extent,
-        selectedFlags,
-        hasSelection,
-        stateRef.current.zoom,
-      );
-      if (result) {
-        stateRef.current.scales = result.scales;
-        stateRef.current.spatialIndex = result.spatialIndex;
-      }
-    };
-
-    let pendingRaf: number | null = null;
-    let lastWidth = 0;
-    let lastHeight = 0;
-
-    const resizeObserver = new ResizeObserver((entries) => {
-      const { width, height } = entries[0].contentRect;
-
-      if (pendingRaf) cancelAnimationFrame(pendingRaf);
-
-      pendingRaf = requestAnimationFrame(() => {
-        const currentRect = container.getBoundingClientRect();
-        if (
-          Math.abs(currentRect.width - lastWidth) > 1 ||
-          Math.abs(currentRect.height - lastHeight) > 1
-        ) {
-          lastWidth = currentRect.width;
-          lastHeight = currentRect.height;
-          pendingRaf = requestAnimationFrame(doRender);
-        } else {
-          doRender();
-        }
-      });
+    const resizeObserver = new ResizeObserver(() => {
+      requestAnimationFrame(doRender);
     });
 
     resizeObserver.observe(container);
     bind();
 
     return () => {
-      if (pendingRaf) cancelAnimationFrame(pendingRaf);
       cleanup();
       resizeObserver.disconnect();
+      tooltipInstanceRef.current = null;
     };
-  }, [data.runs, selectedFlags, hiddenFlags, showVetting, onRunClick, zoomEnabled]);
+  }, [zoomEnabled, selectedFlags, buildRunDetailsUrl, router, doRender, setZoom]);
 
   const aspectClasses =
     "relative flex [aspect-ratio:1/1] w-full items-center justify-center sm:[aspect-ratio:4/3] lg:[aspect-ratio:16/10]";
 
-  if (data.isLoading) {
+  if (data.isLoading)
     return (
       <div className={aspectClasses}>
         <LoadingDots />
       </div>
     );
-  }
-
-  if (data.isError) {
+  if (data.isError)
     return (
       <div className={aspectClasses}>
         <DataFetchError />
       </div>
     );
-  }
 
   if (!data.runs || data.runs.length === 0) {
     return (
@@ -216,10 +207,7 @@ export const CanvasMultiLinePlot: React.FC<Props> = ({
             className="mx-auto"
           />
           <p className="font-bold">No results available</p>
-          <p className="leading-5 text-stone-600">
-            There are no runs available for the selected combination of parameters. Try adjusting
-            the filters to see results.
-          </p>
+          <p className="leading-5 text-stone-600">Try adjusting the filters to see results.</p>
         </div>
       </div>
     );

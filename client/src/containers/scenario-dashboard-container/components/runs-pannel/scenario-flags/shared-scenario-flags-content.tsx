@@ -97,7 +97,7 @@ export function SharedScenarioFlagsContent({ result, prefix }: SharedContentProp
               <div className="flex gap-3">
                 <strong className="text-foreground text-xs">MEDIUM</strong>
                 <Tooltip>
-                  <TooltipTrigger onClick={handleMediumClick}>
+                  <TooltipTrigger asChild onClick={handleMediumClick}>
                     {isMediumCategoriesHidden ? (
                       <EyeOff className="h-4 w-4" />
                     ) : (
@@ -132,7 +132,7 @@ export function SharedScenarioFlagsContent({ result, prefix }: SharedContentProp
               <div className="flex gap-3">
                 <strong className="text-foreground text-xs">HIGH</strong>
                 <Tooltip>
-                  <TooltipTrigger onClick={handleHighClick}>
+                  <TooltipTrigger asChild onClick={handleHighClick}>
                     {isHighCategoriesHidden ? (
                       <EyeOff className="h-4 w-4" />
                     ) : (

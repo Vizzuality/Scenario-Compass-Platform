@@ -10,7 +10,7 @@ export function ExpandChartButton({ onClick }: Props) {
   return (
     <TooltipProvider>
       <Tooltip>
-        <TooltipTrigger>
+        <TooltipTrigger asChild>
           <Button
             onClick={onClick}
             variant="ghost"

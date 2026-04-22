@@ -62,7 +62,7 @@ export const drawHoverFrame = (
     PLOT_CONFIG.FULL_OPACITY,
   );
 
-  // Find closest data point to mouse
+  // Find the closest data point to mouse
   const year = xScale.invert(mouseX);
   let closestPoint = hoveredRun.orderedPoints[0];
   let minDiff = Math.abs(closestPoint.year - year);

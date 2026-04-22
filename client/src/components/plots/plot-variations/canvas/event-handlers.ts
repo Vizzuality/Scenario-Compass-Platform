@@ -1,5 +1,5 @@
 import { ExtendedRun } from "@/types/data/run";
-import { Scales, ZoomState } from "./types";
+import { DEFAULT_ZOOM, Scales, ZoomState } from "./types";
 import { clampZoom, Extent } from "./scales";
 import { findClosestRun, SpatialIndex } from "./hit-detection";
 import { drawHoverFrame } from "./hover";
@@ -23,6 +23,21 @@ export interface CanvasStateRef {
   dragStartZoom: ZoomState;
 }
 
+export const createInitialState = (): CanvasStateRef => ({
+  scales: null,
+  spatialIndex: null,
+  extent: null,
+  runs: [],
+  zoom: DEFAULT_ZOOM,
+  hoveredRunId: null,
+  selectedRun: null,
+  isDragging: false,
+  didDrag: false,
+  dragStartX: 0,
+  dragStartY: 0,
+  dragStartZoom: DEFAULT_ZOOM,
+});
+
 interface HandlerDeps {
   canvas: HTMLCanvasElement;
   container: HTMLDivElement;
@@ -31,8 +46,8 @@ interface HandlerDeps {
   hasSelection: boolean;
   tooltip: TooltipHelpers;
   setZoom: (zoom: ZoomState) => void;
-  onRunClick?: (run: ExtendedRun) => void;
   zoomEnabled: boolean;
+  onSelectedRunChange?: (run: ExtendedRun | null) => void;
 }
 
 /** Check if a pixel coordinate is inside the plot area. */
@@ -47,8 +62,8 @@ export const createEventHandlers = ({
   hasSelection,
   tooltip,
   setZoom,
-  onRunClick,
   zoomEnabled,
+  onSelectedRunChange,
 }: HandlerDeps) => {
   let rafId: number | null = null;
   let currentCursor = "default";
@@ -73,6 +88,7 @@ export const createEventHandlers = ({
   const clearSelection = () => {
     stateRef.current.selectedRun = null;
     stateRef.current.hoveredRunId = null;
+    onSelectedRunChange?.(null);
     tooltip.hide();
     tooltip.setInteractive(false);
     setCursor("default");
@@ -87,7 +103,9 @@ export const createEventHandlers = ({
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
 
-    // --- SELECTED MODE: tooltip snaps to data points on the selected line ---
+    /**
+     * SELECTED MODE: tooltip snaps to data points on the selected line
+     */
     if (selectedRun) {
       const plotLeft = MARGIN.left;
       const plotRight = rect.width - MARGIN.right;
@@ -120,8 +138,18 @@ export const createEventHandlers = ({
       return;
     }
 
-    // --- IDLE MODE: highlight closest line ---
-    const hovered = findClosestRun(mouseX, mouseY, runs, scales, spatialIndex);
+    /**
+     * IDLE MODE: highlight closest line
+     */
+    const hovered = findClosestRun(
+      mouseX,
+      mouseY,
+      runs,
+      scales,
+      spatialIndex,
+      selectedFlags,
+      hasSelection,
+    );
 
     if (hovered) {
       setCursor("pointer");
@@ -227,16 +255,33 @@ export const createEventHandlers = ({
     const mouseY = e.clientY - rect.top;
 
     if (selectedRun) {
-      const clicked = findClosestRun(mouseX, mouseY, runs, scales, spatialIndex);
+      const clicked = findClosestRun(
+        mouseX,
+        mouseY,
+        runs,
+        scales,
+        spatialIndex,
+        selectedFlags,
+        hasSelection,
+      );
       if (!clicked || clicked.runId !== selectedRun.runId) {
         clearSelection();
       }
       return;
     }
 
-    const clicked = findClosestRun(mouseX, mouseY, runs, scales, spatialIndex);
+    const clicked = findClosestRun(
+      mouseX,
+      mouseY,
+      runs,
+      scales,
+      spatialIndex,
+      selectedFlags,
+      hasSelection,
+    );
     if (clicked) {
       stateRef.current.selectedRun = clicked;
+      onSelectedRunChange?.(clicked);
       tooltip.setInteractive(true);
 
       const ctx = canvas.getContext("2d");

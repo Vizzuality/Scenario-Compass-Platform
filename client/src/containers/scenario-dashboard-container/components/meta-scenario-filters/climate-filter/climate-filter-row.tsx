@@ -38,13 +38,19 @@ export const ClimateFilterRow = ({ prefix }: RowFilterProps) => {
             <button
               id={id}
               aria-expanded={open}
-              className={cn(selectTriggerVariants({ theme: "light", size: "lg" }), "h-10 w-48")}
+              className={cn(
+                selectTriggerVariants({ theme: "light", size: "lg" }),
+                "flex h-10 w-48 items-center justify-between px-3 text-left",
+              )}
             >
-              {selectedOptions.length === 0
-                ? "Select options"
-                : selectedOptions.length === 1
-                  ? getDisplayLabel(selectedOptions[0])
-                  : `${selectedOptions.length} Selected`}
+              <span className="min-w-0 truncate">
+                {selectedOptions.length === 0
+                  ? "Select options"
+                  : selectedOptions.length === 1
+                    ? getDisplayLabel(selectedOptions[0])
+                    : `${selectedOptions.length} Selected`}
+              </span>
+
               <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </button>
           </PopoverTrigger>

@@ -15,6 +15,7 @@ export const createTooltipHelpers = (
   tooltip: HTMLDivElement,
   onNavigate?: (run: ExtendedRun) => void,
   onPrefetch?: (run: ExtendedRun) => void,
+  onClose?: () => void,
 ): TooltipHelpers => {
   tooltip.style.position = "absolute";
   tooltip.style.left = "0";
@@ -40,6 +41,11 @@ export const createTooltipHelpers = (
     if (target.closest("[data-navigate]") && currentRun && onNavigate) {
       onNavigate(currentRun);
     }
+    if (target.closest("[data-close]")) {
+      tooltip.style.display = "none";
+      tooltip.style.pointerEvents = "none";
+      onClose?.();
+    }
   });
 
   return {
@@ -55,11 +61,9 @@ export const createTooltipHelpers = (
       const rawLeft = goLeft ? x - OFFSET_X - tw : x + OFFSET_X;
       const rawTop = goBelow ? y + OFFSET_Y : y - OFFSET_Y - th;
 
-      // Clamp to container bounds
-      const left = Math.max(0, Math.min(rawLeft, containerWidth - tw));
-      const top = Math.max(0, Math.min(rawTop, containerHeight - th));
+      const left = Math.round(Math.max(0, Math.min(rawLeft, containerWidth - tw)));
+      const top = Math.round(Math.max(0, Math.min(rawTop, containerHeight - th)));
 
-      const r = "8px";
       tooltip.style.transform = `translate3d(${left}px, ${top}px, 0)`;
     },
 
@@ -68,24 +72,46 @@ export const createTooltipHelpers = (
       const isInteractive = tooltip.style.pointerEvents === "auto";
 
       tooltip.innerHTML = `
-        <ul class="list-disc m-0 pl-4 flex flex-col gap-1 text-black">
-          <li><strong>Year:</strong> ${point.year}</li>
-          <li><strong>Value:</strong> ${formatNumber(point.value)}</li>
-          <li><strong>Model:</strong> ${run.modelName}</li>
-          <li><strong>Scenario:</strong> ${run.scenarioName}</li>
-        </ul>
-        ${
-          isInteractive
-            ? `
-          <button
-            data-navigate
-            class="mt-2 inline-flex max-w-[140px] w-full items-center justify-center gap-0 rounded-md border-1 border-primary bg-primary-foreground text-primary px-3 py-1.5 text-xs font-bold cursor-pointer transition-all hover:bg-primary hover:text-primary-foreground hover:gap-1"
-          >
-           See Scenario details
-          </button>
-        `
-            : ""
-        }
+        <div style="position: relative;">
+          ${
+            isInteractive
+              ? `
+            <button
+              data-close
+              class="absolute -top-1 -right-1 flex items-center justify-center w-6 h-6 rounded-full cursor-pointer text-gray-400 hover:text-gray-700 hover:bg-gray-100"
+              style="background: none; border: none; padding: 0;"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 6 6 18"/>
+                <path d="M6 6 18 18"/>
+              </svg>
+            </button>
+          `
+              : ""
+          }
+          <ul class="list-disc m-0 pl-4 flex flex-col gap-1 text-black" style="${isInteractive ? "padding-right: 20px;" : ""}">
+            <li><strong>Value:</strong> ${formatNumber(point.value)} ${run.unit}</li>
+            <li><strong>Year:</strong> ${point.year}</li>
+            <li><strong>Model:</strong> ${run.modelName}</li>
+            <li><strong>Scenario:</strong> ${run.scenarioName}</li>
+          </ul>
+          ${
+            isInteractive
+              ? `
+            <button
+              data-navigate
+              class="mt-2 inline-flex max-w-[160px] w-full items-center justify-center gap-1 rounded-md border-1 border-primary bg-primary-foreground text-primary px-3 py-1.5 text-xs font-bold cursor-pointer hover:bg-primary hover:text-primary-foreground"
+            >
+              See Scenario details
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 7h10v10"/>
+                <path d="M7 17 17 7"/>
+              </svg>
+            </button>
+          `
+              : ""
+          }
+        </div>
       `;
 
       if (isInteractive && onPrefetch && run.runId !== prefetchedRunId) {

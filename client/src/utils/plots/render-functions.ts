@@ -5,6 +5,7 @@ import { PlotDimensions } from "@/lib/config/plots/plots-dimensions";
 import { ExtendedRun, ShortDataPoint } from "@/types/data/run";
 import { calculateOptimalTicksWithNiceYears } from "@/utils/plots/ticks-computation";
 import { formatShortenedNumber } from "@/utils/plots/format-functions";
+import { YExtentPair } from "@/components/plots/plot-variations/canvas/scales";
 
 export type SVGSelection = d3.Selection<SVGSVGElement, unknown, null, undefined>;
 export type GroupSelection = d3.Selection<SVGGElement, unknown, null, undefined>;
@@ -238,16 +239,28 @@ export function interpolatePoints(run: ExtendedRun, allYears: number[]): Extende
   return { ...run, orderedPoints: interpolatedPoints };
 }
 
-export const processAreaChartData = (dataPoints: ShortDataPoint[]): ProcessedAreaData => {
+export const computeAreaChartDomains = (
+  dataPoints: ShortDataPoint[],
+  yExtent?: YExtentPair,
+): ProcessedAreaData => {
   const aggregatedData = aggregateDataByYear(dataPoints);
   const xDomain = d3.extent(aggregatedData, (d) => d.year) as [number, number];
-  const yMin = d3.min(aggregatedData, (d) => d.min)!;
-  const yMax = d3.max(aggregatedData, (d) => d.max)!;
-  const padding = (yMax - yMin) * 0.1;
+
+  let yDomain: [number, number];
+
+  if (yExtent) {
+    const padding = (yExtent.yMax - yExtent.yMin) * 0.1;
+    yDomain = [yExtent.yMin - padding, yExtent.yMax + padding];
+  } else {
+    const yMin = d3.min(aggregatedData, (d) => d.min)!;
+    const yMax = d3.max(aggregatedData, (d) => d.max)!;
+    const padding = (yMax - yMin) * 0.1;
+    yDomain = [yMin - padding, yMax + padding];
+  }
 
   return {
     aggregatedData,
     xDomain,
-    yDomain: [yMin - padding, yMax + padding],
+    yDomain,
   };
 };
