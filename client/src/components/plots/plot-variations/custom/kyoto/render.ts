@@ -96,7 +96,7 @@ export const renderKyotoPlot = ({ svg, data, dimensions }: Props): void => {
     .range([0, dimensions.INNER_WIDTH]);
 
   const [yMin, yMax] = d3.extent(allValues) as [number, number];
-  const yPadding = (yMax - yMin) * 0.125;
+  const yPadding = (yMax - yMin) * 0.175;
 
   const yScale = d3
     .scaleLinear()

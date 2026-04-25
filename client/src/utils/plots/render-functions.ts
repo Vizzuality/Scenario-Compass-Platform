@@ -47,11 +47,21 @@ export const createMainGroup = (svg: SVGSelection, dimensions: PlotDimensions): 
   return svg.append("g").attr("transform", `translate(${MARGIN.LEFT},${MARGIN.TOP})`);
 };
 
-export const calculateDomain = (points: ShortDataPoint[]): PlotDomain => {
+export const calculateDomain = (points: ShortDataPoint[], yExtent?: YExtentPair): PlotDomain => {
   const xDomain = d3.extent(points, (d) => d.year) as [number, number];
-  const [yMin, yMax] = d3.extent(points, (d) => d.value) as [number, number];
-  const padding = (yMax - yMin) * 0.1;
-  return { xDomain, yDomain: [yMin - padding, yMax + padding] };
+
+  let yDomain: [number, number];
+
+  if (yExtent) {
+    const padding = (yExtent.yMax - yExtent.yMin) * 0.1;
+    yDomain = [yExtent.yMin - padding, yExtent.yMax + padding];
+  } else {
+    const [yMin, yMax] = d3.extent(points, (d) => d.value) as [number, number];
+    const padding = (yMax - yMin) * 0.1;
+    yDomain = [yMin - padding, yMax + padding];
+  }
+
+  return { xDomain, yDomain };
 };
 
 export const createScales = (domain: PlotDomain, width: number, height: number): PlotScales => {
@@ -142,7 +152,7 @@ export const renderAxes = ({
       .append("text")
       .attr("class", "x-axis-label")
       .attr("x", width / 2)
-      .attr("y", height + 40)
+      .attr("y", height + 35)
       .attr("text-anchor", "middle")
       .style("font-size", FONT_SIZE)
       .style("fill", GRID_TEXT_COLOR)
@@ -177,13 +187,6 @@ export const findClosestDataPoint = <T extends { year: number }>(
       ? currentElement
       : closestElement;
   }, data[0]);
-};
-
-export const createLineGenerator = (scales: PlotScales): d3.Line<ShortDataPoint> => {
-  return d3
-    .line<ShortDataPoint>()
-    .x((d) => scales.xScale(d.year))
-    .y((d) => scales.yScale(d.value));
 };
 
 /**

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useEffectEvent, useRef } from "react";
 import { useScenarioFlagsSelection } from "@/hooks/nuqs/flags/use-scenario-flags-selection";
 import { ExtendedRun, RunPipelineReturn } from "@/types/data/run";
 import { filterDecadePoints, filterVisibleRuns } from "@/utils/plots/filtering-functions";
@@ -23,10 +23,10 @@ import { useCanvasPlotZoom } from "@/hooks/plots/use-canvas-plot-zoom";
 interface Props {
   data: RunPipelineReturn;
   prefix?: string;
-  onRunClick?: (run: ExtendedRun) => void;
+  onRunClick: (run: ExtendedRun) => void;
   zoomEnabled?: boolean;
   selectedRun?: ExtendedRun | null;
-  onSelectedRunChange?: (run: ExtendedRun | null) => void;
+  onSelectedRunChange: (run: ExtendedRun | null) => void;
   yExtent?: YExtentPair;
 }
 
@@ -39,6 +39,9 @@ export const CanvasMultiLinePlot: React.FC<Props> = ({
   onSelectedRunChange,
   yExtent,
 }) => {
+  const { selectedFlags, hiddenFlags, showVetting } = useScenarioFlagsSelection(prefix);
+  const router = useRouter();
+  const buildRunDetailsUrl = useGetRunDetailsUrl();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
@@ -46,14 +49,17 @@ export const CanvasMultiLinePlot: React.FC<Props> = ({
   const stateRef = useRef<CanvasStateRef>(createInitialState());
   const tooltipInstanceRef = useRef<TooltipHelpers | null>(null);
 
-  const onSelectedRunChangeRef = useRef(onSelectedRunChange);
-  onSelectedRunChangeRef.current = onSelectedRunChange;
-  const onRunClickRef = useRef(onRunClick);
-  onRunClickRef.current = onRunClick;
+  const handleSelectedRunChange = useEffectEvent((run: ExtendedRun | null) => {
+    onSelectedRunChange(run);
+  });
 
-  const { selectedFlags, hiddenFlags, showVetting } = useScenarioFlagsSelection(prefix);
-  const router = useRouter();
-  const buildRunDetailsUrl = useGetRunDetailsUrl();
+  const handleRunClick = useEffectEvent((run: ExtendedRun) => {
+    onRunClick(run);
+  });
+
+  const handlePrefetch = useEffectEvent((run: ExtendedRun) => {
+    router.prefetch(buildRunDetailsUrl(run));
+  });
 
   /**
    * CORE RENDER FUNCTION
@@ -133,15 +139,12 @@ export const CanvasMultiLinePlot: React.FC<Props> = ({
 
     const tooltip = createTooltipHelpers(
       tooltipEl,
-      (run) => onRunClickRef.current?.(run),
-      (run) => {
-        const url = buildRunDetailsUrl(run);
-        router.prefetch(url);
-      },
+      (run) => handleRunClick(run),
+      (run) => handlePrefetch(run),
       () => {
         // Clear selection logic
         stateRef.current.selectedRun = null;
-        onSelectedRunChangeRef.current?.(null);
+        handleSelectedRunChange(null);
         tooltipInstanceRef.current?.setInteractive(false);
         doRender();
       },
@@ -162,7 +165,7 @@ export const CanvasMultiLinePlot: React.FC<Props> = ({
       tooltip,
       setZoom,
       zoomEnabled,
-      onSelectedRunChange: (run) => onSelectedRunChangeRef.current?.(run),
+      onSelectedRunChange: (run) => handleSelectedRunChange(run),
     });
 
     const resizeObserver = new ResizeObserver(() => {
@@ -177,7 +180,7 @@ export const CanvasMultiLinePlot: React.FC<Props> = ({
       resizeObserver.disconnect();
       tooltipInstanceRef.current = null;
     };
-  }, [zoomEnabled, selectedFlags, buildRunDetailsUrl, router, doRender, setZoom]);
+  }, [zoomEnabled, selectedFlags, doRender, setZoom]);
 
   const aspectClasses =
     "relative flex [aspect-ratio:1/1] w-full items-center justify-center sm:[aspect-ratio:4/3] lg:[aspect-ratio:16/10]";
@@ -188,6 +191,7 @@ export const CanvasMultiLinePlot: React.FC<Props> = ({
         <LoadingDots />
       </div>
     );
+
   if (data.isError)
     return (
       <div className={aspectClasses}>

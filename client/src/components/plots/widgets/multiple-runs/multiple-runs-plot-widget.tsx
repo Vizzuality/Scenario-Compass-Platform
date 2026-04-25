@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { PlotWidgetHeader } from "@/components/plots/components";
 import { ChartType, PLOT_TYPE_OPTIONS } from "@/components/plots/components";
 import { useGetMultipleRunsForVariablePipeline } from "@/hooks/runs/data-pipeline/use-get-multiple-runs-for-variable-pipeline";
@@ -31,10 +31,12 @@ export function MultipleRunsPlotWidget({
   const [chartType, setChartType] = useState<ChartType>(initialChartType);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedRun, setSelectedRun] = useState<ExtendedRun | null>(null);
+
   const buildRunDetailsUrl = useGetRunDetailsUrl();
   const { getVariable, setVariable } = useTabAndVariablesParams(prefix);
   const currentVariable = getVariable(plotConfig);
   const data = useGetMultipleRunsForVariablePipeline({ variable: currentVariable, prefix });
+
   const { chartRef, handleDownload } = useDownloadPlotAssets({
     runs: data.runs,
     title: currentVariable.replaceAll("|", " - "),
@@ -42,22 +44,34 @@ export function MultipleRunsPlotWidget({
   });
 
   const handleRunClick = (run: ExtendedRun) => {
-    const url = buildRunDetailsUrl(run);
-    window.open(url, "_blank");
+    window.open(buildRunDetailsUrl(run), "_blank");
   };
 
-  const renderChart = (enableZoom: boolean) => {
+  const handleVariableChange = (variable: string) => {
+    setSelectedRun(null);
+    setVariable(plotConfig, variable);
+  };
+
+  const renderChart = (zoomEnabled: boolean) => {
     switch (chartType) {
       case PLOT_TYPE_OPTIONS.AREA:
-        return <AreaPlot key="area" data={data} prefix={prefix} yExtent={yExtent} />;
+        return <AreaPlot data={data} prefix={prefix} yExtent={yExtent} />;
       case PLOT_TYPE_OPTIONS.DOTS:
-        return <DotPlot key="dots" data={data} />;
+        return (
+          <DotPlot
+            data={data}
+            prefix={prefix}
+            onRunClick={handleRunClick}
+            selectedRun={selectedRun}
+            onSelectedRunChange={setSelectedRun}
+            yExtent={yExtent}
+          />
+        );
       case PLOT_TYPE_OPTIONS.MULTIPLE_LINE:
         return (
           <CanvasMultiLinePlot
-            key="multiline"
             data={data}
-            zoomEnabled={enableZoom}
+            zoomEnabled={zoomEnabled}
             prefix={prefix}
             onRunClick={handleRunClick}
             selectedRun={selectedRun}
@@ -70,31 +84,15 @@ export function MultipleRunsPlotWidget({
     }
   };
 
-  const handleDialogOpenChange = (open: boolean) => {
-    setIsDialogOpen(open);
-  };
-
-  const handleExpand = () => {
-    setIsDialogOpen(true);
-  };
-
-  const handleVariableChange = (variable: string) => {
-    setSelectedRun(null);
-    setVariable(plotConfig, variable);
-  };
-
   return (
     <>
-      <div
-        key={chartType}
-        className="flex h-full w-full flex-col rounded-md bg-white p-4 select-none"
-      >
+      <div className="flex h-full w-full flex-col rounded-md bg-white p-4 select-none">
         <PlotWidgetHeader
           title={plotConfig.title}
           chartType={chartType}
           onChange={chartType !== PLOT_TYPE_OPTIONS.DOTS ? setChartType : undefined}
           onDownload={handleDownload}
-          onExpand={handleExpand}
+          onExpand={() => setIsDialogOpen(true)}
         />
         <VariableSelect
           options={plotConfig.variables}
@@ -106,11 +104,7 @@ export function MultipleRunsPlotWidget({
         </div>
       </div>
 
-      <ChartDialog
-        open={isDialogOpen}
-        onOpenChange={handleDialogOpenChange}
-        title={plotConfig.title}
-      >
+      <ChartDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} title={plotConfig.title}>
         <div className="flex h-full w-full flex-col">
           <VariableSelect
             options={plotConfig.variables}
@@ -118,22 +112,7 @@ export function MultipleRunsPlotWidget({
             currentVariable={currentVariable}
           />
           <div className="relative min-h-0 flex-1 [&>*]:!aspect-auto [&>*]:!h-full">
-            {isDialogOpen && (
-              <>
-                {chartType === PLOT_TYPE_OPTIONS.MULTIPLE_LINE && (
-                  <CanvasMultiLinePlot
-                    key="multiline-dialog"
-                    data={data}
-                    prefix={prefix}
-                    onRunClick={handleRunClick}
-                    selectedRun={selectedRun}
-                    onSelectedRunChange={setSelectedRun}
-                    yExtent={yExtent}
-                  />
-                )}
-                {chartType === PLOT_TYPE_OPTIONS.AREA && <AreaPlot data={data} prefix={prefix} />}
-              </>
-            )}
+            {isDialogOpen && renderChart(true)}
           </div>
         </div>
       </ChartDialog>

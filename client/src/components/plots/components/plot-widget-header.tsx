@@ -10,9 +10,21 @@ interface Props {
   title?: string;
   onDownload?: (selectedTypes: DOWNLOAD_TYPE[]) => void;
   onExpand?: () => void;
+  toggleOptions?: [ChartType, ChartType];
 }
 
-export function PlotWidgetHeader({ chartType, onChange, title, onDownload, onExpand }: Props) {
+export function PlotWidgetHeader({
+  chartType,
+  onChange,
+  title,
+  onDownload,
+  onExpand,
+  toggleOptions,
+}: Props) {
+  const toggle = onChange && (
+    <ChartTypeToggle currentType={chartType} onChange={onChange} options={toggleOptions} />
+  );
+
   if (title) {
     return (
       <div className="mb-4 flex items-center justify-between">
@@ -22,7 +34,7 @@ export function PlotWidgetHeader({ chartType, onChange, title, onDownload, onExp
         <div className="flex items-center gap-4">
           {onExpand && <ExpandChartButton onClick={onExpand} />}
           <DownloadPlotButton onClick={onDownload} />
-          {onChange && <ChartTypeToggle currentType={chartType} onChange={onChange} />}
+          {toggle}
         </div>
       </div>
     );
@@ -34,7 +46,7 @@ export function PlotWidgetHeader({ chartType, onChange, title, onDownload, onExp
       <div className="flex items-center gap-4">
         {onExpand && <ExpandChartButton onClick={onExpand} />}
         <DownloadPlotButton onClick={onDownload} />
-        {onChange && <ChartTypeToggle currentType={chartType} onChange={onChange} />}
+        {toggle}
       </div>
     </div>
   );
