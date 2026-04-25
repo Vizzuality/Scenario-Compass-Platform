@@ -6,6 +6,7 @@ import { PLOT_TYPE_OPTIONS } from "@/components/plots/components";
 import HistogramWidget from "@/components/plots/widgets/histogram-widget";
 import { YExtentPair } from "@/components/plots/plot-variations/canvas/scales";
 import CustomTabPlotGrid from "@/containers/scenario-dashboard-container/components/plots-section/custom-tab-plot-grid";
+import { useBaseUrlParams } from "@/hooks/nuqs/url-params/use-base-url-params";
 
 type ComparisonPlotSideProps = {
   prefix?: string;
@@ -22,6 +23,11 @@ type ComparisonPlotSideProps = {
 
 export function ComparisonPlotSide(props: ComparisonPlotSideProps) {
   const { prefix, className } = props;
+  const { startYear, endYear } = useBaseUrlParams();
+  const chartType =
+    parseInt(startYear!) === parseInt(endYear!)
+      ? PLOT_TYPE_OPTIONS.DOTS
+      : PLOT_TYPE_OPTIONS.MULTIPLE_LINE;
 
   if (props.isCustom) {
     return (
@@ -29,7 +35,7 @@ export function ComparisonPlotSide(props: ComparisonPlotSideProps) {
         <CustomTabPlotGrid
           prefix={prefix}
           className="flex h-fit w-full flex-col gap-4"
-          initialChartType={PLOT_TYPE_OPTIONS.MULTIPLE_LINE}
+          initialChartType={chartType}
         />
       </div>
     );
@@ -49,7 +55,7 @@ export function ComparisonPlotSide(props: ComparisonPlotSideProps) {
         <MultipleRunsPlotWidget
           prefix={prefix}
           plotConfig={plotConfig}
-          initialChartType={PLOT_TYPE_OPTIONS.MULTIPLE_LINE}
+          initialChartType={chartType}
           yExtent={yExtent}
         />
       )}

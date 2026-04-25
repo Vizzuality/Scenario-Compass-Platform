@@ -7,10 +7,18 @@ import { Button } from "@/components/ui/button";
 export default function BackButton() {
   const router = useRouter();
 
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      router.back();
+    } else {
+      router.push("/");
+    }
+  };
+
   return (
     <div className="mb-8 flex items-center justify-between">
       <Button
-        onClick={() => router.back()}
+        onClick={handleBack}
         size="lg"
         className="text-base leading-6 font-normal"
         variant="ghost"

@@ -10,7 +10,7 @@ import { ComboboxVariableSelect } from "@/components/plots/components";
 import { Variable } from "@iiasa/ixmp4-ts";
 import { useTabAndVariablesParams } from "@/hooks/nuqs/tabs/use-tabs-and-variables-params";
 import { VariableSelectWrapper } from "@/components/plots/components";
-import { AreaPlot } from "@/components/plots/plot-variations";
+import { AreaPlot, DotPlot } from "@/components/plots/plot-variations";
 import { useDownloadPlotAssets } from "@/hooks/plots/download/use-download-plot-assets";
 import queryKeys from "@/lib/query-keys";
 import { CanvasMultiLinePlot } from "@/components/plots/plot-variations/canvas/canvas-multi-line-plot";
@@ -43,12 +43,12 @@ export function CustomMultipleRunsPlotWidget({
   const [chartType, setChartType] = useState<ChartType>(initialChartType);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const selectedRunRef = useRef<ExtendedRun | null>(null);
+
   const buildRunDetailsUrl = useGetRunDetailsUrl();
   const { setCustomVariable, getCustomVariable } = useTabAndVariablesParams(prefix);
   const selectedVariableIndex = getCustomVariable(index);
-  const currentVariable = variableOptions?.find(
-    (variable) => variable.id === selectedVariableIndex,
-  );
+  const currentVariable = variableOptions?.find((v) => v.id === selectedVariableIndex);
+
   const data = useGetMultipleRunsForVariablePipeline({
     variable: currentVariable?.name || "",
     prefix,
@@ -57,10 +57,7 @@ export function CustomMultipleRunsPlotWidget({
   const { chartRef, handleDownload } = useDownloadPlotAssets({
     runs: data.runs,
     title: currentVariable?.name.replaceAll("|", " - ") || "plot",
-    imageOptions: {
-      padding: { all: 30 },
-      includeInFilename: true,
-    },
+    imageOptions: { padding: { all: 30 }, includeInFilename: true },
   });
 
   useEffect(() => {
@@ -74,30 +71,63 @@ export function CustomMultipleRunsPlotWidget({
   }, [onVariableSelect, selectedVariableIndex]);
 
   const handleRunClick = (run: ExtendedRun) => {
-    const url = buildRunDetailsUrl(run);
-    window.open(url, "_blank");
+    window.open(buildRunDetailsUrl(run), "_blank");
   };
 
   const handleVariableChange = (variableId: Variable["id"]) => {
     if (!selectedVariableIndex && onVariableSelect) {
       onVariableSelect(variableId);
     }
-    setCustomVariable({
-      plotIndex: index,
-      variableId,
-    });
+    setCustomVariable({ plotIndex: index, variableId });
     selectedRunRef.current = null;
   };
 
-  const handleExpand = () => {
-    setIsDialogOpen(true);
+  const renderChart = (zoomEnabled: boolean) => {
+    if (chartType === PLOT_TYPE_OPTIONS.AREA) {
+      return <AreaPlot data={data} prefix={prefix} />;
+    }
+    if (chartType === PLOT_TYPE_OPTIONS.DOTS) {
+      return (
+        <DotPlot
+          data={data}
+          prefix={prefix}
+          onRunClick={handleRunClick}
+          selectedRun={selectedRunRef.current}
+          onSelectedRunChange={(run) => {
+            selectedRunRef.current = run;
+          }}
+        />
+      );
+    }
+    if (chartType === PLOT_TYPE_OPTIONS.MULTIPLE_LINE) {
+      return (
+        <CanvasMultiLinePlot
+          data={data}
+          prefix={prefix}
+          zoomEnabled={zoomEnabled}
+          onRunClick={handleRunClick}
+          selectedRun={selectedRunRef.current}
+          onSelectedRunChange={(run) => {
+            selectedRunRef.current = run;
+          }}
+        />
+      );
+    }
+    return null;
   };
 
-  const handleDialogOpenChange = (open: boolean) => {
-    setIsDialogOpen(open);
-  };
-
-  const showChartTypeToggle = chartType !== PLOT_TYPE_OPTIONS.DOTS;
+  const variableSelectEl = (
+    <div className="mb-5 flex items-center gap-2.5">
+      <p className="text-xs">Variable</p>
+      <ComboboxVariableSelect
+        isLoading={isLoading}
+        isError={isError}
+        options={variableOptions}
+        value={currentVariable?.id}
+        onSelectAction={handleVariableChange}
+      />
+    </div>
+  );
 
   if (!currentVariable) {
     return (
@@ -117,71 +147,24 @@ export function CustomMultipleRunsPlotWidget({
         <div className="flex flex-col justify-between">
           <PlotWidgetHeader
             chartType={chartType}
-            onChange={showChartTypeToggle ? setChartType : undefined}
+            onChange={chartType !== PLOT_TYPE_OPTIONS.DOTS ? setChartType : undefined}
             onDownload={handleDownload}
-            onExpand={handleExpand}
+            onExpand={() => setIsDialogOpen(true)}
           />
-          <div className="mb-5 flex items-center gap-2.5">
-            <p className="text-xs">Variable</p>
-            <ComboboxVariableSelect
-              isLoading={isLoading}
-              isError={isError}
-              options={variableOptions}
-              value={currentVariable?.id}
-              onSelectAction={handleVariableChange}
-            />
-          </div>
+          {variableSelectEl}
         </div>
-        <div ref={chartRef}>
-          {chartType === PLOT_TYPE_OPTIONS.AREA && <AreaPlot data={data} prefix={prefix} />}
-          {chartType === PLOT_TYPE_OPTIONS.MULTIPLE_LINE && (
-            <CanvasMultiLinePlot
-              data={data}
-              prefix={prefix}
-              onRunClick={handleRunClick}
-              selectedRun={selectedRunRef.current}
-              onSelectedRunChange={(run) => {
-                selectedRunRef.current = run;
-              }}
-            />
-          )}
-        </div>
+        <div ref={chartRef}>{renderChart(false)}</div>
       </div>
 
       <ChartDialog
         open={isDialogOpen}
-        onOpenChange={handleDialogOpenChange}
-        title={currentVariable?.name.replaceAll("|", " - ") || "Plot"}
+        onOpenChange={setIsDialogOpen}
+        title={currentVariable.name.replaceAll("|", " - ")}
       >
         <div className="flex h-full w-full flex-col">
-          <div className="mb-5 flex items-center gap-2.5">
-            <p className="text-xs">Variable</p>
-            <ComboboxVariableSelect
-              isLoading={isLoading}
-              isError={isError}
-              options={variableOptions}
-              value={currentVariable?.id}
-              onSelectAction={handleVariableChange}
-            />
-          </div>
+          {variableSelectEl}
           <div className="relative min-h-0 flex-1 [&>*]:!aspect-auto [&>*]:!h-full">
-            {isDialogOpen && (
-              <>
-                {chartType === PLOT_TYPE_OPTIONS.MULTIPLE_LINE && (
-                  <CanvasMultiLinePlot
-                    key="multiline-dialog"
-                    data={data}
-                    prefix={prefix}
-                    onRunClick={handleRunClick}
-                    selectedRun={selectedRunRef.current}
-                    onSelectedRunChange={(run) => {
-                      selectedRunRef.current = run;
-                    }}
-                  />
-                )}
-                {chartType === PLOT_TYPE_OPTIONS.AREA && <AreaPlot data={data} prefix={prefix} />}
-              </>
-            )}
+            {isDialogOpen && renderChart(true)}
           </div>
         </div>
       </ChartDialog>
