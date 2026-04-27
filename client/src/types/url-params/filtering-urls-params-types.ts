@@ -9,10 +9,16 @@ import {
   END_OF_CENTURY_WARMING_KEY,
   PEAK_WARMING_KEY,
 } from "@/lib/config/filters/advanced-filters-config";
+import {
+  FOSSIL_FUEL_PHASE_DOWN_KEY,
+  MITIGATION_STRATEGY_KEY,
+} from "@/lib/config/filters/typology-filter-config";
 
 export const FILTERS_CONFIG = {
   climateCategory: { group: "climate", type: "array" },
   yearNetZero: { group: "climate", type: "array" },
+  [FOSSIL_FUEL_PHASE_DOWN_KEY]: { group: "typologies", type: "array" },
+  [MITIGATION_STRATEGY_KEY]: { group: "typologies", type: "array" },
   [RENEWABLES_SHARE_2050]: { group: "energy", type: "string" },
   [FOSSIL_SHARE_2050]: { group: "energy", type: "string" },
   [BIOMASS_SHARE_2050]: { group: "energy", type: "string" },
