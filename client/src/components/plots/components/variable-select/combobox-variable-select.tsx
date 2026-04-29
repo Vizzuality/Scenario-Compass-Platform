@@ -30,18 +30,23 @@ export function ComboboxVariableSelect({
   const [open, setOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
 
-  const handleSelect = (currentValue: number) => {
-    const isSameValue = currentValue === value;
-    if (!isSameValue) {
+  const handleSelect = (currentValue: Variable["id"]) => {
+    if (currentValue !== value) {
       onSelectAction(currentValue);
-      setOpen(false);
     }
+    setOpen(false);
+    setSearchQuery("");
+  };
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    setOpen(nextOpen);
+    if (!nextOpen) setSearchQuery("");
   };
 
   const variablesTree = React.useMemo(() => {
-    if (!options || isLoading) return {};
+    if (!options) return {};
     return buildTree<Variable>(options);
-  }, [options, isLoading]);
+  }, [options]);
 
   const filteredTree = React.useMemo(() => {
     return filterTree(variablesTree, searchQuery);
@@ -59,8 +64,10 @@ export function ComboboxVariableSelect({
     return count;
   }, [filteredTree]);
 
+  const selectedLabel = value ? options?.find((v) => v.id === value)?.name : undefined;
+
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
@@ -69,11 +76,7 @@ export function ComboboxVariableSelect({
           aria-expanded={open}
           className="w-64 justify-between border-1 border-stone-300 font-normal"
         >
-          <p className="truncate text-sm">
-            {value
-              ? options?.find((variable) => variable.id === value)?.name
-              : "Select variable..."}
-          </p>
+          <p className="truncate text-sm">{selectedLabel ?? "Select variable..."}</p>
           <ChevronsUpDown className="opacity-50" size={16} />
         </Button>
       </PopoverTrigger>
@@ -110,7 +113,6 @@ export function ComboboxVariableSelect({
                       key={node.path}
                       node={node}
                       level={0}
-                      isRootLevel={true}
                       selectedValue={value}
                       onSelect={handleSelect}
                       searchQuery={searchQuery}

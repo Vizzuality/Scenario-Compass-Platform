@@ -15,21 +15,28 @@ import {
   renderGridLines,
   renderAxes,
 } from "@/utils/plots/render-functions";
-import { CATEGORY_CONFIG } from "@/lib/config/reasons-of-concern/category-config";
-import { createTooltipManager } from "@/utils/plots/tooltip-manager";
+import {
+  CATEGORY_CONFIG,
+  getCategoryAbbrev,
+} from "@/lib/config/reasons-of-concern/category-config";
 import { ExtendedRun } from "@/types/data/run";
-import { filterVisibleRuns } from "@/utils/plots/filtering-functions";
 import { getRunColor } from "@/utils/plots/colors-functions";
-import { formatNumber } from "@/utils/plots/format-functions";
+import { createTooltipHelpers } from "@/components/plots/plot-variations/canvas/tooltip";
+import { YExtentPair } from "@/components/plots/plot-variations/canvas/scales";
 
 const DOT_CLASS_PREFIX = "dot-run-";
+const DOT_TOOLTIP_CLASS = "dot-plot-tooltip";
 
 interface Props {
   svg: SVGSelection;
   runs: ExtendedRun[];
   dimensions: PlotDimensions;
   selectedFlags: string[];
-  onRunClick?: (run: ExtendedRun) => void;
+  onRunClick: (run: ExtendedRun) => void;
+  onPrefetch?: (run: ExtendedRun) => void;
+  selectedRun?: ExtendedRun | null;
+  onSelectedRunChange?: (run: ExtendedRun | null) => void;
+  yExtent?: YExtentPair;
 }
 
 export const renderDotPlot = ({
@@ -38,11 +45,29 @@ export const renderDotPlot = ({
   selectedFlags,
   dimensions,
   onRunClick,
+  onPrefetch,
+  selectedRun,
+  onSelectedRunChange,
+  yExtent,
 }: Props): void => {
   clearSVG(svg);
-  const tooltipManager = createTooltipManager({ svg, dimensions });
-  if (!tooltipManager) return;
-  if (runs.length === 0) return;
+
+  const containerEl = svg.node()?.parentElement as HTMLDivElement | null;
+  if (!containerEl || runs.length === 0) return;
+
+  containerEl.style.position = "relative";
+
+  const existingTooltip = containerEl.querySelector<HTMLDivElement>(`.${DOT_TOOLTIP_CLASS}`);
+  if (existingTooltip) existingTooltip.remove();
+  const tooltipEl = document.createElement("div");
+  tooltipEl.className = DOT_TOOLTIP_CLASS;
+  containerEl.appendChild(tooltipEl);
+
+  const tooltip = createTooltipHelpers(tooltipEl, onRunClick, onPrefetch, () => {
+    tooltip.setInteractive(false);
+    onSelectedRunChange?.(null);
+    resetDots();
+  });
 
   const g = createMainGroup(svg, dimensions);
 
@@ -54,8 +79,11 @@ export const renderDotPlot = ({
   );
 
   const hasSelection = selectedFlags.length > 0;
-  const domain = calculateDomain(allPoints);
+  const domain = calculateDomain(allPoints, yExtent);
   const scales = createScales(domain, dimensions.INNER_WIDTH, dimensions.INNER_HEIGHT);
+
+  const isRunSelected = (run: ExtendedRun) =>
+    !hasSelection || selectedFlags.includes(getCategoryAbbrev(run.flagCategory) ?? "");
 
   renderGridLines(g, scales.yScale, dimensions.INNER_WIDTH);
   renderAxes({
@@ -65,7 +93,7 @@ export const renderDotPlot = ({
     yUnitText: runs[0].unit,
   });
 
-  const JITTER_AMOUNT = 250;
+  const JITTER_AMOUNT = dimensions.INNER_WIDTH * 0.8;
 
   const getJitter = (runId: string, year: number) => {
     const seed =
@@ -73,84 +101,115 @@ export const renderDotPlot = ({
         a = (a << 5) - a + b.charCodeAt(0);
         return a & a;
       }, 0) + year;
-
     const pseudo = Math.sin(seed) * 10000;
     return (pseudo - Math.floor(pseudo) - 0.5) * JITTER_AMOUNT;
   };
+
+  const getDotX = (d: (typeof allPoints)[number]) =>
+    scales.xScale(d.year) + getJitter(d.run.runId, d.year);
+
+  const getAbsCoords = (d: (typeof allPoints)[number]) => ({
+    absX: dimensions.MARGIN.LEFT + getDotX(d),
+    absY: dimensions.MARGIN.TOP + scales.yScale(d.value),
+  });
 
   const dots = g
     .selectAll(".data-point")
     .data(allPoints)
     .join("circle")
     .attr("class", (d) => `${DOT_CLASS_PREFIX}${d.run.runId}`)
-    .attr("cx", (d) => {
-      const baseX = scales.xScale(d.year);
-      const jitter = getJitter(d.run.runId, d.year);
-      return baseX + jitter;
-    })
+    .attr("cx", (d) => getDotX(d))
     .attr("cy", (d) => scales.yScale(d.value))
     .attr("r", PLOT_CONFIG.SINGLE_DOT_RADIUS)
     .attr("fill", (d) => getRunColor(d.run, selectedFlags, hasSelection))
     .attr("fill-opacity", PLOT_CONFIG.NORMAL_OPACITY)
-    .style("cursor", "pointer");
+    .style("cursor", (d) => (isRunSelected(d.run) ? "pointer" : "default"));
+
+  dots.filter((d) => isRunSelected(d.run)).raise();
+
+  const resetDots = () => {
+    dots
+      .transition()
+      .duration(0)
+      .attr("fill-opacity", PLOT_CONFIG.NORMAL_OPACITY)
+      .attr("stroke", "none")
+      .attr("r", PLOT_CONFIG.SINGLE_DOT_RADIUS)
+      .attr("fill", (d) => getRunColor(d.run, selectedFlags, hasSelection));
+  };
+
+  const selectDot = (run: ExtendedRun, point: { year: number; value: number }) => {
+    if (!isRunSelected(run)) return;
+
+    const hoverColor = CATEGORY_CONFIG[run.flagCategory]?.color || GREY;
+
+    dots.transition().duration(0).attr("fill-opacity", PLOT_CONFIG.DIMMED_OPACITY);
+
+    dots
+      .filter((d) => d.run.runId === run.runId)
+      .transition()
+      .duration(0)
+      .attr("fill-opacity", PLOT_CONFIG.FULL_OPACITY)
+      .attr("fill", hoverColor)
+      .attr("stroke-width", DOT_HOVER_STROKE)
+      .attr("r", DOT_HOVER_RADIUS);
+
+    tooltip.setInteractive(true);
+    tooltip.updateContent(run, point);
+
+    const matchedPoint = allPoints.find((p) => p.run.runId === run.runId && p.year === point.year);
+    if (matchedPoint) {
+      const { absX, absY } = getAbsCoords(matchedPoint);
+      tooltip.position(absX, absY, containerEl!.offsetWidth, containerEl!.offsetHeight);
+    }
+  };
+
+  // Sync external selectedRun on render
+  if (selectedRun) {
+    const selectedPoint = allPoints.find((p) => p.run.runId === selectedRun.runId);
+    if (selectedPoint) {
+      selectDot(selectedRun, { year: selectedPoint.year, value: selectedPoint.value });
+    }
+  }
 
   dots
-    .on("mouseleave", function () {
-      dots
-        .transition()
-        .duration(PLOT_CONFIG.NORMAL_TRANSITION_MS)
-        .attr("fill-opacity", PLOT_CONFIG.NORMAL_OPACITY)
-        .attr("stroke", "none")
-        .attr("r", PLOT_CONFIG.SINGLE_DOT_RADIUS)
-        .attr("fill", (d) => getRunColor(d.run, selectedFlags, hasSelection));
-
-      tooltipManager.hide();
+    .on("mouseleave", function (_event, d) {
+      if (!isRunSelected(d.run)) return;
+      if (tooltipEl!.style.pointerEvents === "auto") return;
+      tooltip.hide();
+      resetDots();
     })
-    .on("mouseenter", function (event, hoveredRun) {
-      const hoveredDot = d3.select(this);
-      const hoverColor = CATEGORY_CONFIG[hoveredRun.run.flagCategory]?.color || GREY;
+    .on("mouseenter", function (_event, d) {
+      if (!isRunSelected(d.run)) return;
+      if (tooltipEl!.style.pointerEvents === "auto") return;
 
-      dots
-        .transition()
-        .duration(PLOT_CONFIG.FAST_TRANSITION_MS)
-        .attr("fill-opacity", PLOT_CONFIG.DIMMED_OPACITY);
+      const hoveredDot = d3.select(this);
+      const hoverColor = CATEGORY_CONFIG[d.run.flagCategory]?.color || GREY;
+
+      dots.transition().duration(0).attr("fill-opacity", PLOT_CONFIG.DIMMED_OPACITY);
 
       hoveredDot
         .transition()
-        .duration(PLOT_CONFIG.FAST_TRANSITION_MS)
+        .duration(0)
         .attr("fill-opacity", PLOT_CONFIG.FULL_OPACITY)
         .attr("fill", hoverColor)
         .attr("stroke-width", DOT_HOVER_STROKE)
         .attr("r", DOT_HOVER_RADIUS);
-      tooltipManager.show();
 
-      const tooltipHTML = `
-        <ul class="list-disc m-0 pl-5 flex flex-col gap-1 text-black">
-            <li>
-                <strong> Year: </strong> ${hoveredRun.year}
-            </li>
-            <li>
-                <strong>Value: </strong>
-                <span >${formatNumber(hoveredRun.value)}</span>
-            </li>
-            <li>
-                <strong> Model: </strong>
-                <span>${hoveredRun.run.modelName}</span>
-            </li>
-            <li>
-                <strong> Scenario: </strong>
-                <span>${hoveredRun.run.scenarioName}</li>
-            </ul>
-      `;
-
-      const pointX = scales.xScale(hoveredRun.year);
-      const pointY = scales.yScale(hoveredRun.value);
-
-      tooltipManager.update(tooltipHTML, pointX, pointY);
+      tooltip.updateContent(d.run, { year: d.year, value: d.value });
+      const { absX, absY } = getAbsCoords(d);
+      tooltip.position(absX, absY, containerEl!.offsetWidth, containerEl!.offsetHeight);
     })
-
-    .on("click", (event, d) => {
+    .on("click", function (event, d) {
+      if (!isRunSelected(d.run)) return;
       event.stopPropagation();
-      onRunClick?.(d.run);
+      onSelectedRunChange?.(d.run);
+      selectDot(d.run, { year: d.year, value: d.value });
     });
+
+  svg.on("click.tooltip-reset", () => {
+    tooltip.setInteractive(false);
+    tooltip.hide();
+    onSelectedRunChange?.(null);
+    resetDots();
+  });
 };

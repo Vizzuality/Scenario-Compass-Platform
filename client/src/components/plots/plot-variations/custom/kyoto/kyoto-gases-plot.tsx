@@ -1,7 +1,7 @@
 import { PlotContainer, PlotWidgetHeader } from "@/components/plots/components";
 import { useGetSingleRunForVariablePipeline } from "@/hooks/runs/data-pipeline/use-get-single-run-for-variable-pipeline";
 import LoadingDots from "@/components/animations/loading-dots";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { DataFetchError } from "@/components/error-state/data-fetch-error";
 import { ShortRun, ShortRunReturn } from "@/components/plots/plot-variations/custom/kyoto/types";
 import { getFinalCH4Points } from "@/components/plots/plot-variations/custom/kyoto/utils";
@@ -11,6 +11,11 @@ import { renderKyotoPlot } from "@/components/plots/plot-variations/custom/kyoto
 import * as d3 from "d3";
 import { ExtendedRun, ShortDataPoint } from "@/types/data/run";
 import { OTHER_GASES } from "@/lib/config/plots/plots-constants";
+import { renderKyotoBarPlot } from "@/components/plots/plot-variations/custom/kyoto/render-bar";
+import { renderKyotoWaterfallPlot } from "@/components/plots/plot-variations/custom/kyoto/render-waterfall";
+import { useBaseUrlParams } from "@/hooks/nuqs/url-params/use-base-url-params";
+import { ChartDialog } from "@/components/custom/chart-dialog";
+import { ChartType, PLOT_TYPE_OPTIONS } from "@/components/plots/components/chart-type-toggle";
 
 const GWP_CH4 = 25;
 const GWP_N2O_WITH_UNIT_CONVERSION = 0.298;
@@ -25,13 +30,6 @@ const convertGasToMtCO2eq = (runs: ExtendedRun[], multiplier: number) => {
   return converted;
 };
 
-const renderStateComponent = (content: React.ReactNode) => (
-  <div className="flex w-full flex-col justify-between rounded-md bg-white p-4 select-none">
-    <PlotWidgetHeader title="GHG Emissions" />
-    <PlotContainer>{content}</PlotContainer>
-  </div>
-);
-
 const createShortRun = (
   variableName: string,
   isLine: boolean,
@@ -42,21 +40,102 @@ const createShortRun = (
   orderedPoints,
 });
 
-const KyotoBasePlot = ({ data }: { data: ShortRunReturn }) => {
+const KyotoBasePlot = ({
+  data,
+  isSingleYear,
+  chartType,
+}: {
+  data: ShortRunReturn;
+  isSingleYear: boolean;
+  chartType: ChartType;
+}) => {
   const { svgRef, dimensions, plotContainer } = usePlotContainer();
 
   useEffect(() => {
     if (!data?.shortRuns?.length || !svgRef.current) return;
-
     const svg = d3.select(svgRef.current);
-    renderKyotoPlot({ svg, dimensions, data });
-  }, [data, dimensions, svgRef]);
+
+    if (!isSingleYear) {
+      renderKyotoPlot({ svg, dimensions, data });
+      return;
+    }
+
+    if (chartType === PLOT_TYPE_OPTIONS.WATERFALL) {
+      renderKyotoWaterfallPlot({ svg, dimensions, data });
+    } else {
+      renderKyotoBarPlot({ svg, dimensions, data });
+    }
+  }, [data, dimensions, svgRef, isSingleYear, chartType]);
 
   return plotContainer;
 };
 
+// Separate component that owns all hooks — rendered only after loading/error guards pass
+function KyotoGasesContent({
+  result,
+  isSingleYear,
+}: {
+  result: ShortRunReturn;
+  isSingleYear: boolean;
+}) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [singleYearChartType, setSingleYearChartType] = useState<ChartType>(
+    PLOT_TYPE_OPTIONS.STACKED_BAR,
+  );
+
+  useEffect(() => {
+    const hasNegatives = result.shortRuns
+      .filter((r) => !r.isLine)
+      .some((r) => r.orderedPoints.some((p) => p.value < 0));
+    setSingleYearChartType(
+      hasNegatives ? PLOT_TYPE_OPTIONS.WATERFALL : PLOT_TYPE_OPTIONS.STACKED_BAR,
+    );
+  }, [result.shortRuns]);
+
+  const variables = [OTHER_GASES, "N2O", "CH4", "CO2"];
+  const legend = <CustomPlotLegend flagCategory={result.flagCategory} variables={variables} />;
+  const plot = (
+    <KyotoBasePlot isSingleYear={isSingleYear} data={result} chartType={singleYearChartType} />
+  );
+
+  return (
+    <>
+      <div className="flex w-full flex-col justify-between rounded-md bg-white p-4 select-none">
+        <PlotWidgetHeader
+          title="GHG Emissions"
+          onExpand={() => setIsDialogOpen(true)}
+          chartType={isSingleYear ? singleYearChartType : undefined}
+          onChange={isSingleYear ? setSingleYearChartType : undefined}
+          toggleOptions={
+            isSingleYear ? [PLOT_TYPE_OPTIONS.WATERFALL, PLOT_TYPE_OPTIONS.STACKED_BAR] : undefined
+          }
+        />
+        {legend}
+        <PlotContainer>{plot}</PlotContainer>
+      </div>
+
+      <ChartDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} title="GHG Emissions">
+        <div className="flex h-full w-full flex-col">
+          {legend}
+          <div className="relative min-h-0 flex-1 [&>*]:!aspect-auto [&>*]:!h-full">
+            {isDialogOpen && <PlotContainer>{plot}</PlotContainer>}
+          </div>
+        </div>
+      </ChartDialog>
+    </>
+  );
+}
+
+const renderStateComponent = (content: React.ReactNode) => (
+  <div className="flex w-full flex-col justify-between rounded-md bg-white p-4 select-none">
+    <PlotWidgetHeader title="GHG Emissions" />
+    <PlotContainer>{content}</PlotContainer>
+  </div>
+);
+
 /**
  * Converts greenhouse gases to common unit: Mt CO2 equivalent per year
+ *
  *
  * Input units:
  * - Kyoto gases: Mt CO2eq/year (already converted)
@@ -66,24 +145,19 @@ const KyotoBasePlot = ({ data }: { data: ShortRunReturn }) => {
  * - N2O: kt N2O/year → Mt CO2eq/year (GWP = 298, kt to Mt = ÷1000)
  */
 export function KyotoGasesPlot() {
-  const kyotoGases = useGetSingleRunForVariablePipeline({
-    variable: "Emissions|Kyoto Gases",
-  });
+  const { startYear, endYear } = useBaseUrlParams();
+  const isSingleYear = parseInt(startYear!) === parseInt(endYear!);
+
+  const kyotoGases = useGetSingleRunForVariablePipeline({ variable: "Emissions|Kyoto Gases" });
   const CO2 = useGetSingleRunForVariablePipeline({ variable: "Emissions|CO2" });
   const CH4_AFOLU = useGetSingleRunForVariablePipeline({ variable: "Emissions|CH4|AFOLU" });
-  const CH4_ENERGY = useGetSingleRunForVariablePipeline({
-    variable: "Emissions|CH4|Energy",
-  });
+  const CH4_ENERGY = useGetSingleRunForVariablePipeline({ variable: "Emissions|CH4|Energy" });
   const N2O = useGetSingleRunForVariablePipeline({ variable: "Emissions|N2O" });
 
-  const isError = [kyotoGases, CO2, CH4_AFOLU, CH4_ENERGY, N2O].some(
-    (pipeline) => pipeline.isError,
-  );
-  const isLoading = [kyotoGases, CO2, CH4_AFOLU, CH4_ENERGY, N2O].some(
-    (pipeline) => pipeline.isLoading,
-  );
+  const isError = [kyotoGases, CO2, CH4_AFOLU, CH4_ENERGY, N2O].some((p) => p.isError);
+  const isLoading = [kyotoGases, CO2, CH4_AFOLU, CH4_ENERGY, N2O].some((p) => p.isLoading);
   const isAnyMissingArray = [kyotoGases, CO2, CH4_AFOLU, N2O, CH4_ENERGY].some(
-    (pipeline) => pipeline.runs.length === 0,
+    (p) => p.runs.length === 0,
   );
 
   if (isLoading) return renderStateComponent(<LoadingDots />);
@@ -100,33 +174,24 @@ export function KyotoGasesPlot() {
       </DataFetchError>,
     );
 
-  // Convert gases to Mt CO2eq/year
   const CH4_AFOLU_CO2eq = convertGasToMtCO2eq(CH4_AFOLU.runs, GWP_CH4);
   const CH4_ENERGY_CO2eq = convertGasToMtCO2eq(CH4_ENERGY.runs, GWP_CH4);
   const N2O_CO2eq = convertGasToMtCO2eq(N2O.runs, GWP_N2O_WITH_UNIT_CONVERSION);
   const CO2_CO2eq = structuredClone(CO2.runs);
 
-  // Combine CH4 sources
   const FINAL_CH4_CO2eq = getFinalCH4Points(
     CH4_ENERGY_CO2eq[0].orderedPoints,
     CH4_AFOLU_CO2eq[0].orderedPoints,
   );
 
-  // Calculate Other Gases (Kyoto - CO2 - CH4 - N2O)
   const otherGasesPoints: ShortDataPoint[] = kyotoGases.runs[0].orderedPoints.map((kyotoPoint) => {
-    const co2Point = CO2_CO2eq[0].orderedPoints.find((p) => p.year === kyotoPoint.year);
-    const ch4Point = FINAL_CH4_CO2eq.find((p) => p.year === kyotoPoint.year);
-    const n2oPoint = N2O_CO2eq[0].orderedPoints.find((p) => p.year === kyotoPoint.year);
-
-    const co2Value = co2Point?.value || 0;
-    const ch4Value = ch4Point?.value || 0;
-    const n2oValue = n2oPoint?.value || 0;
-
-    const otherGasesValue = kyotoPoint.value - co2Value - ch4Value - n2oValue;
+    const co2Value = CO2_CO2eq[0].orderedPoints.find((p) => p.year === kyotoPoint.year)?.value ?? 0;
+    const ch4Value = FINAL_CH4_CO2eq.find((p) => p.year === kyotoPoint.year)?.value ?? 0;
+    const n2oValue = N2O_CO2eq[0].orderedPoints.find((p) => p.year === kyotoPoint.year)?.value ?? 0;
 
     return {
       year: kyotoPoint.year,
-      value: Math.max(0, otherGasesValue),
+      value: Math.max(0, kyotoPoint.value - co2Value - ch4Value - n2oValue),
     };
   });
 
@@ -141,15 +206,5 @@ export function KyotoGasesPlot() {
     ],
   };
 
-  const variables = [OTHER_GASES, "N2O", "CH4", "CO2"];
-
-  return (
-    <div className="flex w-full flex-col justify-between rounded-md bg-white p-4 select-none">
-      <PlotWidgetHeader title="GHG Emissions" />
-      <CustomPlotLegend flagCategory={result.flagCategory} variables={variables} />
-      <PlotContainer>
-        <KyotoBasePlot data={result} />
-      </PlotContainer>
-    </div>
-  );
+  return <KyotoGasesContent result={result} isSingleYear={isSingleYear} />;
 }
