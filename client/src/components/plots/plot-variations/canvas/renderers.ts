@@ -8,6 +8,8 @@ import { drawAllLines } from "./lines";
 import { getCategoryAbbrev } from "@/lib/config/reasons-of-concern/category-config";
 import { getRunColor } from "@/utils/plots/colors-functions";
 
+export type ColorFn = (run: ExtendedRun) => string;
+
 export interface RenderResult {
   scales: Scales;
   spatialIndex: SpatialIndex;
@@ -22,6 +24,7 @@ export const renderChart = (
   hasSelection: boolean,
   zoom: ZoomState,
   selectedRun: ExtendedRun | null,
+  getLineColor?: ColorFn,
 ): RenderResult | null => {
   const rect = container.getBoundingClientRect();
   if (rect.width === 0 || rect.height === 0) return null;
@@ -34,11 +37,28 @@ export const renderChart = (
 
   ctx.clearRect(0, 0, rect.width, rect.height);
   drawAxesAndGrid(ctx, scales, runs, rect.width, rect.height);
-  drawAllLines(ctx, runs, scales, selectedFlags, hasSelection, rect.width, rect.height);
+  drawAllLines(
+    ctx,
+    runs,
+    scales,
+    selectedFlags,
+    hasSelection,
+    rect.width,
+    rect.height,
+    selectedRun,
+    getLineColor,
+  );
 
   if (selectedRun) {
-    const abbrev = getCategoryAbbrev(selectedRun.flagCategory);
-    const runColor = getRunColor(selectedRun, abbrev ? [abbrev] : selectedFlags, true);
+    const color = getLineColor
+      ? getLineColor(selectedRun)
+      : getRunColor(
+          selectedRun,
+          getCategoryAbbrev(selectedRun.flagCategory)
+            ? [getCategoryAbbrev(selectedRun.flagCategory)!]
+            : selectedFlags,
+          true,
+        );
 
     const path = new Path2D();
     selectedRun.orderedPoints.forEach((point, index) => {
@@ -56,7 +76,7 @@ export const renderChart = (
 
     ctx.save();
     ctx.lineWidth = 3;
-    ctx.strokeStyle = runColor;
+    ctx.strokeStyle = color;
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
     ctx.stroke(path);

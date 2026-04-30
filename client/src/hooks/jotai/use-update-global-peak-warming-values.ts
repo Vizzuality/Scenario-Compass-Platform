@@ -1,6 +1,6 @@
-import { peakWarmingMaxAtom, peakWarmingMinAtom } from "@/utils/atoms/peak-warming-atoms";
-import { useSetAtom } from "jotai";
 import { useEffect } from "react";
+import { useSetAtom } from "jotai";
+import { peakWarmingMaxAtom, peakWarmingMinAtom } from "@/utils/atoms/peak-warming-atoms";
 import { CLIMATE_ASSESSMENT_PEAK_WARMING_MEDIAN } from "@/lib/config/filters/advanced-filters-config";
 import { MetaIndicator } from "@/types/data/meta-indicator";
 
@@ -15,24 +15,22 @@ export const useUpdateGlobalPeakWarmingValues = ({ isLoading, isError, metaIndic
   const setGlobalMax = useSetAtom(peakWarmingMaxAtom);
 
   useEffect(() => {
-    if (isError || isLoading || !metaIndicators) return;
+    if (isError || isLoading || !metaIndicators?.length) return;
 
-    let localMin = Number.MAX_SAFE_INTEGER;
-    let localMax = Number.MIN_SAFE_INTEGER;
+    let localMin = Infinity;
+    let localMax = -Infinity;
 
     for (const indicator of metaIndicators) {
       if (indicator.key === CLIMATE_ASSESSMENT_PEAK_WARMING_MEDIAN) {
-        const v = parseFloat(indicator.value);
-        if (v > localMax) localMax = v;
-        if (v < localMin) localMin = v;
+        const value = parseFloat(indicator.value);
+        if (!isNaN(value)) {
+          if (value < localMin) localMin = value;
+          if (value > localMax) localMax = value;
+        }
       }
     }
 
-    if (localMin !== Number.MAX_SAFE_INTEGER) {
-      setGlobalMin((prev) => (localMin < prev ? localMin : prev));
-    }
-    if (localMax !== Number.MIN_SAFE_INTEGER) {
-      setGlobalMax((prev) => (localMax > prev ? localMax : prev));
-    }
-  }, [metaIndicators, isLoading, isError, setGlobalMin, setGlobalMax]);
+    if (localMin !== Infinity) setGlobalMin(localMin);
+    if (localMax !== -Infinity) setGlobalMax(localMax);
+  }, [isLoading, isError, metaIndicators, setGlobalMin, setGlobalMax]);
 };

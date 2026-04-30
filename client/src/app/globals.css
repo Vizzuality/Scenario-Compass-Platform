@@ -58,6 +58,11 @@
   --color-data-pink: var(--data-pink);
   --color-data-purple: var(--data-purple);
   --color-data-blue: var(--data-blue);
+
+  --color-compass-blue: var(--compass-blue);
+  --color-compass-sand: var(--compass-sand);
+  --color-compass-slate: var(--compass-slate);
+  --color-compass-body: var(--compass-body);
 }
 
 :root {
@@ -111,6 +116,11 @@
   --data-pink: #ec8d82;
   --data-purple: #832da4;
   --data-blue: #4599df;
+
+  --compass-blue: #1b4f72;
+  --compass-sand: #d9d2c5;
+  --compass-slate: #7a7a80;
+  --compass-body: #3d3d40;
 }
 
 [data-slot="skeleton"].custom-skeleton-pulse,

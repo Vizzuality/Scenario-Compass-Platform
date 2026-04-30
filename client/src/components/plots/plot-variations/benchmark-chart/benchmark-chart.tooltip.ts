@@ -1,24 +1,15 @@
-import { formatNumber } from "@/utils/plots/format-functions";
-import { ExtendedRun } from "@/types/data/run";
-import { ColorFn } from "./renderers";
+import { BenchmarkDotTooltipPoint } from "@/components/plots/plot-variations/benchmark-chart/render-benchmark-chart";
+import { BENCHMARK_GROUP_LABELS } from "@/components/plots/plot-variations/benchmark-chart/benchmark-chart.config";
+import { formatPercent } from "@/components/plots/plot-variations/benchmark-chart/benchmark-chart.helpers";
 
 const OFFSET_X = 12;
 const OFFSET_Y = 16;
 
-export interface TooltipHelpers {
-  updateContent: (run: ExtendedRun, point: { year: number; value: number }) => void;
-  position: (x: number, y: number, containerWidth: number, containerHeight: number) => void;
-  hide: () => void;
-  setInteractive: (interactive: boolean) => void;
-}
-
-export const createTooltipHelpers = (
+export const createBenchmarkDotTooltipHelpers = (
   tooltip: HTMLDivElement,
-  onNavigate?: (run: ExtendedRun) => void,
-  onPrefetch?: (run: ExtendedRun) => void,
+  onNavigate?: (point: BenchmarkDotTooltipPoint) => void,
   onClose?: () => void,
-  getLineColor?: ColorFn,
-): TooltipHelpers => {
+) => {
   tooltip.style.position = "absolute";
   tooltip.style.left = "0";
   tooltip.style.top = "0";
@@ -26,23 +17,24 @@ export const createTooltipHelpers = (
   tooltip.style.pointerEvents = "none";
   tooltip.style.willChange = "transform";
   tooltip.style.background = "white";
-  tooltip.style.border = "none";
+  tooltip.style.border = "1px solid gray";
   tooltip.style.borderRadius = "4px";
   tooltip.style.padding = "10px 12px";
   tooltip.style.fontSize = "12px";
-  tooltip.style.maxWidth = "220px";
+  tooltip.style.maxWidth = "240px";
   tooltip.style.minWidth = "160px";
   tooltip.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.12)";
   tooltip.innerHTML = "";
 
-  let currentRun: ExtendedRun | null = null;
-  let prefetchedRunId: string | null = null;
+  let currentPoint: BenchmarkDotTooltipPoint | null = null;
 
-  tooltip.addEventListener("click", (e) => {
-    const target = e.target as HTMLElement;
-    if (target.closest("[data-navigate]") && currentRun && onNavigate) {
-      onNavigate(currentRun);
+  tooltip.addEventListener("click", (event) => {
+    const target = event.target as HTMLElement;
+
+    if (target.closest("[data-navigate]") && currentPoint && onNavigate) {
+      onNavigate(currentPoint);
     }
+
     if (target.closest("[data-close]")) {
       tooltip.style.display = "none";
       tooltip.style.pointerEvents = "none";
@@ -51,7 +43,7 @@ export const createTooltipHelpers = (
   });
 
   return {
-    position(x, y, containerWidth, containerHeight) {
+    position(x: number, y: number, containerWidth: number, containerHeight: number) {
       tooltip.style.display = "block";
 
       const tw = tooltip.offsetWidth;
@@ -69,10 +61,9 @@ export const createTooltipHelpers = (
       tooltip.style.transform = `translate3d(${left}px, ${top}px, 0)`;
     },
 
-    updateContent(run, point) {
-      currentRun = run;
+    updateContent(point: BenchmarkDotTooltipPoint) {
+      currentPoint = point;
       const isInteractive = tooltip.style.pointerEvents === "auto";
-      const color = getLineColor ? getLineColor(run) : null;
 
       tooltip.innerHTML = `
         <div style="position: relative;">
@@ -92,13 +83,14 @@ export const createTooltipHelpers = (
           `
               : ""
           }
+
           <ul class="list-disc m-0 pl-4 flex flex-col gap-1 text-black" style="${isInteractive ? "padding-right: 20px;" : ""}">
-            <li><strong>Value:</strong> ${formatNumber(point.value)} ${run.unit}</li>
             <li><strong>Year:</strong> ${point.year}</li>
-            <li><strong>Model:</strong> ${run.modelName}</li>
-            <li><strong>Scenario:</strong> ${run.scenarioName}</li>
-            ${color ? `<li><strong>Concern:</strong> <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:${color}; margin-right:4px;"></span></li>` : ""}
+            <li><strong>Group:</strong> ${BENCHMARK_GROUP_LABELS[point.groupKey]}</li>
+            <li><strong>Change:</strong> ${formatPercent(point.pctChange)}</li>
+            <li><strong>Run:</strong> ${point.runId}</li>
           </ul>
+
           ${
             isInteractive
               ? `
@@ -117,18 +109,13 @@ export const createTooltipHelpers = (
           }
         </div>
       `;
-
-      if (isInteractive && onPrefetch && run.runId !== prefetchedRunId) {
-        prefetchedRunId = run.runId;
-        onPrefetch(run);
-      }
     },
 
     hide() {
       tooltip.style.display = "none";
     },
 
-    setInteractive(interactive) {
+    setInteractive(interactive: boolean) {
       tooltip.style.pointerEvents = interactive ? "auto" : "none";
     },
   };
