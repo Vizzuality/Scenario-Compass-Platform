@@ -23,6 +23,11 @@ export interface RunPipelineReturn {
 export interface SingleRunPipelineParams {
   variable: string;
   prefix?: string;
+  defaults?: {
+    startYear?: number;
+    endYear?: number;
+    geography?: string;
+  };
 }
 
 export type DataPointsQueriesReturn = Array<

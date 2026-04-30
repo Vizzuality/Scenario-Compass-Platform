@@ -44,12 +44,25 @@ export default function useRequiredMetaIndicators(): UseMetaIndicatorsReturn {
     select: selectFunction,
   });
 
-  const metaIndicators = useMemo(() => {
-    return [...(requiredMetaData ?? []), ...(concernMetaData ?? [])];
-  }, [requiredMetaData, concernMetaData]);
+  const {
+    data: ARMeta,
+    isLoading: isLoadingAR,
+    isError: isErrorAR,
+  } = useQuery({
+    ...queryKeys.metaIndicators.tabulate({
+      // @ts-expect-error No ts support
+      key_like: "*AR6*",
+    }),
+    staleTime: 5 * 60 * 1000,
+    select: (data: DataFrame) => getMetaPoints(data),
+  });
 
-  const isLoading = isLoadingRequiredMeta || isLoadingConcernMeta;
-  const isError = isErrorRequiredMeta || isErrorConcernMeta;
+  const metaIndicators = useMemo(() => {
+    return [...(requiredMetaData ?? []), ...(concernMetaData ?? []), ...(ARMeta ?? [])];
+  }, [requiredMetaData, concernMetaData, ARMeta]);
+
+  const isLoading = isLoadingRequiredMeta || isLoadingConcernMeta || isLoadingAR;
+  const isError = isErrorRequiredMeta || isErrorConcernMeta || isErrorAR;
 
   useUpdateGlobalCarbonRemovalValues({
     isLoading,

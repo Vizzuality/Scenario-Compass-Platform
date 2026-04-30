@@ -72,9 +72,9 @@ export function ComboboxVariableSelect({
         <Button
           variant="outline"
           role="combobox"
-          size="sm"
+          size="lg"
           aria-expanded={open}
-          className="w-64 justify-between border-1 border-stone-300 font-normal"
+          className="w-full justify-between rounded-[4px] border-1 border-stone-300 px-3 py-2 text-sm font-normal"
         >
           <p className="truncate text-sm">{selectedLabel ?? "Select variable..."}</p>
           <ChevronsUpDown className="opacity-50" size={16} />
