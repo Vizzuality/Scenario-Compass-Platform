@@ -22,13 +22,13 @@ export function ModuleHero() {
     >
       <Navbar theme="light" sheetTheme="lilac" />
       <div className="container grid-cols-2 px-10 py-7 md:px-20 md:py-14 lg:grid">
-        <hgroup className="flex flex-col gap-6">
+        <hgroup className="mb-10 flex flex-col gap-6">
           <Heading variant="light" size="5xl" as="h1">
             Guided Exploration
           </Heading>
           <h2 className="text-foreground text-xl leading-7">
-            Answer critical questions about the interplay between land use, climate goals, and food
-            security.
+            Understanding the feasibility and sustainability of global climate mitigation
+            benchmarks.
           </h2>
         </hgroup>
       </div>

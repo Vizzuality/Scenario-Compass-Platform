@@ -4,7 +4,7 @@ import HeaderTitle from "@/containers/scenario-dashboard-container/details-view/
 import ModelCombobox from "@/containers/scenario-dashboard-container/details-view/header/model-combobox";
 import ScenarioCombobox from "@/containers/scenario-dashboard-container/details-view/header/scenario-combobox";
 import RegionCombobox from "@/containers/scenario-dashboard-container/details-view/header/region-combobox";
-import YearSelection from "@/containers/scenario-dashboard-container/details-view/header/year-selection";
+import StartEndYearsSelection from "@/containers/scenario-dashboard-container/details-view/header/start-end-years-selection";
 
 export default function ScenarioDetailsViewHeader() {
   return (
@@ -16,7 +16,7 @@ export default function ScenarioDetailsViewHeader() {
       </div>
       <div className="mt-6 grid grid-cols-[1fr_1fr] items-end gap-4">
         <RegionCombobox />
-        <YearSelection />
+        <StartEndYearsSelection />
       </div>
     </div>
   );

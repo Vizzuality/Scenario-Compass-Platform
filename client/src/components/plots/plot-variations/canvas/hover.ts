@@ -13,6 +13,7 @@ import { Scales } from "./types";
 import { drawLine, setPlotClip } from "./lines";
 import { drawAxesAndGrid } from "./axes";
 import { MARGIN } from "./constants";
+import { ColorFn } from "./renderers";
 
 /**
  * Draws dimmed lines + highlighted hovered line + guide + dot.
@@ -29,6 +30,7 @@ export const drawHoverFrame = (
   hasSelection: boolean,
   width: number,
   height: number,
+  getLineColor?: ColorFn,
 ): { year: number; value: number } => {
   const { xScale, yScale } = scales;
   const plotH = height - MARGIN.top - MARGIN.bottom;
@@ -43,14 +45,15 @@ export const drawHoverFrame = (
   // Draw all non-hovered lines at reduced opacity in their own color
   for (const run of runs) {
     if (run.runId === hoveredRun.runId) continue;
-    const color = getRunColor(run, selectedFlags, hasSelection);
+    const color = getLineColor ? getLineColor(run) : getRunColor(run, selectedFlags, hasSelection);
     drawLine(ctx, run, scales, color, PLOT_CONFIG.NORMAL_STROKE_WIDTH, PLOT_CONFIG.DIMMED_OPACITY);
   }
 
   // Highlight hovered line
-  const highlightColor =
-    CATEGORY_CONFIG[hoveredRun.flagCategory as keyof typeof CATEGORY_CONFIG]?.color ||
-    getRunColor(hoveredRun, selectedFlags, hasSelection);
+  const highlightColor = getLineColor
+    ? getLineColor(hoveredRun)
+    : CATEGORY_CONFIG[hoveredRun.flagCategory as keyof typeof CATEGORY_CONFIG]?.color ||
+      getRunColor(hoveredRun, selectedFlags, hasSelection);
 
   ctx.globalAlpha = 1;
   drawLine(
