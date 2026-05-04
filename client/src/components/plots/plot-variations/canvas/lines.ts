@@ -48,12 +48,10 @@ export const drawAllLines = (
   hasSelection: boolean,
   width: number,
   height: number,
+  selectedRun?: ExtendedRun | null,
 ) => {
   setPlotClip(ctx, width, height);
 
-  /**
-   * Split the runs into two groups, this allows us to draw the active ones on top of the dimmed lines
-   */
   const backgroundRuns: ExtendedRun[] = [];
   const activeRuns: ExtendedRun[] = [];
 

@@ -5,6 +5,8 @@ import { setupCanvas } from "./canvas-utils";
 import { buildSpatialIndex, SpatialIndex } from "./hit-detection";
 import { drawAxesAndGrid } from "./axes";
 import { drawAllLines } from "./lines";
+import { getCategoryAbbrev } from "@/lib/config/reasons-of-concern/category-config";
+import { getRunColor } from "@/utils/plots/colors-functions";
 
 export interface RenderResult {
   scales: Scales;
@@ -19,6 +21,7 @@ export const renderChart = (
   selectedFlags: string[],
   hasSelection: boolean,
   zoom: ZoomState,
+  selectedRun: ExtendedRun | null,
 ): RenderResult | null => {
   const rect = container.getBoundingClientRect();
   if (rect.width === 0 || rect.height === 0) return null;
@@ -31,7 +34,42 @@ export const renderChart = (
 
   ctx.clearRect(0, 0, rect.width, rect.height);
   drawAxesAndGrid(ctx, scales, runs, rect.width, rect.height);
-  drawAllLines(ctx, runs, scales, selectedFlags, hasSelection, rect.width, rect.height);
+  drawAllLines(
+    ctx,
+    runs,
+    scales,
+    selectedFlags,
+    hasSelection,
+    rect.width,
+    rect.height,
+    selectedRun,
+  );
+
+  if (selectedRun) {
+    const abbrev = getCategoryAbbrev(selectedRun.flagCategory);
+    const runColor = getRunColor(selectedRun, abbrev ? [abbrev] : selectedFlags, true);
+
+    const path = new Path2D();
+    selectedRun.orderedPoints.forEach((point, index) => {
+      const x = scales.xScale(point.year);
+      const yValue = "median" in point ? (point as any).median : point.value;
+      const y = scales.yScale(yValue);
+
+      if (index === 0) {
+        path.moveTo(x, y);
+      } else {
+        path.lineTo(x, y);
+      }
+    });
+
+    ctx.save();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = runColor;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    ctx.stroke(path);
+    ctx.restore();
+  }
 
   return { scales, spatialIndex };
 };

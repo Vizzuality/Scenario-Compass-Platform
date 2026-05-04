@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { PlotWidgetHeader } from "@/components/plots/components";
 import { ChartType, PLOT_TYPE_OPTIONS } from "@/components/plots/components";
 import { useGetMultipleRunsForVariablePipeline } from "@/hooks/runs/data-pipeline/use-get-multiple-runs-for-variable-pipeline";
@@ -14,6 +14,7 @@ import { ChartDialog } from "@/components/custom/chart-dialog";
 import { CanvasMultiLinePlot } from "@/components/plots/plot-variations/canvas/canvas-multi-line-plot";
 import { useGetRunDetailsUrl } from "@/hooks/nuqs/url-params/use-get-run-details-url";
 import { YExtentPair } from "@/components/plots/plot-variations/canvas/scales";
+import { useSelectedRunParam } from "@/hooks/nuqs/url-params/use-selected-run-param";
 
 interface Props {
   plotConfig: PlotConfig;
@@ -30,12 +31,17 @@ export function MultipleRunsPlotWidget({
 }: Props) {
   const [chartType, setChartType] = useState<ChartType>(initialChartType);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedRun, setSelectedRun] = useState<ExtendedRun | null>(null);
+  const { selectedRunId, setSelectedRunId } = useSelectedRunParam(prefix);
 
   const buildRunDetailsUrl = useGetRunDetailsUrl();
   const { getVariable, setVariable } = useTabAndVariablesParams(prefix);
   const currentVariable = getVariable(plotConfig);
   const data = useGetMultipleRunsForVariablePipeline({ variable: currentVariable, prefix });
+
+  const selectedRun = useMemo(() => {
+    if (!selectedRunId || !data?.runs) return null;
+    return data.runs.find((r) => r.runId === selectedRunId) || null;
+  }, [selectedRunId, data?.runs]);
 
   const { chartRef, handleDownload } = useDownloadPlotAssets({
     runs: data.runs,
@@ -48,8 +54,12 @@ export function MultipleRunsPlotWidget({
   };
 
   const handleVariableChange = (variable: string) => {
-    setSelectedRun(null);
+    setSelectedRunId(null);
     setVariable(plotConfig, variable);
+  };
+
+  const handleSelectedRunChange = (run: ExtendedRun | null) => {
+    setSelectedRunId(run ? run.runId : null);
   };
 
   const renderChart = (zoomEnabled: boolean) => {
@@ -63,7 +73,7 @@ export function MultipleRunsPlotWidget({
             prefix={prefix}
             onRunClick={handleRunClick}
             selectedRun={selectedRun}
-            onSelectedRunChange={setSelectedRun}
+            onSelectedRunChange={handleSelectedRunChange}
             yExtent={yExtent}
           />
         );
@@ -75,7 +85,7 @@ export function MultipleRunsPlotWidget({
             prefix={prefix}
             onRunClick={handleRunClick}
             selectedRun={selectedRun}
-            onSelectedRunChange={setSelectedRun}
+            onSelectedRunChange={handleSelectedRunChange}
             yExtent={yExtent}
           />
         );

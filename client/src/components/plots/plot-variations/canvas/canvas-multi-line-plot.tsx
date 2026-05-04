@@ -68,7 +68,7 @@ export const CanvasMultiLinePlot: React.FC<Props> = ({
   const doRender = useCallback(() => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
-    const { runs, extent, zoom: currentZoom } = stateRef.current;
+    const { runs, extent, zoom: currentZoom, selectedRun } = stateRef.current;
 
     if (!canvas || !container || !runs || runs.length === 0 || !extent) return;
 
@@ -80,6 +80,7 @@ export const CanvasMultiLinePlot: React.FC<Props> = ({
       selectedFlags,
       selectedFlags.length > 0,
       currentZoom,
+      selectedRun,
     );
 
     if (result) {

@@ -76,9 +76,18 @@ export const createEventHandlers = ({
   };
 
   const repaint = () => {
-    const { runs, extent, zoom } = stateRef.current;
+    const { runs, extent, zoom, selectedRun } = stateRef.current;
     if (!extent) return;
-    const result = renderChart(canvas, container, runs, extent, selectedFlags, hasSelection, zoom);
+    const result = renderChart(
+      canvas,
+      container,
+      runs,
+      extent,
+      selectedFlags,
+      hasSelection,
+      zoom,
+      selectedRun,
+    );
     if (result) {
       stateRef.current.scales = result.scales;
       stateRef.current.spatialIndex = result.spatialIndex;
@@ -244,6 +253,22 @@ export const createEventHandlers = ({
     }
   };
 
+  const onMouseLeave = () => {
+    if (rafId) cancelAnimationFrame(rafId);
+    stateRef.current.isDragging = false;
+
+    tooltip.hide();
+
+    if (stateRef.current.selectedRun) {
+      repaint();
+      return;
+    }
+
+    setCursor("default");
+    stateRef.current.hoveredRunId = null;
+    repaint();
+  };
+
   const onClick = (e: MouseEvent) => {
     if (stateRef.current.didDrag) return;
 
@@ -311,18 +336,6 @@ export const createEventHandlers = ({
     }
   };
 
-  const onMouseLeave = () => {
-    if (rafId) cancelAnimationFrame(rafId);
-    stateRef.current.isDragging = false;
-
-    if (stateRef.current.selectedRun) return;
-
-    setCursor("default");
-    tooltip.hide();
-    stateRef.current.hoveredRunId = null;
-    repaint();
-  };
-
   const preventWheel = (e: Event) => e.preventDefault();
 
   return {
@@ -331,7 +344,7 @@ export const createEventHandlers = ({
       canvas.addEventListener("mousemove", onMouseMove);
       canvas.addEventListener("mouseup", onMouseUp);
       canvas.addEventListener("click", onClick);
-      canvas.addEventListener("mouseleave", onMouseLeave);
+      container.addEventListener("mouseleave", onMouseLeave);
       canvas.addEventListener("wheel", preventWheel, { passive: false });
       window.addEventListener("mouseup", onMouseUp);
       window.addEventListener("keydown", onKeyDown);
@@ -341,7 +354,7 @@ export const createEventHandlers = ({
       canvas.removeEventListener("mousemove", onMouseMove);
       canvas.removeEventListener("mouseup", onMouseUp);
       canvas.removeEventListener("click", onClick);
-      canvas.removeEventListener("mouseleave", onMouseLeave);
+      container.removeEventListener("mouseleave", onMouseLeave);
       window.removeEventListener("mouseup", onMouseUp);
       window.removeEventListener("keydown", onKeyDown);
     },

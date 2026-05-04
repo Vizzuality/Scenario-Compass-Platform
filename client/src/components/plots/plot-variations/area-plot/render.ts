@@ -38,12 +38,11 @@ export const renderAreaPlot = ({
   dimensions,
   selectedFlags = [],
   yExtent,
-}: Props): void => {
+}: Props): (() => void) | void => {
   clearSVG(svg);
   const tooltipManager = createTooltipManager({ svg, dimensions });
   if (!tooltipManager) return;
 
-  // Change this in the future if the Opacity should differ from no selection to selected
   const COMPUTED_OPACITY = selectedFlags?.length > 0 ? 1 : 1;
 
   if (runs.length === 0) return;
@@ -135,64 +134,54 @@ export const renderAreaPlot = ({
 
   const interactionOverlay = createInteractionOverlay(groupSelection, INNER_WIDTH, INNER_HEIGHT);
 
-  interactionOverlay
-    .on("mouseenter", () => {
-      if (hasSelection) {
-        verticalHoverLine.style("opacity", 1);
-      } else {
-        verticalHoverLine.style("opacity", 1);
-        intersectionPoint.style("opacity", 1);
-        pointWrappingCircle.style("opacity", 1);
-      }
-      tooltipManager.show();
-    })
-    .on("mouseleave", () => {
-      if (hasSelection) {
-        verticalHoverLine.style("opacity", 0);
-      } else {
-        verticalHoverLine.style("opacity", 0);
+  const updateHoverState = (targetYear: number | null) => {
+    if (targetYear === null) {
+      verticalHoverLine.style("opacity", 0);
+      if (!hasSelection) {
         intersectionPoint.style("opacity", 0);
         pointWrappingCircle.style("opacity", 0);
       }
       tooltipManager.hide();
-    })
-    .on("mousemove", function (event) {
-      const [mouseX] = d3.pointer(event);
-      const nearestData = findClosestDataPoint(mouseX, scales.xScale, aggregatedData);
+      return;
+    }
 
-      if (!nearestData) return;
+    const nearestData = aggregatedData.find((d) => d.year === targetYear);
+    if (!nearestData) {
+      updateHoverState(null);
+      return;
+    }
 
-      const pointX = scales.xScale(nearestData.year);
-      const pointY = scales.yScale(nearestData.median);
+    const pointX = scales.xScale(nearestData.year);
+    const pointY = scales.yScale(nearestData.median);
 
-      if (hasSelection) {
-        verticalHoverLine.attr("x1", pointX).attr("x2", pointX);
-      } else {
-        verticalHoverLine.attr("x1", pointX).attr("x2", pointX);
-        intersectionPoint.attr("cx", pointX).attr("cy", pointY);
-        pointWrappingCircle.attr("cx", pointX).attr("cy", pointY);
-      }
+    if (hasSelection) {
+      verticalHoverLine.style("opacity", 1).attr("x1", pointX).attr("x2", pointX);
+    } else {
+      verticalHoverLine.style("opacity", 1).attr("x1", pointX).attr("x2", pointX);
+      intersectionPoint.style("opacity", 1).attr("cx", pointX).attr("cy", pointY);
+      pointWrappingCircle.style("opacity", 1).attr("cx", pointX).attr("cy", pointY);
+    }
 
-      let tooltipHTML: string;
+    let tooltipHTML: string;
 
-      if (hasSelection) {
-        const tableRows: string[] = [];
+    if (hasSelection) {
+      const tableRows: string[] = [];
 
-        aggregatedDataByFlag.forEach((flagData, flagName) => {
-          const flagDataPoint = findClosestDataPoint(mouseX, scales.xScale, flagData);
-          if (!flagDataPoint) return;
+      aggregatedDataByFlag.forEach((flagData, flagName) => {
+        const flagDataPoint = flagData.find((d) => d.year === targetYear);
+        if (!flagDataPoint) return;
 
-          let color = GREY;
-          if (flagName !== "Base") {
-            const flagRun = runs.find((run) => getCategoryAbbrev(run.flagCategory) === flagName);
-            if (flagRun) {
-              color = getRunColor(flagRun, selectedFlags, hasSelection);
-            }
+        let color = GREY;
+        if (flagName !== "Base") {
+          const flagRun = runs.find((run) => getCategoryAbbrev(run.flagCategory) === flagName);
+          if (flagRun) {
+            color = getRunColor(flagRun, selectedFlags, hasSelection);
           }
+        }
 
-          const colorDot = `<div style="width: 8px; height: 8px; background-color: ${color}; border-radius: 50%; margin-inline: auto;"></div>`;
+        const colorDot = `<div style="width: 8px; height: 8px; background-color: ${color}; border-radius: 50%; margin-inline: auto;"></div>`;
 
-          tableRows.push(`
+        tableRows.push(`
         <tr class="border-b border-gray-300 last:border-b-0">
           <td class="px-2 py-1 border-r border-gray-300">
               ${colorDot}
@@ -202,9 +191,9 @@ export const renderAreaPlot = ({
           <td class="px-2 py-1 text-right">${formatNumber(flagDataPoint.max)}</td>
         </tr>
       `);
-        });
+      });
 
-        tooltipHTML = `
+      tooltipHTML = `
       <div class="text-black text-xs">
         <div class="mb-2 font-semibold">Year: ${nearestData.year}</div>
         <table class="w-full border-collapse border border-gray-400">
@@ -222,8 +211,8 @@ export const renderAreaPlot = ({
         </table>
       </div>
     `;
-      } else {
-        tooltipHTML = `
+    } else {
+      tooltipHTML = `
       <ul class="list-disc m-0 pl-5 flex flex-col gap-1 text-black">
         <li><strong>Year:</strong> ${nearestData.year}</li>
         <li><strong>Max:</strong> <span>${formatNumber(nearestData.max)}</span></li>
@@ -231,10 +220,36 @@ export const renderAreaPlot = ({
         <li><strong>Min:</strong> <span>${formatNumber(nearestData.min)}</span></li>
       </ul>
     `;
-      }
+    }
 
-      const yPosition = hasSelection ? dimensions.INNER_HEIGHT / 2 : pointY;
+    const yPosition = hasSelection ? dimensions.INNER_HEIGHT / 2 : pointY;
+    tooltipManager.show();
+    tooltipManager.update(tooltipHTML, pointX, yPosition);
+  };
 
-      tooltipManager.update(tooltipHTML, pointX, yPosition);
+  interactionOverlay
+    .on("mouseleave", () => {
+      window.dispatchEvent(new CustomEvent("sync-plot-hover", { detail: { year: null } }));
+    })
+    .on("mousemove", function (event) {
+      const [mouseX] = d3.pointer(event);
+      const nearestData = findClosestDataPoint(mouseX, scales.xScale, aggregatedData);
+
+      if (!nearestData) return;
+
+      window.dispatchEvent(
+        new CustomEvent("sync-plot-hover", { detail: { year: nearestData.year } }),
+      );
     });
+
+  const handleSync = (e: Event) => {
+    const customEvent = e as CustomEvent<{ year: number | null }>;
+    updateHoverState(customEvent.detail.year);
+  };
+
+  window.addEventListener("sync-plot-hover", handleSync);
+
+  return () => {
+    window.removeEventListener("sync-plot-hover", handleSync);
+  };
 };

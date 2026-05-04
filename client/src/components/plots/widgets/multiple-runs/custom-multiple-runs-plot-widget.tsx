@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { PlotWidgetHeader } from "@/components/plots/components";
 import { ChartType, PLOT_TYPE_OPTIONS } from "@/components/plots/components";
 import { useGetMultipleRunsForVariablePipeline } from "@/hooks/runs/data-pipeline/use-get-multiple-runs-for-variable-pipeline";
@@ -16,6 +16,7 @@ import queryKeys from "@/lib/query-keys";
 import { CanvasMultiLinePlot } from "@/components/plots/plot-variations/canvas/canvas-multi-line-plot";
 import { useGetRunDetailsUrl } from "@/hooks/nuqs/url-params/use-get-run-details-url";
 import { ChartDialog } from "@/components/custom/chart-dialog";
+import { useSelectedRunParam } from "@/hooks/nuqs/url-params/use-selected-run-param";
 
 interface Props {
   prefix?: string;
@@ -42,8 +43,7 @@ export function CustomMultipleRunsPlotWidget({
 
   const [chartType, setChartType] = useState<ChartType>(initialChartType);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const selectedRunRef = useRef<ExtendedRun | null>(null);
-
+  const { selectedRunId, setSelectedRunId } = useSelectedRunParam();
   const buildRunDetailsUrl = useGetRunDetailsUrl();
   const { setCustomVariable, getCustomVariable } = useTabAndVariablesParams(prefix);
   const selectedVariableIndex = getCustomVariable(index);
@@ -53,6 +53,8 @@ export function CustomMultipleRunsPlotWidget({
     variable: currentVariable?.name || "",
     prefix,
   });
+
+  const selectedRun = data.runs?.find((r) => r.runId === selectedRunId) || null;
 
   const { chartRef, handleDownload } = useDownloadPlotAssets({
     runs: data.runs,
@@ -79,7 +81,7 @@ export function CustomMultipleRunsPlotWidget({
       onVariableSelect(variableId);
     }
     setCustomVariable({ plotIndex: index, variableId });
-    selectedRunRef.current = null;
+    setSelectedRunId(null);
   };
 
   const renderChart = (zoomEnabled: boolean) => {
@@ -92,9 +94,9 @@ export function CustomMultipleRunsPlotWidget({
           data={data}
           prefix={prefix}
           onRunClick={handleRunClick}
-          selectedRun={selectedRunRef.current}
+          selectedRun={selectedRun}
           onSelectedRunChange={(run) => {
-            selectedRunRef.current = run;
+            setSelectedRunId(run?.runId || null);
           }}
         />
       );
@@ -106,9 +108,9 @@ export function CustomMultipleRunsPlotWidget({
           prefix={prefix}
           zoomEnabled={zoomEnabled}
           onRunClick={handleRunClick}
-          selectedRun={selectedRunRef.current}
+          selectedRun={selectedRun}
           onSelectedRunChange={(run) => {
-            selectedRunRef.current = run;
+            setSelectedRunId(run?.runId || null);
           }}
         />
       );

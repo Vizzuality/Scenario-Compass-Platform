@@ -7,6 +7,7 @@ import NavigateToCompareScenarios from "@/containers/scenario-dashboard-containe
 import useShowReasonsForConcern from "@/hooks/nuqs/tabs/use-show-reasons-for-concer";
 import useGetVariablesForTab from "@/hooks/nuqs/tabs/use-get-variables-for-tab";
 import useCombineRunsForVariablesPipeline from "@/hooks/runs/data-pipeline/use-combine-runs-for-variables-pipeline";
+import RunHeader from "@/containers/scenario-dashboard-container/components/runs-pannel/run-header";
 
 interface Props {
   prefix?: string;
@@ -20,6 +21,8 @@ export default function RunsPanel({ prefix }: Props) {
   return (
     <div className="mx-auto flex w-120 flex-col gap-6">
       <NavigateToCompareScenarios />
+      <RunHeader runs={result.runs} prefix={prefix} />
+
       {showMetric && (
         <>
           <ScenarioModelMetrics result={result} />
