@@ -24,14 +24,19 @@ const AreaBasePlot: React.FC<AreaChartProps> = ({ runs, prefix, yExtent }) => {
   useEffect(() => {
     if (!runs.length || !svgRef.current || dimensions.WIDTH === 0) return;
     const svg = d3.select(svgRef.current);
-    renderAreaPlot({
+
+    const cleanup = renderAreaPlot({
       svg,
       runs,
       dimensions,
       selectedFlags,
       yExtent,
     });
-  }, [dimensions, runs, selectedFlags, svgRef]);
+
+    return () => {
+      if (cleanup) cleanup();
+    };
+  }, [dimensions, runs, selectedFlags, svgRef, yExtent]);
 
   return plotContainer;
 };

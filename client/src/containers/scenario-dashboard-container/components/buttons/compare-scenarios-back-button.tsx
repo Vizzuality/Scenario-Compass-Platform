@@ -28,7 +28,9 @@ export default function CompareScenariosBackButton() {
       <ArrowLeftIcon size={16} />
       <p className="leading-none">
         {geoName ? ` ${geoName.name}` : ""} |{year ? ` for ${year}` : ""}
-        {startYear && endYear ? ` ${startYear} - ${endYear}` : ""}
+        {startYear &&
+          endYear &&
+          (startYear === endYear ? ` ${startYear}` : ` ${startYear} - ${endYear}`)}
       </p>
     </Button>
   );
