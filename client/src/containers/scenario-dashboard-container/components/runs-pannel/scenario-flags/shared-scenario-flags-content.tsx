@@ -20,15 +20,21 @@ import {
 } from "@/lib/config/reasons-of-concern/category-config";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Eye, EyeOff } from "lucide-react";
+import RunHeader from "@/containers/scenario-dashboard-container/components/runs-pannel/run-header";
 
 export const SCENARIO_FLAGS_ACCORDION_VALUE = "scenario-flags";
 
 interface SharedContentProps {
   result: RunPipelineReturn;
   prefix?: string;
+  showSelectedScenario?: boolean;
 }
 
-export function SharedScenarioFlagsContent({ result, prefix }: SharedContentProps) {
+export function SharedScenarioFlagsContent({
+  result,
+  prefix,
+  showSelectedScenario = false,
+}: SharedContentProps) {
   const { showVetting, setShowVetting, toggleMultipleHidden, hiddenFlags } =
     useScenarioFlagsSelection(prefix);
 
@@ -61,6 +67,7 @@ export function SharedScenarioFlagsContent({ result, prefix }: SharedContentProp
         </div>
       </AccordionTrigger>
       <AccordionContent className="flex flex-col gap-3 border-t pt-4">
+        {showSelectedScenario && <RunHeader runs={result.runs} prefix={prefix} />}
         <div className="flex flex-col gap-2">
           <div className="flex">
             <div className="flex">

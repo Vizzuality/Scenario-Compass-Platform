@@ -155,7 +155,9 @@ export function CustomMultipleRunsPlotWidget({
           />
           {variableSelectEl}
         </div>
-        <div ref={chartRef}>{renderChart(false)}</div>
+        <div ref={chartRef} className="h-[400px] sm:h-[450px] lg:h-[500px]">
+          {renderChart(false)}
+        </div>
       </div>
 
       <ChartDialog

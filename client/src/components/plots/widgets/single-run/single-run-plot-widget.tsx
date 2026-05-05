@@ -12,6 +12,7 @@ import { StackedBarPlot } from "@/components/plots/plot-variations/stacked-bar-p
 import { WaterfallPlot } from "@/components/plots/plot-variations/waterfall";
 import { ChartDialog } from "@/components/custom/chart-dialog";
 import { ChartType, PLOT_TYPE_OPTIONS } from "@/components/plots/components/chart-type-toggle";
+import { ChartWrapper } from "@/components/plots/chart-wrapper";
 
 interface Props {
   plotConfig: SingleScenarioPlotConfig;
@@ -73,7 +74,7 @@ export function SingleRunPlotWidget({ plotConfig }: Props) {
         <div ref={legendRef}>
           {data.runs[0] && <PlotLegend runs={data.runs} variablesMap={plotConfig.variablesMap} />}
         </div>
-        <div ref={chartRef}>{renderChart()}</div>
+        <ChartWrapper ref={chartRef}>{renderChart()}</ChartWrapper>
       </div>
 
       <ChartDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} title={plotConfig.title}>
@@ -81,9 +82,7 @@ export function SingleRunPlotWidget({ plotConfig }: Props) {
           <div>
             {data.runs[0] && <PlotLegend runs={data.runs} variablesMap={plotConfig.variablesMap} />}
           </div>
-          <div className="relative min-h-0 flex-1 [&>*]:!aspect-auto [&>*]:!h-full">
-            {isDialogOpen && renderChart()}
-          </div>
+          <div className="relative min-h-0 flex-1">{isDialogOpen && renderChart()}</div>
         </div>
       </ChartDialog>
     </>

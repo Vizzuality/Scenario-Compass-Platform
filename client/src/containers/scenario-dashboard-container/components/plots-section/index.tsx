@@ -16,7 +16,7 @@ export default function ScenarioExplorationPlotsSection() {
   return (
     <>
       <div className="w-full bg-white pt-8">
-        <div className="text-foreground container mx-auto flex items-center justify-between">
+        <div className="text-foreground dashboard-container mx-auto flex items-center justify-between">
           <p>Explore the dashboards below, organised by topic and featuring curated variables</p>
           <Suspense fallback={<p className="underline">Clear all filters</p>}>
             <ClearFilterButton />
@@ -26,7 +26,7 @@ export default function ScenarioExplorationPlotsSection() {
       <Suspense fallback={<TabsSectionSkeleton />}>
         <TabsSection />
       </Suspense>
-      <div className="container mx-auto flex gap-6 pb-24 lg:gap-8">
+      <div className="dashboard-container mx-auto flex gap-6 pb-24 lg:gap-8">
         <Suspense fallback={<PlotGridSkeleton />}>
           <PlotGrid />
         </Suspense>

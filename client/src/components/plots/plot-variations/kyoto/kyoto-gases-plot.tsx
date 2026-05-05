@@ -1,21 +1,22 @@
-import { PlotContainer, PlotWidgetHeader } from "@/components/plots/components";
+import { PlotWidgetHeader } from "@/components/plots/components";
 import { useGetSingleRunForVariablePipeline } from "@/hooks/runs/data-pipeline/use-get-single-run-for-variable-pipeline";
 import LoadingDots from "@/components/animations/loading-dots";
 import React, { useEffect, useState } from "react";
 import { DataFetchError } from "@/components/error-state/data-fetch-error";
-import { ShortRun, ShortRunReturn } from "@/components/plots/plot-variations/custom/kyoto/types";
-import { getFinalCH4Points } from "@/components/plots/plot-variations/custom/kyoto/utils";
-import CustomPlotLegend from "@/components/plots/plot-variations/custom/kyoto/custom-plot-legend";
+import { ShortRun, ShortRunReturn } from "@/components/plots/plot-variations/kyoto/types";
+import { getFinalCH4Points } from "@/components/plots/plot-variations/kyoto/utils";
+import CustomPlotLegend from "@/components/plots/plot-variations/kyoto/custom-plot-legend";
 import { usePlotContainer } from "@/hooks/plots/plot-container/use-plot-container";
-import { renderKyotoPlot } from "@/components/plots/plot-variations/custom/kyoto/render";
+import { renderKyotoPlot } from "@/components/plots/plot-variations/kyoto/render";
 import * as d3 from "d3";
 import { ExtendedRun, ShortDataPoint } from "@/types/data/run";
 import { OTHER_GASES } from "@/lib/config/plots/plots-constants";
-import { renderKyotoBarPlot } from "@/components/plots/plot-variations/custom/kyoto/render-bar";
-import { renderKyotoWaterfallPlot } from "@/components/plots/plot-variations/custom/kyoto/render-waterfall";
+import { renderKyotoBarPlot } from "@/components/plots/plot-variations/kyoto/render-bar";
+import { renderKyotoWaterfallPlot } from "@/components/plots/plot-variations/kyoto/render-waterfall";
 import { useBaseUrlParams } from "@/hooks/nuqs/url-params/use-base-url-params";
 import { ChartDialog } from "@/components/custom/chart-dialog";
 import { ChartType, PLOT_TYPE_OPTIONS } from "@/components/plots/components/chart-type-toggle";
+import { ChartWrapper } from "@/components/plots/chart-wrapper";
 
 const GWP_CH4 = 25;
 const GWP_N2O_WITH_UNIT_CONVERSION = 0.298;
@@ -70,7 +71,6 @@ const KyotoBasePlot = ({
   return plotContainer;
 };
 
-// Separate component that owns all hooks — rendered only after loading/error guards pass
 function KyotoGasesContent({
   result,
   isSingleYear,
@@ -111,15 +111,13 @@ function KyotoGasesContent({
           }
         />
         {legend}
-        <PlotContainer>{plot}</PlotContainer>
+        <ChartWrapper>{plot}</ChartWrapper>
       </div>
 
       <ChartDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} title="GHG Emissions">
         <div className="flex h-full w-full flex-col">
           {legend}
-          <div className="relative min-h-0 flex-1 [&>*]:!aspect-auto [&>*]:!h-full">
-            {isDialogOpen && <PlotContainer>{plot}</PlotContainer>}
-          </div>
+          <div className="relative min-h-0 flex-1">{isDialogOpen && plot}</div>
         </div>
       </ChartDialog>
     </>
@@ -129,7 +127,9 @@ function KyotoGasesContent({
 const renderStateComponent = (content: React.ReactNode) => (
   <div className="flex w-full flex-col justify-between rounded-md bg-white p-4 select-none">
     <PlotWidgetHeader title="GHG Emissions" />
-    <PlotContainer>{content}</PlotContainer>
+    <ChartWrapper>
+      <div className="flex h-full w-full items-center justify-center">{content}</div>
+    </ChartWrapper>
   </div>
 );
 

@@ -1,3 +1,4 @@
+import * as d3 from "d3";
 import {
   clearSVG,
   createInteractionOverlay,
@@ -7,7 +8,6 @@ import {
   SVGSelection,
 } from "@/utils/plots/render-functions";
 import { PlotDimensions } from "@/lib/config/plots/plots-dimensions";
-import * as d3 from "d3";
 import { ExtendedRun } from "@/types/data/run";
 import { createTooltipManager } from "@/utils/plots/tooltip-manager";
 import { createHoverElements } from "@/utils/plots/create-hover-elements";
@@ -18,6 +18,11 @@ import {
 } from "@/utils/plots/colors-functions";
 import { formatNumber } from "@/utils/plots/format-functions";
 
+interface StackedDataPoint {
+  year: number;
+  [key: string]: number;
+}
+
 interface Props {
   svg: SVGSelection;
   runs: ExtendedRun[];
@@ -25,20 +30,19 @@ interface Props {
   variablesMap: Record<string, string>;
 }
 
-interface StackedDataPoint {
-  year: number;
-  [key: string]: number;
-}
-
-export const renderStackedAreaPlot = ({ svg, runs, dimensions, variablesMap }: Props): void => {
+export const renderStackedAreaPlot = ({
+  svg,
+  runs,
+  dimensions,
+  variablesMap,
+}: Props): (() => void) | void => {
   clearSVG(svg);
 
-  if (runs.length === 0) {
-    return;
-  }
+  if (runs.length === 0) return;
 
   const g = createMainGroup(svg, dimensions);
   const tooltipManager = createTooltipManager({ svg, dimensions });
+  if (!tooltipManager) return;
 
   const activeVariables = getActiveVariables(runs);
   const variableNames = Object.keys(variablesMap);
@@ -52,12 +56,10 @@ export const renderStackedAreaPlot = ({ svg, runs, dimensions, variablesMap }: P
 
   const dataPoints: StackedDataPoint[] = allYears.map((year) => {
     const dataPoint: StackedDataPoint = { year };
-
     runs.forEach((run) => {
       const point = run.orderedPoints.find((p) => p.year === year);
       dataPoint[run.variableName] = point?.value || 0;
     });
-
     return dataPoint;
   });
 
@@ -73,7 +75,6 @@ export const renderStackedAreaPlot = ({ svg, runs, dimensions, variablesMap }: P
 
   const [yMin, yMax] = d3.extent(allValues) as [number, number];
   const yPadding = (yMax - yMin) * 0.125;
-
   const yScale = d3
     .scaleLinear()
     .domain([yMin, yMax + yPadding])
@@ -108,70 +109,81 @@ export const renderStackedAreaPlot = ({ svg, runs, dimensions, variablesMap }: P
   const { verticalHoverLine } = createHoverElements(g, dimensions.INNER_HEIGHT);
   const dataByYear = new Map(dataPoints.map((d) => [d.year, d]));
 
-  createInteractionOverlay(g, dimensions.INNER_WIDTH, dimensions.INNER_HEIGHT)
-    .on("mouseenter", () => {
-      verticalHoverLine.style("opacity", 1);
-      tooltipManager?.show();
-    })
-    .on("mouseleave", () => {
+  const updateHoverState = (targetYear: number | null) => {
+    if (targetYear === null) {
       verticalHoverLine.style("opacity", 0);
-      tooltipManager?.hide();
+      tooltipManager.hide();
+      return;
+    }
+
+    const dataPoint = dataByYear.get(targetYear);
+    if (!dataPoint) return;
+
+    const x = xScale(dataPoint.year);
+    verticalHoverLine.style("opacity", 1).attr("x1", x).attr("x2", x);
+
+    let cumulative = 0;
+    const tooltipData = presentVariables
+      .map((variableName) => {
+        const value = dataPoint[variableName] || 0;
+        const start = cumulative;
+        cumulative += value;
+        return {
+          key: variableName,
+          value,
+          start,
+          end: cumulative,
+          color: variableColorMap.get(variableName) || colors[0],
+        };
+      })
+      .reverse();
+
+    const content = tooltipData
+      .map(
+        (d) =>
+          `<div class="flex items-center gap-2 mb-1">
+            <div class="border border-foreground" style="width: 10px; height: 10px; background-color: ${d.color}; border-radius: 100px; flex-shrink: 0;"></div>
+            <div class="text-black">
+              <strong>${variablesMap[d.key] || d.key}:</strong> ${formatNumber(d.value)}
+            </div>
+          </div>`,
+      )
+      .join("");
+
+    tooltipManager.show();
+    tooltipManager.update(
+      `<div class="text-black">
+        <div class="mb-1"><strong>Year:</strong> ${dataPoint.year}</div>
+        <div class="mb-2"><strong>Total sum:</strong> ${formatNumber(cumulative)}</div>
+        <div>${content}</div>
+      </div>`,
+      x,
+      dimensions.INNER_HEIGHT / 2,
+    );
+  };
+
+  createInteractionOverlay(g, dimensions.INNER_WIDTH, dimensions.INNER_HEIGHT)
+    .on("mouseleave", () => {
+      window.dispatchEvent(new CustomEvent("sync-plot-hover", { detail: { year: null } }));
     })
     .on("mousemove", function (event) {
       const [mouseX] = d3.pointer(event);
       const year = Math.round(xScale.invert(mouseX));
-
-      let dataPoint = dataByYear.get(year);
-      if (!dataPoint) {
-        dataPoint = dataPoints.reduce((prev, curr) =>
-          Math.abs(curr.year - year) < Math.abs(prev.year - year) ? curr : prev,
-        );
-      }
-
-      if (!dataPoint) return;
-
-      const x = xScale(dataPoint.year);
-      verticalHoverLine.attr("x1", x).attr("x2", x);
-
-      let cumulative = 0;
-
-      const tooltipData = presentVariables
-        .map((variableName) => {
-          const value = dataPoint[variableName] || 0;
-          const start = cumulative;
-          cumulative += value;
-          return {
-            key: variableName,
-            value,
-            start,
-            end: cumulative,
-            color: variableColorMap.get(variableName) || colors[0],
-          };
-        })
-        .reverse();
-
-      const total = cumulative;
-
-      const content = tooltipData
-        .map(
-          (d) =>
-            `<div class="flex items-center gap-2 mb-1">
-              <div class="border border-foreground" style="width: 10px; height: 10px; background-color: ${d.color}; border-radius: 100px; flex-shrink: 0;"></div>
-              <div class="text-black">
-                <strong>${variablesMap[d.key] || d.key}:</strong> ${formatNumber(d.value)}
-              </div>
-            </div>`,
-        )
-        .join("");
-
-      tooltipManager?.update(
-        `<div class="text-black">
-          <div class="mb-1"><strong>Year:</strong> ${dataPoint.year}</div>
-          <div class="mb-2"><strong>Total sum:</strong> ${formatNumber(total)}</div>
-          <div>${content}</div>
-        </div>`,
-        x,
-        dimensions.INNER_HEIGHT / 2,
+      const nearestYear = allYears.reduce((prev, curr) =>
+        Math.abs(curr - year) < Math.abs(prev - year) ? curr : prev,
       );
+
+      window.dispatchEvent(new CustomEvent("sync-plot-hover", { detail: { year: nearestYear } }));
     });
+
+  const handleSync = (e: Event) => {
+    const customEvent = e as CustomEvent<{ year: number | null }>;
+    updateHoverState(customEvent.detail.year);
+  };
+
+  window.addEventListener("sync-plot-hover", handleSync);
+
+  return () => {
+    window.removeEventListener("sync-plot-hover", handleSync);
+  };
 };

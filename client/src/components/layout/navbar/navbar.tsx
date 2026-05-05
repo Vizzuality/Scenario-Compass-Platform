@@ -62,7 +62,10 @@ export function Navbar({ className, theme, sheetTheme }: Props) {
   return (
     <nav className={cn("h-14 w-full bg-transparent lg:h-21", className)}>
       <div
-        className={cn("container mx-auto flex h-full items-center justify-between px-4", navStyles)}
+        className={cn(
+          "dashboard-container mx-auto flex h-full items-center justify-between",
+          navStyles,
+        )}
       >
         <Logo theme={theme} />
 

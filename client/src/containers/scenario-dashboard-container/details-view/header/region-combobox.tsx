@@ -2,9 +2,11 @@ import { ComboboxFilter } from "@/components/ui/combobox";
 import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/lib/query-keys";
 import { useBaseUrlParams } from "@/hooks/nuqs/url-params/use-base-url-params";
+import { useSelectedRunParam } from "@/hooks/nuqs/url-params/use-selected-run-param";
 
 export default function RegionCombobox() {
   const { model, geography, setGeography, scenario } = useBaseUrlParams();
+  const { setSelectedRunId } = useSelectedRunParam();
 
   const { data, isLoading } = useQuery({
     ...queryKeys.regions.list({
@@ -29,6 +31,7 @@ export default function RegionCombobox() {
 
   const handleSetRegion = (region: string) => {
     setGeography(region);
+    setSelectedRunId(null);
   };
 
   return (

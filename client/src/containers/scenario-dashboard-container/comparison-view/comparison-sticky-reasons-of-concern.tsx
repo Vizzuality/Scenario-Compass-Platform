@@ -47,7 +47,7 @@ export default function ComparisonStickyFlags({
       <div ref={sentinelRef} className="h-0" />
       <div
         className={cn(
-          "sticky top-0 z-10 transition-all duration-150",
+          "sticky top-0 z-100 transition-all duration-150",
           isStuck && "border-b bg-white shadow-[0_15px_15px_rgba(0,0,0,0.1)]",
         )}
       >

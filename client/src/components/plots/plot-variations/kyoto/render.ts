@@ -10,7 +10,7 @@ import { PlotDimensions } from "@/lib/config/plots/plots-dimensions";
 import * as d3 from "d3";
 import { createTooltipManager } from "@/utils/plots/tooltip-manager";
 import { createHoverElements } from "@/utils/plots/create-hover-elements";
-import { ShortRun, ShortRunReturn } from "@/components/plots/plot-variations/custom/kyoto/types";
+import { ShortRun, ShortRunReturn } from "@/components/plots/plot-variations/kyoto/types";
 import { ShortDataPoint } from "@/types/data/run";
 import { CATEGORY_CONFIG } from "@/lib/config/reasons-of-concern/category-config";
 import { getColorsForVariables } from "@/utils/plots/colors-functions";
@@ -33,21 +33,18 @@ export const getOrderedVariableNames = (runs: ShortRun[]): string[] => {
   return variableNames.sort((a, b) => a.localeCompare(b));
 };
 
-export const renderKyotoPlot = ({ svg, data, dimensions }: Props): void => {
+export const renderKyotoPlot = ({ svg, data, dimensions }: Props): (() => void) | void => {
   clearSVG(svg);
   const { shortRuns, flagCategory } = data;
-  if (shortRuns.length === 0) {
-    return;
-  }
+  if (shortRuns.length === 0) return;
 
   const g = createMainGroup(svg, dimensions);
   const tooltipManager = createTooltipManager({ svg, dimensions });
+  if (!tooltipManager) return;
 
   const areaRuns = shortRuns.filter((run) => !run.isLine);
   const lineRuns = shortRuns.filter((run) => run.isLine);
-
   const areaVariableNames = getOrderedVariableNames(areaRuns);
-
   const nonOtherGasVariables = areaVariableNames.filter((name) => name !== "Other Gases").reverse();
   const colors = getColorsForVariables(flagCategory, nonOtherGasVariables.length);
 
@@ -58,19 +55,16 @@ export const renderKyotoPlot = ({ svg, data, dimensions }: Props): void => {
   variableColorMap.set(OTHER_GASES, LIGHT_GREY);
 
   const lineColor = CATEGORY_CONFIG[flagCategory].palette;
-
   const allYears = [
     ...new Set(shortRuns.flatMap((run) => run.orderedPoints.map((p) => p.year))),
   ].sort((a, b) => a - b);
 
   const stackedAreaData: StackedDataPoint[] = allYears.map((year) => {
     const dataPoint: StackedDataPoint = { year };
-
     areaRuns.forEach((run) => {
       const point = run.orderedPoints.find((p) => p.year === year);
       dataPoint[run.variableName] = point?.value || 0;
     });
-
     return dataPoint;
   });
 
@@ -94,10 +88,8 @@ export const renderKyotoPlot = ({ svg, data, dimensions }: Props): void => {
     .scaleLinear()
     .domain(d3.extent(allYears) as [number, number])
     .range([0, dimensions.INNER_WIDTH]);
-
   const [yMin, yMax] = d3.extent(allValues) as [number, number];
   const yPadding = (yMax - yMin) * 0.175;
-
   const yScale = d3
     .scaleLinear()
     .domain([yMin, yMax + yPadding])
@@ -115,7 +107,6 @@ export const renderKyotoPlot = ({ svg, data, dimensions }: Props): void => {
 
   if (stackedAreaData.length > 0 && areaVariableNames.length > 0) {
     const stackedData = d3.stack<StackedDataPoint>().keys(areaVariableNames)(stackedAreaData);
-
     const area = d3
       .area<d3.SeriesPoint<StackedDataPoint>>()
       .x((d) => xScale(d.data.year))
@@ -139,7 +130,6 @@ export const renderKyotoPlot = ({ svg, data, dimensions }: Props): void => {
       .x((d) => xScale(d.year))
       .y((d) => yScale(d.value))
       .curve(d3.curveCardinal);
-
     g.selectAll(".line-path")
       .data(lineData)
       .enter()
@@ -157,104 +147,108 @@ export const renderKyotoPlot = ({ svg, data, dimensions }: Props): void => {
     number,
     { year: number; areas: Record<string, number>; lines: Record<string, number> }
   >();
-
   allYears.forEach((year) => {
     const areas: Record<string, number> = {};
     const lines: Record<string, number> = {};
-
     areaRuns.forEach((run) => {
       const point = run.orderedPoints.find((p) => p.year === year);
       areas[run.variableName] = point?.value || 0;
     });
-
     lineRuns.forEach((run) => {
       const point = run.orderedPoints.find((p) => p.year === year);
-      if (point) {
-        lines[run.variableName] = point.value;
-      }
+      if (point) lines[run.variableName] = point.value;
     });
-
     dataByYear.set(year, { year, areas, lines });
   });
 
-  createInteractionOverlay(g, dimensions.INNER_WIDTH, dimensions.INNER_HEIGHT)
-    .on("mouseenter", () => {
-      verticalHoverLine.style("opacity", 1);
-      tooltipManager?.show();
-    })
-    .on("mouseleave", () => {
+  const updateHoverState = (targetYear: number | null) => {
+    if (targetYear === null) {
       verticalHoverLine.style("opacity", 0);
-      tooltipManager?.hide();
+      tooltipManager.hide();
+      return;
+    }
+
+    const dataPoint = dataByYear.get(targetYear);
+    if (!dataPoint) return;
+
+    const x = xScale(dataPoint.year);
+    verticalHoverLine.style("opacity", 1).attr("x1", x).attr("x2", x);
+
+    let cumulative = 0;
+    const areaTooltipData = areaVariableNames
+      .map((variableName) => {
+        const value = dataPoint.areas[variableName] || 0;
+        const start = cumulative;
+        cumulative += value;
+        return {
+          key: variableName,
+          value,
+          start,
+          end: cumulative,
+          color: variableColorMap.get(variableName) || colors[0],
+          isLine: false,
+        };
+      })
+      .reverse();
+
+    const lineTooltipData = lineRuns
+      .filter((run) => dataPoint.lines[run.variableName] !== undefined)
+      .map((run) => ({
+        key: run.variableName,
+        value: dataPoint.lines[run.variableName],
+        color: lineColor[0],
+        isLine: true,
+      }));
+
+    const allTooltipData = [...areaTooltipData, ...lineTooltipData];
+
+    const content = allTooltipData
+      .sort((a, b) => Number(b.isLine) - Number(a.isLine))
+      .map((d) => {
+        const legendElement = d.isLine
+          ? `<div style="width: 10px; height: 3px; background-color: ${d.color}; flex-shrink: 0;"></div>`
+          : `<div style="width: 10px; height: 10px; background-color: ${d.color}; border: 1px solid #666; border-radius: 100px; flex-shrink: 0;"></div>`;
+
+        return `<div class="flex items-center gap-2 mb-1">
+          ${legendElement}
+          <div class="text-black"><strong>${d.key}:</strong> ${formatNumber(d.value)}</div>
+        </div>`;
+      })
+      .join("");
+
+    tooltipManager.show();
+    tooltipManager.update(
+      `<div class="text-black">
+        <div class="mb-1"><strong>Year:</strong> ${dataPoint.year}</div>
+        <div>${content}</div>
+      </div>`,
+      x,
+      dimensions.INNER_HEIGHT / 2,
+    );
+  };
+
+  createInteractionOverlay(g, dimensions.INNER_WIDTH, dimensions.INNER_HEIGHT)
+    .on("mouseleave", () => {
+      window.dispatchEvent(new CustomEvent("sync-plot-hover", { detail: { year: null } }));
     })
     .on("mousemove", function (event) {
       const [mouseX] = d3.pointer(event);
       const year = Math.round(xScale.invert(mouseX));
-
-      let dataPoint = dataByYear.get(year);
-      if (!dataPoint) {
-        const availableYears = Array.from(dataByYear.keys());
-        const closestYear = availableYears.reduce((prev, curr) =>
-          Math.abs(curr - year) < Math.abs(prev - year) ? curr : prev,
-        );
-        dataPoint = dataByYear.get(closestYear);
-      }
-
-      if (!dataPoint) return;
-
-      const x = xScale(dataPoint.year);
-      verticalHoverLine.attr("x1", x).attr("x2", x);
-
-      let cumulative = 0;
-      const areaTooltipData = areaVariableNames
-        .map((variableName) => {
-          const value = dataPoint.areas[variableName] || 0;
-          const start = cumulative;
-          cumulative += value;
-          return {
-            key: variableName,
-            value,
-            start,
-            end: cumulative,
-            color: variableColorMap.get(variableName) || colors[0],
-            isLine: false,
-          };
-        })
-        .reverse();
-
-      const lineTooltipData = lineRuns
-        .filter((run) => dataPoint.lines[run.variableName] !== undefined)
-        .map((run) => ({
-          key: run.variableName,
-          value: dataPoint.lines[run.variableName],
-          color: lineColor[0],
-          isLine: true,
-        }));
-
-      const allTooltipData = [...areaTooltipData, ...lineTooltipData];
-
-      const content = allTooltipData
-        .sort((a, b) => Number(b.isLine) - Number(a.isLine))
-        .map((d) => {
-          const legendElement = d.isLine
-            ? `<div style="width: 10px; height: 3px; background-color: ${d.color}; flex-shrink: 0;"></div>`
-            : `<div style="width: 10px; height: 10px; background-color: ${d.color}; border: 1px solid #666; border-radius: 100px; flex-shrink: 0;"></div>`;
-
-          return `<div class="flex items-center gap-2 mb-1">
-      ${legendElement}
-      <div class="text-black">
-        <strong>${d.key}:</strong> ${formatNumber(d.value)}
-      </div>
-    </div>`;
-        })
-        .join("");
-
-      tooltipManager?.update(
-        `<div class="text-black">
-          <div class="mb-1"><strong>Year:</strong> ${dataPoint.year}</div>
-          <div>${content}</div>
-        </div>`,
-        x,
-        dimensions.INNER_HEIGHT / 2,
+      const nearestYear = allYears.reduce((prev, curr) =>
+        Math.abs(curr - year) < Math.abs(prev - year) ? curr : prev,
       );
+
+      window.dispatchEvent(new CustomEvent("sync-plot-hover", { detail: { year: nearestYear } }));
     });
+
+  const handleSync = (e: Event) => {
+    const customEvent = e as CustomEvent<{ year: number | null }>;
+    updateHoverState(customEvent.detail.year);
+  };
+
+  window.addEventListener("sync-plot-hover", handleSync);
+
+  return () => {
+    window.removeEventListener("sync-plot-hover", handleSync);
+  };
 };

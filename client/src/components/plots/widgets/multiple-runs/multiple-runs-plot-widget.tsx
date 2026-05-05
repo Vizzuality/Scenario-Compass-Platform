@@ -15,6 +15,7 @@ import { CanvasMultiLinePlot } from "@/components/plots/plot-variations/canvas/c
 import { useGetRunDetailsUrl } from "@/hooks/nuqs/url-params/use-get-run-details-url";
 import { YExtentPair } from "@/components/plots/plot-variations/canvas/scales";
 import { useSelectedRunParam } from "@/hooks/nuqs/url-params/use-selected-run-param";
+import { ChartWrapper } from "@/components/plots/chart-wrapper";
 
 interface Props {
   plotConfig: PlotConfig;
@@ -109,9 +110,7 @@ export function MultipleRunsPlotWidget({
           onChange={handleVariableChange}
           currentVariable={currentVariable}
         />
-        <div ref={chartRef} className="min-h-0 flex-1">
-          {renderChart(false)}
-        </div>
+        <ChartWrapper ref={chartRef}>{renderChart(false)}</ChartWrapper>
       </div>
 
       <ChartDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} title={plotConfig.title}>
@@ -121,9 +120,7 @@ export function MultipleRunsPlotWidget({
             onChange={(v) => setVariable(plotConfig, v)}
             currentVariable={currentVariable}
           />
-          <div className="relative min-h-0 flex-1 [&>*]:!aspect-auto [&>*]:!h-full">
-            {isDialogOpen && renderChart(true)}
-          </div>
+          <div className="relative min-h-0 flex-1">{isDialogOpen && renderChart(true)}</div>
         </div>
       </ChartDialog>
     </>

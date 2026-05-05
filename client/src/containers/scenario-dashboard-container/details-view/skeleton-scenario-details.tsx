@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 function SkeletonHeader() {
   return (
-    <div className="container mx-auto mb-8">
+    <div className="dashboard-container mx-auto mb-8">
       <Skeleton className="mb-6 h-8 w-64" />
       <div className="grid grid-cols-[1fr_1fr] items-end gap-4">
         <div className="flex flex-col gap-2">
@@ -77,7 +77,7 @@ function SkeletonSidebar() {
 function SkeletonBody() {
   return (
     <div className="bg-background w-full">
-      <div className="container mx-auto flex gap-16">
+      <div className="dashboard-container mx-auto flex gap-16">
         <div className="my-8 grid h-fit min-h-[600px] w-full grid-cols-1 grid-rows-2 gap-4 xl:grid-cols-2">
           {Array.from({ length: 4 }).map((_, i) => (
             <SkeletonPlotCard key={i} />
@@ -93,7 +93,7 @@ export default function ScenarioDetailsSkeleton() {
   return (
     <div className="w-full bg-white">
       <div className="h-16 w-full border-b">
-        <div className="container mx-auto flex h-full items-center">
+        <div className="dashboard-container mx-auto flex h-full items-center">
           <Skeleton className="h-6 w-32" />
         </div>
       </div>

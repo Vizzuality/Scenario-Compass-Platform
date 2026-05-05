@@ -2,7 +2,7 @@ import { clearSVG, createMainGroup, SVGSelection } from "@/utils/plots/render-fu
 import { PlotDimensions } from "@/lib/config/plots/plots-dimensions";
 import * as d3 from "d3";
 import { createTooltipManager } from "@/utils/plots/tooltip-manager";
-import { ShortRunReturn } from "@/components/plots/plot-variations/custom/kyoto/types";
+import { ShortRunReturn } from "@/components/plots/plot-variations/kyoto/types";
 import { CATEGORY_CONFIG } from "@/lib/config/reasons-of-concern/category-config";
 import { getColorsForVariables } from "@/utils/plots/colors-functions";
 import {

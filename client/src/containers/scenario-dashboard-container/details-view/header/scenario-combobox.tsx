@@ -4,9 +4,11 @@ import { ComboboxFilter } from "@/components/ui/combobox";
 import queryKeys from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { useBaseUrlParams } from "@/hooks/nuqs/url-params/use-base-url-params";
+import { useSelectedRunParam } from "@/hooks/nuqs/url-params/use-selected-run-param";
 
 export default function ScenarioCombobox() {
-  const { model, setScenario, scenario } = useBaseUrlParams();
+  const { model, setScenario, scenario, setGeography } = useBaseUrlParams();
+  const { setSelectedRunId } = useSelectedRunParam();
 
   const { data, isLoading } = useQuery({
     ...queryKeys.scenarios.list({
@@ -28,6 +30,8 @@ export default function ScenarioCombobox() {
 
   const handleScenarioChange = (sceario: string) => {
     setScenario(sceario);
+    setGeography(null);
+    setSelectedRunId(null);
   };
 
   return (

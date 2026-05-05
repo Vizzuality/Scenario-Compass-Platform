@@ -147,4 +147,9 @@
   .content-container {
     @apply relative container w-full px-5 sm:px-5 md:px-10 lg:px-20 xl:px-20 2xl:px-20;
   }
+
+  .dashboard-container {
+    @apply mx-auto w-full px-12;
+    max-width: 1920px;
+  }
 }

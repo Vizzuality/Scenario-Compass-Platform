@@ -8,7 +8,7 @@ import YearSelection from "@/containers/scenario-dashboard-container/details-vie
 
 export default function ScenarioDetailsViewHeader() {
   return (
-    <div className="container mx-auto mb-8">
+    <div className="dashboard-container mx-auto mb-8">
       <HeaderTitle />
       <div className="grid grid-cols-[1fr_1fr] items-end gap-4">
         <ModelCombobox />

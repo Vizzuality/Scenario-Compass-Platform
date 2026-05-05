@@ -4,18 +4,28 @@ import SingleRunScenarioFlags from "@/containers/scenario-dashboard-container/co
 import { SINGLE_SCENARIO_VIEW_PLOTS_CONFIG_ARRAY } from "@/lib/config/tabs/tabs-config";
 import { SingleRunPlotWidget } from "@/components/plots/widgets/single-run/single-run-plot-widget";
 import AdditionalInformation from "@/containers/scenario-dashboard-container/components/runs-pannel/components/additional-information";
-import { KyotoGasesPlot } from "@/components/plots/plot-variations/custom/kyoto/kyoto-gases-plot";
+import { KyotoGasesPlot } from "@/components/plots/plot-variations/kyoto/kyoto-gases-plot";
 import useGetVariablesForTab from "@/hooks/nuqs/tabs/use-get-variables-for-tab";
 import useCombineRunsForVariablesPipeline from "@/hooks/runs/data-pipeline/use-combine-runs-for-variables-pipeline";
 import ScenarioDetailsInfo from "@/containers/scenario-dashboard-container/details-view/body/scenario-details-info";
+import { useSelectedRunParam } from "@/hooks/nuqs/url-params/use-selected-run-param";
+import { useEffect } from "react";
 
-export default function ScenarioTabs() {
+export default function ScenarioDetailPlots() {
   const { variables } = useGetVariablesForTab({});
   const result = useCombineRunsForVariablesPipeline({ variablesNames: variables });
+  const { setSelectedRunId } = useSelectedRunParam();
+  const currentRunId = result.runs?.[0]?.runId || result.runs?.[0]?.runId;
+
+  useEffect(() => {
+    if (currentRunId) {
+      setSelectedRunId(currentRunId);
+    }
+  }, [currentRunId, setSelectedRunId]);
 
   return (
     <div className="bg-background w-full">
-      <div className="container mx-auto flex gap-6 pb-24 lg:gap-8">
+      <div className="dashboard-container mx-auto flex gap-6 pb-24 lg:gap-8">
         <div className="my-8 grid h-fit min-h-[600px] w-full grid-cols-1 grid-rows-2 gap-4 xl:grid-cols-2">
           <KyotoGasesPlot />
           {SINGLE_SCENARIO_VIEW_PLOTS_CONFIG_ARRAY.map((plotConfig, index) => {
