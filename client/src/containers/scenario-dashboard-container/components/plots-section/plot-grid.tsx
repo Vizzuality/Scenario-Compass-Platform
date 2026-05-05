@@ -7,11 +7,24 @@ import CustomTabPlotGrid from "@/containers/scenario-dashboard-container/compone
 import HistogramWidget from "@/components/plots/widgets/histogram-widget";
 import { useBaseUrlParams } from "@/hooks/nuqs/url-params/use-base-url-params";
 import LoadingDots from "@/components/animations/loading-dots";
+import { useSelectedRunParam } from "@/hooks/nuqs/url-params/use-selected-run-param";
 
 export function PlotGrid() {
   const { startYear, endYear } = useBaseUrlParams();
-  const chartType =
-    parseInt(startYear!) === parseInt(endYear!) ? PLOT_TYPE_OPTIONS.DOTS : PLOT_TYPE_OPTIONS.AREA;
+  const { selectedRunId } = useSelectedRunParam();
+
+  const getInitialChartType = () => {
+    if (selectedRunId) {
+      return PLOT_TYPE_OPTIONS.MULTIPLE_LINE;
+    }
+
+    return parseInt(startYear!) === parseInt(endYear!)
+      ? PLOT_TYPE_OPTIONS.DOTS
+      : PLOT_TYPE_OPTIONS.AREA;
+  };
+
+  const chartType = getInitialChartType();
+
   const { selectedTab } = useTabAndVariablesParams();
   if (selectedTab.isCustom) {
     return (

@@ -11,7 +11,7 @@ export default function ScenarioDashboardComparisonPageContainer() {
     <>
       <div className="w-full bg-white">
         <Navbar theme="light" sheetTheme="burgundy" />
-        <div className="container mx-auto flex flex-col items-start justify-between gap-11 pt-8">
+        <div className="dashboard-container mx-auto flex flex-col items-start justify-between gap-11 pt-8">
           <Suspense>
             <CompareScenariosBackButton />
           </Suspense>

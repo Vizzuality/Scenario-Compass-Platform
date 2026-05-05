@@ -1,6 +1,5 @@
 import LoadingDots from "@/components/animations/loading-dots";
 import { DataFetchError } from "@/components/error-state/data-fetch-error";
-import { PlotContainer } from "@/components/plots/components/plot-container";
 import Image from "next/image";
 import notFoundImage from "@/assets/images/not-found.webp";
 import React from "react";
@@ -12,26 +11,28 @@ interface Props<T> {
   children: (items: T[]) => React.ReactNode;
 }
 
+const centered = "relative flex h-full w-full items-center justify-center";
+
 export const PlotStateHandler = <T,>({ items, isLoading, isError, children }: Props<T>) => {
   if (isLoading) {
     return (
-      <PlotContainer>
+      <div className={centered}>
         <LoadingDots />
-      </PlotContainer>
+      </div>
     );
   }
 
   if (isError) {
     return (
-      <PlotContainer>
+      <div className={centered}>
         <DataFetchError />
-      </PlotContainer>
+      </div>
     );
   }
 
   if (items.length === 0) {
     return (
-      <PlotContainer>
+      <div className={centered}>
         <div className="-mt-10 px-4 text-center">
           <Image
             src={notFoundImage}
@@ -46,13 +47,9 @@ export const PlotStateHandler = <T,>({ items, isLoading, isError, children }: Pr
             the filters to see results.
           </p>
         </div>
-      </PlotContainer>
+      </div>
     );
   }
 
-  return (
-    <PlotContainer>
-      <div className="absolute inset-0">{children(items)}</div>
-    </PlotContainer>
-  );
+  return <div className="relative h-full w-full">{children(items)}</div>;
 };

@@ -219,7 +219,7 @@ export const CanvasMultiLinePlot: React.FC<Props> = ({
   }
 
   return (
-    <div className="relative aspect-square w-full flex-1 sm:aspect-[4/3] lg:aspect-[16/10]">
+    <div className="relative h-full w-full">
       <div ref={containerRef} className="absolute inset-0">
         <canvas ref={canvasRef} className="block h-full w-full" />
         {zoomEnabled && (

@@ -7,9 +7,9 @@ import { COMPARISON_TAG } from "@/containers/scenario-dashboard-container/consta
 
 export function TabsSectionSkeleton() {
   return (
-    <div className="flex w-full bg-white pt-9">
-      <div className="w-full border-b" />
-      <div className="container mx-auto flex shrink-0 pt-4">
+    <div className="relative w-full bg-white pt-9">
+      <div className="absolute bottom-0 left-0 w-full border-b" />
+      <div className="dashboard-container relative flex pt-4">
         {TABS_CONFIG_ARRAY.map((tab, index) => (
           <button
             key={index}
@@ -24,7 +24,6 @@ export function TabsSectionSkeleton() {
           </button>
         ))}
       </div>
-      <div className="w-full border-b" />
     </div>
   );
 }
@@ -34,9 +33,9 @@ export function TabsSection() {
   const { setSelectedTab: setSelectedTabPrefixed } = useTabAndVariablesParams(COMPARISON_TAG);
 
   return (
-    <div className="flex w-full bg-white pt-9">
-      <div className="w-full border-b" />
-      <div className="container mx-auto flex shrink-0 pt-4">
+    <div className="relative w-full bg-white pt-9">
+      <div className="absolute bottom-0 left-0 w-full border-b" />
+      <div className="dashboard-container relative flex pt-4">
         {TABS_CONFIG_ARRAY.map((tab, index) => (
           <button
             key={index}
@@ -55,7 +54,6 @@ export function TabsSection() {
           </button>
         ))}
       </div>
-      <div className="w-full border-b" />
     </div>
   );
 }

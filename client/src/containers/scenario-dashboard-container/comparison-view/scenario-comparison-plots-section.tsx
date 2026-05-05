@@ -8,6 +8,7 @@ import useGetVariablesForTab from "@/hooks/nuqs/tabs/use-get-variables-for-tab";
 import useCombineRunsForVariablesPipeline from "@/hooks/runs/data-pipeline/use-combine-runs-for-variables-pipeline";
 import { VerticalComparisonPlotGrid } from "@/containers/scenario-dashboard-container/comparison-view/vertical-comparison-plot-grid";
 import ComparisonStickyFlags from "@/containers/scenario-dashboard-container/comparison-view/comparison-sticky-reasons-of-concern";
+import RunHeader from "@/containers/scenario-dashboard-container/components/runs-pannel/run-header";
 
 const prefix = COMPARISON_TAG;
 
@@ -25,7 +26,7 @@ export default function ScenarioComparisonPlotsSection() {
   const leftResult = useCombineRunsForVariablesPipeline({ variablesNames: leftVariables });
 
   return (
-    <div className="container mx-auto my-8">
+    <div className="dashboard-container mx-auto my-8">
       <FilterGrid prefix={prefix} />
       <ComparisonStickyFlags
         leftShowMetric={leftShowMetric}

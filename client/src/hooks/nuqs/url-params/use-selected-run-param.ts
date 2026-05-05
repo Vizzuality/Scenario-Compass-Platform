@@ -2,7 +2,7 @@ import { parseAsString, useQueryState } from "nuqs";
 import { getParamName } from "@/utils/url-params-utils";
 
 export function useSelectedRunParam(prefix: string = "") {
-  const paramName = getParamName("selectedRun", prefix);
+  const paramName = getParamName("selectedRunId", prefix);
 
   const [selectedRunId, setSelectedRunId] = useQueryState(
     paramName,
