@@ -14,13 +14,15 @@ export function PlotGrid() {
   const { selectedRunId } = useSelectedRunParam();
 
   const getInitialChartType = () => {
+    if (parseInt(startYear!) === parseInt(endYear!)) {
+      return PLOT_TYPE_OPTIONS.DOTS;
+    }
+
     if (selectedRunId) {
       return PLOT_TYPE_OPTIONS.MULTIPLE_LINE;
     }
 
-    return parseInt(startYear!) === parseInt(endYear!)
-      ? PLOT_TYPE_OPTIONS.DOTS
-      : PLOT_TYPE_OPTIONS.AREA;
+    return PLOT_TYPE_OPTIONS.AREA;
   };
 
   const chartType = getInitialChartType();
