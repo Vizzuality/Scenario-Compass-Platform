@@ -28,7 +28,7 @@ export default function KeyQuestions() {
             transparent quality-control process. <br />
             For more see:{" "}
             <Link
-              href="https://philippverpoort.github.io/scenario-vetting-criteria/criteria_types/"
+              href="https://philippverpoort.github.io/scenario-vetting-criteria/restructuring/"
               rel="noopener noreferrer"
               target="_blank"
               className="underline"
