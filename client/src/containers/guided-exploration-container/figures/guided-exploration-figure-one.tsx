@@ -3,7 +3,10 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/lib/query-keys";
-import { useFigureOne, FigureOneDataPoint } from "@/hooks/runs/guided-exploration/use-figure-one";
+import {
+  useFigureOne,
+  FigureOneDataPoint,
+} from "@/hooks/guided-exploration/figure-one/use-figure-one";
 import { ScatterPlot } from "@/components/plots/plot-variations/scatter-plot/scatter-plot";
 import { useGetRunDetailsUrl } from "@/hooks/nuqs/url-params/use-get-run-details-url";
 import GeographyFilter from "@/containers/scenario-dashboard-container/components/filter-top/geography-filter";
@@ -83,7 +86,7 @@ export function GuidedExplorationFigOne() {
               <GeographyFilter variant="dark" />
             </div>
 
-            <div className="grid w-full grid-cols-2 items-end gap-4">
+            <div className="grid w-full items-end gap-4">
               <div className="flex flex-1 gap-6" data-testid="year-filter">
                 <div className="flex w-full flex-col gap-2">
                   <Label
@@ -103,15 +106,6 @@ export function GuidedExplorationFigOne() {
                   />
                 </div>
               </div>
-              <Button
-                type="button"
-                variant="tertiary"
-                size="lg"
-                onClick={handleResetControls}
-                className="border-compass-sand border bg-white"
-              >
-                Reset
-              </Button>
             </div>
           </div>
 
@@ -170,6 +164,15 @@ export function GuidedExplorationFigOne() {
               </div>
             ))}
           </div>
+          <Button
+            type="button"
+            variant="tertiary"
+            size="lg"
+            onClick={handleResetControls}
+            className="border-compass-sand w-full border bg-white"
+          >
+            Reset
+          </Button>
         </div>
       </div>
     </div>

@@ -5,7 +5,7 @@ import * as d3 from "d3";
 import { renderScatterPlot } from "./render-scatter-plot";
 import { usePlotContainer } from "@/hooks/plots/plot-container/use-plot-container";
 import { PlotStateHandler } from "@/components/plots/components";
-import { FigureOneDataPoint } from "@/hooks/runs/guided-exploration/use-figure-one";
+import { FigureOneDataPoint } from "@/hooks/guided-exploration/figure-one/use-figure-one";
 
 interface ScatterBasePlotProps {
   points: FigureOneDataPoint[];

@@ -27,11 +27,7 @@ import {
   HOVER_HEADER_LABEL_Y,
   HOVER_LABEL_FONT_SIZE,
   HOVER_LABEL_RIGHT_OFFSET,
-  HOVER_LABEL_STROKE_COLOR,
-  HOVER_LABEL_STROKE_WIDTH,
   HOVER_LABEL_TEXT_COLOR,
-  HOVER_MAX_LABEL_Y_OFFSET,
-  HOVER_MIN_LABEL_Y_OFFSET,
   HOVER_RANGE_FILL_OPACITY,
   HOVER_RANGE_STROKE_WIDTH,
   HOVER_ZONE_X_PADDING,
@@ -45,12 +41,19 @@ import {
   ZERO_LINE_DASH_ARRAY,
   ZERO_LINE_STROKE_WIDTH,
   type BenchmarkGroupKey,
+  HOVER_PILL_PADDING_X,
+  HOVER_PILL_PADDING_Y,
+  HOVER_PILL_BACKGROUND_COLOR,
+  HOVER_PILL_BACKGROUND_OPACITY,
+  HOVER_PILL_RADIUS,
+  HOVER_PILL_LINE_GAP,
+  HOVER_PILL_CHART_PADDING,
 } from "./benchmark-chart.config";
 import {
   BenchmarkDataPoint,
   FigureThreeData,
   GroupBenchmarkData,
-} from "@/hooks/runs/guided-exploration/figure-three/use-figure-three";
+} from "@/hooks/guided-exploration/figure-three/use-figure-three";
 import { createBenchmarkDotTooltipHelpers } from "@/components/plots/plot-variations/benchmark-chart/benchmark-chart.tooltip";
 
 export interface BenchmarkSelectedPoint {
@@ -418,6 +421,84 @@ export const renderBenchmarkChart = ({
     .attr("class", "benchmark-hover-layer")
     .style("pointer-events", "none");
 
+  type HoverPillPlacement = "center" | "above-line" | "below-line";
+
+  const createHoverPillLabel = (className: string) => {
+    const group = hoverLayer
+      .append("g")
+      .attr("class", `benchmark-hover-pill-label ${className}`)
+      .style("opacity", 0);
+
+    const background = group
+      .append("rect")
+      .attr("fill", HOVER_PILL_BACKGROUND_COLOR)
+      .attr("fill-opacity", HOVER_PILL_BACKGROUND_OPACITY)
+      .attr("rx", HOVER_PILL_RADIUS)
+      .attr("ry", HOVER_PILL_RADIUS);
+
+    const text = group
+      .append("text")
+      .attr("text-anchor", "end")
+      .attr("dominant-baseline", "middle")
+      .style("font-size", HOVER_LABEL_FONT_SIZE)
+      .style("font-weight", 600)
+      .style("fill", HOVER_LABEL_TEXT_COLOR);
+
+    const show = (
+      label: string,
+      x: number,
+      y: number,
+      placement: HoverPillPlacement = "center",
+    ): void => {
+      text.attr("x", x).attr("y", y).text(label);
+
+      const textNode = text.node();
+      if (!textNode) return;
+
+      const initialBox = textNode.getBBox();
+
+      const pillHeight = initialBox.height + HOVER_PILL_PADDING_Y * 2;
+      const initialPillY = initialBox.y - HOVER_PILL_PADDING_Y;
+
+      let targetPillY = initialPillY;
+
+      if (placement === "above-line") {
+        targetPillY = Math.max(y - HOVER_PILL_LINE_GAP - pillHeight, HOVER_PILL_CHART_PADDING);
+      }
+
+      if (placement === "below-line") {
+        targetPillY = Math.min(
+          y + HOVER_PILL_LINE_GAP,
+          innerHeight - pillHeight - HOVER_PILL_CHART_PADDING,
+        );
+      }
+
+      const textYOffset = targetPillY - initialPillY;
+
+      text.attr("y", y + textYOffset);
+
+      const finalBox = textNode.getBBox();
+
+      background
+        .attr("x", finalBox.x - HOVER_PILL_PADDING_X)
+        .attr("y", finalBox.y - HOVER_PILL_PADDING_Y)
+        .attr("width", finalBox.width + HOVER_PILL_PADDING_X * 2)
+        .attr("height", finalBox.height + HOVER_PILL_PADDING_Y * 2);
+
+      group.style("opacity", 1);
+    };
+
+    const hide = (): void => {
+      group.style("opacity", 0);
+    };
+
+    return { show, hide };
+  };
+
+  const hoverHeaderLabel = createHoverPillLabel("benchmark-hover-header-label");
+  const maxLabel = createHoverPillLabel("benchmark-hover-max-label");
+  const minLabel = createHoverPillLabel("benchmark-hover-min-label");
+
   const maxHoverLine = hoverLayer
     .append("line")
     .attr("class", "benchmark-hover-line benchmark-hover-max-line")
@@ -446,46 +527,14 @@ export const renderBenchmarkChart = ({
     .attr("rx", RANGE_BAR_RADIUS)
     .style("opacity", 0);
 
-  const hoverHeaderLabel = hoverLayer
-    .append("text")
-    .attr("class", "benchmark-hover-label benchmark-hover-header-label")
-    .attr("text-anchor", "end")
-    .style("font-size", HOVER_LABEL_FONT_SIZE)
-    .style("fill", HOVER_LABEL_TEXT_COLOR)
-    .style("stroke", HOVER_LABEL_STROKE_COLOR)
-    .style("stroke-width", HOVER_LABEL_STROKE_WIDTH)
-    .style("paint-order", "stroke")
-    .style("opacity", 0);
-
-  const maxLabel = hoverLayer
-    .append("text")
-    .attr("class", "benchmark-hover-label benchmark-hover-max-label")
-    .attr("text-anchor", "end")
-    .style("font-size", HOVER_LABEL_FONT_SIZE)
-    .style("fill", HOVER_LABEL_TEXT_COLOR)
-    .style("stroke", HOVER_LABEL_STROKE_COLOR)
-    .style("stroke-width", HOVER_LABEL_STROKE_WIDTH)
-    .style("paint-order", "stroke")
-    .style("opacity", 0);
-
-  const minLabel = hoverLayer
-    .append("text")
-    .attr("class", "benchmark-hover-label benchmark-hover-min-label")
-    .attr("text-anchor", "end")
-    .style("font-size", HOVER_LABEL_FONT_SIZE)
-    .style("fill", HOVER_LABEL_TEXT_COLOR)
-    .style("stroke", HOVER_LABEL_STROKE_COLOR)
-    .style("stroke-width", HOVER_LABEL_STROKE_WIDTH)
-    .style("paint-order", "stroke")
-    .style("opacity", 0);
-
   const hideHover = (): void => {
     maxHoverLine.style("opacity", 0);
     minHoverLine.style("opacity", 0);
     hoverRange.style("opacity", 0);
-    hoverHeaderLabel.style("opacity", 0);
-    maxLabel.style("opacity", 0);
-    minLabel.style("opacity", 0);
+
+    hoverHeaderLabel.hide();
+    maxLabel.hide();
+    minLabel.hide();
   };
 
   const updateHover = ({ year, groupKey, min, max, xBase, barWidth }: HoverState): void => {
@@ -508,23 +557,25 @@ export const renderBenchmarkChart = ({
       .attr("stroke", colors.dot)
       .style("opacity", 1);
 
-    hoverHeaderLabel
-      .attr("x", innerWidth - HOVER_LABEL_RIGHT_OFFSET)
-      .attr("y", HOVER_HEADER_LABEL_Y)
-      .text(`${year} · ${BENCHMARK_GROUP_LABELS[groupKey]}`)
-      .style("opacity", 1);
+    hoverHeaderLabel.show(
+      `${year} · ${BENCHMARK_GROUP_LABELS[groupKey]}`,
+      innerWidth - HOVER_LABEL_RIGHT_OFFSET,
+      HOVER_HEADER_LABEL_Y,
+    );
 
-    maxLabel
-      .attr("x", innerWidth - HOVER_LABEL_RIGHT_OFFSET)
-      .attr("y", Math.max(maxY + HOVER_MAX_LABEL_Y_OFFSET, 28))
-      .text(`Max: ${formatPercent(max)}`)
-      .style("opacity", 1);
+    maxLabel.show(
+      `Max: ${formatPercent(max)}`,
+      innerWidth - HOVER_LABEL_RIGHT_OFFSET,
+      maxY,
+      "above-line",
+    );
 
-    minLabel
-      .attr("x", innerWidth - HOVER_LABEL_RIGHT_OFFSET)
-      .attr("y", Math.min(minY + HOVER_MIN_LABEL_Y_OFFSET, innerHeight - 4))
-      .text(`Min: ${formatPercent(min)}`)
-      .style("opacity", 1);
+    minLabel.show(
+      `Min: ${formatPercent(min)}`,
+      innerWidth - HOVER_LABEL_RIGHT_OFFSET,
+      minY,
+      "below-line",
+    );
   };
 
   const interactionOverlay = g

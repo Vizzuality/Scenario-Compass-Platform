@@ -9,7 +9,10 @@ import { DataPoint } from "@/types/data/data-point";
 import { ExtendedRun } from "@/types/data/run";
 import useBaseRunTransformation from "@/hooks/runs/data-pipeline/use-base-run-transformation";
 import { geographyConfig } from "@/lib/config/filters/geography-filter-config";
-import { useScatterLegend, LegendItem } from "@/hooks/runs/guided-exploration/use-scatter-legend";
+import {
+  useScatterLegend,
+  LegendItem,
+} from "@/hooks/guided-exploration/figure-one/use-scatter-legend";
 import { IS_PART_OF_AR_6 } from "@/lib/config/reasons-of-concern/category-config";
 import {
   CAPACITY_ELECTRICITY_SOLAR,
@@ -28,10 +31,6 @@ export interface FigureOneDefaults {
   xVariable: string;
   yVariable: string;
   geography?: string;
-}
-
-interface UseFigureOneOptions {
-  defaultValues?: FigureOneDefaults;
 }
 
 interface UseFigureOneReturn {
@@ -64,9 +63,7 @@ const DEFAULT_FIGURE_ONE_VALUES: FigureOneDefaults = {
   yVariable: CAPACITY_ELECTRICITY_WIND,
 };
 
-export function useFigureOne({
-  defaultValues = DEFAULT_FIGURE_ONE_VALUES,
-}: UseFigureOneOptions = {}): UseFigureOneReturn {
+export function useFigureOne(): UseFigureOneReturn {
   const {
     year,
     setYear,
@@ -77,9 +74,7 @@ export function useFigureOne({
     yVariable,
     setYVariable,
     resetFigureOneUrlParams,
-  } = useFigureOneUrlParams({
-    defaultValues,
-  });
+  } = useFigureOneUrlParams({ defaultValues: DEFAULT_FIGURE_ONE_VALUES });
 
   const resetFigureOneControls = useCallback(async () => {
     await resetFigureOneUrlParams();
@@ -160,15 +155,9 @@ export function useFigureOne({
     });
   }, [allPoints, showVetted, showUnvetted]);
 
-  const xUnit = useMemo(
-    () => runs?.find((r) => dataX?.some((d) => String(d.runId) === r.runId))?.unit ?? "",
-    [runs, dataX],
-  );
+  const xUnit = runs?.find((r) => dataX?.some((d) => String(d.runId) === r.runId))?.unit ?? "";
 
-  const yUnit = useMemo(
-    () => runs?.find((r) => dataY?.some((d) => String(d.runId) === r.runId))?.unit ?? "",
-    [runs, dataY],
-  );
+  const yUnit = runs?.find((r) => dataY?.some((d) => String(d.runId) === r.runId))?.unit ?? "";
 
   return {
     data,

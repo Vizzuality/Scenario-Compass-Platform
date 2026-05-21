@@ -3,7 +3,7 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
-import { FigureThreeData } from "@/hooks/runs/guided-exploration/figure-three/use-figure-three";
+import { FigureThreeData } from "@/hooks/guided-exploration/figure-three/use-figure-three";
 import {
   BenchmarkDotTooltipPoint,
   BenchmarkSelectedPoint,
