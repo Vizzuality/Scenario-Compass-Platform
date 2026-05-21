@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { PlotDimensions } from "@/lib/config/plots/plots-dimensions";
-import { FigureOneDataPoint } from "@/hooks/runs/guided-exploration/use-figure-one";
+import { FigureOneDataPoint } from "@/hooks/guided-exploration/figure-one/use-figure-one";
 import { renderGridLines } from "@/utils/plots/render-functions";
 
 export interface ScatterScales {

@@ -1,4 +1,4 @@
-import { BenchmarkDataPoint } from "@/hooks/runs/guided-exploration/figure-three/use-figure-three";
+import { BenchmarkDataPoint } from "@/hooks/guided-exploration/figure-three/use-figure-three";
 import { DOT_RADIUS } from "./benchmark-chart.config";
 import { type BenchmarkGroupKey } from "./benchmark-chart.config";
 import { formatNumber } from "@/utils/plots/format-functions";

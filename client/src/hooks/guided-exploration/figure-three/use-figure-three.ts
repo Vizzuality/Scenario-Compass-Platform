@@ -3,7 +3,7 @@
 import { useCallback, useMemo } from "react";
 import { parseAsArrayOf, parseAsBoolean, parseAsInteger, parseAsString, useQueryState } from "nuqs";
 import { useGetMultipleRunsForVariablePipeline } from "@/hooks/runs/data-pipeline/use-get-multiple-runs-for-variable-pipeline";
-import { buildGroupData } from "@/hooks/runs/guided-exploration/figure-three/figure-three-hook-utils";
+import { buildGroupData } from "@/hooks/guided-exploration/figure-three/figure-three-hook-utils";
 import { ExtendedRun } from "@/types/data/run";
 
 export const FIG_THREE_PREFIX = "fig3";

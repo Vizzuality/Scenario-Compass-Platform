@@ -1,9 +1,10 @@
 import { ModuleHero } from "@/containers/guided-exploration-container/module-hero";
 import { cn } from "@/lib/utils";
-import { GuidedExplorationFigOne } from "@/containers/guided-exploration-container/guided-exploration-figure-one";
+import { GuidedExplorationFigOne } from "@/containers/guided-exploration-container/figures/guided-exploration-figure-one";
 import { ModuleCheckpointComponent } from "@/containers/guided-exploration-container/module-checkpoint";
-import { GuidedExplorationFigTwo } from "@/containers/guided-exploration-container/guided-exploration-figure-two";
-import { GuidedExplorationFigThree } from "@/containers/guided-exploration-container/guided-exploration-figure-three";
+import { GuidedExplorationFigTwo } from "@/containers/guided-exploration-container/figures/guided-exploration-figure-two";
+import { GuidedExplorationFigThree } from "@/containers/guided-exploration-container/figures/guided-exploration-figure-three";
+import { Suspense } from "react";
 
 const CONTENT_WIDTH = "mx-auto max-w-[860px]";
 
@@ -144,7 +145,9 @@ export function GuidedExplorationPageContainer() {
           </section>
 
           <div className="dashboard-container mb-16 w-full">
-            <GuidedExplorationFigOne />
+            <Suspense>
+              <GuidedExplorationFigOne />
+            </Suspense>
           </div>
 
           {/* Section 3 */}
@@ -210,11 +213,15 @@ export function GuidedExplorationPageContainer() {
           </section>
 
           <div className="dashboard-container mb-16 w-full">
-            <GuidedExplorationFigTwo />
+            <Suspense>
+              <GuidedExplorationFigTwo />
+            </Suspense>
           </div>
 
           <div className={cn(CONTENT_WIDTH, "mb-16")}>
-            <ModuleCheckpointComponent />
+            <Suspense>
+              <ModuleCheckpointComponent />
+            </Suspense>
           </div>
 
           <section className={cn(CONTENT_WIDTH, "mb-8 space-y-5")}>
@@ -238,7 +245,9 @@ export function GuidedExplorationPageContainer() {
           </section>
 
           <div className="dashboard-container mb-16 w-full">
-            <GuidedExplorationFigThree />
+            <Suspense>
+              <GuidedExplorationFigThree />
+            </Suspense>
           </div>
 
           <div className={cn(CONTENT_WIDTH, "mb-16")}>

@@ -3,8 +3,8 @@
 import { useQueryStates, parseAsBoolean } from "nuqs";
 import { useCallback, useMemo } from "react";
 import {
-  UNVETTED_COLOR,
-  VETTED_COLOR,
+  NOT_AR_6_COLOR,
+  AR_6_COLOR,
 } from "@/components/plots/plot-variations/scatter-plot/scatter-plot-config";
 
 export interface LegendItem {
@@ -23,8 +23,8 @@ interface UseScatterLegendReturn {
 
 export function useScatterLegend({
   prefix = "",
-  unvettedColor = UNVETTED_COLOR,
-  vettedColor = VETTED_COLOR,
+  unvettedColor = NOT_AR_6_COLOR,
+  vettedColor = AR_6_COLOR,
   vettedLabel = "In AR6 Ensemble",
   unvettedLabel = "Not in AR6 Ensemble",
 }: {

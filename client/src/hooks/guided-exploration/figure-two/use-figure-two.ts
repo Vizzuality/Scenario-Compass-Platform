@@ -17,10 +17,6 @@ export interface FigureTwoDefaults {
   prefix: string;
 }
 
-interface UseFigureTwoOptions {
-  defaultValues?: FigureTwoDefaults;
-}
-
 const DEFAULT_FIGURE_TWO_VALUES: FigureTwoDefaults = {
   startYear: 2020,
   endYear: 2040,
@@ -42,22 +38,20 @@ interface UseFigureTwoReturn extends RunPipelineReturn {
   resetFigureTwoControls: () => Promise<void>;
 }
 
-export function useFigureTwo({
-  defaultValues = DEFAULT_FIGURE_TWO_VALUES,
-}: UseFigureTwoOptions = {}): UseFigureTwoReturn {
+export function useFigureTwo(): UseFigureTwoReturn {
   const { geography, setGeography, startYear, endYear, setStartYear, setEndYear, clearAll } =
     useBaseUrlParams({
       useDefaults: true,
       prefix: FIG_TWO_PREFIX,
       defaults: {
-        startYear: defaultValues.startYear,
-        endYear: defaultValues.endYear,
+        startYear: DEFAULT_FIGURE_TWO_VALUES.startYear,
+        endYear: DEFAULT_FIGURE_TWO_VALUES.endYear,
       },
     });
 
   const [variable, setVariable] = useQueryState(
     FIG_TWO_PREFIX + "Var",
-    parseAsString.withDefault(defaultValues.variable),
+    parseAsString.withDefault(DEFAULT_FIGURE_TWO_VALUES.variable),
   );
 
   const [includeUnvetted, setIncludeUnvetted] = useQueryState(
@@ -65,18 +59,18 @@ export function useFigureTwo({
     parseAsBoolean.withDefault(true),
   );
 
-  const resetFigureTwoControls = useCallback(async (): Promise<void> => {
-    await Promise.all([setVariable(defaultValues.variable), clearAll()]);
-  }, [setVariable, clearAll, defaultValues.variable]);
-
   const pipelineData = useGetMultipleRunsForVariablePipeline({
     variable,
     prefix: FIG_TWO_PREFIX,
     defaults: {
-      startYear: defaultValues.startYear,
-      endYear: defaultValues.endYear,
+      startYear: DEFAULT_FIGURE_TWO_VALUES.startYear,
+      endYear: DEFAULT_FIGURE_TWO_VALUES.endYear,
     },
   });
+
+  const resetFigureTwoControls = useCallback(async (): Promise<void> => {
+    await Promise.all([setVariable(DEFAULT_FIGURE_TWO_VALUES.variable), clearAll()]);
+  }, [setVariable, clearAll, DEFAULT_FIGURE_TWO_VALUES.variable]);
 
   return {
     ...pipelineData,

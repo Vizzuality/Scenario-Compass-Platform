@@ -1,4 +1,4 @@
-import { FigureThreeData } from "@/hooks/runs/guided-exploration/figure-three/use-figure-three";
+import { FigureThreeData } from "@/hooks/guided-exploration/figure-three/use-figure-three";
 
 export type BenchmarkGroupKey = keyof Pick<FigureThreeData, "groupA" | "groupB">;
 
@@ -59,10 +59,6 @@ export const ZERO_LINE_DASH_ARRAY = "6,4";
 export const Y_AXIS_LABEL = "% compared to 2020";
 export const Y_AXIS_LABEL_OFFSET = -52;
 
-export const GROUP_LABEL_Y_OFFSET = 52;
-export const GROUP_LABEL_ROTATION = -35;
-export const GROUP_LABEL_FONT_SIZE = "10px";
-
 export const HOVER_GUIDE_LINE_COLOR = "#111827";
 export const HOVER_GUIDE_LINE_WIDTH = 1.25;
 export const HOVER_GUIDE_LINE_DASH_ARRAY = "4,4";
@@ -72,10 +68,19 @@ export const HOVER_RANGE_FILL_OPACITY = 0.08;
 export const HOVER_RANGE_STROKE_WIDTH = 2;
 
 export const HOVER_LABEL_FONT_SIZE = "11px";
-export const HOVER_LABEL_TEXT_COLOR = "#111827";
+export const HOVER_LABEL_TEXT_COLOR = "white";
 export const HOVER_LABEL_STROKE_COLOR = "#ffffff";
 export const HOVER_LABEL_STROKE_WIDTH = 4;
 export const HOVER_LABEL_RIGHT_OFFSET = 6;
+
+export const HOVER_PILL_LINE_GAP = 4;
+export const HOVER_PILL_CHART_PADDING = 4;
+
+export const HOVER_PILL_PADDING_X = 8;
+export const HOVER_PILL_PADDING_Y = 5;
+export const HOVER_PILL_RADIUS = 10;
+export const HOVER_PILL_BACKGROUND_COLOR = "#000000";
+export const HOVER_PILL_BACKGROUND_OPACITY = 0.85;
 
 export const HOVER_HEADER_LABEL_Y = 14;
 export const HOVER_MAX_LABEL_Y_OFFSET = -6;
