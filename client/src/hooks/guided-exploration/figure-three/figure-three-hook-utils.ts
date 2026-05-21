@@ -1,7 +1,7 @@
 import {
   BenchmarkDataPoint,
   GroupBenchmarkData,
-} from "@/hooks/runs/guided-exploration/figure-three/use-figure-three";
+} from "@/hooks/guided-exploration/figure-three/use-figure-three";
 import { ExtendedRun } from "@/types/data/run";
 import {
   FEASIBILITY_META_KEY,

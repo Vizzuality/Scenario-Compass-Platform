@@ -4,3 +4,7 @@
 science/data
 *.env
 /.idea
+/science/src/iasa.egg-info/dependency_links.txt
+/science/src/iasa.egg-info/PKG-INFO
+/science/src/iasa.egg-info/SOURCES.txt
+/science/src/iasa.egg-info/top_level.txt

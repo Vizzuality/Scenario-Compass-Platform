@@ -7,7 +7,7 @@ import {
   useFigureThree,
   VARIABLE_PREFIX_FILTER,
   BENCHMARK_YEARS,
-} from "@/hooks/runs/guided-exploration/figure-three/use-figure-three";
+} from "@/hooks/guided-exploration/figure-three/use-figure-three";
 import { BenchmarkChart } from "@/components/plots/plot-variations/benchmark-chart/benchmark-chart";
 import { BenchmarkDotTooltipPoint } from "@/components/plots/plot-variations/benchmark-chart/render-benchmark-chart";
 import { ComboboxVariableSelect } from "@/components/plots/components/variable-select/combobox-variable-select";
@@ -101,9 +101,9 @@ export function GuidedExplorationFigThree() {
 
   return (
     <div className="bg-card my-8 rounded-xl p-6 select-none">
-      <div className="flex flex-col md:flex-row">
+      <div className="flex flex-col gap-4 md:flex-row">
         {/* Chart */}
-        <div className="flex aspect-[4/3] max-h-[90vh] min-h-[520px] w-full min-w-0 rounded-lg bg-white p-2">
+        <div className="border-compass-sand flex aspect-[4/3] max-h-[90vh] min-h-[520px] w-full min-w-0 rounded-lg border bg-white p-2">
           {isLoading && (
             <div className={chartStateClasses}>
               <LoadingDots />
@@ -150,8 +150,7 @@ export function GuidedExplorationFigThree() {
         </div>
 
         {/* Controls */}
-        <div className="border-compass-sand flex max-w-md shrink-0 flex-col gap-6 rounded-lg border p-5 md:w-80">
-          {/* Variable */}
+        <div className="flex max-w-md shrink-0 flex-col gap-6 md:w-80">
           <div className="flex flex-col gap-2">
             <Label className="font-bold">Variable</Label>
             <ComboboxVariableSelect
@@ -163,7 +162,6 @@ export function GuidedExplorationFigThree() {
             />
           </div>
 
-          {/* Years */}
           <div className="flex flex-col gap-2">
             <Label className="font-bold">Years</Label>
             <div className="flex flex-wrap gap-2">
@@ -175,7 +173,7 @@ export function GuidedExplorationFigThree() {
                     key={year}
                     onClick={() => toggleYear(year)}
                     className={cn(
-                      "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+                      "rounded-full border px-3.5 py-1 text-sm font-medium transition-colors",
                       isSelected
                         ? "border-black bg-black text-white"
                         : "border-stone-300 bg-white text-stone-500 hover:border-stone-400 hover:text-stone-700",
@@ -188,15 +186,10 @@ export function GuidedExplorationFigThree() {
             </div>
           </div>
 
-          {/* Scenario groups */}
           <div className="flex flex-col gap-3">
             <Label className="font-bold">Scenario groups</Label>
             <div className="flex flex-col gap-2">
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-2">
-                  <span className="inline-block h-3 w-4 rounded-sm border border-[rgba(99,132,220,0.5)] bg-[rgba(99,132,220,0.35)]" />
-                  <Label className="text-xs font-normal">GW3b+GW3a</Label>
-                </div>
+              <div className="flex items-center gap-4">
                 <Switch
                   checked={showGroupA}
                   onCheckedChange={(checked) => {
@@ -204,13 +197,11 @@ export function GuidedExplorationFigThree() {
                     setShowGroupA(checked);
                   }}
                 />
+                <span className="inline-block h-3 w-4 rounded-sm border border-[rgba(99,132,220,0.5)] bg-[rgba(99,132,220,0.35)]" />
+                <Label className="font-normal">GW3b+GW3a</Label>
               </div>
 
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-2">
-                  <span className="inline-block h-3 w-4 rounded-sm border border-[rgba(134,193,134,0.5)] bg-[rgba(134,193,134,0.35)]" />
-                  <Label className="text-xs font-normal">GW2b+GW2a+GW1</Label>
-                </div>
+              <div className="flex items-center gap-4">
                 <Switch
                   checked={showGroupB}
                   onCheckedChange={(checked) => {
@@ -218,19 +209,17 @@ export function GuidedExplorationFigThree() {
                     setShowGroupB(checked);
                   }}
                 />
+                <span className="inline-block h-3 w-4 rounded-sm border border-[rgba(134,193,134,0.5)] bg-[rgba(134,193,134,0.35)]" />
+                <Label className="ont-normal">GW2b+GW2a+GW1</Label>
               </div>
             </div>
           </div>
 
           {/* Layers */}
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             <Label className="font-bold">Layers</Label>
             <div className="flex flex-col gap-2">
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-2">
-                  <span className="inline-block h-3 w-4 rounded-sm border border-stone-300 bg-stone-200" />
-                  <Label className="text-xs font-normal">Range (all vetted)</Label>
-                </div>
+              <div className="flex items-center gap-4">
                 <Switch
                   checked={showRangeBars}
                   onCheckedChange={(checked) => {
@@ -238,13 +227,10 @@ export function GuidedExplorationFigThree() {
                     setShowRangeBars(checked);
                   }}
                 />
+                <Label className="font-normal">Range (all vetted)</Label>
               </div>
 
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-2">
-                  <span className="inline-block h-2.5 w-2.5 rounded-full bg-stone-400" />
-                  <Label className="text-xs font-normal">Dots (no concern)</Label>
-                </div>
+              <div className="flex items-center gap-4">
                 <Switch
                   checked={showNoConcernDots}
                   onCheckedChange={(checked) => {
@@ -252,13 +238,10 @@ export function GuidedExplorationFigThree() {
                     setShowNoConcernDots(checked);
                   }}
                 />
+                <Label className="font-normal">Dots (no concern)</Label>
               </div>
 
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-2">
-                  <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#9CA3AF]" />
-                  <Label className="text-xs font-normal">Include unvetted</Label>
-                </div>
+              <div className="flex items-center gap-4">
                 <Switch
                   checked={includeUnvetted}
                   onCheckedChange={(checked) => {
@@ -266,6 +249,7 @@ export function GuidedExplorationFigThree() {
                     setIncludeUnvetted(checked);
                   }}
                 />
+                <Label className="font-normal">Include unvetted</Label>
               </div>
             </div>
           </div>

@@ -12,26 +12,26 @@ import {
   clearSVG,
   renderAxes,
 } from "@/utils/plots/render-functions";
-import { FigureOneDataPoint } from "@/hooks/runs/guided-exploration/use-figure-one";
+import { FigureOneDataPoint } from "@/hooks/guided-exploration/figure-one/use-figure-one";
 import { createScatterTooltipHelpers } from "./scatter-tooltip";
 import { IS_PART_OF_AR_6 } from "@/lib/config/reasons-of-concern/category-config";
 import { createScatterScales } from "./scatter-scales";
 import {
   DOT_CLASS_PREFIX,
   DOT_TOOLTIP_CLASS,
-  UNVETTED_COLOR,
-  UNVETTED_COLOR_DIMMED,
-  VETTED_COLOR,
-  VETTED_COLOR_DIMMED,
+  NOT_AR_6_COLOR,
+  NOT_AR_6_COLOR_DIMMED,
+  AR_6_COLOR,
+  AR_6_COLOR_DIMMED,
 } from "@/components/plots/plot-variations/scatter-plot/scatter-plot-config";
 
 const isVetted = (d: FigureOneDataPoint) =>
   d.run.metaIndicators.some((mi) => mi.key === IS_PART_OF_AR_6 && mi.value === "true");
 
-const getDotColor = (d: FigureOneDataPoint) => (isVetted(d) ? VETTED_COLOR : UNVETTED_COLOR);
+const getDotColor = (d: FigureOneDataPoint) => (isVetted(d) ? AR_6_COLOR : NOT_AR_6_COLOR);
 
 const getDimmedColor = (d: FigureOneDataPoint) =>
-  isVetted(d) ? VETTED_COLOR_DIMMED : UNVETTED_COLOR_DIMMED;
+  isVetted(d) ? AR_6_COLOR_DIMMED : NOT_AR_6_COLOR_DIMMED;
 
 interface Props {
   svg: SVGSelection;

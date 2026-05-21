@@ -1,5 +1,5 @@
 import { formatNumber } from "@/utils/plots/format-functions";
-import { FigureOneDataPoint } from "@/hooks/runs/guided-exploration/use-figure-one";
+import { FigureOneDataPoint } from "@/hooks/guided-exploration/figure-one/use-figure-one";
 
 const OFFSET_X = 12;
 const OFFSET_Y = 16;
