@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { PlotWidgetHeader } from "@/components/plots/components";
-import { ChartType, PLOT_TYPE_OPTIONS } from "@/components/plots/components";
+import { ChartType, PlotWidgetHeader, PLOT_TYPE_OPTIONS } from "@/components/plots/components";
 import { useGetMultipleRunsForVariablePipeline } from "@/hooks/runs/data-pipeline/use-get-multiple-runs-for-variable-pipeline";
 import { PlotConfig } from "@/lib/config/tabs/variables-config";
 import { VariableSelect } from "@/components/plots/components";
