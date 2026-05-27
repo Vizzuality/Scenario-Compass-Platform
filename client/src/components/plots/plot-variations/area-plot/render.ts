@@ -5,6 +5,7 @@ import { AREA_BACKGROUND_COLOR, GREY, STROKE_WIDTH } from "@/lib/config/plots/pl
 import {
   SVGSelection,
   PlotDomain,
+  addSciWeightedStats,
   createScales,
   createMainGroup,
   clearSVG,
@@ -30,6 +31,8 @@ interface Props {
   selectedFlags: string[];
   onRunClick?: (run: ExtendedRun) => void;
   yExtent?: YExtentPair;
+  showSciWeightedMedian?: boolean;
+  showSciWeightedPercentiles?: boolean;
 }
 
 export const renderAreaPlot = ({
@@ -38,6 +41,8 @@ export const renderAreaPlot = ({
   dimensions,
   selectedFlags = [],
   yExtent,
+  showSciWeightedMedian = false,
+  showSciWeightedPercentiles = false,
 }: Props): (() => void) | void => {
   clearSVG(svg);
   const tooltipManager = createTooltipManager({ svg, dimensions });
@@ -48,7 +53,15 @@ export const renderAreaPlot = ({
   if (runs.length === 0) return;
 
   const allPoints = runs.flatMap((run) => run.orderedPoints);
-  const { aggregatedData, xDomain, yDomain } = computeAreaChartDomains(allPoints, yExtent);
+  const {
+    aggregatedData: baseAggregatedData,
+    xDomain,
+    yDomain,
+  } = computeAreaChartDomains(allPoints, yExtent);
+  const hasWeightedStats = showSciWeightedMedian || showSciWeightedPercentiles;
+  const aggregatedData = hasWeightedStats
+    ? addSciWeightedStats(baseAggregatedData, runs)
+    : baseAggregatedData;
   const { INNER_WIDTH, INNER_HEIGHT } = dimensions;
   const groupSelection = createMainGroup(svg, dimensions);
   const allYears = allPoints.map((d) => d.year);
@@ -80,6 +93,55 @@ export const renderAreaPlot = ({
     .y((d) => scales.yScale(d.median))
     .curve(d3.curveMonotoneX);
 
+  const weightedMedianLine = d3
+    .line<AggregatedDataPoint>()
+    .defined((d) => d.sciWeightedMedian !== undefined)
+    .x((d) => scales.xScale(d.year))
+    .y((d) => scales.yScale(d.sciWeightedMedian!))
+    .curve(d3.curveMonotoneX);
+
+  const weightedP05Line = d3
+    .line<AggregatedDataPoint>()
+    .defined((d) => d.sciWeightedP05 !== undefined)
+    .x((d) => scales.xScale(d.year))
+    .y((d) => scales.yScale(d.sciWeightedP05!))
+    .curve(d3.curveMonotoneX);
+
+  const weightedP95Line = d3
+    .line<AggregatedDataPoint>()
+    .defined((d) => d.sciWeightedP95 !== undefined)
+    .x((d) => scales.xScale(d.year))
+    .y((d) => scales.yScale(d.sciWeightedP95!))
+    .curve(d3.curveMonotoneX);
+
+  const renderBaseWeightedLines = () => {
+    if (showSciWeightedMedian) {
+      groupSelection
+        .append("path")
+        .datum(aggregatedData)
+        .attr("fill", "none")
+        .attr("stroke", GREY)
+        .attr("opacity", COMPUTED_OPACITY)
+        .attr("stroke-width", STROKE_WIDTH + 0.5)
+        .attr("stroke-dasharray", "3 2")
+        .attr("d", weightedMedianLine);
+    }
+
+    if (showSciWeightedPercentiles) {
+      [weightedP05Line, weightedP95Line].forEach((line) => {
+        groupSelection
+          .append("path")
+          .datum(aggregatedData)
+          .attr("fill", "none")
+          .attr("stroke", GREY)
+          .attr("opacity", COMPUTED_OPACITY * 0.35)
+          .attr("stroke-width", Math.max(0.75, STROKE_WIDTH - 0.4))
+          .attr("stroke-dasharray", "8 5")
+          .attr("d", line);
+      });
+    }
+  };
+
   groupSelection
     .append("path")
     .datum(aggregatedData)
@@ -105,6 +167,8 @@ export const renderAreaPlot = ({
       visibleRuns: runs,
       scales,
       selectedFlags,
+      showSciWeightedMedian,
+      showSciWeightedPercentiles,
     });
 
     const selectedRunsByFlag = new Map<string, ExtendedRun[]>();
@@ -123,9 +187,14 @@ export const renderAreaPlot = ({
       if (runs.length === 0) return;
       const flagPoints = runs.flatMap((run) => run.orderedPoints);
       const { aggregatedData: flagAggregatedData } = computeAreaChartDomains(flagPoints);
-      aggregatedDataByFlag.set(flagAbbrev, flagAggregatedData);
+      aggregatedDataByFlag.set(
+        flagAbbrev,
+        hasWeightedStats ? addSciWeightedStats(flagAggregatedData, runs) : flagAggregatedData,
+      );
     });
   }
+
+  renderBaseWeightedLines();
 
   const { verticalHoverLine, intersectionPoint, pointWrappingCircle } = createHoverElements(
     groupSelection,
@@ -164,7 +233,7 @@ export const renderAreaPlot = ({
 
     let tooltipHTML: string;
 
-    if (hasSelection) {
+    if (hasSelection || hasWeightedStats) {
       const tableRows: string[] = [];
 
       aggregatedDataByFlag.forEach((flagData, flagName) => {
@@ -183,12 +252,27 @@ export const renderAreaPlot = ({
 
         tableRows.push(`
         <tr class="border-b border-gray-300 last:border-b-0">
-          <td class="px-2 py-1 border-r border-gray-300">
+          <td class="px-1.5 py-1 border-r border-gray-300">
               ${colorDot}
           </td>
-          <td class="px-2 py-1 text-right border-r border-gray-300">${formatNumber(flagDataPoint.min)}</td>
-          <td class="px-2 py-1 text-right border-r border-gray-300">${formatNumber(flagDataPoint.median)}</td>
-          <td class="px-2 py-1 text-right">${formatNumber(flagDataPoint.max)}</td>
+          <td class="px-1.5 py-1 text-right border-r border-gray-300">${formatNumber(flagDataPoint.min)}</td>
+          ${
+            showSciWeightedPercentiles
+              ? `<td class="px-1.5 py-1 text-right border-r border-gray-300">${flagDataPoint.sciWeightedP05 !== undefined ? formatNumber(flagDataPoint.sciWeightedP05) : "-"}</td>`
+              : ""
+          }
+          <td class="px-1.5 py-1 text-right border-r border-gray-300">${formatNumber(flagDataPoint.median)}</td>
+          ${
+            showSciWeightedMedian
+              ? `<td class="px-1.5 py-1 text-right border-r border-gray-300">${flagDataPoint.sciWeightedMedian !== undefined ? formatNumber(flagDataPoint.sciWeightedMedian) : "-"}</td>`
+              : ""
+          }
+          ${
+            showSciWeightedPercentiles
+              ? `<td class="px-1.5 py-1 text-right border-r border-gray-300">${flagDataPoint.sciWeightedP95 !== undefined ? formatNumber(flagDataPoint.sciWeightedP95) : "-"}</td>`
+              : ""
+          }
+          <td class="px-1.5 py-1 text-right">${formatNumber(flagDataPoint.max)}</td>
         </tr>
       `);
       });
@@ -199,16 +283,32 @@ export const renderAreaPlot = ({
         <table class="w-full border-collapse border border-gray-400">
           <thead>
             <tr class="border-b border-gray-400 bg-gray-100">
-              <th class="px-2 py-1 text-center font-semibold border-r border-gray-300">Flag</th>
-              <th class="px-2 py-1 text-center font-semibold border-r border-gray-300">Min</th>
-              <th class="px-2 py-1 text-center font-semibold border-r border-gray-300">Median</th>
-              <th class="px-2 py-1 text-center font-semibold">Max</th>
+              <th class="px-1.5 py-1 text-center font-semibold border-r border-gray-300">Flag</th>
+              <th class="px-1.5 py-1 text-center font-semibold border-r border-gray-300">Min</th>
+              ${
+                showSciWeightedPercentiles
+                  ? `<th class="px-1.5 py-1 text-center font-semibold border-r border-gray-300">5*</th>`
+                  : ""
+              }
+              <th class="px-1.5 py-1 text-center font-semibold border-r border-gray-300">Med</th>
+              ${
+                showSciWeightedMedian
+                  ? `<th class="px-1.5 py-1 text-center font-semibold border-r border-gray-300">W. Med*</th>`
+                  : ""
+              }
+              ${
+                showSciWeightedPercentiles
+                  ? `<th class="px-1.5 py-1 text-center font-semibold border-r border-gray-300">95*</th>`
+                  : ""
+              }
+              <th class="px-1.5 py-1 text-center font-semibold">Max</th>
             </tr>
           </thead>
           <tbody>
             ${tableRows.join("")}
           </tbody>
         </table>
+        ${hasWeightedStats ? `<div class="mt-1 text-[10px] text-gray-600">* computed using weighted ensemble data</div>` : ""}
       </div>
     `;
     } else {

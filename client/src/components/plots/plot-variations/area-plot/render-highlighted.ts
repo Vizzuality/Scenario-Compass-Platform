@@ -2,6 +2,7 @@ import { getCategoryAbbrev } from "@/lib/config/reasons-of-concern/category-conf
 import {
   GroupSelection,
   PlotScales,
+  addSciWeightedStats,
   computeAreaChartDomains,
 } from "@/utils/plots/render-functions";
 import * as d3 from "d3";
@@ -15,6 +16,8 @@ interface Params {
   selectedFlags: string[];
   scales: PlotScales;
   groupSelection: GroupSelection;
+  showSciWeightedMedian?: boolean;
+  showSciWeightedPercentiles?: boolean;
 }
 
 export const renderHighlightedFlags = ({
@@ -22,6 +25,8 @@ export const renderHighlightedFlags = ({
   visibleRuns,
   selectedFlags,
   scales,
+  showSciWeightedMedian = false,
+  showSciWeightedPercentiles = false,
 }: Params) => {
   const hasSelection = selectedFlags.length > 0;
 
@@ -42,6 +47,10 @@ export const renderHighlightedFlags = ({
 
     const flagPoints = runs.flatMap((run) => run.orderedPoints);
     const { aggregatedData: flagAggregatedData } = computeAreaChartDomains(flagPoints);
+    const flagData =
+      showSciWeightedMedian || showSciWeightedPercentiles
+        ? addSciWeightedStats(flagAggregatedData, runs)
+        : flagAggregatedData;
 
     const firstRunInFlag = runs[0];
     const flagColor = getRunColor(firstRunInFlag, selectedFlags, hasSelection);
@@ -59,9 +68,30 @@ export const renderHighlightedFlags = ({
       .y((d) => scales.yScale(d.median))
       .curve(d3.curveMonotoneX);
 
+    const flagWeightedMedianLine = d3
+      .line<AggregatedDataPoint>()
+      .defined((d) => d.sciWeightedMedian !== undefined)
+      .x((d) => scales.xScale(d.year))
+      .y((d) => scales.yScale(d.sciWeightedMedian!))
+      .curve(d3.curveMonotoneX);
+
+    const flagWeightedP05Line = d3
+      .line<AggregatedDataPoint>()
+      .defined((d) => d.sciWeightedP05 !== undefined)
+      .x((d) => scales.xScale(d.year))
+      .y((d) => scales.yScale(d.sciWeightedP05!))
+      .curve(d3.curveMonotoneX);
+
+    const flagWeightedP95Line = d3
+      .line<AggregatedDataPoint>()
+      .defined((d) => d.sciWeightedP95 !== undefined)
+      .x((d) => scales.xScale(d.year))
+      .y((d) => scales.yScale(d.sciWeightedP95!))
+      .curve(d3.curveMonotoneX);
+
     groupSelection
       .append("path")
-      .datum(flagAggregatedData)
+      .datum(flagData)
       .attr("fill", flagColor)
       .attr("fill-opacity", 0.2)
       .attr("d", flagAreaSurface)
@@ -69,12 +99,40 @@ export const renderHighlightedFlags = ({
 
     groupSelection
       .append("path")
-      .datum(flagAggregatedData)
+      .datum(flagData)
       .attr("fill", "none")
       .attr("stroke", flagColor)
       .attr("stroke-width", STROKE_WIDTH)
       .attr("stroke-opacity", 1)
       .attr("d", flagMedianLine)
       .attr("class", `flag-line-${flagAbbrev}`);
+
+    if (showSciWeightedMedian) {
+      groupSelection
+        .append("path")
+        .datum(flagData)
+        .attr("fill", "none")
+        .attr("stroke", flagColor)
+        .attr("stroke-width", STROKE_WIDTH + 0.5)
+        .attr("stroke-opacity", 1)
+        .attr("stroke-dasharray", "3 2")
+        .attr("d", flagWeightedMedianLine)
+        .attr("class", `flag-weighted-median-line-${flagAbbrev}`);
+    }
+
+    if (showSciWeightedPercentiles) {
+      [flagWeightedP05Line, flagWeightedP95Line].forEach((line, index) => {
+        groupSelection
+          .append("path")
+          .datum(flagData)
+          .attr("fill", "none")
+          .attr("stroke", flagColor)
+          .attr("stroke-width", Math.max(0.75, STROKE_WIDTH - 0.4))
+          .attr("stroke-opacity", 0.35)
+          .attr("stroke-dasharray", "8 5")
+          .attr("d", line)
+          .attr("class", `flag-weighted-p${index === 0 ? "05" : "95"}-line-${flagAbbrev}`);
+      });
+    }
   });
 };

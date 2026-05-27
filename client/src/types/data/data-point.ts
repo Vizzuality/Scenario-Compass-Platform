@@ -39,6 +39,9 @@ interface AggregatedDataPoint {
   max: number;
   average: number;
   median: number;
+  sciWeightedP05?: number;
+  sciWeightedP95?: number;
+  sciWeightedMedian?: number;
 }
 
 /**
