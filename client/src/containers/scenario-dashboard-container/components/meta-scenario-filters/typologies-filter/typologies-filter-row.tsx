@@ -30,7 +30,7 @@ export const TypologiesFilterRow = ({ prefix }: RowFilterProps) => {
   return (
     <div className="flex w-full flex-col gap-2">
       <div className="flex items-center gap-2">
-        <Label htmlFor={id} className="w-24 leading-5">
+        <Label htmlFor={id} className="w-20 leading-5">
           Typologies:
         </Label>
         <Popover open={open} onOpenChange={setOpen}>
@@ -38,13 +38,18 @@ export const TypologiesFilterRow = ({ prefix }: RowFilterProps) => {
             <button
               id={id}
               aria-expanded={open}
-              className={cn(selectTriggerVariants({ theme: "light", size: "lg" }), "h-10 w-48")}
+              className={cn(
+                selectTriggerVariants({ theme: "light", size: "lg" }),
+                "flex h-10 w-48 items-center justify-between overflow-hidden px-3 text-left [white-space:normal]",
+              )}
             >
-              {selectedOptions.length === 0
-                ? "Select options"
-                : selectedOptions.length === 1
-                  ? getDisplayLabel(selectedOptions[0])
-                  : `${selectedOptions.length} Selected`}
+              <span className="min-w-0 truncate overflow-hidden whitespace-nowrap">
+                {selectedOptions.length === 0
+                  ? "Select options"
+                  : selectedOptions.length === 1
+                    ? getDisplayLabel(selectedOptions[0])
+                    : `${selectedOptions.length} Selected`}
+              </span>
               <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </button>
           </PopoverTrigger>
