@@ -21,7 +21,9 @@ interface AreaChartProps {
 const AreaBasePlot: React.FC<AreaChartProps> = ({ runs, prefix, yExtent }) => {
   const { svgRef, dimensions, plotContainer } = usePlotContainer();
   const { selectedFlags } = useScenarioFlagsSelection(prefix);
-  const { showSciWeightedMedian, showSciWeightedPercentiles } = useSciWeightedStatsParams();
+  const { showSciWeightedMedian, showSciWeightedPercentiles } = useSciWeightedStatsParams({
+    prefix,
+  });
 
   useEffect(() => {
     if (!runs.length || !svgRef.current || dimensions.WIDTH === 0) return;
