@@ -5,6 +5,12 @@ import { formatPercent } from "@/components/plots/plot-variations/benchmark-char
 const OFFSET_X = 12;
 const OFFSET_Y = 16;
 
+const formatTooltipValue = (value: number, unit: string): string => {
+  if (unit === "%") return formatPercent(value);
+  if (unit.toLowerCase() === "year") return Math.round(value).toString();
+  return `${value.toLocaleString()}${unit ? ` ${unit}` : ""}`;
+};
+
 export const createBenchmarkDotTooltipHelpers = (
   tooltip: HTMLDivElement,
   onNavigate?: (point: BenchmarkDotTooltipPoint) => void,
@@ -85,10 +91,14 @@ export const createBenchmarkDotTooltipHelpers = (
           }
 
           <ul class="list-disc m-0 pl-4 flex flex-col gap-1 text-black" style="${isInteractive ? "padding-right: 20px;" : ""}">
-            <li><strong>Year:</strong> ${point.year}</li>
+            <li><strong>${point.valueUnit === "%" ? "Year" : "Indicator"}:</strong> ${point.xLabel}</li>
             <li><strong>Group:</strong> ${BENCHMARK_GROUP_LABELS[point.groupKey]}</li>
-            <li><strong>Change:</strong> ${formatPercent(point.pctChange)}</li>
-            <li><strong>Run:</strong> ${point.runId}</li>
+            <li><strong>${point.valueLabel}:</strong> ${formatTooltipValue(
+              point.pctChange,
+              point.valueUnit,
+            )}</li>
+            <li><strong>Model:</strong> ${point.point.run.modelName}</li>
+            <li><strong>Scenario:</strong> ${point.point.run.scenarioName}</li>
           </ul>
 
           ${

@@ -15,6 +15,7 @@ import {
 import { ADDITIONAL_INFORMATION_META_INDICATORS } from "@/containers/scenario-dashboard-container/components/runs-pannel/utils";
 import { useBaseUrlParams } from "@/hooks/nuqs/url-params/use-base-url-params";
 import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
 
 interface InfoItemProps {
   title: string;
@@ -91,6 +92,10 @@ export default function ScenarioDetailsInfo() {
     item.key.includes(YEAR_PEAK_TEMPERATURE_META_INDICATOR_KEY),
   ) || { value: "Loading Temperature" };
 
+  const doiURL = metaData?.find((item) => item.key.includes("Scientific Manuscript (DOI)")) || {
+    value: "",
+  };
+
   const cumulativeEmissionsWithUnit =
     Number(cumulativeCO2Emissions.value).toFixed(3).toString() + " Gt CO2";
 
@@ -117,7 +122,19 @@ export default function ScenarioDetailsInfo() {
           <InfoItem title="Year of net-zero CO2" value={yearNetZeroCO2.value} />
           <InfoItem title="Year of net-zero GHG" value={yearNetZeroGHG.value} />
           <InfoItem title="Project" value={projectName.value} />
-          <InfoItem title="Study" value={studyName.value} />
+          <div className="text-foreground flex items-center justify-center gap-2">
+            <span>•</span>
+            <div className="flex flex-1 justify-between text-sm">
+              <p>Study</p>
+              <Link
+                target="_blank"
+                href={"https://doi.org/" + doiURL.value}
+                className="underline underline-offset-2"
+              >
+                {studyName.value}
+              </Link>
+            </div>
+          </div>
         </>
       )}
     </div>

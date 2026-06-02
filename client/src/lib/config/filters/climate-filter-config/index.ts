@@ -61,6 +61,9 @@ export const YEAR_NET_ZERO_GHG_META_INDICATOR_KEY =
 export const CUMULATIVE_CO2_EMISSIONS_META_INDICATOR_KEY =
   "Emissions Diagnostics|Cumulative CO2 [2020-2100, Gt CO2]";
 
+export const CUMULATIVE_CO2_NET_NEGATIVE_EMISSIONS_META_INDICATOR_KEY =
+  "Emissions Diagnostics|Cumulative Net-Negative CO2 [2020-2100, Gt CO2]";
+
 export const CUMULATIVE_CCS_META_INDICATOR_KEY =
   "Emissions Diagnostics|Cumulative CCS [2020-2100, Gt CO2]";
 

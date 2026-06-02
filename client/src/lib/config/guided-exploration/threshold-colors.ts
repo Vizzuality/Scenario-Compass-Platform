@@ -1,4 +1,4 @@
-import { IS_PART_OF_AR_6 } from "@/lib/config/reasons-of-concern/category-config";
+import { VALUE_OK, VETTING2025 } from "@/lib/config/reasons-of-concern/category-config";
 import { ExtendedRun } from "@/types/data/run";
 import { ThresholdBand } from "@/lib/config/guided-exploration/capacity-thresholds";
 
@@ -37,7 +37,7 @@ export const createThresholdColorFn = (
   return (run: ExtendedRun): string => {
     const isVetted = includeUnvetted
       ? true
-      : run.metaIndicators.some((mi) => mi.key === IS_PART_OF_AR_6 && mi.value === "true");
+      : run.metaIndicators.some((mi) => mi.key === VETTING2025 && mi.value === VALUE_OK);
 
     if (!isVetted) return UNVETTED_COLOR;
 

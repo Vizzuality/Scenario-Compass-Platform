@@ -5,7 +5,7 @@ import { findClosestRun, SpatialIndex } from "./hit-detection";
 import { drawHoverFrame } from "./hover";
 import { TooltipHelpers } from "./tooltip";
 import { DRAG_THRESHOLD, MARGIN, MIN_ZOOM } from "./constants";
-import { renderChart, ColorFn } from "./renderers";
+import { renderChart, ColorFn, ThresholdGuide } from "./renderers";
 
 /** Minimal mutable state that event handlers read/write via ref. */
 export interface CanvasStateRef {
@@ -49,6 +49,7 @@ interface HandlerDeps {
   zoomEnabled: boolean;
   onSelectedRunChange?: (run: ExtendedRun | null) => void;
   getLineColor?: ColorFn;
+  thresholdGuides?: ThresholdGuide[];
 }
 
 /** Check if a pixel coordinate is inside the plot area. */
@@ -66,6 +67,7 @@ export const createEventHandlers = ({
   zoomEnabled,
   onSelectedRunChange,
   getLineColor,
+  thresholdGuides,
 }: HandlerDeps) => {
   let rafId: number | null = null;
   let currentCursor = "default";
@@ -90,6 +92,7 @@ export const createEventHandlers = ({
       zoom,
       selectedRun,
       getLineColor,
+      thresholdGuides,
     );
     if (result) {
       stateRef.current.scales = result.scales;
@@ -136,6 +139,7 @@ export const createEventHandlers = ({
           rect.width,
           rect.height,
           getLineColor,
+          thresholdGuides,
         );
 
         const pointX = scales.xScale(closestPoint.year);
@@ -180,6 +184,7 @@ export const createEventHandlers = ({
           rect.width,
           rect.height,
           getLineColor,
+          thresholdGuides,
         );
 
         const pointX = scales.xScale(closestPoint.year);
@@ -331,6 +336,7 @@ export const createEventHandlers = ({
           rect.width,
           rect.height,
           getLineColor,
+          thresholdGuides,
         );
         tooltip.updateContent(clicked, closestPoint);
         const pointX = scales.xScale(closestPoint.year);

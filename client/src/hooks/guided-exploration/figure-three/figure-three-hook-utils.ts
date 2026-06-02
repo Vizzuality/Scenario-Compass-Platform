@@ -13,6 +13,18 @@ import {
 import { matchesClimateCategoryFilter } from "@/utils/filtering";
 
 const BASELINE_YEAR = 2020;
+const FIXED_BASELINES_BY_VARIABLE: Record<string, { year: number; value: number }> = {
+  "Emissions|Kyoto Gases": { year: 2019, value: 59090 },
+  "Emissions|CO2|Energy and Industrial Processes": { year: 2019, value: 37086 },
+  "Primary Energy|Non-Biomass Renewables": { year: 2019, value: 28.65 },
+};
+
+export const getVariableBaselineYear = (variable: string): number =>
+  FIXED_BASELINES_BY_VARIABLE[variable]?.year ?? BASELINE_YEAR;
+
+const getBaselineValue = (run: ExtendedRun): number | undefined =>
+  FIXED_BASELINES_BY_VARIABLE[run.variableName]?.value ??
+  run.orderedPoints.find((point) => point.year === BASELINE_YEAR)?.value;
 
 const isVetted = (run: ExtendedRun): boolean =>
   run.metaIndicators.some((mi) => mi.key === VETTING2025 && mi.value === VALUE_OK);
@@ -30,19 +42,17 @@ export const buildGroupData = (
   categoryFilter: string[],
   label: string,
   selectedYears: number[],
-  includeUnvetted: boolean,
 ): GroupBenchmarkData => {
   const groupRuns = runs.filter((run) => matchesClimateCategoryFilter(run, categoryFilter));
   const allVetted: BenchmarkDataPoint[] = [];
+  const withUnvetted: BenchmarkDataPoint[] = [];
   const noConcern: BenchmarkDataPoint[] = [];
 
   for (const run of groupRuns) {
-    const baseline = run.orderedPoints.find((point) => point.year === BASELINE_YEAR)?.value;
+    const baseline = getBaselineValue(run);
     if (baseline === undefined || baseline === 0) continue;
 
     const vetted = isVetted(run);
-    if (!vetted && !includeUnvetted) continue;
-
     const noConcernRun = vetted && hasNoConcern(run);
 
     for (const year of selectedYears) {
@@ -58,10 +68,47 @@ export const buildGroupData = (
         run,
       };
 
-      allVetted.push(dataPoint);
+      if (vetted) allVetted.push(dataPoint);
+      withUnvetted.push(dataPoint);
       if (noConcernRun) noConcern.push(dataPoint);
     }
   }
 
-  return { label, allVetted, noConcern };
+  return { label, allVetted, withUnvetted, noConcern };
+};
+
+export const buildMetaIndicatorGroupData = (
+  runs: ExtendedRun[],
+  categoryFilter: string[],
+  label: string,
+  metaIndicatorKey: string,
+  bucket: number,
+): GroupBenchmarkData => {
+  const groupRuns = runs.filter((run) => matchesClimateCategoryFilter(run, categoryFilter));
+  const allVetted: BenchmarkDataPoint[] = [];
+  const withUnvetted: BenchmarkDataPoint[] = [];
+  const noConcern: BenchmarkDataPoint[] = [];
+
+  for (const run of groupRuns) {
+    const metaIndicator = run.metaIndicators.find(
+      (indicator) => indicator.key === metaIndicatorKey,
+    );
+    const value = metaIndicator ? Number.parseFloat(metaIndicator.value) : Number.NaN;
+    if (!Number.isFinite(value)) continue;
+
+    const vetted = isVetted(run);
+    const noConcernRun = vetted && hasNoConcern(run);
+    const dataPoint: BenchmarkDataPoint = {
+      year: bucket,
+      pctChange: value,
+      runId: run.runId,
+      run,
+    };
+
+    if (vetted) allVetted.push(dataPoint);
+    withUnvetted.push(dataPoint);
+    if (noConcernRun) noConcern.push(dataPoint);
+  }
+
+  return { label, allVetted, withUnvetted, noConcern };
 };

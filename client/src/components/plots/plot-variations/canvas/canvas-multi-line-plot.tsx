@@ -15,7 +15,7 @@ import { createTooltipHelpers, TooltipHelpers } from "./tooltip";
 import { createEventHandlers } from "./event-handlers";
 import { ZoomControls } from "./zoom-controls";
 import { MIN_ZOOM } from "./constants";
-import { renderChart, ColorFn } from "./renderers";
+import { renderChart, ColorFn, ThresholdGuide } from "./renderers";
 import { useRouter } from "next/navigation";
 import { useGetRunDetailsUrl } from "@/hooks/nuqs/url-params/use-get-run-details-url";
 import { useCanvasPlotZoom } from "@/hooks/plots/use-canvas-plot-zoom";
@@ -29,6 +29,8 @@ interface Props {
   onSelectedRunChange: (run: ExtendedRun | null) => void;
   yExtent?: YExtentPair;
   getLineColor?: ColorFn;
+  showVettingOverride?: boolean;
+  thresholdGuides?: ThresholdGuide[];
 }
 
 export const CanvasMultiLinePlot: React.FC<Props> = ({
@@ -40,6 +42,8 @@ export const CanvasMultiLinePlot: React.FC<Props> = ({
   onSelectedRunChange,
   yExtent,
   getLineColor,
+  showVettingOverride,
+  thresholdGuides,
 }) => {
   const { selectedFlags, hiddenFlags, showVetting } = useScenarioFlagsSelection(prefix);
   const router = useRouter();
@@ -80,13 +84,14 @@ export const CanvasMultiLinePlot: React.FC<Props> = ({
       currentZoom,
       selectedRun,
       getLineColor,
+      thresholdGuides,
     );
 
     if (result) {
       stateRef.current.scales = result.scales;
       stateRef.current.spatialIndex = result.spatialIndex;
     }
-  }, [selectedFlags, getLineColor]);
+  }, [selectedFlags, getLineColor, thresholdGuides]);
 
   const { zoom, setZoom, zoomIn, zoomOut, zoomReset } = useCanvasPlotZoom(
     stateRef,
@@ -98,7 +103,11 @@ export const CanvasMultiLinePlot: React.FC<Props> = ({
     if (!data.runs) return;
 
     const decadeFilteredRuns = filterDecadePoints(data.runs);
-    const visibleRuns = filterVisibleRuns(decadeFilteredRuns, hiddenFlags, showVetting);
+    const visibleRuns = filterVisibleRuns(
+      decadeFilteredRuns,
+      hiddenFlags,
+      showVettingOverride ?? showVetting,
+    );
     const extent = computeExtentWithPadding(visibleRuns, yExtent);
 
     Object.assign(stateRef.current, {
@@ -107,7 +116,7 @@ export const CanvasMultiLinePlot: React.FC<Props> = ({
     });
 
     doRender();
-  }, [data.runs, hiddenFlags, showVetting, yExtent, doRender]);
+  }, [data.runs, hiddenFlags, showVetting, showVettingOverride, yExtent, doRender]);
 
   useEffect(() => {
     const isSelected = !!externalSelectedRun;
@@ -153,6 +162,7 @@ export const CanvasMultiLinePlot: React.FC<Props> = ({
       zoomEnabled,
       onSelectedRunChange: (run) => handleSelectedRunChange(run),
       getLineColor,
+      thresholdGuides,
     });
 
     const resizeObserver = new ResizeObserver(() => {
@@ -167,7 +177,7 @@ export const CanvasMultiLinePlot: React.FC<Props> = ({
       resizeObserver.disconnect();
       tooltipInstanceRef.current = null;
     };
-  }, [zoomEnabled, selectedFlags, doRender, setZoom, getLineColor]);
+  }, [zoomEnabled, selectedFlags, doRender, setZoom, getLineColor, thresholdGuides]);
 
   const aspectClasses =
     "relative flex [aspect-ratio:1/1] w-full items-center justify-center sm:[aspect-ratio:4/3] lg:[aspect-ratio:16/10]";

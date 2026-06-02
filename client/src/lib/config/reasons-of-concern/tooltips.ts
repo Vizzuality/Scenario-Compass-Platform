@@ -118,7 +118,7 @@ export const reasonsForConcernMap: ReasonsForConcernMap = {
     description:
       "This scenario assumes levels of bioenergy use that raise sustainability concerns. \n" +
       "\n" +
-      "High concern: projected primary bioenergy use exceeds 160245 EJ per year in at least one period until the end of the century. \n" +
+      "High concern: projected primary bioenergy use exceeds 245 EJ per year in at least one period until the end of the century. \n" +
       "\n" +
       "Medium concern: projected primary bioenergy supply exceeds 100 EJ per year in at least one period until the end of the century. ",
     link: "https://philippverpoort.github.io/scenario-vetting-criteria/criteria_meta/",
