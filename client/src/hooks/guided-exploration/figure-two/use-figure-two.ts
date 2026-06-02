@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { useQueryState, parseAsString, parseAsBoolean } from "nuqs";
+import { useQueryState, parseAsString } from "nuqs";
 import { useGetMultipleRunsForVariablePipeline } from "@/hooks/runs/data-pipeline/use-get-multiple-runs-for-variable-pipeline";
 import { RunPipelineReturn } from "@/types/data/run";
 import { useBaseUrlParams } from "@/hooks/nuqs/url-params/use-base-url-params";
@@ -24,6 +24,8 @@ const DEFAULT_FIGURE_TWO_VALUES: FigureTwoDefaults = {
   prefix: FIG_TWO_PREFIX,
 };
 
+export type FigureTwoVettingMode = "show" | "hide" | "grey-out";
+
 interface UseFigureTwoReturn extends RunPipelineReturn {
   variable: string;
   setVariable: (value: string | null) => Promise<URLSearchParams>;
@@ -33,8 +35,8 @@ interface UseFigureTwoReturn extends RunPipelineReturn {
   setEndYear: (value: string) => void;
   geography: string | null;
   setGeography: (value: string | null) => Promise<URLSearchParams>;
-  includeUnvetted: boolean;
-  setIncludeUnvetted: (value: boolean | null) => Promise<URLSearchParams>;
+  vettingMode: FigureTwoVettingMode;
+  setVettingMode: (value: FigureTwoVettingMode | null) => Promise<URLSearchParams>;
   resetFigureTwoControls: () => Promise<void>;
 }
 
@@ -54,9 +56,9 @@ export function useFigureTwo(): UseFigureTwoReturn {
     parseAsString.withDefault(DEFAULT_FIGURE_TWO_VALUES.variable),
   );
 
-  const [includeUnvetted, setIncludeUnvetted] = useQueryState(
-    FIG_TWO_PREFIX + "Unvetted",
-    parseAsBoolean.withDefault(true),
+  const [vettingMode, setVettingMode] = useQueryState(
+    FIG_TWO_PREFIX + "Vetting",
+    parseAsString.withDefault("show"),
   );
 
   const pipelineData = useGetMultipleRunsForVariablePipeline({
@@ -69,8 +71,15 @@ export function useFigureTwo(): UseFigureTwoReturn {
   });
 
   const resetFigureTwoControls = useCallback(async (): Promise<void> => {
-    await Promise.all([setVariable(DEFAULT_FIGURE_TWO_VALUES.variable), clearAll()]);
-  }, [setVariable, clearAll, DEFAULT_FIGURE_TWO_VALUES.variable]);
+    await Promise.all([
+      setVariable(DEFAULT_FIGURE_TWO_VALUES.variable),
+      setVettingMode(null),
+      clearAll(),
+    ]);
+  }, [setVariable, setVettingMode, clearAll, DEFAULT_FIGURE_TWO_VALUES.variable]);
+
+  const normalizedVettingMode: FigureTwoVettingMode =
+    vettingMode === "hide" || vettingMode === "grey-out" ? vettingMode : "show";
 
   return {
     ...pipelineData,
@@ -82,8 +91,8 @@ export function useFigureTwo(): UseFigureTwoReturn {
     setEndYear,
     geography,
     setGeography,
-    includeUnvetted,
-    setIncludeUnvetted,
+    vettingMode: normalizedVettingMode,
+    setVettingMode,
     resetFigureTwoControls,
   };
 }

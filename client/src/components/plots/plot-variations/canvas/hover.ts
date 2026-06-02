@@ -13,7 +13,7 @@ import { Scales } from "./types";
 import { drawLine, setPlotClip } from "./lines";
 import { drawAxesAndGrid } from "./axes";
 import { MARGIN } from "./constants";
-import { ColorFn } from "./renderers";
+import { ColorFn, drawThresholdGuides, ThresholdGuide } from "./renderers";
 
 /**
  * Draws dimmed lines + highlighted hovered line + guide + dot.
@@ -31,6 +31,7 @@ export const drawHoverFrame = (
   width: number,
   height: number,
   getLineColor?: ColorFn,
+  thresholdGuides?: ThresholdGuide[],
 ): { year: number; value: number } => {
   const { xScale, yScale } = scales;
   const plotH = height - MARGIN.top - MARGIN.bottom;
@@ -109,6 +110,8 @@ export const drawHoverFrame = (
 
   // Release clip — everything above was contained in the plot area
   ctx.restore();
+
+  drawThresholdGuides(ctx, scales, width, height, thresholdGuides);
 
   return closestPoint;
 };

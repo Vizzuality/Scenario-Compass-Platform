@@ -17,6 +17,7 @@ interface BenchmarkChartProps {
   showGroupB: boolean;
   showRangeBars: boolean;
   showNoConcernDots: boolean;
+  includeUnvetted: boolean;
   selectedPoint?: BenchmarkSelectedPoint | null;
   onPointClick?: (point: BenchmarkDotTooltipPoint) => void;
   onSelectedPointChange?: (point: BenchmarkDotTooltipPoint | null) => void;
@@ -29,6 +30,7 @@ export const BenchmarkChart: React.FC<BenchmarkChartProps> = ({
   showGroupB,
   showRangeBars,
   showNoConcernDots,
+  includeUnvetted,
   selectedPoint,
   onPointClick,
   onSelectedPointChange,
@@ -61,6 +63,7 @@ export const BenchmarkChart: React.FC<BenchmarkChartProps> = ({
         showGroupB,
         showRangeBars,
         showNoConcernDots,
+        includeUnvetted,
         selectedPoint,
         onPointClick,
         onSelectedPointChange,
@@ -82,6 +85,7 @@ export const BenchmarkChart: React.FC<BenchmarkChartProps> = ({
     showGroupB,
     showRangeBars,
     showNoConcernDots,
+    includeUnvetted,
     selectedPoint,
     onPointClick,
     onSelectedPointChange,

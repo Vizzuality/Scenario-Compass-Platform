@@ -35,6 +35,9 @@ import {
   MIN_RANGE_BAR_HEIGHT,
   RANGE_BAR_RADIUS,
   RANGE_BAR_STROKE_WIDTH,
+  UNVETTED_WHISKER_CAP_WIDTH_RATIO,
+  UNVETTED_WHISKER_DASH_ARRAY,
+  UNVETTED_WHISKER_STROKE_WIDTH,
   Y_AXIS_LABEL,
   Y_AXIS_LABEL_OFFSET,
   ZERO_LINE_COLOR,
@@ -69,11 +72,16 @@ export interface BenchmarkDotTooltipPoint extends BenchmarkSelectedPoint {
   range: {
     min: number;
     max: number;
+    minLabel: string;
+    maxLabel: string;
   } | null;
   xBase: number;
   barWidth: number;
   color: string;
   point: BenchmarkDataPoint;
+  xLabel: string;
+  valueLabel: string;
+  valueUnit: string;
 }
 
 export interface RenderBenchmarkProps {
@@ -86,6 +94,7 @@ export interface RenderBenchmarkProps {
   showGroupB: boolean;
   showRangeBars: boolean;
   showNoConcernDots: boolean;
+  includeUnvetted: boolean;
   selectedPoint?: BenchmarkSelectedPoint | null;
   onPointClick?: (point: BenchmarkDotTooltipPoint) => void;
   onSelectedPointChange?: (point: BenchmarkDotTooltipPoint | null) => void;
@@ -96,6 +105,8 @@ interface HoverState {
   groupKey: BenchmarkGroupKey;
   min: number;
   max: number;
+  minLabel: string;
+  maxLabel: string;
   xBase: number;
   barWidth: number;
 }
@@ -130,6 +141,75 @@ const getRangeByYear = (
   };
 };
 
+const getUnvettedRangeExtensions = (
+  vettedRange: { min: number; max: number } | null,
+  unvettedRange: { min: number; max: number } | null,
+): Array<{ from: number; to: number; caps: number[] }> => {
+  if (!unvettedRange) return [];
+
+  if (!vettedRange) {
+    return [
+      {
+        from: unvettedRange.min,
+        to: unvettedRange.max,
+        caps: [unvettedRange.min, unvettedRange.max],
+      },
+    ];
+  }
+
+  const extensions: Array<{ from: number; to: number; caps: number[] }> = [];
+
+  if (unvettedRange.min < vettedRange.min) {
+    extensions.push({ from: vettedRange.min, to: unvettedRange.min, caps: [unvettedRange.min] });
+  }
+
+  if (unvettedRange.max > vettedRange.max) {
+    extensions.push({ from: vettedRange.max, to: unvettedRange.max, caps: [unvettedRange.max] });
+  }
+
+  return extensions;
+};
+
+const getHoverRangeState = ({
+  year,
+  groupKey,
+  vettedRange,
+  unvettedRange,
+  includeUnvetted,
+  xBase,
+  barWidth,
+}: {
+  year: number;
+  groupKey: BenchmarkGroupKey;
+  vettedRange: { min: number; max: number } | null;
+  unvettedRange: { min: number; max: number } | null;
+  includeUnvetted: boolean;
+  xBase: number;
+  barWidth: number;
+}): HoverState | null => {
+  const displayedRange = includeUnvetted ? (unvettedRange ?? vettedRange) : vettedRange;
+  if (!displayedRange) return null;
+
+  const extendsMin = Boolean(
+    includeUnvetted && vettedRange && unvettedRange && unvettedRange.min < vettedRange.min,
+  );
+  const extendsMax = Boolean(
+    includeUnvetted && vettedRange && unvettedRange && unvettedRange.max > vettedRange.max,
+  );
+  const unvettedOnly = includeUnvetted && !vettedRange && Boolean(unvettedRange);
+
+  return {
+    year,
+    groupKey,
+    min: displayedRange.min,
+    max: displayedRange.max,
+    minLabel: extendsMin || unvettedOnly ? "Unvetted min" : "Min",
+    maxLabel: extendsMax || unvettedOnly ? "Unvetted max" : "Max",
+    xBase,
+    barWidth,
+  };
+};
+
 const getActiveGroups = (showGroupA: boolean, showGroupB: boolean): BenchmarkGroupKey[] => {
   return BENCHMARK_GROUP_KEYS.filter((groupKey) =>
     groupKey === "groupA" ? showGroupA : showGroupB,
@@ -141,16 +221,20 @@ const buildYDomain = (
   activeYears: number[],
   activeGroups: BenchmarkGroupKey[],
 ): [number, number] => {
-  const allValues: number[] = [0];
+  const includeZero = (data.valueUnit ?? "%") === "%";
+  const allValues: number[] = includeZero ? [0] : [];
 
   activeGroups.forEach((groupKey) => {
-    data[groupKey].allVetted
+    data[groupKey].withUnvetted
       .filter((point) => activeYears.includes(point.year))
       .forEach((point) => allValues.push(point.pctChange));
   });
 
+  if (!allValues.length) return [0, 1];
+
   const yExtent = d3.extent(allValues) as [number, number];
-  const yPadding = Math.max((yExtent[1] - yExtent[0]) * 0.1, 5);
+  const yRange = yExtent[1] - yExtent[0];
+  const yPadding = Math.max(yRange * 0.1, includeZero ? 5 : 1);
 
   return [yExtent[0] - yPadding, yExtent[1] + yPadding];
 };
@@ -201,6 +285,21 @@ const sortDotsForStableLayout = (
 
 const formatPercent = (value: number): string => `${formatNumber(value)}%`;
 
+const formatBenchmarkValue = (value: number, unit = "%"): string => {
+  if (unit.toLowerCase() === "year") return Math.round(value).toString();
+
+  const formatted = formatNumber(value);
+  if (!unit) return formatted;
+  if (unit === "%") return `${formatted}%`;
+  return `${formatted} ${unit}`;
+};
+
+const formatAxisTick = (value: number, unit = "%"): string => {
+  if (unit === "%") return `${value}%`;
+  if (unit.toLowerCase() === "year") return Math.round(value).toString();
+  return formatNumber(value);
+};
+
 const getDotKey = (point: BenchmarkSelectedPoint): string =>
   `${point.runId}-${point.year}-${point.groupKey}`;
 
@@ -224,6 +323,7 @@ export const renderBenchmarkChart = ({
   showGroupB,
   showRangeBars,
   showNoConcernDots,
+  includeUnvetted,
   selectedPoint,
   onPointClick,
   onSelectedPointChange,
@@ -257,7 +357,7 @@ export const renderBenchmarkChart = ({
 
   const g = createMainGroup(svg, dimensions);
 
-  const activeYears = selectedYears.filter((year) => year !== BASELINE_YEAR);
+  const activeYears = data.xValues ?? selectedYears.filter((year) => year !== BASELINE_YEAR);
   if (!activeYears.length) return;
 
   const activeGroups = getActiveGroups(showGroupA, showGroupB);
@@ -294,14 +394,16 @@ export const renderBenchmarkChart = ({
     .attr("stroke", GRID_STROKE_COLOR)
     .attr("stroke-width", 1);
 
-  g.append("line")
-    .attr("x1", 0)
-    .attr("x2", innerWidth)
-    .attr("y1", yScale(0))
-    .attr("y2", yScale(0))
-    .attr("stroke", ZERO_LINE_COLOR)
-    .attr("stroke-width", ZERO_LINE_STROKE_WIDTH)
-    .attr("stroke-dasharray", ZERO_LINE_DASH_ARRAY);
+  if ((data.valueUnit ?? "%") === "%") {
+    g.append("line")
+      .attr("x1", 0)
+      .attr("x2", innerWidth)
+      .attr("y1", yScale(0))
+      .attr("y2", yScale(0))
+      .attr("stroke", ZERO_LINE_COLOR)
+      .attr("stroke-width", ZERO_LINE_STROKE_WIDTH)
+      .attr("stroke-dasharray", ZERO_LINE_DASH_ARRAY);
+  }
 
   const yAxis = g
     .append("g")
@@ -310,7 +412,7 @@ export const renderBenchmarkChart = ({
       d3
         .axisLeft(yScale)
         .ticks(6)
-        .tickFormat((tick) => `${tick}%`),
+        .tickFormat((tick) => formatAxisTick(Number(tick), data.valueUnit ?? "%")),
     );
 
   yAxis.selectAll("path, line").attr("stroke", GRID_STROKE_COLOR);
@@ -323,7 +425,7 @@ export const renderBenchmarkChart = ({
     .attr("text-anchor", "middle")
     .style("font-size", FONT_SIZE)
     .style("fill", GRID_TEXT_COLOR)
-    .text(Y_AXIS_LABEL);
+    .text(data.yAxisLabel ?? Y_AXIS_LABEL);
 
   g.selectAll(".benchmark-year-header")
     .data(activeYears)
@@ -339,7 +441,7 @@ export const renderBenchmarkChart = ({
     .style("font-size", YEAR_HEADER_FONT_SIZE)
     .style("font-weight", YEAR_HEADER_FONT_WEIGHT)
     .style("fill", GRID_TEXT_COLOR)
-    .text((year) => year);
+    .text((year) => data.xLabels?.[year] ?? year);
 
   activeGroups.forEach((groupKey) => {
     const group: GroupBenchmarkData = data[groupKey];
@@ -351,16 +453,19 @@ export const renderBenchmarkChart = ({
       const yearStr = String(year);
       const xBase = (xYearScale(yearStr) ?? 0) + xOffset;
       const range = getRangeByYear(group.allVetted, year);
+      const unvettedRange = getRangeByYear(group.withUnvetted, year);
+      const hoverRangeState = getHoverRangeState({
+        year,
+        groupKey,
+        vettedRange: range,
+        unvettedRange,
+        includeUnvetted,
+        xBase,
+        barWidth,
+      });
 
-      if (range) {
-        rangeHoverStates.push({
-          year,
-          groupKey,
-          min: range.min,
-          max: range.max,
-          xBase,
-          barWidth,
-        });
+      if (hoverRangeState) {
+        rangeHoverStates.push(hoverRangeState);
       }
 
       if (showRangeBars && range) {
@@ -377,6 +482,36 @@ export const renderBenchmarkChart = ({
           .attr("stroke", colors.rangeBorder)
           .attr("stroke-width", RANGE_BAR_STROKE_WIDTH)
           .attr("rx", RANGE_BAR_RADIUS);
+      }
+
+      if (showRangeBars && includeUnvetted) {
+        const whiskerX = xBase + barWidth / 2;
+        const capHalfWidth = (barWidth * UNVETTED_WHISKER_CAP_WIDTH_RATIO) / 2;
+
+        getUnvettedRangeExtensions(range, unvettedRange).forEach((extension) => {
+          g.append("line")
+            .attr("class", "benchmark-unvetted-whisker")
+            .attr("x1", whiskerX)
+            .attr("x2", whiskerX)
+            .attr("y1", yScale(extension.from))
+            .attr("y2", yScale(extension.to))
+            .attr("stroke", colors.rangeBorder)
+            .attr("stroke-width", UNVETTED_WHISKER_STROKE_WIDTH)
+            .attr("stroke-dasharray", UNVETTED_WHISKER_DASH_ARRAY)
+            .attr("stroke-linecap", "round");
+
+          extension.caps.forEach((cap) => {
+            g.append("line")
+              .attr("class", "benchmark-unvetted-whisker-cap")
+              .attr("x1", whiskerX - capHalfWidth)
+              .attr("x2", whiskerX + capHalfWidth)
+              .attr("y1", yScale(cap))
+              .attr("y2", yScale(cap))
+              .attr("stroke", colors.rangeBorder)
+              .attr("stroke-width", UNVETTED_WHISKER_STROKE_WIDTH)
+              .attr("stroke-linecap", "round");
+          });
+        });
       }
 
       if (!showNoConcernDots) return;
@@ -406,11 +541,21 @@ export const renderBenchmarkChart = ({
           pctChange: point.pctChange,
           cx: dotX,
           cy: dotY,
-          range,
+          range: hoverRangeState
+            ? {
+                min: hoverRangeState.min,
+                max: hoverRangeState.max,
+                minLabel: hoverRangeState.minLabel,
+                maxLabel: hoverRangeState.maxLabel,
+              }
+            : null,
           xBase,
           barWidth,
           color: colors.dot,
           point,
+          xLabel: data.xLabels?.[year] ?? String(year),
+          valueLabel: data.valueLabel ?? "Change",
+          valueUnit: data.valueUnit ?? "%",
         });
       });
     });
@@ -537,7 +682,16 @@ export const renderBenchmarkChart = ({
     minLabel.hide();
   };
 
-  const updateHover = ({ year, groupKey, min, max, xBase, barWidth }: HoverState): void => {
+  const updateHover = ({
+    year,
+    groupKey,
+    min,
+    max,
+    minLabel: hoverMinLabel,
+    maxLabel: hoverMaxLabel,
+    xBase,
+    barWidth,
+  }: HoverState): void => {
     const colors = BENCHMARK_COLORS[groupKey];
     const maxY = yScale(max);
     const minY = yScale(min);
@@ -558,20 +712,20 @@ export const renderBenchmarkChart = ({
       .style("opacity", 1);
 
     hoverHeaderLabel.show(
-      `${year} · ${BENCHMARK_GROUP_LABELS[groupKey]}`,
+      `${data.xLabels?.[year] ?? year} · ${BENCHMARK_GROUP_LABELS[groupKey]}`,
       innerWidth - HOVER_LABEL_RIGHT_OFFSET,
       HOVER_HEADER_LABEL_Y,
     );
 
     maxLabel.show(
-      `Max: ${formatPercent(max)}`,
+      `${hoverMaxLabel}: ${formatBenchmarkValue(max, data.valueUnit ?? "%")}`,
       innerWidth - HOVER_LABEL_RIGHT_OFFSET,
       maxY,
       "above-line",
     );
 
     minLabel.show(
-      `Min: ${formatPercent(min)}`,
+      `${hoverMinLabel}: ${formatBenchmarkValue(min, data.valueUnit ?? "%")}`,
       innerWidth - HOVER_LABEL_RIGHT_OFFSET,
       minY,
       "below-line",
@@ -651,6 +805,8 @@ export const renderBenchmarkChart = ({
         groupKey: point.groupKey,
         min: point.range.min,
         max: point.range.max,
+        minLabel: point.range.minLabel,
+        maxLabel: point.range.maxLabel,
         xBase: point.xBase,
         barWidth: point.barWidth,
       });

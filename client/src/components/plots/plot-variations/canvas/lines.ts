@@ -5,6 +5,7 @@ import { Scales } from "./types";
 import { MARGIN } from "./constants";
 import { getCategoryAbbrev } from "@/lib/config/reasons-of-concern/category-config";
 import { ColorFn } from "./renderers";
+import { hasVettingFlag } from "@/utils/plots/filtering-functions";
 
 /** Sets a clip region to the plot area. Always pair with ctx.restore(). */
 export const setPlotClip = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
@@ -35,11 +36,7 @@ export const drawLine = (
   run.orderedPoints.forEach((point, i) => {
     const x = scales.xScale(point.year);
     const y = scales.yScale(point.value);
-    if (i === 0) {
-      ctx.moveTo(x, y);
-    } else {
-      ctx.lineTo(x, y);
-    }
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
   });
   ctx.stroke();
 };
@@ -58,30 +55,35 @@ export const drawAllLines = (
 ) => {
   setPlotClip(ctx, width, height);
 
-  const backgroundRuns: ExtendedRun[] = [];
-  const activeRuns: ExtendedRun[] = [];
+  const backgroundUnvettedRuns: ExtendedRun[] = [];
+  const backgroundVettedRuns: ExtendedRun[] = [];
+  const activeUnvettedRuns: ExtendedRun[] = [];
+  const activeVettedRuns: ExtendedRun[] = [];
 
   runs.forEach((run) => {
     const abbrev = getCategoryAbbrev(run.flagCategory);
     const isActive = !hasSelection || (abbrev && selectedFlags.includes(abbrev));
-    (isActive ? activeRuns : backgroundRuns).push(run);
+    const isVetted = hasVettingFlag(run);
+
+    if (isActive && isVetted) activeVettedRuns.push(run);
+    else if (isActive) activeUnvettedRuns.push(run);
+    else if (isVetted) backgroundVettedRuns.push(run);
+    else backgroundUnvettedRuns.push(run);
   });
 
-  /**
-   * PASS 1: Draw dimmed lines first (the "bottom" layer)
-   */
-  backgroundRuns.forEach((run) => {
-    const color = getLineColor ? getLineColor(run) : getRunColor(run, selectedFlags, hasSelection);
-    drawLine(ctx, run, scales, color, PLOT_CONFIG.NORMAL_STROKE_WIDTH, PLOT_CONFIG.NORMAL_OPACITY);
-  });
+  const drawRuns = (runsToDraw: ExtendedRun[], alpha: number) => {
+    runsToDraw.forEach((run) => {
+      const color = getLineColor
+        ? getLineColor(run)
+        : getRunColor(run, selectedFlags, hasSelection);
+      drawLine(ctx, run, scales, color, PLOT_CONFIG.NORMAL_STROKE_WIDTH, alpha);
+    });
+  };
 
-  /**
-   * PASS 2: Draw active lines last (the "top" layer)
-   */
-  activeRuns.forEach((run) => {
-    const color = getLineColor ? getLineColor(run) : getRunColor(run, selectedFlags, hasSelection);
-    drawLine(ctx, run, scales, color, PLOT_CONFIG.NORMAL_STROKE_WIDTH, 1.0);
-  });
+  drawRuns(backgroundUnvettedRuns, PLOT_CONFIG.NORMAL_OPACITY);
+  drawRuns(activeUnvettedRuns, 1.0);
+  drawRuns(backgroundVettedRuns, PLOT_CONFIG.NORMAL_OPACITY);
+  drawRuns(activeVettedRuns, 1.0);
 
   ctx.globalAlpha = 1;
   ctx.restore();
