@@ -1,6 +1,7 @@
 import { Heading } from "@/components/custom/heading";
 import Link from "next/link";
 import { ABOUT_PAGE_LINKS } from "@/lib/paths";
+import { CONTENT_LINK_CLASS } from "@/lib/utils";
 
 export default function MainAboutPageModule() {
   return (
@@ -14,7 +15,7 @@ export default function MainAboutPageModule() {
             <h3 className="text-2xl leading-8 font-bold text-stone-900">
               Contribution to IPCC AR7
             </h3>
-            <Link href="/ar7" className="underline">
+            <Link href="/ar7" className={CONTENT_LINK_CLASS}>
               Call for scenario submissions for IPCC AR7
             </Link>
           </div>
@@ -28,7 +29,7 @@ export default function MainAboutPageModule() {
                 href={ABOUT_PAGE_LINKS.Byers}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline decoration-1 underline-offset-[1.5px]"
+                className={CONTENT_LINK_CLASS}
               >
                 Byers et al., 2022
               </Link>
@@ -40,7 +41,7 @@ export default function MainAboutPageModule() {
                 <Link
                   href={ABOUT_PAGE_LINKS.Heerden}
                   target="_blank"
-                  className="underline decoration-1 underline-offset-[1.5px]"
+                  className={CONTENT_LINK_CLASS}
                   rel="noopener noreferrer"
                 >
                   van Heerden et al. (2025)
@@ -51,7 +52,7 @@ export default function MainAboutPageModule() {
                 <Link
                   href={ABOUT_PAGE_LINKS.Soergel}
                   target="_blank"
-                  className="underline decoration-1 underline-offset-[1.5px]"
+                  className={CONTENT_LINK_CLASS}
                   rel="noopener noreferrer"
                 >
                   Soergel et al. (2024)
@@ -63,7 +64,7 @@ export default function MainAboutPageModule() {
                   href={ABOUT_PAGE_LINKS.Richters}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="underline decoration-1 underline-offset-[1.5px]"
+                  className={CONTENT_LINK_CLASS}
                 >
                   Richters et al. (2024)
                 </Link>
@@ -74,7 +75,7 @@ export default function MainAboutPageModule() {
                   href={ABOUT_PAGE_LINKS.Gidden}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="underline decoration-1 underline-offset-[1.5px]"
+                  className={CONTENT_LINK_CLASS}
                 >
                   Gidden et al (2023)
                 </Link>
@@ -93,7 +94,7 @@ export default function MainAboutPageModule() {
                 href={ABOUT_PAGE_LINKS.FEATURED_REGISTRATION}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline decoration-1 underline-offset-[1.5px]"
+                className={CONTENT_LINK_CLASS}
               >
                 Scenario Compass Sandbox
               </Link>
@@ -110,7 +111,7 @@ export default function MainAboutPageModule() {
                     href={ABOUT_PAGE_LINKS.IPCC_AR6}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="underline decoration-1 underline-offset-[1.5px]"
+                    className={CONTENT_LINK_CLASS}
                   >
                     IPCC AR6 WG3: Scenarios and Modelling Methods
                   </Link>
@@ -120,10 +121,7 @@ export default function MainAboutPageModule() {
               </li>
               <li>
                 <strong>
-                  <Link
-                    href={ABOUT_PAGE_LINKS.SENSES_TOOLKIT}
-                    className="underline decoration-1 underline-offset-[1.5px]"
-                  >
+                  <Link href={ABOUT_PAGE_LINKS.SENSES_TOOLKIT} className={CONTENT_LINK_CLASS}>
                     Senses Toolkit
                   </Link>
                 </strong>{" "}

@@ -1,6 +1,6 @@
-import ComingSoon from "@/containers/coming-soon-container";
 import { Heading } from "@/components/custom/heading";
 import AboutPageHero from "@/containers/about-container/about-page-hero";
+import Ar7ContentModule from "@/containers/ar7/ar7-content-module";
 
 export default function Ar7PageContainer() {
   return (
@@ -15,7 +15,7 @@ export default function Ar7PageContainer() {
           </h2>
         </div>
       </AboutPageHero>
-      <ComingSoon />
+      <Ar7ContentModule />
     </div>
   );
 }
