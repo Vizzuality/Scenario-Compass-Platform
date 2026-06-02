@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Heading } from "@/components/custom/heading";
 import MethodologyPageHero from "@/containers/methodology-container/methodology-page-hero";
+import { CONTENT_LINK_CLASS } from "@/lib/utils";
 
 const Links = {
   IPCC_AR6: "https://www.ipcc.ch/report/ar6/wg3/downloads/report/IPCC_AR6_WGIII_Annex-III.pdf",
@@ -55,7 +56,7 @@ export default function MethodologyContainer() {
                 href={Links.QUALITY_CONTROLLER}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline decoration-1 underline-offset-[1.5px]"
+                className={CONTENT_LINK_CLASS}
               >
                 here
               </Link>
@@ -70,7 +71,7 @@ export default function MethodologyContainer() {
             </h3>
             <p>
               Based on expert assessments conducted by the{" "}
-              <Link className="underline" href="/about#scenario-compass-initiative">
+              <Link className={CONTENT_LINK_CLASS} href="/about#scenario-compass-initiative">
                 SCI's scientific working groups
               </Link>{" "}
               scenarios are marked with “flags” to indicate reasons for concern if they exceed

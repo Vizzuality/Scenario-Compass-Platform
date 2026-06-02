@@ -16,6 +16,7 @@ export const INTERNAL_PATHS = {
   SCENARIO_DASHBOARD_COMPARISON: "/scenario-dashboard/comparison",
   METHODOLOGY: "/methodology",
   ABOUT: "/about",
+  AR7: "/ar7",
   NOT_FOUND: "/not-found",
   LICENSE: "/license",
 } as const;
@@ -76,6 +77,7 @@ const allDesktopPaths = [
   { href: EXTERNAL_LINKS.DOWNLOAD.href, label: EXTERNAL_LINKS.DOWNLOAD.label },
   { href: INTERNAL_PATHS.LICENSE, label: "License" },
   { href: INTERNAL_PATHS.ABOUT, label: "About" },
+  { href: INTERNAL_PATHS.AR7, label: "AR7" },
 ];
 
 export const desktopPaths: LinkItem[] = env.NEXT_PUBLIC_PRE_LAUNCH_MODE
@@ -93,4 +95,15 @@ export const ABOUT_PAGE_LINKS = {
   Richters: "https://doi.org/10.5281/zenodo.5782903",
   Gidden: "https://doi.org/10.1038/s41586-023-06724-y",
   Byers: "https://doi.org/10.5281/zenodo.5886911",
+};
+
+export const AR7_PAGE_LINKS = {
+  OPEN_LETTER_1: "https://doi.org/10.5281/zenodo.20419069",
+  OPEN_LETTER_2: "https://doi.org/10.5281/zenodo.20356173",
+  GLOBAL_SANDBOX: "https://sandbox.scenariocompass.org/",
+  NATIONAL_SANDBOX: "https://national-sandbox.scenariocompass.org/",
+  IAMC_NATIONAL_SCENARIOS:
+    "https://www.iamconsortium.org/scientific-working-groups/national-scenarios/",
+  IPCC_AR6_ANNEX_III:
+    "https://www.ipcc.ch/report/ar6/wg3/downloads/report/IPCC_AR6_WGIII_Annex-III.pdf",
 };

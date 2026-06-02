@@ -1,5 +1,6 @@
 import { MembersPictureModule } from "@/containers/about-container/members-picture-module";
 import Link from "next/link";
+import { CONTENT_LINK_CLASS } from "@/lib/utils";
 
 export function MembersSection() {
   return (
@@ -17,7 +18,7 @@ export function MembersSection() {
             <p>
               The Scenario Compass Initiative is grateful for the generous support from the{" "}
               <Link
-                className="underline decoration-1 underline-offset-[1.5px]"
+                className={CONTENT_LINK_CLASS}
                 href="https://www.bezosearthfund.org/"
                 rel="noopener noreferrer"
                 target="_blank"

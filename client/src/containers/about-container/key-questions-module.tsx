@@ -1,5 +1,6 @@
 import { Heading } from "@/components/custom/heading";
 import Link from "next/link";
+import { CONTENT_LINK_CLASS } from "@/lib/utils";
 
 export default function KeyQuestions() {
   return (
@@ -31,7 +32,7 @@ export default function KeyQuestions() {
               href="https://philippverpoort.github.io/scenario-vetting-criteria/restructuring/"
               rel="noopener noreferrer"
               target="_blank"
-              className="underline"
+              className={CONTENT_LINK_CLASS}
             >
               How are scenarios quality-controlled?
             </Link>
