@@ -20,8 +20,8 @@ export const BASELINE_YEAR = 2020;
 export const BENCHMARK_GROUP_KEYS: BenchmarkGroupKey[] = ["groupA", "groupB"];
 
 export const BENCHMARK_GROUP_LABELS: Record<BenchmarkGroupKey, string> = {
-  groupA: "GW3b+GW3a",
-  groupB: "GW2b+GW2a+GW1",
+  groupA: "GW3",
+  groupB: "GW2+GW1",
 };
 
 export const BENCHMARK_COLORS: Record<BenchmarkGroupKey, BenchmarkGroupColors> = {
@@ -51,6 +51,9 @@ export const DOT_STROKE_WIDTH = 0.5;
 export const RANGE_BAR_RADIUS = 2;
 export const RANGE_BAR_STROKE_WIDTH = 1;
 export const MIN_RANGE_BAR_HEIGHT = 2;
+export const UNVETTED_WHISKER_STROKE_WIDTH = 2;
+export const UNVETTED_WHISKER_CAP_WIDTH_RATIO = 0.45;
+export const UNVETTED_WHISKER_DASH_ARRAY = "3,3";
 
 export const ZERO_LINE_COLOR = "#374151";
 export const ZERO_LINE_STROKE_WIDTH = 1.5;
