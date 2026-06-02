@@ -1,6 +1,6 @@
-import { carbonRemovalMaxAtom, carbonRemovalMinAtom } from "@/utils/atoms/carbon-removal-atoms";
-import { useAtomValue } from "jotai";
+import { useEffect } from "react";
 import { useSetAtom } from "jotai";
+import { carbonRemovalMaxAtom, carbonRemovalMinAtom } from "@/utils/atoms/carbon-removal-atoms";
 import { EMISSIONS_DIAGNOSTICS_CUMULATIVE_CCS_2020_2100_Gt_CO2 } from "@/lib/config/filters/advanced-filters-config";
 import { MetaIndicator } from "@/types/data/meta-indicator";
 
@@ -17,30 +17,24 @@ export const useUpdateGlobalCarbonRemovalValues = ({
 }: Props) => {
   const setGlobalMin = useSetAtom(carbonRemovalMinAtom);
   const setGlobalMax = useSetAtom(carbonRemovalMaxAtom);
-  const currentGlobalMin = useAtomValue(carbonRemovalMinAtom);
-  const currentGlobalMax = useAtomValue(carbonRemovalMaxAtom);
 
-  if (isError || isLoading || !metaIndicators) return;
+  useEffect(() => {
+    if (isError || isLoading || !metaIndicators?.length) return;
 
-  let localMinCarbonRemoval = Number.MAX_SAFE_INTEGER;
-  let localMaxCarbonRemoval = Number.MIN_SAFE_INTEGER;
+    let localMin = Infinity;
+    let localMax = -Infinity;
 
-  metaIndicators.forEach((indicator) => {
-    if (indicator.key === EMISSIONS_DIAGNOSTICS_CUMULATIVE_CCS_2020_2100_Gt_CO2) {
-      const carbonRemovalValue = parseFloat(indicator.value);
-      if (carbonRemovalValue > localMaxCarbonRemoval) {
-        localMaxCarbonRemoval = carbonRemovalValue;
-      }
-      if (carbonRemovalValue < localMinCarbonRemoval) {
-        localMinCarbonRemoval = carbonRemovalValue;
+    for (const indicator of metaIndicators) {
+      if (indicator.key === EMISSIONS_DIAGNOSTICS_CUMULATIVE_CCS_2020_2100_Gt_CO2) {
+        const value = parseFloat(indicator.value);
+        if (!isNaN(value)) {
+          if (value < localMin) localMin = value;
+          if (value > localMax) localMax = value;
+        }
       }
     }
-  });
 
-  if (localMinCarbonRemoval < currentGlobalMin) {
-    setGlobalMin(localMinCarbonRemoval);
-  }
-  if (localMaxCarbonRemoval > currentGlobalMax) {
-    setGlobalMax(localMaxCarbonRemoval);
-  }
+    if (localMin !== Infinity) setGlobalMin(localMin);
+    if (localMax !== -Infinity) setGlobalMax(localMax);
+  }, [isLoading, isError, metaIndicators, setGlobalMin, setGlobalMax]);
 };

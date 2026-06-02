@@ -24,7 +24,7 @@ interface YearSelectionFilterProps {
   options?: number[];
 }
 
-const SingleYearSelect = ({
+export const SingleYearSelect = ({
   value,
   onChange,
   placeholder,
@@ -48,9 +48,9 @@ const SingleYearSelect = ({
   );
 };
 
-export default function YearSelection() {
+export default function StartEndYearsSelection({ prefix }: { prefix?: string }) {
   const { model, geography, scenario, startYear, endYear, setEndYear, setStartYear } =
-    useBaseUrlParams();
+    useBaseUrlParams({ prefix });
 
   const isStartDisabled = !model || !scenario || !geography;
 

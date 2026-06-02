@@ -5,7 +5,7 @@ import { findClosestRun, SpatialIndex } from "./hit-detection";
 import { drawHoverFrame } from "./hover";
 import { TooltipHelpers } from "./tooltip";
 import { DRAG_THRESHOLD, MARGIN, MIN_ZOOM } from "./constants";
-import { renderChart } from "./renderers";
+import { renderChart, ColorFn } from "./renderers";
 
 /** Minimal mutable state that event handlers read/write via ref. */
 export interface CanvasStateRef {
@@ -48,6 +48,7 @@ interface HandlerDeps {
   setZoom: (zoom: ZoomState) => void;
   zoomEnabled: boolean;
   onSelectedRunChange?: (run: ExtendedRun | null) => void;
+  getLineColor?: ColorFn;
 }
 
 /** Check if a pixel coordinate is inside the plot area. */
@@ -64,6 +65,7 @@ export const createEventHandlers = ({
   setZoom,
   zoomEnabled,
   onSelectedRunChange,
+  getLineColor,
 }: HandlerDeps) => {
   let rafId: number | null = null;
   let currentCursor = "default";
@@ -87,6 +89,7 @@ export const createEventHandlers = ({
       hasSelection,
       zoom,
       selectedRun,
+      getLineColor,
     );
     if (result) {
       stateRef.current.scales = result.scales;
@@ -132,6 +135,7 @@ export const createEventHandlers = ({
           hasSelection,
           rect.width,
           rect.height,
+          getLineColor,
         );
 
         const pointX = scales.xScale(closestPoint.year);
@@ -175,6 +179,7 @@ export const createEventHandlers = ({
           hasSelection,
           rect.width,
           rect.height,
+          getLineColor,
         );
 
         const pointX = scales.xScale(closestPoint.year);
@@ -321,6 +326,7 @@ export const createEventHandlers = ({
           hasSelection,
           rect.width,
           rect.height,
+          getLineColor,
         );
         tooltip.updateContent(clicked, closestPoint);
         const pointX = scales.xScale(closestPoint.year);
@@ -345,7 +351,9 @@ export const createEventHandlers = ({
       canvas.addEventListener("mouseup", onMouseUp);
       canvas.addEventListener("click", onClick);
       container.addEventListener("mouseleave", onMouseLeave);
-      canvas.addEventListener("wheel", preventWheel, { passive: false });
+      if (zoomEnabled) {
+        canvas.addEventListener("wheel", preventWheel, { passive: false });
+      }
       window.addEventListener("mouseup", onMouseUp);
       window.addEventListener("keydown", onKeyDown);
     },
@@ -355,6 +363,9 @@ export const createEventHandlers = ({
       canvas.removeEventListener("mouseup", onMouseUp);
       canvas.removeEventListener("click", onClick);
       container.removeEventListener("mouseleave", onMouseLeave);
+      if (zoomEnabled) {
+        canvas.removeEventListener("wheel", preventWheel);
+      }
       window.removeEventListener("mouseup", onMouseUp);
       window.removeEventListener("keydown", onKeyDown);
     },

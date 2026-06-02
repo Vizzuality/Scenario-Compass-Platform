@@ -15,7 +15,7 @@ import { createTooltipHelpers, TooltipHelpers } from "./tooltip";
 import { createEventHandlers } from "./event-handlers";
 import { ZoomControls } from "./zoom-controls";
 import { MIN_ZOOM } from "./constants";
-import { renderChart } from "./renderers";
+import { renderChart, ColorFn } from "./renderers";
 import { useRouter } from "next/navigation";
 import { useGetRunDetailsUrl } from "@/hooks/nuqs/url-params/use-get-run-details-url";
 import { useCanvasPlotZoom } from "@/hooks/plots/use-canvas-plot-zoom";
@@ -28,6 +28,7 @@ interface Props {
   selectedRun?: ExtendedRun | null;
   onSelectedRunChange: (run: ExtendedRun | null) => void;
   yExtent?: YExtentPair;
+  getLineColor?: ColorFn;
 }
 
 export const CanvasMultiLinePlot: React.FC<Props> = ({
@@ -38,6 +39,7 @@ export const CanvasMultiLinePlot: React.FC<Props> = ({
   selectedRun: externalSelectedRun,
   onSelectedRunChange,
   yExtent,
+  getLineColor,
 }) => {
   const { selectedFlags, hiddenFlags, showVetting } = useScenarioFlagsSelection(prefix);
   const router = useRouter();
@@ -61,10 +63,6 @@ export const CanvasMultiLinePlot: React.FC<Props> = ({
     router.prefetch(buildRunDetailsUrl(run));
   });
 
-  /**
-   * CORE RENDER FUNCTION
-   * Memoized to be called by various effects
-   */
   const doRender = useCallback(() => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
@@ -81,26 +79,21 @@ export const CanvasMultiLinePlot: React.FC<Props> = ({
       selectedFlags.length > 0,
       currentZoom,
       selectedRun,
+      getLineColor,
     );
 
     if (result) {
       stateRef.current.scales = result.scales;
       stateRef.current.spatialIndex = result.spatialIndex;
     }
-  }, [selectedFlags]);
+  }, [selectedFlags, getLineColor]);
 
-  /**
-   * ZOOM HOOK
-   */
   const { zoom, setZoom, zoomIn, zoomOut, zoomReset } = useCanvasPlotZoom(
     stateRef,
     doRender,
     zoomEnabled,
   );
 
-  /**
-   * GRANULAR EFFECT: DATA & FILTER SYNC
-   */
   useEffect(() => {
     if (!data.runs) return;
 
@@ -116,10 +109,6 @@ export const CanvasMultiLinePlot: React.FC<Props> = ({
     doRender();
   }, [data.runs, hiddenFlags, showVetting, yExtent, doRender]);
 
-  /**
-   * GRANULAR EFFECT: SELECTION SYNC
-   * Handles synchronization between Widget and Dialog
-   */
   useEffect(() => {
     const isSelected = !!externalSelectedRun;
     stateRef.current.selectedRun = externalSelectedRun ?? null;
@@ -128,10 +117,6 @@ export const CanvasMultiLinePlot: React.FC<Props> = ({
     doRender();
   }, [externalSelectedRun, doRender]);
 
-  /**
-   * GRANULAR EFFECT: INFRASTRUCTURE SETUP
-   * Handles DOM listeners and observers
-   */
   useEffect(() => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
@@ -143,12 +128,12 @@ export const CanvasMultiLinePlot: React.FC<Props> = ({
       (run) => handleRunClick(run),
       (run) => handlePrefetch(run),
       () => {
-        // Clear selection logic
         stateRef.current.selectedRun = null;
         handleSelectedRunChange(null);
         tooltipInstanceRef.current?.setInteractive(false);
         doRender();
       },
+      getLineColor,
     );
 
     tooltipInstanceRef.current = tooltip;
@@ -167,6 +152,7 @@ export const CanvasMultiLinePlot: React.FC<Props> = ({
       setZoom,
       zoomEnabled,
       onSelectedRunChange: (run) => handleSelectedRunChange(run),
+      getLineColor,
     });
 
     const resizeObserver = new ResizeObserver(() => {
@@ -181,7 +167,7 @@ export const CanvasMultiLinePlot: React.FC<Props> = ({
       resizeObserver.disconnect();
       tooltipInstanceRef.current = null;
     };
-  }, [zoomEnabled, selectedFlags, doRender, setZoom]);
+  }, [zoomEnabled, selectedFlags, doRender, setZoom, getLineColor]);
 
   const aspectClasses =
     "relative flex [aspect-ratio:1/1] w-full items-center justify-center sm:[aspect-ratio:4/3] lg:[aspect-ratio:16/10]";

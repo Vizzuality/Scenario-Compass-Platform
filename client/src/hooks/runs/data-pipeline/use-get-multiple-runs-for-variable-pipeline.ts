@@ -8,8 +8,9 @@ import useBaseRunTransformation from "@/hooks/runs/data-pipeline/use-base-run-tr
 export function useGetMultipleRunsForVariablePipeline({
   variable,
   prefix = "",
+  defaults = {},
 }: SingleRunPipelineParams): RunPipelineReturn {
-  const { year, endYear, startYear, geography } = useBaseUrlParams({ prefix });
+  const { year, endYear, startYear, geography } = useBaseUrlParams({ prefix, defaults });
   const {
     dataPoints,
     isLoading: isLoadingDataPointsFiltering,

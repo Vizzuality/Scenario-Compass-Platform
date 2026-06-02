@@ -41,6 +41,7 @@ export function matchesClimateCategoryFilter(
 ): boolean {
   if (!climateCategory || climateCategory.length === 0) return true;
   if (!run.metaIndicators?.length) return false;
+
   return climateCategory.some((categoryValue) =>
     run.metaIndicators.some((mp) => mp.value.includes(categoryValue)),
   );

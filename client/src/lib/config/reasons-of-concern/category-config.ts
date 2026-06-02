@@ -259,6 +259,8 @@ export const VALUE_OK = "ok";
  */
 export const VETTING2025 = "Vetting|SCI 2025";
 
+export const IS_PART_OF_AR_6 = "Scenario Ensemble|AR6";
+
 /**
  * Retrieves the abbreviated form of a category key.
  *
