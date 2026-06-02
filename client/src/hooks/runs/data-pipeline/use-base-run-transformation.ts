@@ -15,6 +15,8 @@ export default function useBaseRunTransformation({
   prefix?: string;
 }): RunPipelineReturn {
   const {
+    fossilFuelPhaseDown,
+    mitigationStrategy,
     climateCategory,
     yearNetZero,
     carbonRemoval,
@@ -58,6 +60,8 @@ export default function useBaseRunTransformation({
     fossilShare,
     eocWarming,
     peakWarming,
+    fossilFuelPhaseDown: fossilFuelPhaseDown,
+    mitigationStrategy: mitigationStrategy,
   });
 
   const isLoading = isLoadingMeta || isEnergyShareLoading || isGfaLoading;

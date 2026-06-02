@@ -10,6 +10,7 @@ import { useScenarioFlagsSelection } from "@/hooks/nuqs/flags/use-scenario-flags
 import { filterDecadePoints, filterVisibleRuns } from "@/utils/plots/filtering-functions";
 import { interpolatePoints } from "@/utils/plots/render-functions";
 import { YExtentPair } from "@/components/plots/plot-variations/canvas/scales";
+import { useSciWeightedStatsParams } from "@/hooks/nuqs/plots/use-sci-weighted-stats-params";
 
 interface AreaChartProps {
   runs: ExtendedRun[];
@@ -20,6 +21,7 @@ interface AreaChartProps {
 const AreaBasePlot: React.FC<AreaChartProps> = ({ runs, prefix, yExtent }) => {
   const { svgRef, dimensions, plotContainer } = usePlotContainer();
   const { selectedFlags } = useScenarioFlagsSelection(prefix);
+  const { showSciWeightedMedian, showSciWeightedPercentiles } = useSciWeightedStatsParams();
 
   useEffect(() => {
     if (!runs.length || !svgRef.current || dimensions.WIDTH === 0) return;
@@ -31,12 +33,22 @@ const AreaBasePlot: React.FC<AreaChartProps> = ({ runs, prefix, yExtent }) => {
       dimensions,
       selectedFlags,
       yExtent,
+      showSciWeightedMedian,
+      showSciWeightedPercentiles: showSciWeightedMedian && showSciWeightedPercentiles,
     });
 
     return () => {
       if (cleanup) cleanup();
     };
-  }, [dimensions, runs, selectedFlags, svgRef, yExtent]);
+  }, [
+    dimensions,
+    runs,
+    selectedFlags,
+    showSciWeightedMedian,
+    showSciWeightedPercentiles,
+    svgRef,
+    yExtent,
+  ]);
 
   return plotContainer;
 };

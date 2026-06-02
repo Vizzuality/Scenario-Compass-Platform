@@ -8,6 +8,7 @@ import { useTabAndVariablesParams } from "@/hooks/nuqs/tabs/use-tabs-and-variabl
 import { MetaIndicator } from "@/types/data/meta-indicator";
 import { useScenarioFlagsSelection } from "@/hooks/nuqs/flags/use-scenario-flags-selection";
 import { filterVisibleRuns } from "@/utils/plots/filtering-functions";
+import { ChartWrapper } from "@/components/plots/chart-wrapper";
 
 interface Props {
   plotConfig: PlotConfig;
@@ -66,7 +67,7 @@ export default function HistogramWidget({ plotConfig, prefix, plotConfigArray }:
         onChange={setCurrentVariable}
         currentVariable={currentVariable}
       />
-      <div ref={chartRef}>
+      <ChartWrapper ref={chartRef}>
         <HistogramPlot
           split={getHistogramSplit()}
           xUnitText={currentVariable === YEAR_OF_PEAK_WARMING ? "Year" : "°C"}
@@ -76,7 +77,7 @@ export default function HistogramWidget({ plotConfig, prefix, plotConfigArray }:
             metaIndicators,
           }}
         />
-      </div>
+      </ChartWrapper>
     </div>
   );
 }

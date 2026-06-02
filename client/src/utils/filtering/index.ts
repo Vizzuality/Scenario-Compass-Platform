@@ -12,6 +12,13 @@ import {
   FOSSIL_SHARE_2050,
   RENEWABLES_SHARE_2050,
 } from "@/lib/config/filters/energy-filter-config";
+import {
+  FOSSIL_FUEL_PHASE_DOWN_FILTER_CONFIG,
+  FOSSIL_FUEL_PHASE_DOWN_KEY,
+  MITIGATION_STRATEGY_FILTER_CONFIG,
+  MITIGATION_STRATEGY_KEY,
+  SCENARIO_TYPOLOGY_META_KEY,
+} from "@/lib/config/filters/typology-filter-config";
 
 interface FilterRunsByMetaIndicatorsParams {
   runs: ExtendedRun[];
@@ -24,6 +31,8 @@ interface FilterRunsByMetaIndicatorsParams {
   [CARBON_REMOVAL_KEY]: string | null;
   [PEAK_WARMING_KEY]: string | null;
   [END_OF_CENTURY_WARMING_KEY]: string | null;
+  [FOSSIL_FUEL_PHASE_DOWN_KEY]: string[] | null;
+  [MITIGATION_STRATEGY_KEY]: string[] | null;
 }
 
 export function matchesClimateCategoryFilter(
@@ -45,6 +54,24 @@ export function matchesYearNetZeroFilter(run: ExtendedRun, yearNetZero: string[]
     run.metaIndicators.some(
       (mp) => mp.key === YEAR_NET_ZERO_CO2_META_INDICATOR_KEY && mp.value === year,
     ),
+  );
+}
+
+export function matchesStrategy(
+  run: ExtendedRun,
+  params: string[] | null,
+  mappings: readonly { value: string; label: string }[],
+): boolean {
+  if (!params || params.length === 0) return true;
+
+  const paramsSet = new Set<string>(params);
+
+  const filteredLabels = new Set<string>(
+    mappings.filter(({ value }) => paramsSet.has(value)).map(({ label }) => label),
+  );
+
+  return run.metaIndicators.some(
+    ({ key, value }) => key === SCENARIO_TYPOLOGY_META_KEY && filteredLabels.has(value),
   );
 }
 
@@ -82,6 +109,8 @@ export function filterRunsByMetaIndicators({
   fossilShare,
   peakWarming,
   eocWarming,
+  fossilFuelPhaseDown,
+  mitigationStrategy,
 }: FilterRunsByMetaIndicatorsParams): ExtendedRun[] {
   if (!runs?.length) return [];
 
@@ -89,6 +118,8 @@ export function filterRunsByMetaIndicators({
     return (
       matchesClimateCategoryFilter(run, climateCategory) &&
       matchesYearNetZeroFilter(run, yearNetZero) &&
+      matchesStrategy(run, fossilFuelPhaseDown, FOSSIL_FUEL_PHASE_DOWN_FILTER_CONFIG.mappings) &&
+      matchesStrategy(run, mitigationStrategy, MITIGATION_STRATEGY_FILTER_CONFIG.mappings) &&
       matchesSliderFilter(run, RENEWABLES_SHARE_2050, renewablesShare) &&
       matchesSliderFilter(run, INCREASE_IN_GLOBAL_FOREST_AREA_KEY, gfaIncrease) &&
       matchesSliderFilter(run, BIOMASS_SHARE_2050, biomassShare) &&

@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { PlotWidgetHeader } from "@/components/plots/components";
-import { ChartType, PLOT_TYPE_OPTIONS } from "@/components/plots/components";
+import { ChartType, PlotWidgetHeader, PLOT_TYPE_OPTIONS } from "@/components/plots/components";
 import { useGetMultipleRunsForVariablePipeline } from "@/hooks/runs/data-pipeline/use-get-multiple-runs-for-variable-pipeline";
 import { ExtendedRun } from "@/types/data/run";
 import { useQuery } from "@tanstack/react-query";

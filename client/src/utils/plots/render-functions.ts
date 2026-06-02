@@ -6,6 +6,7 @@ import { ExtendedRun, ShortDataPoint } from "@/types/data/run";
 import { calculateOptimalTicksWithNiceYears } from "@/utils/plots/ticks-computation";
 import { formatShortenedNumber } from "@/utils/plots/format-functions";
 import { YExtentPair } from "@/components/plots/plot-variations/canvas/scales";
+import { ENSEMBLE_WEIGHT_SCI_2025_BETA } from "@/lib/config/filters/required-meta-keys";
 
 export type SVGSelection = d3.Selection<SVGSVGElement, unknown, null, undefined>;
 export type GroupSelection = d3.Selection<SVGGElement, unknown, null, undefined>;
@@ -36,6 +37,91 @@ export const aggregateDataByYear = (dataPoints: ShortDataPoint[]): AggregatedDat
   });
 
   return aggregatedData.sort((a, b) => a.year - b.year);
+};
+
+const getSciEnsembleWeight = (run: ExtendedRun): number | null => {
+  const indicator = run.metaIndicators.find(({ key }) => key === ENSEMBLE_WEIGHT_SCI_2025_BETA);
+  if (!indicator) return null;
+
+  const weight = Number(indicator.value);
+  return Number.isFinite(weight) && weight > 0 ? weight : null;
+};
+
+const calculateWeightedPercentile = (
+  values: Array<{ value: number; weight: number }>,
+  percentile: number,
+): number | undefined => {
+  const validValues = values
+    .filter(({ value, weight }) => Number.isFinite(value) && Number.isFinite(weight) && weight > 0)
+    .sort((a, b) => a.value - b.value);
+
+  if (validValues.length === 0) return undefined;
+
+  const totalWeight = d3.sum(validValues, ({ weight }) => weight);
+  const threshold = totalWeight * percentile;
+  let cumulativeWeight = 0;
+
+  for (const item of validValues) {
+    cumulativeWeight += item.weight;
+    if (cumulativeWeight >= threshold) return item.value;
+  }
+
+  return validValues.at(-1)?.value;
+};
+
+const calculateSciWeightedStatsByYear = (runs: ExtendedRun[]): AggregatedDataPoint[] => {
+  const weightedValuesByYear = new Map<number, Array<{ value: number; weight: number }>>();
+
+  runs.forEach((run) => {
+    const weight = getSciEnsembleWeight(run);
+    if (!weight) return;
+
+    run.orderedPoints.forEach((point) => {
+      if (!weightedValuesByYear.has(point.year)) {
+        weightedValuesByYear.set(point.year, []);
+      }
+      weightedValuesByYear.get(point.year)!.push({ value: point.value, weight });
+    });
+  });
+
+  return [...weightedValuesByYear.entries()]
+    .map(([year, values]) => {
+      const totalWeight = d3.sum(values, ({ weight }) => weight);
+      const weightedSum = d3.sum(values, ({ value, weight }) => value * weight);
+
+      return {
+        year,
+        min: d3.min(values, ({ value }) => value)!,
+        max: d3.max(values, ({ value }) => value)!,
+        average: weightedSum / totalWeight,
+        median: weightedSum / totalWeight,
+        sciWeightedP05: calculateWeightedPercentile(values, 0.05),
+        sciWeightedP95: calculateWeightedPercentile(values, 0.95),
+        sciWeightedMedian: weightedSum / totalWeight,
+      };
+    })
+    .sort((a, b) => a.year - b.year);
+};
+
+export const addSciWeightedStats = (
+  aggregatedData: AggregatedDataPoint[],
+  runs: ExtendedRun[],
+): AggregatedDataPoint[] => {
+  const weightedDataByYear = new Map(
+    calculateSciWeightedStatsByYear(runs).map((point) => [point.year, point]),
+  );
+
+  return aggregatedData.map((point) => {
+    const weightedPoint = weightedDataByYear.get(point.year);
+    if (!weightedPoint) return point;
+
+    return {
+      ...point,
+      sciWeightedP05: weightedPoint.sciWeightedP05,
+      sciWeightedP95: weightedPoint.sciWeightedP95,
+      sciWeightedMedian: weightedPoint.sciWeightedMedian,
+    };
+  });
 };
 
 export const clearSVG = (svg: SVGSelection): void => {
