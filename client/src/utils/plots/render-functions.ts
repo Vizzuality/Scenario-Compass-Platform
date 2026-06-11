@@ -69,7 +69,12 @@ const calculateWeightedPercentile = (
   return validValues.at(-1)?.value;
 };
 
-const calculateSciWeightedStatsByYear = (runs: ExtendedRun[]): AggregatedDataPoint[] => {
+type SciWeightedStatsByYear = Pick<
+  AggregatedDataPoint,
+  "year" | "sciWeightedP05" | "sciWeightedP95" | "sciWeightedMedian"
+>;
+
+const calculateSciWeightedStatsByYear = (runs: ExtendedRun[]): SciWeightedStatsByYear[] => {
   const weightedValuesByYear = new Map<number, Array<{ value: number; weight: number }>>();
 
   runs.forEach((run) => {
@@ -86,18 +91,11 @@ const calculateSciWeightedStatsByYear = (runs: ExtendedRun[]): AggregatedDataPoi
 
   return [...weightedValuesByYear.entries()]
     .map(([year, values]) => {
-      const totalWeight = d3.sum(values, ({ weight }) => weight);
-      const weightedSum = d3.sum(values, ({ value, weight }) => value * weight);
-
       return {
         year,
-        min: d3.min(values, ({ value }) => value)!,
-        max: d3.max(values, ({ value }) => value)!,
-        average: weightedSum / totalWeight,
-        median: weightedSum / totalWeight,
         sciWeightedP05: calculateWeightedPercentile(values, 0.05),
         sciWeightedP95: calculateWeightedPercentile(values, 0.95),
-        sciWeightedMedian: weightedSum / totalWeight,
+        sciWeightedMedian: calculateWeightedPercentile(values, 0.5),
       };
     })
     .sort((a, b) => a.year - b.year);
