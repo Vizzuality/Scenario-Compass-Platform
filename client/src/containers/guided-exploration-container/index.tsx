@@ -120,8 +120,8 @@ export function GuidedExplorationPageContainer() {
               <p>
                 The Scenario Compass dataset builds on the AR6 scenario database, assembled for the
                 Sixth Assessment Report of the Intergovernmental Panel on Climate Change (IPCC),
-                published in 2022. Since then, new scenarios have extended coverage into areas which
-                the original ensemble left unexplored and include scenarios that better represent
+                published in 2022. Since then, new scenarios have extended coverage into areas that
+                the original ensemble left unexplored, including scenarios that better represent
                 current developments and near-term policy constraints, providing a stronger basis
                 for decision-making.
               </p>
@@ -140,7 +140,7 @@ export function GuidedExplorationPageContainer() {
           <section className={cn(CONTENT_WIDTH, "mb-12")}>
             <FigureCaption
               label="Figure 1 · The Scenario Map"
-              caption="Scenario count reflects modelling conventions, not real-world likelihood — more is not more probable."
+              caption="Note on reading this figure: Scenario count reflects modelling conventions, not real-world likelihood — more is not more probable."
             />
           </section>
 
@@ -196,9 +196,9 @@ export function GuidedExplorationPageContainer() {
             </p>
 
             <p>
-              These assessments are made by an expert panel convened by the Scenario Compass. They
-              are reviewed annually and subject to public consultation. This process matters for a
-              specific reason: these are expert judgments, not objective facts. Scientists can and
+              These assessments are made by an expert panel convened by the Scenario Compass Initiative. They
+              are reviewed annually and subject to public consultation. This process matters:
+              the assessments are expert judgments, not objective facts. Scientists can and
               do disagree about where the lines fall. Rather than resolving this disagreement
               artificially, the Scenario Compass puts the choice in your hands – informed by expert
               assessments, you can select your own thresholds and explore how the results change.
@@ -251,9 +251,9 @@ export function GuidedExplorationPageContainer() {
           </div>
 
           <div className={cn(CONTENT_WIDTH, "mb-16")}>
-            <p className="font-bold">Three findings emerge consistently:</p>
+            <p className="font-bold">Three findings emerge consistently when considering feasibility and sustainability:</p>
             <ol className="text-compass-body mt-4 list-decimal space-y-2 pl-6 text-lg">
-              <li>Considering sustainability and feasibility increases short-term ambition.</li>
+              <li>Short-term ambition increases; emissions are more strongly reduced in the next 25 years.</li>
               <li>Speculative carbon removal (CDR) reliance is significantly reduced.</li>
               <li>Demand-side transformations become essential for 1.5°C compatibility.</li>
             </ol>
