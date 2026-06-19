@@ -7,7 +7,8 @@ import { CONTENT_LINK_CLASS } from "@/lib/utils";
 const Links = {
   IPCC_AR6: "https://www.ipcc.ch/report/ar6/wg3/downloads/report/IPCC_AR6_WGIII_Annex-III.pdf",
   SENSES_TOOLKIT: "https://climatescenarios.org/primer/",
-  QUALITY_CONTROLLER: "https://philippverpoort.github.io/scenario-vetting-criteria/restructuring/",
+  QUALITY_CONTROLLER:
+    "https://philippverpoort.github.io/scenario-vetting-criteria/latest/edition-2026-02-01/summary/",
   FEATURED_REGISTRATION: "https://sandbox.scenariocompass.org/tor",
   Heerden: "https://doi.org/10.1038/s41560-025-01703-1",
   Soergel: "https://doi.org/10.1088/1748-9326/ad80af",
