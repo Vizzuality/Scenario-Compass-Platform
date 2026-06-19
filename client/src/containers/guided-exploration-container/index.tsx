@@ -196,12 +196,13 @@ export function GuidedExplorationPageContainer() {
             </p>
 
             <p>
-              These assessments are made by an expert panel convened by the Scenario Compass Initiative. They
-              are reviewed annually and subject to public consultation. This process matters:
-              the assessments are expert judgments, not objective facts. Scientists can and
-              do disagree about where the lines fall. Rather than resolving this disagreement
-              artificially, the Scenario Compass puts the choice in your hands – informed by expert
-              assessments, you can select your own thresholds and explore how the results change.
+              These assessments are made by an expert panel convened by the Scenario Compass
+              Initiative. They are reviewed annually and subject to public consultation. This
+              process matters: the assessments are expert judgments, not objective facts. Scientists
+              can and do disagree about where the lines fall. Rather than resolving this
+              disagreement artificially, the Scenario Compass puts the choice in your hands –
+              informed by expert assessments, you can select your own thresholds and explore how the
+              results change.
             </p>
           </section>
 
@@ -237,11 +238,17 @@ export function GuidedExplorationPageContainer() {
 
             <p className="text-lg">
               When you filter the scenario ensemble to keep only those that both limit warming to
-              1.5°C and meet certain feasibility or sustainability thresholds, the benchmark ranges
-              change.
+              1.5°C and meet feasibility and sustainability thresholds, the benchmark ranges change.
             </p>
 
             <p className="text-lg">Exposing those shifts is the purpose of Figure 3.</p>
+          </section>
+
+          <section className={cn(CONTENT_WIDTH, "mb-12")}>
+            <FigureCaption
+              label="Figure 3 · Benchmarks"
+              caption="Note: The feasibility and sustainability assessment in this figure is based on the default assessment, not the criteria you set yourself above."
+            />
           </section>
 
           <div className="dashboard-container mb-16 w-full">
@@ -251,9 +258,14 @@ export function GuidedExplorationPageContainer() {
           </div>
 
           <div className={cn(CONTENT_WIDTH, "mb-16")}>
-            <p className="font-bold">Three findings emerge consistently when considering feasibility and sustainability:</p>
+            <p className="font-bold">
+              Three findings emerge consistently when considering feasibility and sustainability:
+            </p>
             <ol className="text-compass-body mt-4 list-decimal space-y-2 pl-6 text-lg">
-              <li>Short-term ambition increases; emissions are more strongly reduced in the next 25 years.</li>
+              <li>
+                Short-term ambition increases; emissions are more strongly reduced in the next 25
+                years.
+              </li>
               <li>Speculative carbon removal (CDR) reliance is significantly reduced.</li>
               <li>Demand-side transformations become essential for 1.5°C compatibility.</li>
             </ol>
