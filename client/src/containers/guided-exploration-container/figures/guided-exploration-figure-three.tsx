@@ -31,6 +31,7 @@ import notFoundImage from "@/assets/images/not-found.webp";
 import { cn } from "@/lib/utils";
 import { useGetRunDetailsUrl } from "@/hooks/nuqs/url-params/use-get-run-details-url";
 import { InfoIcon } from "lucide-react";
+import { FigureThreeBenchmarkRanges } from "@/containers/guided-exploration-container/figures/figure-three-benchmark-ranges";
 
 const SELECTABLE_YEARS = BENCHMARK_YEARS.filter((year) => year !== 2020);
 
@@ -93,6 +94,7 @@ export function GuidedExplorationFigThree() {
   } = controls;
 
   const [selectedPoint, setSelectedPoint] = useState<BenchmarkDotTooltipPoint | null>(null);
+  const [benchmarkRangesResetKey, setBenchmarkRangesResetKey] = useState(0);
 
   const buildRunDetailsUrl = useGetRunDetailsUrl();
   const isMetaIndicator = mode === "meta";
@@ -139,6 +141,7 @@ export function GuidedExplorationFigThree() {
 
   const handleResetControls = async () => {
     setSelectedPoint(null);
+    setBenchmarkRangesResetKey((key) => key + 1);
     await resetFigureThreeControls();
   };
 
@@ -323,43 +326,61 @@ export function GuidedExplorationFigThree() {
           </div>
 
           {/* Layers */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-6">
             <Label className="font-bold">Layers</Label>
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-4">
                 <Switch
+                  id="bar"
                   checked={showRangeBars}
                   onCheckedChange={(checked) => {
                     setSelectedPoint(null);
                     setShowRangeBars(checked);
                   }}
                 />
-                <Label className="font-normal">Range (all vetted)</Label>
+                <Label htmlFor="bar" className="font-normal">
+                  Bar: Range of all scenarios
+                </Label>
               </div>
 
-              <div className="flex items-center gap-4">
+              <div className="flex items-start gap-4">
                 <Switch
+                  id="dots"
                   checked={showNoConcernDots}
                   onCheckedChange={(checked) => {
                     setSelectedPoint(null);
                     setShowNoConcernDots(checked);
                   }}
                 />
-                <Label className="font-normal">Dots (no concern)</Label>
+                <Label htmlFor="dots" className="font-normal">
+                  Dots: Scenarios without high feasibility or sustainability concerns
+                </Label>
               </div>
 
               <div className="flex items-center gap-4">
                 <Switch
+                  id="outdated"
                   checked={includeUnvetted}
                   onCheckedChange={(checked) => {
                     setSelectedPoint(null);
                     setIncludeUnvetted(checked);
                   }}
                 />
-                <Label className="font-normal">Include unvetted</Label>
+                <Label htmlFor="outdated" className="font-normal">
+                  Include outdated scenarios
+                </Label>
               </div>
             </div>
           </div>
+
+          {data && (
+            <FigureThreeBenchmarkRanges
+              data={data}
+              selectedYears={selectedYears}
+              isMetaIndicator={isMetaIndicator}
+              resetKey={benchmarkRangesResetKey}
+            />
+          )}
 
           {/* Reset */}
           <Button
