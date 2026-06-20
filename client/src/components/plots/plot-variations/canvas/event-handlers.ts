@@ -225,7 +225,11 @@ export const createEventHandlers = ({
   const onMouseMove = (e: MouseEvent) => {
     if (rafId) cancelAnimationFrame(rafId);
     rafId = requestAnimationFrame(() => {
-      stateRef.current.isDragging ? handleDrag(e) : handleHover(e);
+      if (stateRef.current.isDragging) {
+        handleDrag(e);
+      } else {
+        handleHover(e);
+      }
       rafId = null;
     });
   };

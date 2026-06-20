@@ -1,4 +1,4 @@
-import { useId, useState, useEffect } from "react";
+import { useId, useState } from "react";
 import { useFilterUrlParams } from "@/hooks/nuqs/url-params/use-filter-url-params";
 import {
   CLIMATE_CATEGORY_FILTER_CONFIG,
@@ -19,12 +19,13 @@ export const useClimateFilter = (prefix?: string) => {
 
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    if (open) {
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (nextOpen) {
       setPendingCategorySelectedOptions(climateCategory || []);
       setPendingNetZeroSelectedOptions(yearNetZero || []);
     }
-  }, [open, climateCategory, yearNetZero]);
+    setOpen(nextOpen);
+  };
 
   const selectedOptions = [...(climateCategory || []), ...(yearNetZero || [])];
 
@@ -131,7 +132,7 @@ export const useClimateFilter = (prefix?: string) => {
     getLabel,
     getDisplayLabel,
     open,
-    setOpen,
+    setOpen: handleOpenChange,
     hasChanges,
   };
 };

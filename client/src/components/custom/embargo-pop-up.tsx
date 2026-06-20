@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -83,10 +83,11 @@ export function EmbargoPopUp() {
       <DialogContent
         showCloseButton={false}
         className="bg-white sm:max-w-lg"
+        aria-describedby={undefined}
         onInteractOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
-        <b className="text-2xl">Embargo Notification</b>
+        <DialogTitle className="text-2xl">Embargo Notification</DialogTitle>
         <p>
           This website contains scenario data associated with unpublished research and a manuscript
           currently under peer review.
@@ -110,7 +111,8 @@ export function EmbargoPopUp() {
           <div>
             <p className="text-black">
               <em>
-                "Mitigation benchmarks from the 2025 community update of global emissions pathways"
+                &#34;Mitigation benchmarks from the 2025 community update of global emissions
+                pathways&#34;
               </em>{" "}
               (Riahi et al., submitted).
             </p>
@@ -126,8 +128,8 @@ export function EmbargoPopUp() {
 
           <div>
             <p className="text-black">
-              <em>"Scenario Compass Initiative - Pathways Ensemble 2025"</em> (Huppmann et al.)
-              Zenodo.
+              <em>&#34;Scenario Compass Initiative - Pathways Ensemble 2025&#34;</em> (Huppmann et
+              al.) Zenodo.
             </p>
             <Link
               href="https://doi.org/10.5281/zenodo.18598250"

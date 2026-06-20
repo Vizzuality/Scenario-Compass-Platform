@@ -12,13 +12,17 @@ interface Result {
   isError: boolean;
 }
 
+const EMPTY_GFA: Record<string, number> = {};
+
+const selectDataPoints = (data: DataFrame) => extractDataPoints(data);
+
 const fetchForestData = (stepYear: number) => ({
   ...queryKeys.dataPoints.tabulate({
     variable: { name: LAND_FOREST_COVER },
     stepYear,
   }),
   staleTime: 5 * 60 * 1000,
-  select: (data: DataFrame) => extractDataPoints(data),
+  select: selectDataPoints,
 });
 
 const calculatePercentageChanges = (data2020: DataPoint[], data2050: DataPoint[]) => {
@@ -53,8 +57,8 @@ export default function useComputeLandUse(): Result {
   const isError = error2050 || error2020;
 
   const gfaIncreaseArray = useMemo(() => {
-    if (!data2020 || !data2050 || isLoading || isError) {
-      return {};
+    if (!data2020 || !data2050) {
+      return EMPTY_GFA;
     }
 
     if (data2050.length !== data2020.length) {
@@ -64,7 +68,7 @@ export default function useComputeLandUse(): Result {
     }
 
     return calculatePercentageChanges(data2020, data2050);
-  }, [data2020, data2050, isLoading, isError]);
+  }, [data2020, data2050]);
 
   return { gfaIncreaseArray, isLoading, isError };
 }

@@ -9,10 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { YEAR_OPTIONS } from "@/containers/scenario-dashboard-container/url-store";
-import { useQuery } from "@tanstack/react-query";
-import queryKeys from "@/lib/query-keys";
 import { useBaseUrlParams } from "@/hooks/nuqs/url-params/use-base-url-params";
-import { extractDataPoints } from "@/utils/data-manipulation/extract-data-points";
 
 type FilterType = "start" | "end";
 

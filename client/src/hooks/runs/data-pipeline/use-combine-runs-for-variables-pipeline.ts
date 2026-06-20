@@ -3,7 +3,7 @@ import { useQueries } from "@tanstack/react-query";
 import { extractDataPoints } from "@/utils/data-manipulation/extract-data-points";
 import { getDataPointsFilter } from "@/utils/filtering/data-points-filter";
 import queryKeys from "@/lib/query-keys";
-import { DataPointsQueriesReturn, RunPipelineReturn } from "@/types/data/run";
+import { RunPipelineReturn } from "@/types/data/run";
 import useComputeEnergyShare from "@/hooks/runs/filtering/use-compute-energy-share";
 import { filterRunsByMetaIndicators } from "@/utils/filtering";
 import useComputeLandUse from "@/hooks/runs/filtering/use-compute-land-use";
@@ -21,6 +21,7 @@ export default function useCombineRunsForVariablesPipeline({
   prefix?: string;
 }): RunPipelineReturn {
   const { year, endYear, startYear, geography, model, scenario } = useBaseUrlParams({ prefix });
+
   const {
     fossilFuelPhaseDown,
     mitigationStrategy,
@@ -35,27 +36,48 @@ export default function useCombineRunsForVariablesPipeline({
     peakWarming,
   } = useFilterUrlParams(prefix);
 
-  const dataPointQueries: DataPointsQueriesReturn = useQueries({
-    queries: variablesNames.map((variable) => {
-      const filter = getDataPointsFilter({ geography, year, startYear, endYear, variable });
-
-      return {
-        ...queryKeys.dataPoints.tabulate({
-          ...filter,
-          ...(model &&
-            scenario && {
-              model: { name: String(model) },
-              scenario: { name: String(scenario) },
-            }),
-        }),
-        enabled: !!geography,
-        select: (data: DataFrame) => ({
-          dataPoints: extractDataPoints(data),
+  const queryConfigs = useMemo(
+    () =>
+      variablesNames.map((variable) => {
+        const filter = getDataPointsFilter({
+          geography,
+          year,
+          startYear,
+          endYear,
           variable,
-        }),
-      };
+        });
+
+        return {
+          ...queryKeys.dataPoints.tabulate({
+            ...filter,
+            ...(model &&
+              scenario && {
+                model: { name: String(model) },
+                scenario: { name: String(scenario) },
+              }),
+          }),
+          enabled: !!geography,
+          select: (data: DataFrame) => ({
+            dataPoints: extractDataPoints(data),
+            variable,
+          }),
+        };
+      }),
+    [variablesNames, geography, year, startYear, endYear, model, scenario],
+  );
+
+  const dataPointQueries = useQueries({
+    queries: queryConfigs,
+    combine: (results) => ({
+      dataSets: results.flatMap((query) =>
+        query.isSuccess && query.data ? [query.data.dataPoints] : [],
+      ),
+      isLoading: results.some((query) => query.isLoading),
+      isError: results.some((query) => query.isError),
     }),
   });
+
+  const { dataSets, isLoading: isDataLoading, isError: isDataError } = dataPointQueries;
 
   const {
     metaIndicators,
@@ -71,25 +93,46 @@ export default function useCombineRunsForVariablesPipeline({
 
   const { gfaIncreaseArray, isLoading: isGfaLoading, isError: isGfaError } = useComputeLandUse();
 
-  const runs = useMemo(() => {
+  /**
+   * Stage 1:
+   * Expensive data transformation.
+   *
+   * This should NOT depend on UI filters.
+   */
+  const extendedRuns = useMemo(() => {
     if (!geography) return [];
+    if (isDataLoading || isLoadingMeta || isLoadingEnergyShares || isGfaLoading) return [];
+    if (!metaIndicators || !energyShares) return [];
 
-    const dataLoading = dataPointQueries.some((q) => q.isLoading);
-    if (dataLoading || isLoadingMeta) return [];
-
-    const successfulData = dataPointQueries.filter((q) => q.isSuccess && q.data);
-
-    return successfulData.flatMap((dataQuery) => {
-      const { dataPoints } = dataQuery.data!;
-
-      const extendedRuns = generateExtendedRuns({
+    return dataSets.flatMap((dataPoints) => {
+      return generateExtendedRuns({
         energyShares,
         dataPoints,
         metaIndicators,
         gfaIncreaseArray,
       });
+    });
+  }, [
+    geography,
+    isDataLoading,
+    isLoadingMeta,
+    isLoadingEnergyShares,
+    isGfaLoading,
+    metaIndicators,
+    energyShares,
+    gfaIncreaseArray,
+    dataSets,
+  ]);
 
-      return filterRunsByMetaIndicators({
+  /**
+   * Stage 2:
+   * Cheap filter transformation.
+   *
+   * Filter changes should only rerun this block.
+   */
+  const filteredRuns = useMemo(
+    () =>
+      filterRunsByMetaIndicators({
         runs: extendedRuns,
         climateCategory,
         yearNetZero,
@@ -100,36 +143,32 @@ export default function useCombineRunsForVariablesPipeline({
         fossilShare,
         eocWarming,
         peakWarming,
-        fossilFuelPhaseDown: fossilFuelPhaseDown,
-        mitigationStrategy: mitigationStrategy,
-      });
-    });
-  }, [
-    geography,
-    dataPointQueries,
-    isLoadingMeta,
-    metaIndicators,
-    energyShares,
-    gfaIncreaseArray,
-    climateCategory,
-    yearNetZero,
-    carbonRemoval,
-    renewablesShare,
-    biomassShare,
-    gfaIncrease,
-    fossilShare,
-    eocWarming,
-    peakWarming,
-  ]);
+        fossilFuelPhaseDown,
+        mitigationStrategy,
+      }),
+    [
+      extendedRuns,
+      climateCategory,
+      yearNetZero,
+      carbonRemoval,
+      renewablesShare,
+      biomassShare,
+      gfaIncrease,
+      fossilShare,
+      eocWarming,
+      peakWarming,
+      fossilFuelPhaseDown,
+      mitigationStrategy,
+    ],
+  );
 
-  const isLoading =
-    dataPointQueries.some((q) => q.isLoading) ||
-    isLoadingMeta ||
-    isGfaLoading ||
-    isLoadingEnergyShares;
+  const isLoading = isDataLoading || isLoadingMeta || isGfaLoading || isLoadingEnergyShares;
 
-  const isError =
-    dataPointQueries.some((q) => q.isError) || isErrorMeta || isGfaError || isErrorEnergyShares;
+  const isError = isDataError || isErrorMeta || isGfaError || isErrorEnergyShares;
 
-  return { runs, isLoading, isError };
+  return {
+    runs: filteredRuns,
+    isLoading,
+    isError,
+  };
 }

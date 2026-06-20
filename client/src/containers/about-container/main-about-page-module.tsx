@@ -117,7 +117,7 @@ export default function MainAboutPageModule() {
                   </Link>
                 </strong>
                 - provides a comprehensive overview of scenarios and modelling methods used by
-                Working Group 3 of the IPCC's Sixth Assessment Report (AR6).
+                Working Group 3 of the IPTC&#39;s Sixth Assessment Report (AR6).
               </li>
               <li>
                 <strong>

@@ -1,4 +1,4 @@
-import { mobilePaths, EXTERNAL_LINKS, INTERNAL_PATHS } from "@/lib/paths";
+import { mobilePaths, EXTERNAL_LINKS } from "@/lib/paths";
 import Link from "next/link";
 import { Dot, Linkedin } from "lucide-react";
 import { BlueskyLogoIcon } from "@/assets/icons/bluesky-logo-icon";
@@ -20,20 +20,26 @@ export function Footer() {
           </div>
 
           <div className="flex flex-col items-center justify-between gap-10 pt-16 lg:flex-row">
-            <img
+            <Image
               src="/images/logos/logo_iamc.png"
               className="pointer-events-none h-14 w-auto select-none lg:h-18 lg:w-auto"
               alt="Integrated Assessment Modeling Consortium Logo"
+              width={500}
+              height={199}
             />
-            <img
+            <Image
               src="/images/logos/logo_bef.svg"
               className="pointer-events-none h-14 w-auto select-none lg:h-18 lg:w-auto"
               alt="Bezos Earth Found Logo"
+              width={176}
+              height={75}
             />
-            <img
+            <Image
               src="/images/logos/logo_iiasa.png"
               className="pointer-events-none h-14 w-auto select-none lg:h-18 lg:w-auto"
               alt="International Institute for Applied Systems Analysis Logo"
+              width={500}
+              height={140}
             />
           </div>
 

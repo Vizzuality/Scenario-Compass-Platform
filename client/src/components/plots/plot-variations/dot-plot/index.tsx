@@ -60,7 +60,7 @@ export const DotBasePlot: React.FC<DotBasePlotProps> = ({
       onSelectedRunChange: handleSelectedRunChange,
       onPrefetch: handlePrefetch,
     });
-  }, [dimensions, runs, selectedFlags, selectedRun, yExtent]);
+  }, [dimensions, runs, selectedFlags, selectedRun, svgRef, yExtent]);
 
   return plotContainer;
 };

@@ -3,15 +3,7 @@
 import { Label } from "@/components/ui/label";
 import { RowFilterProps } from "@/utils/data-manipulation/get-meta-points";
 import TooltipInfo from "@/containers/scenario-dashboard-container/components/tooltip-info";
-import { useId } from "react";
-import SliderSelect, { ChangeStateAction, SliderSelectItem } from "@/components/slider-select";
-import {
-  INCREASE_IN_GLOBAL_FOREST_AREA_KEY,
-  INCREASE_IN_GLOBAL_FOREST_AREA_LABEL,
-} from "@/lib/config/filters/land-filter-config";
-import { useFilterUrlParams } from "@/hooks/nuqs/url-params/use-filter-url-params";
-import { parseRange } from "@/components/slider-select/utils";
-import { URL_VALUES_FILTER_SEPARATOR } from "@/containers/scenario-dashboard-container/url-store";
+import SliderSelect from "@/components/slider-select";
 import { useLandFilter } from "@/hooks/runs/filtering/use-land-filter";
 
 const tooltipInfo =

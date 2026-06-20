@@ -37,14 +37,15 @@ export function MultipleRunsPlotWidget({
   const { getVariable, setVariable } = useTabAndVariablesParams(prefix);
   const currentVariable = getVariable(plotConfig);
   const data = useGetMultipleRunsForVariablePipeline({ variable: currentVariable, prefix });
+  const dataRuns = data.runs;
 
   const selectedRun = useMemo(() => {
-    if (!selectedRunId || !data?.runs) return null;
-    return data.runs.find((r) => r.runId === selectedRunId) || null;
-  }, [selectedRunId, data?.runs]);
+    if (!selectedRunId) return null;
+    return dataRuns.find((r) => r.runId === selectedRunId) || null;
+  }, [selectedRunId, dataRuns]);
 
   const { chartRef, handleDownload } = useDownloadPlotAssets({
-    runs: data.runs,
+    runs: dataRuns,
     title: currentVariable.replaceAll("|", " - "),
     imageOptions: { padding: { all: 30 }, includeInFilename: true },
   });

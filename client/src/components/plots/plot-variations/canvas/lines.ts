@@ -34,7 +34,11 @@ export const drawLine = (
   run.orderedPoints.forEach((point, i) => {
     const x = scales.xScale(point.year);
     const y = scales.yScale(point.value);
-    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    if (i === 0) {
+      ctx.moveTo(x, y);
+    } else {
+      ctx.lineTo(x, y);
+    }
   });
   ctx.stroke();
 };
@@ -48,7 +52,6 @@ export const drawAllLines = (
   hasSelection: boolean,
   width: number,
   height: number,
-  selectedRun?: ExtendedRun | null,
 ) => {
   setPlotClip(ctx, width, height);
 

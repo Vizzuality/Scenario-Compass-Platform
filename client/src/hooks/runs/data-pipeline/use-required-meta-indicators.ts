@@ -15,6 +15,8 @@ interface UseMetaIndicatorsReturn {
   isError: boolean;
 }
 
+const selectFunction = (data: DataFrame) => getMetaPoints(data);
+
 export default function useRequiredMetaIndicators(): UseMetaIndicatorsReturn {
   const {
     data: requiredMetaData,
@@ -26,7 +28,7 @@ export default function useRequiredMetaIndicators(): UseMetaIndicatorsReturn {
       key_in: [...REQUIRED_META_KEYS],
     }),
     staleTime: 5 * 60 * 1000,
-    select: (data: DataFrame) => getMetaPoints(data),
+    select: selectFunction,
   });
 
   const {
@@ -39,7 +41,7 @@ export default function useRequiredMetaIndicators(): UseMetaIndicatorsReturn {
       key_like: "*Concern|*",
     }),
     staleTime: 5 * 60 * 1000,
-    select: (data: DataFrame) => getMetaPoints(data),
+    select: selectFunction,
   });
 
   const metaIndicators = useMemo(() => {
