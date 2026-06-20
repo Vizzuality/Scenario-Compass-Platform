@@ -3,6 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { DataFetchError } from "@/components/error-state/data-fetch-error";
 import { AccordionItemContent } from "@/containers/scenario-dashboard-container/components/runs-pannel/components/accordion-item-content";
 import { useScenarioFlagsData } from "@/hooks/nuqs/flags/use-scenario-flags-data";
+import { Fragment } from "react";
 
 interface Props {
   result: RunPipelineReturn;
@@ -46,37 +47,37 @@ export default function SingleRunScenarioFlags({ result }: Props) {
       <div className="mt-2 flex flex-col gap-5">
         {okCategories.length > 0 && (
           <div className="flex flex-col gap-2">
-            {okCategories.map(([_key, category]) => (
-              <>
+            {okCategories.map(([key, category]) => (
+              <Fragment key={key}>
                 <div className="[&_svg]:text-foreground flex w-full items-start px-0 py-2">
                   <p className="text-sm">{category.label}</p>
                 </div>
                 <AccordionItemContent categorySummary={category} />
-              </>
+              </Fragment>
             ))}
           </div>
         )}
         {mediumCategories.length > 0 && (
           <div className="flex flex-col gap-2">
-            {mediumCategories.map(([_key, category]) => (
-              <>
+            {mediumCategories.map(([key, category]) => (
+              <Fragment key={key}>
                 <div className="[&_svg]:text-foreground flex w-full items-start px-0 py-2">
                   <p className="text-sm">{category.label}</p>
                 </div>
                 <AccordionItemContent categorySummary={category} />
-              </>
+              </Fragment>
             ))}
           </div>
         )}
         {highCategories.length > 0 && (
           <div className="flex flex-col gap-2">
-            {highCategories.map(([_key, category]) => (
-              <>
+            {highCategories.map(([key, category]) => (
+              <Fragment key={key}>
                 <div className="[&_svg]:text-foreground flex w-full items-start px-0 py-2">
                   <p className="text-sm">{category.label}</p>
                 </div>
                 <AccordionItemContent categorySummary={category} />
-              </>
+              </Fragment>
             ))}
           </div>
         )}

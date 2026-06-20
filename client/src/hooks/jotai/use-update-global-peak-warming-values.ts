@@ -1,7 +1,8 @@
 import { peakWarmingMaxAtom, peakWarmingMinAtom } from "@/utils/atoms/peak-warming-atoms";
-import { useAtomValue, useSetAtom } from "jotai";
-import { MetaIndicator } from "@/types/data/meta-indicator";
+import { useSetAtom } from "jotai";
+import { useEffect } from "react";
 import { CLIMATE_ASSESSMENT_PEAK_WARMING_MEDIAN } from "@/lib/config/filters/advanced-filters-config";
+import { MetaIndicator } from "@/types/data/meta-indicator";
 
 interface Props {
   isLoading: boolean;
@@ -12,30 +13,26 @@ interface Props {
 export const useUpdateGlobalPeakWarmingValues = ({ isLoading, isError, metaIndicators }: Props) => {
   const setGlobalMin = useSetAtom(peakWarmingMinAtom);
   const setGlobalMax = useSetAtom(peakWarmingMaxAtom);
-  const currentGlobalMin = useAtomValue(peakWarmingMinAtom);
-  const currentGlobalMax = useAtomValue(peakWarmingMaxAtom);
 
-  if (isError || isLoading || !metaIndicators) return;
+  useEffect(() => {
+    if (isError || isLoading || !metaIndicators) return;
 
-  let localMin = Number.MAX_SAFE_INTEGER;
-  let localMax = Number.MIN_SAFE_INTEGER;
+    let localMin = Number.MAX_SAFE_INTEGER;
+    let localMax = Number.MIN_SAFE_INTEGER;
 
-  metaIndicators.forEach((indicator) => {
-    if (indicator.key === CLIMATE_ASSESSMENT_PEAK_WARMING_MEDIAN) {
-      const value = parseFloat(indicator.value);
-      if (value > localMax) {
-        localMax = value;
-      }
-      if (value < localMin) {
-        localMin = value;
+    for (const indicator of metaIndicators) {
+      if (indicator.key === CLIMATE_ASSESSMENT_PEAK_WARMING_MEDIAN) {
+        const v = parseFloat(indicator.value);
+        if (v > localMax) localMax = v;
+        if (v < localMin) localMin = v;
       }
     }
-  });
 
-  if (localMin < currentGlobalMin) {
-    setGlobalMin(localMin);
-  }
-  if (localMax > currentGlobalMax) {
-    setGlobalMax(localMax);
-  }
+    if (localMin !== Number.MAX_SAFE_INTEGER) {
+      setGlobalMin((prev) => (localMin < prev ? localMin : prev));
+    }
+    if (localMax !== Number.MIN_SAFE_INTEGER) {
+      setGlobalMax((prev) => (localMax > prev ? localMax : prev));
+    }
+  }, [metaIndicators, isLoading, isError, setGlobalMin, setGlobalMax]);
 };

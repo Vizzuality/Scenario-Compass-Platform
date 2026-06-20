@@ -1,4 +1,4 @@
-import { useId, useState, useEffect } from "react";
+import { useId, useState } from "react";
 import { useFilterUrlParams } from "@/hooks/nuqs/url-params/use-filter-url-params";
 import {
   FOSSIL_FUEL_PHASE_DOWN_FILTER_CONFIG,
@@ -19,12 +19,13 @@ export const useTypologiesFilter = (prefix?: string) => {
 
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    if (open) {
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (nextOpen) {
       setPendingFossilFuelSelectedOptions(fossilFuelPhaseDown || []);
       setPendingMitigationSelectedOptions(mitigationStrategy || []);
     }
-  }, [open, fossilFuelPhaseDown, mitigationStrategy]);
+    setOpen(nextOpen);
+  };
 
   const selectedOptions = [...(fossilFuelPhaseDown || []), ...(mitigationStrategy || [])];
 
@@ -133,7 +134,7 @@ export const useTypologiesFilter = (prefix?: string) => {
     getLabel,
     getDisplayLabel,
     open,
-    setOpen,
+    setOpen: handleOpenChange,
     hasChanges,
   };
 };

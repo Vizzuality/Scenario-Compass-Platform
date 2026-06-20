@@ -34,16 +34,7 @@ export const renderChart = (
 
   ctx.clearRect(0, 0, rect.width, rect.height);
   drawAxesAndGrid(ctx, scales, runs, rect.width, rect.height);
-  drawAllLines(
-    ctx,
-    runs,
-    scales,
-    selectedFlags,
-    hasSelection,
-    rect.width,
-    rect.height,
-    selectedRun,
-  );
+  drawAllLines(ctx, runs, scales, selectedFlags, hasSelection, rect.width, rect.height);
 
   if (selectedRun) {
     const abbrev = getCategoryAbbrev(selectedRun.flagCategory);
@@ -52,7 +43,8 @@ export const renderChart = (
     const path = new Path2D();
     selectedRun.orderedPoints.forEach((point, index) => {
       const x = scales.xScale(point.year);
-      const yValue = "median" in point ? (point as any).median : point.value;
+      const yValue =
+        "median" in point && typeof point.median === "number" ? point.median : point.value;
       const y = scales.yScale(yValue);
 
       if (index === 0) {

@@ -61,8 +61,8 @@ export default function LicensePage() {
             <div>
               <p className="text-black">
                 <em>
-                  "Mitigation benchmarks from the 2025 community update of global emissions
-                  pathways"
+                  &#34;Mitigation benchmarks from the 2025 community update of global emissions
+                  pathways&#34;
                 </em>{" "}
                 (Riahi et al., submitted).
               </p>
@@ -78,8 +78,8 @@ export default function LicensePage() {
 
             <div>
               <p className="text-black">
-                <em>"Scenario Compass Initiative - Pathways Ensemble 2025"</em> (Huppmann et al.)
-                Zenodo.
+                <em>&#34;Scenario Compass Initiative - Pathways Ensemble 2025&#34;</em> (Huppmann et
+                al.) Zenodo.
               </p>
               <Link
                 href="https://doi.org/10.5281/zenodo.18598250"

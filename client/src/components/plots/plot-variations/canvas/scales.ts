@@ -29,7 +29,7 @@ export const computeExtentWithPadding = (runs: ExtendedRun[], yExtent?: YExtentP
     yMin = yExtent.yMin - paddingY;
     yMax = yExtent.yMax + paddingY;
   } else {
-    let [internalYMin, internalYMax] = d3.extent(allPoints, (d) => d.value) as [number, number];
+    const [internalYMin, internalYMax] = d3.extent(allPoints, (d) => d.value) as [number, number];
     const padding = (internalYMax - internalYMin) * 0.1;
 
     yMin = internalYMin - padding;

@@ -1,7 +1,7 @@
 import { PlotWidgetHeader } from "@/components/plots/components";
 import { useGetSingleRunForVariablePipeline } from "@/hooks/runs/data-pipeline/use-get-single-run-for-variable-pipeline";
 import LoadingDots from "@/components/animations/loading-dots";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { DataFetchError } from "@/components/error-state/data-fetch-error";
 import { ShortRun, ShortRunReturn } from "@/components/plots/plot-variations/kyoto/types";
 import { getFinalCH4Points } from "@/components/plots/plot-variations/kyoto/utils";
@@ -79,18 +79,19 @@ function KyotoGasesContent({
   isSingleYear: boolean;
 }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [singleYearChartType, setSingleYearChartType] = useState<ChartType>(
-    PLOT_TYPE_OPTIONS.STACKED_BAR,
+  const [selectedSingleYearChartType, setSelectedSingleYearChartType] = useState<ChartType | null>(
+    null,
   );
 
-  useEffect(() => {
+  const detectedSingleYearChartType = useMemo(() => {
     const hasNegatives = result.shortRuns
       .filter((r) => !r.isLine)
       .some((r) => r.orderedPoints.some((p) => p.value < 0));
-    setSingleYearChartType(
-      hasNegatives ? PLOT_TYPE_OPTIONS.WATERFALL : PLOT_TYPE_OPTIONS.STACKED_BAR,
-    );
+
+    return hasNegatives ? PLOT_TYPE_OPTIONS.WATERFALL : PLOT_TYPE_OPTIONS.STACKED_BAR;
   }, [result.shortRuns]);
+
+  const singleYearChartType = selectedSingleYearChartType ?? detectedSingleYearChartType;
 
   const variables = [OTHER_GASES, "N2O", "CH4", "CO2"];
   const legend = <CustomPlotLegend flagCategory={result.flagCategory} variables={variables} />;
@@ -105,7 +106,7 @@ function KyotoGasesContent({
           title="GHG Emissions"
           onExpand={() => setIsDialogOpen(true)}
           chartType={isSingleYear ? singleYearChartType : undefined}
-          onChange={isSingleYear ? setSingleYearChartType : undefined}
+          onChange={isSingleYear ? setSelectedSingleYearChartType : undefined}
           toggleOptions={
             isSingleYear ? [PLOT_TYPE_OPTIONS.WATERFALL, PLOT_TYPE_OPTIONS.STACKED_BAR] : undefined
           }

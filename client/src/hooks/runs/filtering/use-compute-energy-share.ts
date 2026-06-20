@@ -14,6 +14,7 @@ import {
 } from "@/lib/config/filters/energy-filter-config";
 import { useBaseUrlParams } from "@/hooks/nuqs/url-params/use-base-url-params";
 import { extractDataPoints } from "@/utils/data-manipulation/extract-data-points";
+import { DataFrame } from "@iiasa/ixmp4-ts";
 
 export interface EnergyShare {
   [FOSSIL_SHARE_2050]: number;
@@ -30,6 +31,8 @@ interface EnergyData {
 
 export type EnergyShareMap = Record<string, EnergyShare>;
 
+const selectDataPoints = (data: DataFrame) => extractDataPoints(data);
+
 export default function useComputeEnergyShare() {
   const { geography } = useBaseUrlParams();
 
@@ -43,7 +46,7 @@ export default function useComputeEnergyShare() {
       region: { name: geographyConfig.find((g) => g.id === geography)?.name },
     }),
     staleTime: 5 * 60 * 1000,
-    select: (data) => extractDataPoints(data),
+    select: selectDataPoints,
   });
 
   const energyShares: EnergyShareMap | null = useMemo(() => {

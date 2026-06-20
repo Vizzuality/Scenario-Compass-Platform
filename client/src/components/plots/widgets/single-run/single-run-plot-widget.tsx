@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { PlotWidgetHeader } from "@/components/plots/components/plot-widget-header";
 import { SingleScenarioPlotConfig } from "@/lib/config/tabs/variables-config";
 import useCombineRunsForVariablesPipeline from "@/hooks/runs/data-pipeline/use-combine-runs-for-variables-pipeline";
@@ -20,8 +20,8 @@ interface Props {
 
 export function SingleRunPlotWidget({ plotConfig }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [singleYearChartType, setSingleYearChartType] = useState<ChartType>(
-    PLOT_TYPE_OPTIONS.STACKED_BAR,
+  const [selectedSingleYearChartType, setSelectedSingleYearChartType] = useState<ChartType | null>(
+    null,
   );
 
   const { startYear, endYear } = useBaseUrlParams();
@@ -37,16 +37,13 @@ export function SingleRunPlotWidget({ plotConfig }: Props) {
     imageOptions: { padding: { all: 30 }, includeInFilename: true },
   });
 
-  const [hasAutoDetected, setHasAutoDetected] = useState(false);
-
-  useEffect(() => {
-    if (!data.runs.length || hasAutoDetected) return;
+  const detectedSingleYearChartType = useMemo(() => {
     const hasNegatives = data.runs.some((r) => r.orderedPoints.some((p) => p.value < 0));
-    setSingleYearChartType(
-      hasNegatives ? PLOT_TYPE_OPTIONS.WATERFALL : PLOT_TYPE_OPTIONS.STACKED_BAR,
-    );
-    setHasAutoDetected(true);
-  }, [data.runs, hasAutoDetected]);
+
+    return hasNegatives ? PLOT_TYPE_OPTIONS.WATERFALL : PLOT_TYPE_OPTIONS.STACKED_BAR;
+  }, [data.runs]);
+
+  const singleYearChartType = selectedSingleYearChartType ?? detectedSingleYearChartType;
 
   const renderChart = () => {
     if (!isSingleYear) {
@@ -66,7 +63,7 @@ export function SingleRunPlotWidget({ plotConfig }: Props) {
           onDownload={handleDownload}
           onExpand={() => setIsDialogOpen(true)}
           chartType={isSingleYear ? singleYearChartType : undefined}
-          onChange={isSingleYear ? setSingleYearChartType : undefined}
+          onChange={isSingleYear ? setSelectedSingleYearChartType : undefined}
           toggleOptions={
             isSingleYear ? [PLOT_TYPE_OPTIONS.WATERFALL, PLOT_TYPE_OPTIONS.STACKED_BAR] : undefined
           }

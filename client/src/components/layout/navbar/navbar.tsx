@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 
@@ -46,8 +48,8 @@ const Logo = ({ className, theme }: { className?: string; theme: string }) => {
   const textColor = theme === "light" ? "text-burgundy" : "text-beige-light";
 
   return (
-    <Link href={INTERNAL_PATHS.HOME} className={cn(className, "flex h-fit gap-2")}>
-      <Image src={logoSrc} alt="IIASA Logo" />
+    <Link href={INTERNAL_PATHS.HOME} className={cn(className, "flex h-fit items-center gap-2")}>
+      <Image src={logoSrc} alt="IIASA Logo" className="h-auto w-auto" />
       <div className={textColor}>
         <span className="font-display text-2xl leading-10">Scenario Compass Initiative</span>
       </div>
@@ -85,8 +87,8 @@ export function Navbar({ className, theme, sheetTheme }: Props) {
                 <span className="sr-only">Open Menu</span>
               </Button>
             </SheetTrigger>
-            <SheetTitle>Mobile Menu Sheet</SheetTitle>
             <SheetContent className={cn("w-full gap-6 border-none px-4 py-2", sheetStyles)}>
+              <SheetTitle>Mobile Menu Sheet</SheetTitle>
               <div className="flex items-center justify-between">
                 <Logo theme={sheetStyles} />
                 <SheetClose asChild>
