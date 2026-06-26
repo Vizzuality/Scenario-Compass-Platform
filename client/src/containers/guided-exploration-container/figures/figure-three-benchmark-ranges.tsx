@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { InfoIcon } from "lucide-react";
 
 import {
@@ -60,13 +60,13 @@ const formatBenchmarkRangeValue = (value: number, unit = "%"): string => {
   return formatNumber(value);
 };
 
-const formatBenchmarkRange = (range: BenchmarkRange, unit = "%"): string => {
-  if (!range) return "No range";
+const formatBenchmarkRange = (range: BenchmarkRange, unit = "%"): { min: string; max: string } => {
+  if (!range) return { min: "No range", max: "No range" };
 
   const min = formatBenchmarkRangeValue(range.min, unit);
   const max = formatBenchmarkRangeValue(range.max, unit);
 
-  return min === max ? min : `${min} to ${max}`;
+  return { min, max };
 };
 
 function BenchmarkRangeCard({
@@ -82,13 +82,14 @@ function BenchmarkRangeCard({
   colorClassName: string;
   borderClassName: string;
 }) {
+  const { min, max } = formatBenchmarkRange(range, valueUnit);
   return (
     <div className={cn("rounded-md border p-3", borderClassName)}>
       <div className={cn("text-xs font-bold tracking-widest uppercase", colorClassName)}>
         {label}
       </div>
       <div className={cn("mt-1 text-2xl leading-tight font-bold", colorClassName)}>
-        {formatBenchmarkRange(range, valueUnit)}
+        {min} <span className="text-base font-normal text-stone-400">to</span> {max}
       </div>
       <div className="mt-2 text-xs text-stone-500">
         {range ? `${range.count} no-concern scenarios` : "No no-concern scenarios"}
@@ -114,22 +115,21 @@ export function FigureThreeBenchmarkRanges({
   );
 
   const firstBenchmarkYear = benchmarkYearOptions[0] ?? DEFAULT_BENCHMARK_YEAR;
-  const [benchmarkYear, setBenchmarkYear] = useState(firstBenchmarkYear);
-  const previousResetKeyRef = useRef(resetKey);
-
-  useEffect(() => {
-    if (previousResetKeyRef.current === resetKey) return;
-
-    previousResetKeyRef.current = resetKey;
-    setBenchmarkYear(firstBenchmarkYear);
-  }, [firstBenchmarkYear, resetKey]);
-
-  useEffect(() => {
-    if (isMetaIndicator || !benchmarkYearOptions.length) return;
-    if (!benchmarkYearOptions.includes(benchmarkYear)) {
-      setBenchmarkYear(firstBenchmarkYear);
-    }
-  }, [benchmarkYear, benchmarkYearOptions, firstBenchmarkYear, isMetaIndicator]);
+  const [benchmarkYearSelection, setBenchmarkYearSelection] = useState<{
+    resetKey: number;
+    year: number | null;
+  }>({
+    resetKey,
+    year: null,
+  });
+  const selectedBenchmarkYear =
+    benchmarkYearSelection.resetKey === resetKey ? benchmarkYearSelection.year : null;
+  const benchmarkYear =
+    !isMetaIndicator &&
+    selectedBenchmarkYear !== null &&
+    benchmarkYearOptions.includes(selectedBenchmarkYear)
+      ? selectedBenchmarkYear
+      : firstBenchmarkYear;
 
   const benchmarkSummary = useMemo(() => {
     const summaryYear = isMetaIndicator ? (data.xValues?.[0] ?? 1) : benchmarkYear;
@@ -197,7 +197,7 @@ export function FigureThreeBenchmarkRanges({
               <button
                 key={year}
                 type="button"
-                onClick={() => setBenchmarkYear(year)}
+                onClick={() => setBenchmarkYearSelection({ resetKey, year })}
                 className={cn(
                   "rounded-full border px-2.5 py-1 text-xs font-medium transition-colors",
                   isSelected

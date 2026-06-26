@@ -76,7 +76,7 @@ export function useFigureTwo(): UseFigureTwoReturn {
       setVettingMode(null),
       clearAll(),
     ]);
-  }, [setVariable, setVettingMode, clearAll, DEFAULT_FIGURE_TWO_VALUES.variable]);
+  }, [setVariable, setVettingMode, clearAll]);
 
   const normalizedVettingMode: FigureTwoVettingMode =
     vettingMode === "hide" || vettingMode === "grey-out" ? vettingMode : "show";

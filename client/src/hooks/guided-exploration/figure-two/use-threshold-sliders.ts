@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useEffect, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   FLAG_THRESHOLDS,
   ThresholdBand,
@@ -174,10 +174,6 @@ export function useThresholdSliders({
   });
 
   const draftValues = draftState.key === thresholdKey ? draftState.values : defaultSliderValues;
-
-  useEffect(() => {
-    setDraftState({ key: thresholdKey, values: defaultSliderValues });
-  }, [defaultSliderValues, thresholdKey]);
 
   const thresholds = useMemo(
     (): ThresholdBand => buildThresholds(defaults, draftValues),

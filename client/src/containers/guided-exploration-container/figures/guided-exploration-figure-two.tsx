@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import queryKeys from "@/lib/query-keys";
 import {
@@ -68,13 +68,16 @@ export function GuidedExplorationFigTwo() {
 
   const availableBands = FLAG_THRESHOLDS[variable] ?? [];
 
-  const [selectedBandName, setSelectedBandName] = useState<string>(
-    () => availableBands[0]?.name ?? "",
-  );
-
-  useEffect(() => {
-    setSelectedBandName(FLAG_THRESHOLDS[variable]?.[0]?.name ?? "");
-  }, [variable]);
+  const [selectedBand, setSelectedBand] = useState<{ variable: string; name: string | null }>({
+    variable,
+    name: null,
+  });
+  const selectedBandName =
+    selectedBand.variable === variable &&
+    selectedBand.name !== null &&
+    availableBands.some((band) => band.name === selectedBand.name)
+      ? selectedBand.name
+      : (availableBands[0]?.name ?? "");
 
   const activeConfig = availableBands.find((b) => b.name === selectedBandName) ?? availableBands[0];
 
@@ -98,6 +101,10 @@ export function GuidedExplorationFigTwo() {
   } = useThresholdSliders({ variable, bandName: selectedBandName });
 
   const thresholdYear = activeConfig?.year ?? 2030;
+  const highUpper = thresholds.high.upper;
+  const highLower = thresholds.high.lower;
+  const mediumUpper = thresholds.medium.upper;
+  const mediumLower = thresholds.medium.lower;
   const includeUnvettedInThresholds = vettingMode === "show";
   const showUnvettedInPlot = vettingMode !== "hide";
 
@@ -119,66 +126,59 @@ export function GuidedExplorationFigTwo() {
     includeUnvettedInThresholds,
   );
 
-  const thresholdGuides = useMemo((): ThresholdGuide[] => {
-    const guides: ThresholdGuide[] = [];
+  const thresholdGuides: ThresholdGuide[] = [];
 
-    if (thresholds.high.upper !== undefined) {
-      guides.push({
-        year: thresholdYear,
-        value: thresholds.high.upper,
-        label: "High upper",
-        color: HIGH_THRESHOLD_COLOR,
-      });
-    }
+  if (highUpper !== undefined) {
+    thresholdGuides.push({
+      year: thresholdYear,
+      value: highUpper,
+      label: "High upper",
+      color: HIGH_THRESHOLD_COLOR,
+    });
+  }
 
-    if (thresholds.high.lower !== undefined) {
-      guides.push({
-        year: thresholdYear,
-        value: thresholds.high.lower,
-        label: "High lower",
-        color: HIGH_THRESHOLD_COLOR,
-      });
-    }
+  if (highLower !== undefined) {
+    thresholdGuides.push({
+      year: thresholdYear,
+      value: highLower,
+      label: "High lower",
+      color: HIGH_THRESHOLD_COLOR,
+    });
+  }
 
-    if (thresholds.medium.upper !== undefined) {
-      guides.push({
-        year: thresholdYear,
-        value: thresholds.medium.upper,
-        label: "Medium upper",
-        color: MEDIUM_THRESHOLD_COLOR,
-      });
-    }
+  if (mediumUpper !== undefined) {
+    thresholdGuides.push({
+      year: thresholdYear,
+      value: mediumUpper,
+      label: "Medium upper",
+      color: MEDIUM_THRESHOLD_COLOR,
+    });
+  }
 
-    if (thresholds.medium.lower !== undefined) {
-      guides.push({
-        year: thresholdYear,
-        value: thresholds.medium.lower,
-        label: "Medium lower",
-        color: MEDIUM_THRESHOLD_COLOR,
-      });
-    }
+  if (mediumLower !== undefined) {
+    thresholdGuides.push({
+      year: thresholdYear,
+      value: mediumLower,
+      label: "Medium lower",
+      color: MEDIUM_THRESHOLD_COLOR,
+    });
+  }
 
-    return guides;
-  }, [thresholds, thresholdYear]);
+  const yExtentValues = [
+    ...(runs?.flatMap((run) => run.orderedPoints.map((point) => point.value)) ?? []),
+    ...thresholdGuides.map((guide) => guide.value),
+  ];
 
-  const yExtent = useMemo(() => {
-    const values = [
-      ...(runs?.flatMap((run) => run.orderedPoints.map((point) => point.value)) ?? []),
-      ...thresholdGuides.map((guide) => guide.value),
-    ];
+  const yExtent = yExtentValues.length
+    ? {
+        yMin: Math.min(...yExtentValues),
+        yMax: Math.max(...yExtentValues),
+      }
+    : undefined;
 
-    if (!values.length) return undefined;
-
-    return {
-      yMin: Math.min(...values),
-      yMax: Math.max(...values),
-    };
-  }, [runs, thresholdGuides]);
-
-  const maxSliderValue = useMemo(() => {
-    if (!activeConfig?.high?.upper) return 15000;
-    return Math.ceil(activeConfig.high.upper * 1.5);
-  }, [activeConfig]);
+  const maxSliderValue = activeConfig?.high?.upper
+    ? Math.ceil(activeConfig.high.upper * 1.5)
+    : 15000;
 
   const unit = useMemo(() => {
     if (variable.includes("Energy")) return "EJ";
@@ -236,13 +236,16 @@ export function GuidedExplorationFigTwo() {
                     <TooltipTrigger>
                       <InfoIcon size={16} />
                       <TooltipContent className="max-w-100">
-                        {reasonsForConcernMap[selectedBandName].description}
+                        {reasonsForConcernMap[selectedBandName]?.description}
                       </TooltipContent>
                     </TooltipTrigger>
                   </Tooltip>
                 </Label>
 
-                <Select value={selectedBandName} onValueChange={setSelectedBandName}>
+                <Select
+                  value={selectedBandName}
+                  onValueChange={(name) => setSelectedBand({ variable, name })}
+                >
                   <SelectTrigger className="w-full text-xs" size="lg">
                     <SelectValue>{selectedBandName}</SelectValue>
                   </SelectTrigger>
@@ -277,7 +280,7 @@ export function GuidedExplorationFigTwo() {
             />
 
             <div className="flex flex-col gap-2">
-              <Label className="font-bold">Scenarios that don't pass vetting</Label>
+              <Label className="font-bold">Scenarios that don&apos;t pass vetting</Label>
               <div className="grid grid-cols-3 overflow-hidden bg-white">
                 {VETTING_MODE_OPTIONS.map((option, index) => {
                   const isSelected = vettingMode === option.value;

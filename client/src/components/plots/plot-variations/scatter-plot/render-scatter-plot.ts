@@ -71,8 +71,6 @@ export const renderScatterPlot = ({
   tooltipEl.className = DOT_TOOLTIP_CLASS;
   containerEl.appendChild(tooltipEl);
 
-  let dots: d3.Selection<SVGCircleElement, FigureOneDataPoint, SVGGElement, unknown>;
-
   const resetDots = () => {
     dots
       .transition()
@@ -168,7 +166,7 @@ export const renderScatterPlot = ({
     absY: dimensions.MARGIN.TOP + yScale(d.yValue),
   });
 
-  dots = dotsGroup
+  const dots = dotsGroup
     .selectAll<SVGCircleElement, FigureOneDataPoint>(".data-point")
     .data(points)
     .join("circle")

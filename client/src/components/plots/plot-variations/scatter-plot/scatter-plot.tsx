@@ -49,7 +49,7 @@ const ScatterBasePlot: React.FC<ScatterBasePlotProps> = ({
       xLabel,
       yLabel,
     });
-  }, [dimensions, points, selectedPoint, xLabel, yLabel]);
+  }, [dimensions, points, selectedPoint, svgRef, xLabel, yLabel]);
 
   return plotContainer;
 };

@@ -283,8 +283,6 @@ const sortDotsForStableLayout = (
   return firstPoint.runId.localeCompare(secondPoint.runId);
 };
 
-const formatPercent = (value: number): string => `${formatNumber(value)}%`;
-
 const formatBenchmarkValue = (value: number, unit = "%"): string => {
   if (unit.toLowerCase() === "year") return Math.round(value).toString();
 
@@ -743,8 +741,6 @@ export const renderBenchmarkChart = ({
     .style("cursor", "crosshair")
     .style("pointer-events", "all");
 
-  let dots: d3.Selection<SVGCircleElement, BenchmarkDotTooltipPoint, SVGGElement, unknown>;
-
   const resetDots = () => {
     dots
       .transition()
@@ -835,7 +831,7 @@ export const renderBenchmarkChart = ({
       resetDots();
     });
 
-  dots = g
+  const dots = g
     .append("g")
     .attr("class", "benchmark-no-concern-dots")
     .selectAll<SVGCircleElement, BenchmarkDotTooltipPoint>(".benchmark-no-concern-dot")
