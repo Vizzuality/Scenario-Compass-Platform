@@ -72,8 +72,6 @@ export const HOVER_RANGE_STROKE_WIDTH = 2;
 
 export const HOVER_LABEL_FONT_SIZE = "11px";
 export const HOVER_LABEL_TEXT_COLOR = "white";
-export const HOVER_LABEL_STROKE_COLOR = "#ffffff";
-export const HOVER_LABEL_STROKE_WIDTH = 4;
 export const HOVER_LABEL_RIGHT_OFFSET = 6;
 
 export const HOVER_PILL_LINE_GAP = 4;
@@ -86,7 +84,5 @@ export const HOVER_PILL_BACKGROUND_COLOR = "#000000";
 export const HOVER_PILL_BACKGROUND_OPACITY = 0.85;
 
 export const HOVER_HEADER_LABEL_Y = 14;
-export const HOVER_MAX_LABEL_Y_OFFSET = -6;
-export const HOVER_MIN_LABEL_Y_OFFSET = 14;
 
 export const HOVER_ZONE_X_PADDING = 6;

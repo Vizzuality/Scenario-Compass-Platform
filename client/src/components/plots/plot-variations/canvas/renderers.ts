@@ -8,7 +8,6 @@ import { drawAllLines } from "./lines";
 import { getCategoryAbbrev } from "@/lib/config/reasons-of-concern/category-config";
 import { getRunColor } from "@/utils/plots/colors-functions";
 import { MARGIN } from "./constants";
-import { formatShortenedNumber } from "@/utils/plots/format-functions";
 
 export type ColorFn = (run: ExtendedRun) => string;
 
@@ -144,7 +143,6 @@ export const drawThresholdGuides = (
     const side = guide.label.toLowerCase().startsWith("high") ? "left" : "right";
     const labelY = y;
     const pillPaddingX = 8;
-    const pillPaddingY = 5;
     const dotRadius = 4;
     const dotGap = 6;
     const textMetrics = ctx.measureText(label);

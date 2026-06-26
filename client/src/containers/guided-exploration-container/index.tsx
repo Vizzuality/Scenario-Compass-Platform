@@ -127,12 +127,12 @@ export function GuidedExplorationPageContainer() {
               </p>
 
               <p>
-                The Scenario Compass database is what scientists call an 'ensemble of opportunity'.
-                This means it contains the scenarios that modelling teams chose to submit – not a
-                systematically representative sample of all possible futures. Some technological and
-                socio-economic assumptions appear more often simply because they were conventional
-                at the time, or because they were the focus of research. The database is rich, but
-                it is not a balanced survey.
+                The Scenario Compass database is what scientists call an &apos;ensemble of
+                opportunity&apos;. This means it contains the scenarios that modelling teams chose
+                to submit – not a systematically representative sample of all possible futures. Some
+                technological and socio-economic assumptions appear more often simply because they
+                were conventional at the time, or because they were the focus of research. The
+                database is rich, but it is not a balanced survey.
               </p>
             </div>
           </section>

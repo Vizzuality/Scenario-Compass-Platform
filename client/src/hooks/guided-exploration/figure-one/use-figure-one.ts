@@ -134,11 +134,11 @@ export function useFigureOne(): UseFigureOneReturn {
       .map((id) => {
         const xPoint = xMap.get(id)!;
         const yPoint = yMap.get(id)!;
-        const { value: _, ...rest } = xPoint;
+        const { value: xValue, ...rest } = xPoint;
 
         return {
           ...rest,
-          xValue: xPoint.value,
+          xValue,
           yValue: yPoint.value,
           run: runMap.get(id)!,
         };

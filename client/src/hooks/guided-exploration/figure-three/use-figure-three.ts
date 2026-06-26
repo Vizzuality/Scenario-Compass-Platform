@@ -197,7 +197,7 @@ export function useFigureThree() {
       valueUnit: "%",
       valueLabel: "Change",
     };
-  }, [runs, normalizedMode, normalizedMetaIndicator, selectedYears]);
+  }, [runs, normalizedMode, normalizedMetaIndicator, selectedYears, variable]);
 
   const resetFigureThreeControls = useCallback(async (): Promise<void> => {
     await Promise.all([
